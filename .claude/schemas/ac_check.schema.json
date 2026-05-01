@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Acceptance Criteria Check",
+  "description": "Result of AC verification by the product-owner subagent. Stored at .claude/state/<ticket-id>/ac_check.json",
+  "type": "object",
+  "required": ["ticket_id", "verdict", "criteria"],
+  "properties": {
+    "ticket_id": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["clear", "ambiguous", "missing"],
+      "description": "clear = AC present, unambiguous, testable. ambiguous = needs clarification. missing = no AC found."
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "testable"],
+        "properties": {
+          "id": { "type": "string", "description": "Criterion identifier (AC-1, AC-2, ...)" },
+          "text": { "type": "string" },
+          "testable": { "type": "boolean" },
+          "issues": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "questions_for_reporter": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": { "type": "string" },
+    "requires_ui_work": { "type": "boolean" }
+  }
+}

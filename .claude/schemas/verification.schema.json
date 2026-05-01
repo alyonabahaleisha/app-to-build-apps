@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Verification Report",
+  "description": "Produced by the QA subagent after running the tiered verification pyramid. Stored at .claude/state/<ticket-id>/verification.json",
+  "type": "object",
+  "required": ["ticket_id", "verdict", "tiers", "ac_coverage", "scope_check", "created_at"],
+  "properties": {
+    "ticket_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "verdict": {
+      "type": "string",
+      "enum": ["PASS", "FAIL_RETRY", "FAIL_ESCALATE"]
+    },
+    "verdict_reasoning": { "type": "string" },
+    "routing_hint": {
+      "type": ["string", "null"],
+      "enum": ["fix_implementation", "reconsider_approach", null]
+    },
+    "tiers": {
+      "type": "object",
+      "properties": {
+        "tier1_build_lint": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+            "typecheck_result": {
+              "type": "object",
+              "properties": {
+                "success": { "type": "boolean" },
+                "errors": { "type": "array", "items": { "type": "string" } },
+                "duration_seconds": { "type": "number" }
+              }
+            },
+            "lint_result": {
+              "type": "object",
+              "properties": {
+                "tool": { "type": "string", "description": "eslint" },
+                "new_violations": { "type": "integer" },
+                "blocking_violations": { "type": "array", "items": { "type": "string" } },
+                "duration_seconds": { "type": "number" }
+              }
+            }
+          }
+        },
+        "tier2_unit_tests": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+            "tests_run": { "type": "integer" },
+            "tests_passed": { "type": "integer" },
+            "tests_failed": { "type": "integer" },
+            "failing_tests": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "test_name": { "type": "string" },
+                  "failure_message": { "type": "string" },
+                  "file": { "type": "string" },
+                  "line": { "type": "integer" }
+                }
+              }
+            },
+            "coverage_delta": { "type": ["number", "null"] },
+            "duration_seconds": { "type": "number" }
+          }
+        },
+        "tier3_e2e_tests": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+            "tests_run": { "type": "integer" },
+            "tests_passed": { "type": "integer" },
+            "tests_failed": { "type": "integer" },
+            "flakes_retried": { "type": "integer" },
+            "failing_tests": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "test_name": { "type": "string" },
+                  "failure_message": { "type": "string" },
+                  "screenshot_path": { "type": "string" }
+                }
+              }
+            },
+            "duration_seconds": { "type": "number" }
+          }
+        },
+        "tier4_smoke": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+            "scenarios_run": { "type": "integer" },
+            "scenarios_passed": { "type": "integer" },
+            "scenarios_failed": { "type": "integer" },
+            "failing_scenarios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "scenario_name": { "type": "string" },
+                  "failed_at_step": { "type": "string" },
+                  "expected": { "type": "string" },
+                  "actual": { "type": "string" }
+                }
+              }
+            },
+            "duration_seconds": { "type": "number" }
+          }
+        }
+      }
+    },
+    "ac_coverage": {
+      "type": "object",
+      "properties": {
+        "all_covered": { "type": "boolean" },
+        "mapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "test_methods": { "type": "array", "items": { "type": "string" } },
+              "all_passing": { "type": "boolean" }
+            }
+          }
+        },
+        "uncovered_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "scope_check": {
+      "type": "object",
+      "properties": {
+        "files_in_diff": { "type": "array", "items": { "type": "string" } },
+        "files_outside_allowlist": { "type": "array", "items": { "type": "string" } },
+        "scope_violation": { "type": "boolean" }
+      }
+    },
+    "security_check": {
+      "type": "object",
+      "properties": {
+        "secrets_detected": { "type": "boolean" },
+        "debug_code_detected": { "type": "boolean" },
+        "todo_markers_introduced": { "type": "boolean" },
+        "issues": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "commit_check": {
+      "type": "object",
+      "properties": {
+        "all_reference_ticket": { "type": "boolean" },
+        "conventional_format": { "type": "boolean" },
+        "issues": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

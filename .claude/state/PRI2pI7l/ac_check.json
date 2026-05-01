@@ -1,0 +1,136 @@
+{
+  "ticket_id": "PRI2pI7l",
+  "verdict": "clear",
+  "requires_ui_work": true,
+  "criteria": [
+    {
+      "id": "AC-1",
+      "text": "Reaction write endpoint keyed by (viewer DID, post URI); emoji in {heart, fire, eyes, joy}; 2xx on success.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-2",
+      "text": "Change/remove: new emoji replaces prior; tapping selected emoji removes it. One reaction per viewer per post.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-3",
+      "text": "Independent of Like — no cross-triggering in either direction.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-4",
+      "text": "Native long-press >=400ms on post body opens bar; release on emoji selects; off-target release dismisses.",
+      "testable": true,
+      "issues": ["Clarify whether 'post body' includes embedded media (images, link cards, quote embeds) or only text/metadata — affects gesture conflict with existing image viewer / link open gestures."]
+    },
+    {
+      "id": "AC-5",
+      "text": "Light-impact haptic on each successful native selection, respecting system prefs.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-6",
+      "text": "Web hover >=200ms reveals a React button; click opens popover; outside click / Escape dismisses.",
+      "testable": true,
+      "issues": ["Touch-capable web (iPad, touch laptops) has no true hover — specify fallback (always-visible button, or long-press parity)."]
+    },
+    {
+      "id": "AC-7",
+      "text": "Web keyboard: Tab to React button, Enter/Space opens popover with focus on first emoji, arrows move, Enter selects, Escape closes.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-8",
+      "text": "Surface scope: PostFeedItem and thread post components only. NOT on quote embeds, search previews, notification items, feed-generator previews.",
+      "testable": true,
+      "issues": ["PostFeedItem verified at src/view/com/posts/PostFeedItem.tsx; exact thread-post component ID should be pinned during arch planning."]
+    },
+    {
+      "id": "AC-9",
+      "text": "Viewer's chosen emoji renders as a chip inline with post controls; persists across restarts and devices for the account.",
+      "testable": true,
+      "issues": ["Cross-device persistence implies server-side storage keyed by DID (confirmed by AC-1 endpoint); local cache alone is insufficient."]
+    },
+    {
+      "id": "AC-10",
+      "text": "No aggregate counts, no other-users reactions, no reacted-by viewer in v0.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-11",
+      "text": "A11y: 'React to post' accessibility action opens an accessible picker with localized emoji labels.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-12",
+      "text": "Reduced-motion: instant opacity fade only; no scale/translate animation.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-13",
+      "text": "All emoji labels pass through Lingui; no hard-coded English.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-14",
+      "text": "RTL: emoji order + popover anchor mirror horizontally.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-15",
+      "text": "Feature-flag gate 'quick_reactions_v0', default OFF. When OFF: no bar/button/a11y action/network call on any surface. Runtime flip enables without reinstall.",
+      "testable": true,
+      "issues": ["Codebase search shows no established feature-flag primitive in use (only a Statsig logging reference in src/state/session/logging.ts). Arch planning must choose/introduce a gating mechanism."]
+    },
+    {
+      "id": "AC-16",
+      "text": "Optimistic chip update within 100ms; on failure or offline, revert + non-blocking 'Couldn't save reaction' toast, no retry loop.",
+      "testable": true,
+      "issues": []
+    },
+    {
+      "id": "AC-17",
+      "text": "Rate limit: multiple selections within 2s on the same post debounce to one request for the final selection.",
+      "testable": true,
+      "issues": ["Specify trailing-only debounce vs. leading+trailing. Trailing-only assumed."]
+    },
+    {
+      "id": "AC-18",
+      "text": "Analytics on (a) bar open, (b) emoji select, (c) reaction remove with: post URI hash, emoji code, surface, platform, flag variant.",
+      "testable": true,
+      "issues": ["Specify post URI hash algorithm (e.g., SHA-256 truncated to 16 chars) for privacy-preserving analytics."]
+    }
+  ],
+  "questions": [
+    "AC-4: Does 'post body' include embedded media (images, link cards, quote embeds), or just the text/metadata area? Affects conflict with existing image viewer and link gestures.",
+    "AC-6: On touch-capable web (iPad, touch laptops) hover is unreliable — should the React button be always-visible on touch, or should long-press parity apply?",
+    "AC-15: Which feature-flag system hosts 'quick_reactions_v0'? Codebase has no established flag primitive today.",
+    "AC-17: Is the 2s debounce trailing-only, or leading+trailing?",
+    "AC-18: Which hash function/length for the post URI is acceptable for analytics?",
+    "AC-9: Cross-device persistence — is this a new Bluesky-owned service (since atproto lexicon is explicitly out of scope), or a scoped reuse of existing infra?"
+  ],
+  "questions_for_reporter": [
+    "AC-4: Does 'post body' include embedded media (images, link cards, quote embeds), or just the text/metadata area?",
+    "AC-6: Touch-web hover fallback — always-visible React button, or long-press parity?",
+    "AC-15: Which feature-flag system hosts 'quick_reactions_v0'?",
+    "AC-17: Trailing-only debounce or leading+trailing?",
+    "AC-18: Which hash function / length for post URI in analytics?",
+    "AC-9: Cross-device persistence backend — given atproto lexicon is out of scope, which service owns reaction storage?"
+  ],
+  "testable_ac": [
+    "AC-1", "AC-2", "AC-3", "AC-4", "AC-5", "AC-6", "AC-7", "AC-8", "AC-9",
+    "AC-10", "AC-11", "AC-12", "AC-13", "AC-14", "AC-15", "AC-16", "AC-17", "AC-18"
+  ],
+  "summary": "All 18 AC are observable, bounded, and testable. Six soft clarifications captured (gesture target area, touch-web hover fallback, flag infrastructure choice, debounce semantics, URI hash algorithm, cross-device storage backend). No planning blockers."
+}

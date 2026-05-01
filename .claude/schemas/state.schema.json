@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Ticket Execution State",
+  "description": "Tracks the current state of a ticket through the agentic workflow. Persisted at .claude/state/<ticket-id>/state.json",
+  "type": "object",
+  "required": ["ticket_id", "phase", "retry_count", "trace_id", "started_at", "artifacts"],
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "description": "The ticket identifier (e.g., CARD-abc123, #42)"
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "INTAKE",
+        "AC_VERIFY",
+        "REQUIREMENTS",
+        "PLANNING",
+        "AWAITING_APPROVAL",
+        "EXECUTING",
+        "VERIFYING",
+        "MERGING",
+        "DONE",
+        "FAIL_RETRY",
+        "FAIL_ESCALATE",
+        "ESCALATED"
+      ],
+      "description": "Current phase of the state machine"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    },
+    "max_retries": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 2
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Root trace ID for observability correlation"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "base_branch": {
+      "type": "string",
+      "default": "main"
+    },
+    "feature_branch": {
+      "type": "string",
+      "description": "The created feature branch name (agent/<ticket-id>)"
+    },
+    "pr_url": {
+      "type": "string"
+    },
+    "last_verdict": {
+      "type": ["string", "null"],
+      "enum": ["PASS", "FAIL_RETRY", "FAIL_ESCALATE", null],
+      "default": null
+    },
+    "last_failure_tier": {
+      "type": ["integer", "null"],
+      "enum": [1, 2, 3, 4, null],
+      "default": null
+    },
+    "last_failure_hint": {
+      "type": ["string", "null"],
+      "enum": ["fix_implementation", "reconsider_approach", null],
+      "default": null
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "ticket": { "type": "string" },
+        "ac_check": { "type": "string" },
+        "requirements": { "type": "string" },
+        "plan": { "type": "string" },
+        "execution_log": { "type": "string" },
+        "verification": { "type": "string" },
+        "telemetry": { "type": "string" }
+      }
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "auto_approve": { "type": "boolean", "default": false },
+        "skip_smoke": { "type": "boolean", "default": false },
+        "skip_ui_tests": { "type": "boolean", "default": false },
+        "max_retries": { "type": "integer", "default": 2 }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "total_tokens": { "type": "integer", "default": 0 },
+        "total_tool_calls": { "type": "integer", "default": 0 },
+        "total_duration_ms": { "type": "integer", "default": 0 }
+      }
+    }
+  }
+}

@@ -1,0 +1,277 @@
+#!/usr/bin/env bash
+# Telemetry Append Hook (post-tool-use)
+# Appends a telemetry event after each tool call during active ticket execution.
+#
+# Enhanced to capture:
+# - Skill/subagent names from Task tool invocations
+# - Tool input details (file paths for Edit/Write/Read, command snippets for Bash)
+# - Span tracking for subagent start/end via a tracking file
+# - Duration estimation via timestamp deltas
+#
+# Always exits 0 (telemetry failure should never block execution).
+
+set -uo pipefail
+
+INPUT=$(cat)
+
+# Resolve project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
+# Find active state directory
+STATE_DIR=""
+TICKET_ID=""
+TRACE_ID=""
+PHASE=""
+
+for state_file in "$PROJECT_ROOT"/.claude/state/*/state.json; do
+  if [[ -f "$state_file" ]]; then
+    CURRENT_PHASE=$(jq -r '.phase // empty' "$state_file" 2>/dev/null || true)
+    if [[ "$CURRENT_PHASE" == "EXECUTING" || "$CURRENT_PHASE" == "VERIFYING" || "$CURRENT_PHASE" == "PLANNING" || "$CURRENT_PHASE" == "INTAKE" || "$CURRENT_PHASE" == "AC_VERIFY" || "$CURRENT_PHASE" == "REQUIREMENTS" || "$CURRENT_PHASE" == "MERGING" ]]; then
+      STATE_DIR=$(dirname "$state_file")
+      TICKET_ID=$(jq -r '.ticket_id // empty' "$state_file" 2>/dev/null || true)
+      TRACE_ID=$(jq -r '.trace_id // empty' "$state_file" 2>/dev/null || true)
+      PHASE="$CURRENT_PHASE"
+      break
+    fi
+  fi
+done
+
+# If no active execution, skip telemetry
+if [[ -z "$STATE_DIR" ]]; then
+  exit 0
+fi
+
+TELEMETRY_FILE="$STATE_DIR/telemetry.jsonl"
+SPAN_TRACKER="$STATE_DIR/.active_spans.json"
+
+# Extract tool info from hook input
+TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // "unknown"' 2>/dev/null || echo "unknown")
+
+TOOL_SUCCESS_RAW=$(echo "$INPUT" | jq -r '.tool_response.success // empty' 2>/dev/null || true)
+if [[ "$TOOL_SUCCESS_RAW" == "false" ]]; then
+  TOOL_SUCCESS="false"
+else
+  TOOL_SUCCESS="true"
+fi
+
+# Build telemetry event
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+SPAN_ID=$(uuidgen 2>/dev/null || echo "span-$(date +%s)-$$")
+EPOCH_MS=$(python3 -c "import time; print(int(time.time()*1000))" 2>/dev/null || echo "0")
+
+# ─── Extract tool-specific context ──────────────────────────
+
+TOOL_FILE=""
+TOOL_COMMAND_SNIPPET=""
+SKILL_NAME=""
+SUBAGENT_TYPE=""
+TASK_DESCRIPTION=""
+
+case "$TOOL_NAME" in
+  Edit|Write|NotebookEdit)
+    TOOL_FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' 2>/dev/null || true)
+    ;;
+  Read)
+    TOOL_FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null || true)
+    ;;
+  Glob)
+    TOOL_FILE=$(echo "$INPUT" | jq -r '.tool_input.pattern // empty' 2>/dev/null || true)
+    ;;
+  Grep)
+    TOOL_FILE=$(echo "$INPUT" | jq -r '.tool_input.pattern // empty' 2>/dev/null || true)
+    ;;
+  Bash)
+    TOOL_COMMAND_SNIPPET=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null | head -c 120 || true)
+    ;;
+  Task)
+    SUBAGENT_TYPE=$(echo "$INPUT" | jq -r '.tool_input.subagent_type // empty' 2>/dev/null || true)
+    TASK_DESCRIPTION=$(echo "$INPUT" | jq -r '.tool_input.description // empty' 2>/dev/null || true)
+    TASK_PROMPT=$(echo "$INPUT" | jq -r '.tool_input.prompt // empty' 2>/dev/null || true)
+
+    # Match subagent type to skill name
+    case "$SUBAGENT_TYPE" in
+      coordinator|product-owner|designer|architect|rn-executor|qa|ticket-manager)
+        SKILL_NAME="$SUBAGENT_TYPE"
+        ;;
+      *)
+        # Fallback: keyword-detect skill/subagent from prompt content
+        if echo "$TASK_PROMPT" | grep -qi "coordinator\|state machine\|phase transition" 2>/dev/null; then
+          SKILL_NAME="coordinator"
+        elif echo "$TASK_PROMPT" | grep -qi "product-owner\|product owner\|feature spec\|acceptance criteria.*rubric" 2>/dev/null; then
+          SKILL_NAME="product-owner"
+        elif echo "$TASK_PROMPT" | grep -qi "designer\|ux spec\|user journey\|accessibility spec" 2>/dev/null; then
+          SKILL_NAME="designer"
+        elif echo "$TASK_PROMPT" | grep -qi "architect\|adr\|architecture decision\|files_allowlist\|test spec" 2>/dev/null; then
+          SKILL_NAME="architect"
+        elif echo "$TASK_PROMPT" | grep -qi "rn-executor\|executor skill\|executor subagent" 2>/dev/null; then
+          SKILL_NAME="rn-executor"
+        elif echo "$TASK_PROMPT" | grep -qi "\bqa\b\|qa pyramid\|verification pyramid\|quality checks" 2>/dev/null; then
+          SKILL_NAME="qa"
+        elif echo "$TASK_PROMPT" | grep -qi "ticket-manager\|ticket manager\|fetch ticket" 2>/dev/null; then
+          SKILL_NAME="ticket-manager"
+        elif echo "$TASK_PROMPT" | grep -qi "git-workflow\|git workflow\|create branch\|create pr\|push branch" 2>/dev/null; then
+          SKILL_NAME="git-workflow"
+        elif echo "$TASK_PROMPT" | grep -qi "rn-build\|yarn build\|expo build\|yarn start" 2>/dev/null; then
+          SKILL_NAME="rn-build"
+        elif echo "$TASK_PROMPT" | grep -qi "rn-testing\|jest\|yarn test\|test plan" 2>/dev/null; then
+          SKILL_NAME="rn-testing"
+        elif echo "$TASK_PROMPT" | grep -qi "codebase-navigation\|codebase navigation\|search.*code" 2>/dev/null; then
+          SKILL_NAME="codebase-navigation"
+        elif [[ -n "$SUBAGENT_TYPE" && "$SUBAGENT_TYPE" != "general-purpose" ]]; then
+          SKILL_NAME="$SUBAGENT_TYPE"
+        elif [[ -n "$TASK_DESCRIPTION" ]]; then
+          SKILL_NAME="task:$TASK_DESCRIPTION"
+        fi
+        ;;
+    esac
+    ;;
+  Skill)
+    SKILL_NAME=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null || true)
+    ;;
+esac
+
+# ─── Compute duration from last event ──────────────────────
+
+DURATION_MS=0
+if [[ -f "$TELEMETRY_FILE" ]]; then
+  LAST_EPOCH=$(tail -1 "$TELEMETRY_FILE" 2>/dev/null | jq -r '.epoch_ms // empty' 2>/dev/null || true)
+  if [[ -n "$LAST_EPOCH" && "$LAST_EPOCH" != "0" && "$EPOCH_MS" != "0" ]]; then
+    DURATION_MS=$(( EPOCH_MS - LAST_EPOCH ))
+    if [[ "$DURATION_MS" -lt 0 || "$DURATION_MS" -gt 1800000 ]]; then
+      DURATION_MS=0
+    fi
+  fi
+fi
+
+# ─── Handle Task tool span tracking ────────────────────────
+
+if [[ "$TOOL_NAME" == "Task" || "$TOOL_NAME" == "Skill" ]]; then
+  EFFECTIVE_SKILL="${SKILL_NAME:-unknown}"
+
+  ACTIVE_SPAN_ID=""
+  SPAN_START_EPOCH="0"
+  if [[ -f "$SPAN_TRACKER" ]]; then
+    ACTIVE_SPAN_ID=$(jq -r --arg skill "$EFFECTIVE_SKILL" '.[$skill].span_id // empty' "$SPAN_TRACKER" 2>/dev/null || true)
+    SPAN_START_EPOCH=$(jq -r --arg skill "$EFFECTIVE_SKILL" '.[$skill].epoch_ms // "0"' "$SPAN_TRACKER" 2>/dev/null || true)
+  fi
+
+  if [[ -n "$ACTIVE_SPAN_ID" ]]; then
+    # span_end — the subagent has returned
+    SPAN_DURATION=0
+    if [[ "$SPAN_START_EPOCH" != "0" && "$EPOCH_MS" != "0" ]]; then
+      SPAN_DURATION=$(( EPOCH_MS - SPAN_START_EPOCH ))
+    fi
+
+    jq -n \
+      --arg ts "$TIMESTAMP" \
+      --arg trace "$TRACE_ID" \
+      --arg span "$ACTIVE_SPAN_ID" \
+      --arg ticket "$TICKET_ID" \
+      --arg phase "$PHASE" \
+      --arg skill "$EFFECTIVE_SKILL" \
+      --arg subtype "${SUBAGENT_TYPE:-}" \
+      --argjson success "$TOOL_SUCCESS" \
+      --argjson duration "$SPAN_DURATION" \
+      --argjson epoch "$EPOCH_MS" \
+      '{
+        timestamp: $ts,
+        trace_id: $trace,
+        span_id: $span,
+        ticket_id: $ticket,
+        phase: $phase,
+        event_type: "span_end",
+        epoch_ms: $epoch,
+        attributes: {
+          operation: ("skill:" + $skill),
+          skill: $skill,
+          subagent_type: $subtype,
+          result: (if $success then "pass" else "fail" end),
+          duration_ms: $duration,
+          success: $success
+        }
+      }' >> "$TELEMETRY_FILE" 2>/dev/null || true
+
+    jq --arg skill "$EFFECTIVE_SKILL" 'del(.[$skill])' "$SPAN_TRACKER" > "$SPAN_TRACKER.tmp" 2>/dev/null && \
+      mv "$SPAN_TRACKER.tmp" "$SPAN_TRACKER" 2>/dev/null || true
+  else
+    # span_start — a new subagent invocation
+    jq -n \
+      --arg ts "$TIMESTAMP" \
+      --arg trace "$TRACE_ID" \
+      --arg span "$SPAN_ID" \
+      --arg ticket "$TICKET_ID" \
+      --arg phase "$PHASE" \
+      --arg skill "$EFFECTIVE_SKILL" \
+      --arg subtype "${SUBAGENT_TYPE:-}" \
+      --arg desc "${TASK_DESCRIPTION:-}" \
+      --argjson epoch "$EPOCH_MS" \
+      '{
+        timestamp: $ts,
+        trace_id: $trace,
+        span_id: $span,
+        ticket_id: $ticket,
+        phase: $phase,
+        event_type: "span_start",
+        epoch_ms: $epoch,
+        attributes: {
+          operation: ("skill:" + $skill),
+          skill: $skill,
+          subagent_type: $subtype,
+          description: $desc
+        }
+      }' >> "$TELEMETRY_FILE" 2>/dev/null || true
+
+    if [[ ! -f "$SPAN_TRACKER" ]]; then
+      echo '{}' > "$SPAN_TRACKER" 2>/dev/null || true
+    fi
+    jq --arg skill "$EFFECTIVE_SKILL" --arg span "$SPAN_ID" --argjson epoch "$EPOCH_MS" \
+      '.[$skill] = {"span_id": $span, "epoch_ms": $epoch}' \
+      "$SPAN_TRACKER" > "$SPAN_TRACKER.tmp" 2>/dev/null && \
+      mv "$SPAN_TRACKER.tmp" "$SPAN_TRACKER" 2>/dev/null || true
+  fi
+fi
+
+# ─── Build and emit tool_call event ─────────────────────────
+
+ATTR_JSON=$(jq -n \
+  --arg tool "$TOOL_NAME" \
+  --argjson success "$TOOL_SUCCESS" \
+  --argjson duration "$DURATION_MS" \
+  --arg file "${TOOL_FILE:-}" \
+  --arg command "${TOOL_COMMAND_SNIPPET:-}" \
+  --arg skill "${SKILL_NAME:-}" \
+  --arg subtype "${SUBAGENT_TYPE:-}" \
+  --arg desc "${TASK_DESCRIPTION:-}" \
+  '{
+    tool: $tool,
+    success: $success,
+    duration_ms: $duration
+  }
+  + (if $file != "" then {file: $file} else {} end)
+  + (if $command != "" then {command_snippet: $command} else {} end)
+  + (if $skill != "" then {skill: $skill} else {} end)
+  + (if $subtype != "" then {subagent_type: $subtype} else {} end)
+  + (if $desc != "" then {description: $desc} else {} end)
+' 2>/dev/null || echo '{"tool":"'"$TOOL_NAME"'","success":'"$TOOL_SUCCESS"'}')
+
+jq -n \
+  --arg ts "$TIMESTAMP" \
+  --arg trace "$TRACE_ID" \
+  --arg span "$SPAN_ID" \
+  --arg ticket "$TICKET_ID" \
+  --arg phase "$PHASE" \
+  --argjson epoch "$EPOCH_MS" \
+  --argjson attrs "$ATTR_JSON" \
+  '{
+    timestamp: $ts,
+    trace_id: $trace,
+    span_id: $span,
+    ticket_id: $ticket,
+    phase: $phase,
+    event_type: "tool_call",
+    epoch_ms: $epoch,
+    attributes: $attrs
+  }' >> "$TELEMETRY_FILE" 2>/dev/null || true
+
+exit 0
