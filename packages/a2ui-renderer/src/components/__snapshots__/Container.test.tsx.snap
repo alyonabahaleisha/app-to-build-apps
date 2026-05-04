@@ -1,0 +1,221 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContainerRenderer — snapshots snapshot: column + end + md padding + lg gap 1`] = `
+<View
+  style={
+    {
+      "alignItems": "flex-end",
+      "flexDirection": "column",
+      "gap": 24,
+      "justifyContent": undefined,
+      "padding": 16,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      [
+        {
+          "fontSize": 28,
+          "fontWeight": "700",
+        },
+        {
+          "color": "#0a0a0b",
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    Hi
+  </Text>
+</View>
+`;
+
+exports[`ContainerRenderer — snapshots snapshot: column + stretch + sm padding + sm gap 1`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+      "gap": 8,
+      "justifyContent": undefined,
+      "padding": 8,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      [
+        {
+          "fontSize": 28,
+          "fontWeight": "700",
+        },
+        {
+          "color": "#0a0a0b",
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    Hi
+  </Text>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "400",
+        },
+        {
+          "color": "#0a0a0b",
+        },
+      ]
+    }
+  >
+    body
+  </Text>
+</View>
+`;
+
+exports[`ContainerRenderer — snapshots snapshot: row + between (justify) + md padding 1`] = `
+<View
+  style={
+    {
+      "alignItems": undefined,
+      "flexDirection": "row",
+      "gap": 0,
+      "justifyContent": "space-between",
+      "padding": 16,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      [
+        {
+          "fontSize": 28,
+          "fontWeight": "700",
+        },
+        {
+          "color": "#0a0a0b",
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    Hi
+  </Text>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "400",
+        },
+        {
+          "color": "#0a0a0b",
+        },
+      ]
+    }
+  >
+    body
+  </Text>
+</View>
+`;
+
+exports[`ContainerRenderer — snapshots snapshot: row + center + lg padding + md gap 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": undefined,
+      "padding": 24,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      [
+        {
+          "fontSize": 28,
+          "fontWeight": "700",
+        },
+        {
+          "color": "#0a0a0b",
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    Hi
+  </Text>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "400",
+        },
+        {
+          "color": "#0a0a0b",
+        },
+      ]
+    }
+  >
+    body
+  </Text>
+</View>
+`;
+
+exports[`ContainerRenderer — snapshots snapshot: row + start + none padding + none gap 1`] = `
+<View
+  style={
+    {
+      "alignItems": "flex-start",
+      "flexDirection": "row",
+      "gap": 0,
+      "justifyContent": undefined,
+      "padding": 0,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      [
+        {
+          "fontSize": 28,
+          "fontWeight": "700",
+        },
+        {
+          "color": "#0a0a0b",
+          "paddingTop": 24,
+        },
+      ]
+    }
+  >
+    Hi
+  </Text>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "400",
+        },
+        {
+          "color": "#0a0a0b",
+        },
+      ]
+    }
+  >
+    body
+  </Text>
+</View>
+`;

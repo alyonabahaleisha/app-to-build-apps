@@ -1,5 +1,11 @@
 import {z} from 'zod'
 
+// Re-export canonicalization helpers so server-side consumers using Node CJS
+// resolution can import them via the package's main entry rather than the
+// `./canonical` subpath export (which only resolves under bundler/node16+).
+// The canonical module itself remains the source of truth.
+export {canonicalize, renderHash} from './canonical.js'
+
 export const A2UI_VERSION = 1 as const
 
 const A2UIValueSchema = z.union([z.string(), z.number(), z.boolean(), z.null()])

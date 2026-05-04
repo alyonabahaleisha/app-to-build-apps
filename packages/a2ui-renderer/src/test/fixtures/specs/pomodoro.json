@@ -1,0 +1,194 @@
+{
+  "views": [
+    {
+      "id": "main",
+      "root": {
+        "gap": "lg",
+        "type": "Container",
+        "align": "center",
+        "padding": "lg",
+        "children": [
+          {
+            "text": "\ud83c\udf45 Pomodoro Timer",
+            "type": "Heading",
+            "level": 1
+          },
+          {
+            "gap": "sm",
+            "type": "Container",
+            "align": "center",
+            "children": [
+              {
+                "text": "FOCUS SESSION",
+                "type": "Text",
+                "color": "muted",
+                "weight": "bold"
+              },
+              {
+                "text": "25:00",
+                "type": "Heading",
+                "level": 1
+              },
+              {
+                "text": "Stay focused. Your next break is coming.",
+                "type": "Text",
+                "color": "muted"
+              }
+            ],
+            "direction": "column"
+          },
+          {
+            "gap": "md",
+            "type": "Container",
+            "justify": "center",
+            "children": [
+              {
+                "type": "Button",
+                "label": "\u25b6 Start",
+                "action": {
+                  "type": "toast",
+                  "message": "Timer started! Stay focused for 25 minutes. \ud83c\udf45"
+                },
+                "variant": "primary"
+              },
+              {
+                "type": "Button",
+                "label": "\u23f8 Pause",
+                "action": {
+                  "type": "toast",
+                  "message": "Timer paused. Resume when you're ready!"
+                },
+                "variant": "secondary"
+              },
+              {
+                "type": "Button",
+                "label": "\u21ba Reset",
+                "action": {
+                  "type": "toast",
+                  "message": "Timer reset to 25:00."
+                },
+                "variant": "destructive"
+              }
+            ],
+            "direction": "row"
+          },
+          {
+            "gap": "sm",
+            "type": "Container",
+            "align": "center",
+            "children": [
+              {
+                "text": "COMPLETED SESSIONS",
+                "type": "Text",
+                "color": "muted",
+                "weight": "bold"
+              },
+              {
+                "id": "sessions",
+                "min": 0,
+                "type": "Counter",
+                "label": "Pomodoro Sessions"
+              }
+            ],
+            "direction": "column"
+          },
+          {
+            "gap": "md",
+            "type": "Container",
+            "justify": "center",
+            "children": [
+              {
+                "type": "Button",
+                "label": "\u2705 Complete Session",
+                "action": {
+                  "by": 1,
+                  "type": "increment",
+                  "targetId": "sessions"
+                },
+                "variant": "secondary"
+              },
+              {
+                "type": "Button",
+                "label": "\u2699 Settings",
+                "action": {
+                  "type": "navigate",
+                  "viewId": "settings"
+                },
+                "variant": "secondary"
+              }
+            ],
+            "direction": "row"
+          }
+        ],
+        "direction": "column"
+      }
+    },
+    {
+      "id": "settings",
+      "root": {
+        "gap": "lg",
+        "type": "Container",
+        "padding": "lg",
+        "children": [
+          {
+            "text": "Timer Settings",
+            "type": "Heading",
+            "level": 1
+          },
+          {
+            "text": "Customize your Pomodoro experience.",
+            "type": "Text",
+            "color": "muted"
+          },
+          {
+            "id": "focusDuration",
+            "max": 60,
+            "min": 1,
+            "step": 1,
+            "type": "Counter",
+            "label": "Focus Duration (minutes)"
+          },
+          {
+            "id": "breakDuration",
+            "max": 30,
+            "min": 1,
+            "step": 1,
+            "type": "Counter",
+            "label": "Short Break Duration (minutes)"
+          },
+          {
+            "id": "autoStart",
+            "type": "Toggle",
+            "label": "Auto-start next session",
+            "defaultValue": false
+          },
+          {
+            "id": "soundEnabled",
+            "type": "Toggle",
+            "label": "Enable sound notifications",
+            "defaultValue": true
+          },
+          {
+            "type": "Button",
+            "label": "\u2190 Back to Timer",
+            "action": {
+              "type": "navigate",
+              "viewId": "main"
+            },
+            "variant": "secondary"
+          }
+        ],
+        "direction": "column"
+      }
+    }
+  ],
+  "version": 1,
+  "initialState": {
+    "sessions": 0,
+    "autoStart": false,
+    "soundEnabled": true,
+    "breakDuration": 5,
+    "focusDuration": 25
+  },
+  "initialViewId": "main"
+}

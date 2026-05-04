@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HeadingRenderer — snapshots snapshot: level 1 1`] = `
+<Text
+  accessibilityRole="header"
+  style={
+    [
+      {
+        "fontSize": 28,
+        "fontWeight": "700",
+      },
+      {
+        "color": "#0a0a0b",
+        "paddingTop": 24,
+      },
+    ]
+  }
+>
+  Level One
+</Text>
+`;
+
+exports[`HeadingRenderer — snapshots snapshot: level 2 1`] = `
+<Text
+  accessibilityRole="header"
+  style={
+    [
+      {
+        "fontSize": 22,
+        "fontWeight": "700",
+      },
+      {
+        "color": "#0a0a0b",
+        "paddingTop": 16,
+      },
+    ]
+  }
+>
+  Level Two
+</Text>
+`;
+
+exports[`HeadingRenderer — snapshots snapshot: level 3 1`] = `
+<Text
+  accessibilityRole="header"
+  style={
+    [
+      {
+        "fontSize": 18,
+        "fontWeight": "600",
+      },
+      {
+        "color": "#0a0a0b",
+        "paddingTop": 8,
+      },
+    ]
+  }
+>
+  Level Three
+</Text>
+`;

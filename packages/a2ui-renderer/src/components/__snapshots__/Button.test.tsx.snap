@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonRenderer — T-0003-066a: snapshot primary snapshot: Button primary + label 1`] = `
+<View
+  accessibilityLabel="Primary Action"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 20,
+        "paddingVertical": 12,
+      },
+      {
+        "backgroundColor": "#4f46e5",
+        "borderColor": "transparent",
+        "borderRadius": 10,
+        "borderWidth": 0,
+      },
+      false,
+    ]
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "600",
+        },
+        {
+          "color": "#ffffff",
+        },
+      ]
+    }
+  >
+    Primary Action
+  </Text>
+</View>
+`;
+
+exports[`ButtonRenderer — T-0003-066b: snapshot secondary snapshot: Button secondary + label 1`] = `
+<View
+  accessibilityLabel="Secondary Action"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 20,
+        "paddingVertical": 12,
+      },
+      {
+        "backgroundColor": "#f6f7f9",
+        "borderColor": "#e6e8eb",
+        "borderRadius": 10,
+        "borderWidth": 0.5,
+      },
+      false,
+    ]
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "600",
+        },
+        {
+          "color": "#0a0a0b",
+        },
+      ]
+    }
+  >
+    Secondary Action
+  </Text>
+</View>
+`;
+
+exports[`ButtonRenderer — T-0003-067: snapshot destructive snapshot: Button destructive + label 1`] = `
+<View
+  accessibilityLabel="Delete"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    [
+      {
+        "alignItems": "center",
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 20,
+        "paddingVertical": 12,
+      },
+      {
+        "backgroundColor": "#dc2626",
+        "borderColor": "transparent",
+        "borderRadius": 10,
+        "borderWidth": 0,
+      },
+      false,
+    ]
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "fontSize": 16,
+          "fontWeight": "600",
+        },
+        {
+          "color": "#ffffff",
+        },
+      ]
+    }
+  >
+    Delete
+  </Text>
+</View>
+`;

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageRenderer — snapshots snapshot: with aspectRatio + alt 1`] = `
+<Image
+  accessibilityLabel="A scenic view"
+  onError={[Function]}
+  source={
+    {
+      "uri": "https://example.com/photo.png",
+    }
+  }
+  style={
+    {
+      "aspectRatio": 1.7777777777777777,
+      "borderRadius": 10,
+      "width": "100%",
+    }
+  }
+/>
+`;
+
+exports[`ImageRenderer — snapshots snapshot: without aspectRatio (letterbox fallback) 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#f6f7f9",
+      "borderRadius": 10,
+      "maxHeight": 240,
+      "overflow": "hidden",
+    }
+  }
+>
+  <Image
+    onError={[Function]}
+    source={
+      {
+        "uri": "https://example.com/banner.png",
+      }
+    }
+    style={
+      {
+        "height": 240,
+        "resizeMode": "contain",
+        "width": "100%",
+      }
+    }
+  />
+</View>
+`;

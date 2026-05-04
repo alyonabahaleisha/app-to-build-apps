@@ -1,0 +1,429 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormRenderer — T-0003-104a: snapshot with fields and submit snapshot: Form with TextInput + Toggle + Counter + submit 1`] = `
+<View
+  style={
+    {
+      "gap": 16,
+    }
+  }
+>
+  <View>
+    <Text
+      style={
+        [
+          {
+            "fontSize": 14,
+            "fontWeight": "400",
+          },
+          {
+            "color": "#5e6470",
+          },
+        ]
+      }
+    >
+      Title
+    </Text>
+    <TextInput
+      accessibilityLabel="Title"
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholder="Enter title"
+      placeholderTextColor="#5e6470"
+      style={
+        [
+          {
+            "borderWidth": 0.5,
+            "paddingHorizontal": 14,
+            "paddingVertical": 12,
+          },
+          {
+            "borderColor": "#e6e8eb",
+            "borderRadius": 10,
+            "color": "#0a0a0b",
+            "fontSize": 16,
+            "fontWeight": "400",
+          },
+        ]
+      }
+      value=""
+    />
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "fontSize": 16,
+            "fontWeight": "400",
+          },
+          {
+            "color": "#0a0a0b",
+            "flex": 1,
+          },
+        ]
+      }
+    >
+      Notifications
+    </Text>
+    <RCTSwitch
+      accessibilityLabel="Notifications"
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#4f46e5"
+      style={
+        {
+          "height": 31,
+          "width": 51,
+        }
+      }
+      tintColor="#c7ccd1"
+      value={false}
+    />
+  </View>
+  <View
+    accessibilityActions={
+      [
+        {
+          "name": "increment",
+        },
+        {
+          "name": "decrement",
+        },
+      ]
+    }
+    accessibilityLabel="Quantity, current value 0"
+    onAccessibilityAction={[Function]}
+  >
+    <Text
+      style={
+        [
+          {
+            "fontSize": 14,
+            "fontWeight": "400",
+          },
+          {
+            "color": "#5e6470",
+          },
+        ]
+      }
+    >
+      Quantity
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+        }
+      }
+    >
+      <View
+        accessibilityLabel="Decrease Quantity"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": true,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "alignItems": "center",
+              "height": 44,
+              "justifyContent": "center",
+              "width": 44,
+            },
+            {
+              "backgroundColor": "#f6f7f9",
+              "borderColor": "#e6e8eb",
+              "borderWidth": 0.5,
+            },
+            {
+              "borderRadius": 10,
+            },
+            false,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 16,
+                "fontWeight": "600",
+              },
+              {
+                "color": "#5e6470",
+              },
+            ]
+          }
+        >
+          −
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+            "minWidth": 60,
+          }
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 18,
+                "fontWeight": "600",
+              },
+              {
+                "color": "#0a0a0b",
+                "textAlign": "center",
+              },
+            ]
+          }
+        >
+          0
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Increase Quantity"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": false,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          [
+            {
+              "alignItems": "center",
+              "height": 44,
+              "justifyContent": "center",
+              "width": 44,
+            },
+            {
+              "backgroundColor": "#f6f7f9",
+              "borderColor": "#e6e8eb",
+              "borderWidth": 0.5,
+            },
+            {
+              "borderRadius": 10,
+            },
+            false,
+            false,
+          ]
+        }
+      >
+        <Text
+          style={
+            [
+              {
+                "fontSize": 16,
+                "fontWeight": "600",
+              },
+              {
+                "color": "#0a0a0b",
+              },
+            ]
+          }
+        >
+          +
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignSelf": "stretch",
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Save"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        [
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+            "minHeight": 44,
+            "paddingHorizontal": 20,
+            "paddingVertical": 12,
+          },
+          {
+            "backgroundColor": "#4f46e5",
+            "borderColor": "transparent",
+            "borderRadius": 10,
+            "borderWidth": 0,
+          },
+          false,
+        ]
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontSize": 16,
+              "fontWeight": "600",
+            },
+            {
+              "color": "#ffffff",
+            },
+          ]
+        }
+      >
+        Save
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`FormRenderer — T-0003-104b: snapshot with no submit snapshot: Form with no submit (submitLabel undefined) 1`] = `
+<View
+  style={
+    {
+      "gap": 16,
+    }
+  }
+>
+  <View>
+    <Text
+      style={
+        [
+          {
+            "fontSize": 14,
+            "fontWeight": "400",
+          },
+          {
+            "color": "#5e6470",
+          },
+        ]
+      }
+    >
+      Note
+    </Text>
+    <TextInput
+      accessibilityLabel="Note"
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholderTextColor="#5e6470"
+      style={
+        [
+          {
+            "borderWidth": 0.5,
+            "paddingHorizontal": 14,
+            "paddingVertical": 12,
+          },
+          {
+            "borderColor": "#e6e8eb",
+            "borderRadius": 10,
+            "color": "#0a0a0b",
+            "fontSize": 16,
+            "fontWeight": "400",
+          },
+        ]
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
