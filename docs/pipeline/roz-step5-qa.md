@@ -1,0 +1,117 @@
+## QA Report — Step 5 of ADR-0001
+*Reviewed by Roz, 2026-05-01*
+
+### Verdict: PASS
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Type Check | PASS | `pnpm typecheck` — all 4 workspaces clean (api, a2ui-schema, a2ui-renderer, mobile). |
+| Lint | PASS | `pnpm lint` — eslint clean, no output. |
+| Tests | PASS | 24/24 mobile (Step 5 = 13 SessionProvider + 11 api/boundary) / 126/126 full sweep (97 server + 5 schema + 24 mobile). |
+| Mobile workspace runs (no longer passWithNoTests) | PASS | `passWithNoTests` removed from both `jest.config.js` and `package.json`. Two suites detected (`api.test.ts`, `SessionProvider.test.tsx`); 24 cases execute, 0 skipped. |
+| Flow polyfill fix sound | PASS | `babel.config.js:10` lists `@babel/preset-flow` after `babel-preset-expo`. `jest.config.js:12` `transformIgnorePatterns` covers both pnpm-flat-store (`\\.pnpm/...@react-native\\+[^/]+`) and standard layouts (`@react-native/.*`); `@react-native/js-polyfills` matches the standard branch and Flow is stripped. Empirical: tests run without `Unexpected token` failures. |
+| Coverage (proxy) | PASS | All 14 implementable Step 5 T-IDs (T-0001-085 N/A) map to a non-tautological assertion. AC trace below. |
+| Security | PASS | No hardcoded secrets. Only 2 `console.warn` call sites in Step 5 source (`SessionProvider.tsx:255` — `'secure-store clear failed'` literal, no token; `api.ts:161` — URL warning, no token). `EXPO_PUBLIC_SUPABASE_ANON_KEY` confirmed anon (per `.env.example:8` comment). No tokens in MMKV/AsyncStorage (zero matches under `state/`). Module-scoped `currentSession` in `api.ts:187` (not exported as global; only `setCurrentSession`/`getCurrentSession`/`resetApiForTests` seams). |
+| Steps 1-4 regression | PASS | server 97/97, schema 5/5, renderer 0/0 (still passWithNoTests by design). No drift. |
+
+### AC Coverage trace
+
+| AC (ADR §Step 5) | Test ID | Status |
+|---|---|---|
+| Cold start hydration → resolved within 500ms | T-0001-073 | PASS — `SessionProvider.test.tsx:187`. Warm-up render at :194 amortizes JIT, then timed render at :214 with `waitFor(..., {timeout: 600})` at :224 + `expect(elapsed).toBeLessThan(500)` at :233. Roz Round 2 N-1 satisfied. |
+| `redeemToken` stores token + calls `/auth/sync` + transitions to `'authenticated'` | T-0001-075 | PASS — `SessionProvider.test.tsx:248`; asserts `mockFetch` called once with `/auth/sync`, `Authorization: Bearer <token>` header, persisted snapshot via `secureStore.read()`, status='authenticated'. |
+| `signOut` deletes tokens + transitions to `'unauthenticated'` | T-0001-076, T-0001-081 | PASS — `:288` asserts state and post-signOut `apiFetch` rejects with `NotAuthenticatedError`; `:319` asserts `secureStore.read()` returns null for all 3 keys. |
+| `useSession()` is the only public read; secure-store import boundary | (boundary test) | PASS — `api.test.ts:68` greps `apps/mobile/src` for `expo-secure-store` imports; allowlist = `state/persisted/secure.ts` + the test file that mocks it. Violations → empty array. |
+| `apiFetch` injects Authorization when authenticated; rejects synchronously with `NotAuthenticatedError` when unauthenticated | T-0001-076 | PASS — `api.test.ts:175` calls `apiFetch('/projects')` with no session, asserts `NotAuthenticatedError` AND `fetchSpy` was never called (synchronous gate before network). |
+
+All 5 AC bullets covered.
+
+### Token-leak defense (T-0001-082 broadened, Roz Round 1 G-7)
+
+| Surface | Spied? | Substring check ≥10? | Vacuous-pass guard? |
+|---|---|---|---|
+| `console.{log,info,warn,error,debug}` | YES — `SessionProvider.test.tsx:105–110` and `api.test.ts:29–35` define `CONSOLE_METHODS = ['log','info','warn','error','debug']` and spy all 5 in `spyOnAllConsole()`. | YES — `assertNoTokenLeak` (`SessionProvider.test.tsx:127–142`, `api.test.ts:46–64`) slices the token into 10-char windows at 5-char stride and asserts `not.toContain` for each segment against every serialized call arg. Catches partial logging (e.g. signature-only). | NO — soft observation. The test does not assert "≥1 console call across the run." On the happy path neither `console.warn` site (`SessionProvider.tsx:255`, `api.ts:161`) fires (mock store doesn't throw; tests use `baseUrl` override that bypasses `getApiUrl()`), so the spy buffer can be empty and the assertion passes vacuously. The substring-window construction itself is sound; if a future regression starts logging, the spy WILL catch it. Recording for hardening; not blocking. |
+| Failure paths | YES — assertion runs in T-0001-076 (`:316`, signOut path), T-0001-078 (`:390`, /auth/sync 401), T-0001-133 (`:467`, refresh-failure path), and api.test.ts ApiError path (`:217`, non-2xx response with token attached). | YES — same window check. | Same as above. The 4 failure-path invocations exercise the most plausible leak surfaces (sync 401, refresh 401, signOut, ApiError). |
+
+Verdict: PASS for the spec'd scope. The hardening gap is the absence of a "spy was wired" sentinel call (e.g. `console.warn('canary'); expect(spy).toHaveBeenCalled()` in beforeEach). Suggest for a follow-up; not Step 5 blocker.
+
+### Module boundary on `expo-secure-store`
+
+`grep -rn "expo-secure-store" apps/mobile/src` returns exactly two production matches:
+- `state/persisted/secure.ts:17` — the wrapper itself (sanctioned).
+- `state/persisted/secure.ts:4` — comment.
+
+Test files allowed: `state/session/SessionProvider.test.tsx` (jest.mock at :38) and `lib/api.test.ts` (boundary test definition only — does not import the module).
+
+The boundary test (`api.test.ts:68–103`) is enforced via `execSync grep` — runs at test time, will fail in CI if any future commit adds an import outside the allowlist. Belt and braces.
+
+### Spot-checks (high-risk patterns)
+
+1. **Token-leak T-0001-082 broadened** — covered above. Spies all 5 console methods; substring window of 10 chars at 5-char stride; runs across 4 failure paths. Vacuous-pass guard absent (soft).
+
+2. **`waitFor` explicit timeout (Roz Round 2 N-1)** — `SessionProvider.test.tsx:228` uses `{timeout: 600}` on the T-0001-073 hydration assertion. The default 1000ms would have allowed a 500ms-budget violation to pass silently. 600ms leaves a small jest-scheduling buffer (~100ms over the 500ms ceiling) without softening the budget. PASS.
+
+3. **Module boundary on `expo-secure-store`** — covered above. Only `secure.ts` imports it in production. PASS.
+
+4. **Tokens NOT in MMKV/AsyncStorage** — `grep -rn "react-native-mmkv\|@react-native-async-storage" apps/mobile/src/state/` returns zero matches. PASS. `react-native-mmkv` is still a declared dep in `package.json:27` — Tier 2 (non-secret) state will use it later per ARCHITECTURE.md §5; no Step 5 caller references it.
+
+5. **Idempotent redeemToken (T-0001-083)** — `SessionProvider.tsx:365–367` checks `inFlightRedeemRef.current` and returns the in-flight promise if non-null. Test at `SessionProvider.test.tsx:531`: two `Promise.all`-ed `redeemToken` calls, asserts `mockFetch` called exactly once. PASS.
+
+6. **Refresh failure (T-0001-133)** — `SessionProvider.test.tsx:437`. Mounts with token expiring in 30s (< REFRESH_LEAD_MS = 60s), so `useEffect` triggers inline `performRefresh()`. Refresh client mocked to reject. Asserts state=`unauthenticated` (`:455`), `secureStore.read().accessToken === null` (`:459`), and the next `apiFetch` rejects (`:462`). **DEVIATION:** ADR line 639 specifies `RefreshFailedError`; test asserts `NotAuthenticatedError`. Rationale (SessionProvider.tsx:277–284): `performRefresh` is fire-and-forget — there's no awaiting caller to receive `RefreshFailedError`, so it transitions to unauthenticated and the next apiFetch naturally rejects with `NotAuthenticatedError`. Defensible engineering call: the user-visible state is identical (`status='unauthenticated'`), tokens are cleared, the next fetch rejects. The error-class delta is a documentation precision issue, not a security or correctness defect. **Accept as implementation refinement of the ADR; flag for Cal to update ADR §Step 5 T-0001-133 wording to match.** (`RefreshFailedError` IS the error type for the synchronous defaultRefresh path at `SessionProvider.tsx:126,133`; that path is not exercised in unit tests because `injectedRefreshClient` is set.)
+
+7. **signOut while in-flight (T-0001-123)** — `SessionProvider.test.tsx:393`. Starts an in-flight `apiFetch` with a manually-resolved fetch, calls `signOut()`, asserts subsequent `apiFetch` rejects with `NotAuthenticatedError`, then resolves the in-flight call and asserts it returns its data successfully (proves it wasn't retroactively poisoned). Matches ADR T-0001-123 wording. PASS.
+
+8. **Config exhaustion T-0001-124** — `api.test.ts:107–157`, 6 sub-cases (the 5 mandatory + bonus localhost-HTTP test). Verified: unset (`:108`), empty/whitespace string (`:118`), valid HTTPS (`:123`), HTTP non-localhost (`:129`), HTTP localhost (`:139`, bonus), malformed (`:148`). Each case asserts both dev and non-dev branches. PASS.
+
+9. **NotAuthenticatedError thrown synchronously (T-0001-076)** — `api.ts:227–233` checks `currentSession` BEFORE constructing URL or calling `fetch`. Test at `api.test.ts:175` injects a `fetchSpy`, calls `apiFetch('/projects')` without a session, asserts rejection AND `fetchSpy` was never called. PASS.
+
+10. **secure-store error swallowing (T-0001-080)** — `secure.ts:42–51` returns `null` on `getItemAsync` reject (the catch is empty by design — comment cites T-0001-080). `SessionProvider.tsx:300–319` reads snapshot, falls through to `setState({status: 'unauthenticated'})` when any of the 3 token keys is null. Test at `SessionProvider.test.tsx:515` mocks `getItemAsync` to reject; asserts state resolves to `'unauthenticated'`. Belt-and-suspenders: `SessionProvider.tsx:308` ALSO has a try/catch around `store.read()` for a wrapper that throws despite the contract. Two-layer defense. PASS.
+
+### Refresh-token grant path (defaultRefresh — non-test code)
+
+`SessionProvider.tsx:112–139` — production `defaultRefresh` reads `Constants.expoConfig.extra.{supabaseUrl, supabaseAnonKey}`, constructs a Supabase client with `persistSession: false, autoRefreshToken: false`, calls `client.auth.refreshSession`, throws `RefreshFailedError` on any error. **Not unit-tested** — Colby's design uses `setRefreshClientForTests` to inject a fake everywhere. The real path is exercised end-to-end in integration tests (Step 9+ per ADR §Step 9 INT-003). Acceptable: unit-testing `@supabase/supabase-js` would mean either mocking `createClient` (high-overhead, low-value — the SDK is 3rd-party) or live-network calls (anti-pattern in unit tests). The seam is clean and the production path is short (≈25 lines).
+
+### Scope Check
+
+ADR §Step 5 sanctioned files: `SessionProvider.tsx`, `useSession.ts`, `secure.ts`, `lib/api.ts`, `state/queries/util.ts`, `package.json`, `App.tsx`. Actual diff:
+
+- New: all 6 ADR files + `SessionProvider.test.tsx` + `lib/api.test.ts` (Cal's test mapping for Step 5 implies both — justified).
+- Modified: `app.config.ts` (adds `supabaseUrl`/`supabaseAnonKey` to `extra` — required by `defaultRefresh`, sanctioned); `.env.example` (documents new EXPO_PUBLIC_SUPABASE_* keys + explicit "anon only, never service-role" warning — Robert's secret-handling discipline preserved); `babel.config.js` (Flow preset for jest-expo polyfill — required for tests to run); `jest.config.js` (transformIgnorePatterns + passWithNoTests removal — required); `package.json` (adds `@supabase/supabase-js` per ARCHITECTURE.md §14 sanctioned; `@testing-library/react-native`, `@babel/preset-flow`, `react-test-renderer@18.3.1`, `@types/react-test-renderer` — all required for tests, justified).
+
+No drive-by edits. Clean scope.
+
+### Issues Found
+
+None blocking.
+
+Editorial notes (non-blocking):
+
+- **T-0001-133 vs ADR wording.** Test asserts `NotAuthenticatedError`; ADR says `RefreshFailedError`. Implementation justification at `SessionProvider.tsx:277–284` is sound (fire-and-forget refresh has no awaiting caller to receive the typed error). The user-visible behavior is identical. Recommend Cal updates ADR §Step 5 T-0001-133 to match the implemented state: "the next `apiFetch` rejects with `NotAuthenticatedError` (the in-memory session is cleared); a UI-layer listener on session state can surface the toast." Not blocking Step 5.
+- **Token-leak vacuous-pass guard absent.** `assertNoTokenLeak` does not assert "spy was actually wired" via a sentinel call in beforeEach. If a future change accidentally muted the spy globally, the assertion would still pass with zero calls. The substring-window construction itself is correct. Suggest a one-line `console.warn('roz-canary'); expect(consoleSpies[2]).toHaveBeenCalled()` in beforeEach as a guard. Not blocking.
+- **`secure.ts:42–51` silent catch.** The `try/catch` swallows the underlying error entirely (no log line, no metric). Comment cites T-0001-080; behavior is intentional. At MVP scale this is fine; if mobile error telemetry comes online (Sentry breadcrumb on keychain failure), this catch is the place to add it. Recording.
+
+### Predicted Roz flags (Colby's two)
+
+1. **Test count granularity (15 IDs → 24 cases).** Justified. The 24 jest cases break down: 13 SessionProvider tests covering 13 T-IDs (one test per T-ID), 6 resolveApiUrl cases (T-0001-124 has 5 mandatory + 1 bonus localhost-HTTP), 4 apiFetch+token-leak cases (T-0001-076 + T-0001-082 across happy/failure paths), 1 module-boundary grep test. Total = 24, covers 15 T-IDs (T-0001-082 + T-0001-124 each get multiple cases as Cal explicitly requested in spec). Accepted.
+
+2. **`defaultRefresh` real-Supabase no unit test.** Defended above. The seam (`setRefreshClientForTests`) is clean; the production path is short; the alternative (mocking `@supabase/supabase-js`) would be high-overhead, low-value 3rd-party stubbing. Integration test (T-0001-INT-003) covers the end-to-end refresh path. Accepted.
+
+### Carry-forward
+
+- **Round 2 N-2 — ADR §Step 6 boundary count summary off by 1. STILL OPEN, FIFTH cycle.** ADR-0001-foundation.md line 697 (`Boundary | 4`) and line 704 (`Total | 21`). Recount of §Step 6 Tests table (lines 668–690): Boundary rows = 3 (T-0001-125 line 673, T-0001-092 line 677, T-0001-102 line 690). Fix to `Boundary | 3` / `Total | 20`, OR add the fourth Boundary test you intended (e.g. resend cooldown +1ms past the boundary as a sibling of T-0001-125, or the 320-char email boundary mirroring T-0001-038 from Step 3). **Cal — fifth request. This MUST be fixed before Step 6 implementation begins.** Step 6 is next. Roz's first action on Step 6 will be to verify this and the verdict will FAIL_RETRY on AC-coverage trace if it remains uncorrected. The five-cycle persistence is now itself a process finding.
+
+### Roz's assessment
+
+Five clean passes. First mobile step landed cleanly: jest-expo's Flow polyfill regression diagnosed and fixed at the right layer (babel preset + transformIgnorePatterns rewrite for pnpm's flat store), `passWithNoTests` removed so future Roz cycles will catch silently-skipped suites. The session-token architecture is the right shape: secure-store wrapper as the single import seam (enforced via grep test, will fail CI on any future violation), in-memory session ref as the apiFetch read path (no React-context coupling for callers outside the render tree), `RefreshFailedError`/`NotAuthenticatedError`/`RedeemFailedError`/`ApiError` typed-error hierarchy that lets call sites pattern-match without string parsing.
+
+The token-leak defense (T-0001-082 broadened) does what the spec asks: 5 console methods spied, ≥10-char substring window, runs across 4 failure paths (signOut, /auth/sync 401, refresh 401, ApiError 5xx). The vacuous-pass concern is real but soft — the substring construction itself would catch a real leak; a sentinel-call guard would harden the test against future spy-wiring regressions. Recording for follow-up. Not blocking.
+
+The idempotent-redeemToken pattern (`SessionProvider.tsx:365` — return the in-flight promise) is the cleanest possible implementation of T-0001-083: no debounce timer, no lock, just a ref that's cleared in finally. Two simultaneous calls share one `/auth/sync` call. The signOut-during-in-flight test (T-0001-123) deserves specific praise: it manually resolves the in-flight fetch AFTER signOut to prove the in-flight call isn't retroactively poisoned, which is the exact concurrency invariant the ADR promises.
+
+The T-0001-133 deviation (ADR says `RefreshFailedError`, test+impl say `NotAuthenticatedError`) is a documentation precision issue, not a defect. The implementation rationale (fire-and-forget refresh has no awaiting caller for a typed error) is correct. Cal — please update the ADR wording so future readers don't read this as a contract violation.
+
+The Step 6 boundary count carry-forward has now persisted through five clean QA cycles. This is no longer a benign typo; it's a process anti-pattern. Cal — fix it. Step 6 verdict will fail on AC-coverage trace if the count discrepancy remains.
+
+Colby may proceed pending Cal's ADR §Step 6 boundary fix. Step 5 closes.
+
+— Roz

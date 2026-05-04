@@ -1,0 +1,92 @@
+## QA Report — Step 7 of ADR-0001 (FINAL — closes the ADR)
+*Reviewed by Roz, 2026-05-01*
+
+### Verdict: PASS
+
+| Check | Status | Details |
+|-------|--------|---------|
+| Type Check | PASS | `pnpm typecheck` clean across all 4 workspaces (api, a2ui-schema, a2ui-renderer, mobile). |
+| Lint | PASS | `pnpm lint` clean — eslint emits nothing. |
+| Tests | PASS | Step 7 filter (`Home|timeAgo`): 3 suites, 34/34. Mobile workspace full: 7 suites, 87/87. Full sweep: server 97 + schema 5 + mobile 87 = **189/189**. Matches Colby's reported numbers. |
+| Coverage | PASS | All 17 mandatory Step 7 T-IDs covered by a non-tautological assertion (16 in `Home/index.test.tsx`, 1 in `LibraryCard.test.tsx`). Bonus tests for whitespace title fallback, accessibility label, settings toast, and the showExpiredBanner end-to-end wire. |
+| Security | PASS | Zero `console.*` calls under any Step 7 surface (`screens/Home/`, `screens/Chat/`, `screens/AppRunner/`, `state/queries/projects.ts`, `Navigation.tsx`, `lib/timeAgo.ts`, `components/{Card,EmptyState,Skeleton}.tsx`). The two pre-existing `console.warn` sites (`api.ts:161` env-boot, `SessionProvider.tsx:255` secure-store clear) are Step 5 surfaces, not in this diff. No `MMKV`/`AsyncStorage` imports in Step 7. `specJson`/`spec_json` does not appear anywhere under `screens/Home/` or `state/queries/projects.ts`. T-0001-127 confirms cross-user title isolation under explicit invalidation. |
+| Steps 1-6 regression | PASS | Server 97/97, schema 5/5, deep-link/SignIn (Step 6) 29/29 (filter run). Step 5 SessionProvider suite green inside the mobile total. No drift. |
+
+### AC Coverage trace
+
+| AC (ADR §Step 7) | Test ID | Status |
+|---|---|---|
+| Authenticated user sees Home with sticky "Create new app" CTA | T-0001-103, T-0001-104 | PASS — `index.test.tsx:285` (`home-hero-cta` visible in empty); `:301` (cards rendered); hero is rendered outside the `body` View at `index.tsx:121–130` so it stays above all body branches. |
+| Empty library → empty-state copy + CTA navigates to Chat | T-0001-103, T-0001-106 | PASS — `:282–286` asserts exact `homeCopy.emptyHeadline`/`emptySubhead`; `:339` asserts `navigateSpy('Chat')`. |
+| Loading state → 3 skeleton cards | T-0001-105, T-0001-128 | PASS — `:319` `findAllByTestId('library-skeleton')`; `:320` `expect(skeletons.length).toBe(3)`. Exactly-3, not "at least one." |
+| Populated → cards sorted by `updated_at DESC`, tap → AppRunner with projectId | T-0001-104, T-0001-107 | PASS — `:303–305` server-order assertion (Newest/Middle/Oldest); `:355` `navigateSpy('AppRunner', {projectId: 'aaaa…'})`. |
+| Error state → message + pull-to-retry | T-0001-108, T-0001-112, T-0001-136, T-0001-137 | PASS — 500 (`:363`), shape (`:423`), offline (`:435`), retry CTA (`:470`). All four error sources funnel into the same `library-error` testID (`index.tsx:251`). |
+| Pull-to-refresh re-runs query | T-0001-112 | PASS — `:472` asserts `mockFetch.toHaveBeenCalledTimes(2)` after retry. The pull gesture itself is library-internal; the retry CTA invokes the same handler — accept the proxy. |
+| Theme: light + dark render correctly | T-0001-114 | PASS — `:557` captures `lightColor`; `:579` `expect(darkColor).not.toBe(lightColor)`. Token-table contrast ratios live elsewhere; this asserts the theme propagates. |
+| Unauthenticated → redirect to SignIn | T-0001-109 | PASS — `:394` asserts SignIn headline visible; `:398` `homeCopy.title` query is null; `:399` `mockFetch` not called. |
+| 401 mid-session → SignIn re-renders | T-0001-129 | PASS (scoped) — `:411` 401 surfaces error body; `:417` retry recovers. The full session-clear → re-render is exercised in `SessionProvider.test.tsx` (Step 5) per the comment at `:402–408`. The split is defensible: this test owns the UI side, Step 5 owns the auth-state transition. |
+| Cross-user library | T-0001-127 | PASS (with caveat — see below) — `:498` invalidate, `:506–508` `queryByText('A-…')` all null. Test passes as written; underlying cache leak risk is a follow-up. |
+
+All 7 AC bullets covered, plus the implicit T-IDs for navigation, error handling, and security.
+
+### showExpiredBanner end-to-end wire
+
+- **Implementation:** `Navigation.tsx:33` `useState(false)` for `linkExpired` (React state, not module-level — refute the Step 6 capture-once concern). `Navigation.tsx:42` `useAuthDeepLink({onRedeemError: handleRedeemError})`. `Navigation.tsx:39–41` `handleRedeemError` calls `setLinkExpired(true)`. `Navigation.tsx:44–46` `dismissExpired` sets it back to false. `Navigation.tsx:64–70` SignIn renders via render-prop closing over `linkExpired` (NOT via `initialParams` — the Step 6 carry-forward fix landed correctly). `deepLink.ts:113–117` `onRedeemError?.(err)` fires inside `.catch()` of the redeem promise.
+- **End-to-end test:** `index.test.tsx:597–630`. `mockSessionStatus = 'unauthenticated'`; `mockUseURL.mockReturnValue('appcreator://auth?token=bad.expired.jwt')`; `mockRedeemToken.mockRejectedValueOnce(new Error('redeem_failed'))`; renders `<Navigation/>`; `:626` `screen.getByText('That link expired. Send a new one?')` proves the banner renders end-to-end through the navigator wire.
+- **Verdict:** PASS. Banner copy is verified against the literal string ("That link expired. Send a new one?"), not a `homeCopy.*` lookup. The render-prop pattern is correct — `initialParams` snapshots once and would not react to `setLinkExpired` after the first mount; the render-prop re-evaluates on every parent re-render. Step 6 carry-forward closed.
+
+### Cross-user library (T-0001-127) + signOut cache-clear discussion
+
+- **Current test approach:** explicit `queryClient.invalidateQueries({queryKey: ['projects', 'list']})` after a token swap (`index.test.tsx:498–500`). Test passes — User A titles do not persist (`:506–508`).
+- **Caveat I have to flag:** Colby's source comment at `screens/Home/index.tsx:24–27` says "the query key includes user ID, so changing the user ID gives the query a fresh key (no cache hit from User A)." That's **not what the code does.** `projects.ts:46` reads `list: () => createQueryKey('projects', 'list')` — the user ID is not part of the key. `createQueryKey`'s docstring even shows `createQueryKey('projects', userId)` as the canonical pattern (`util.ts:13–14`). So the only thing standing between User B and User A's cached library on a real signOut → re-sign-in is the explicit `invalidateQueries` call inside SessionProvider — which I have not verified lands. The test mocks the invalidation directly. **Real defense in depth would put `userId` in the key.**
+- **Roz's call on the `queryClient.clear()` patch:** **FOLLOW-UP, not blocking.** Justification: (a) the test as written passes against the real component code, so the AC trace holds; (b) the cross-user threat surface only realizes if SessionProvider's signOut path doesn't `clear()` — that's a Step 5 surface, not Step 7's primary scope; (c) blocking ADR-0001 close on a defense-in-depth patch under time pressure is the wrong trade-off. Carry-forward to ADR-0002 (or as a Step 5 follow-up) — choose one fix: either `createQueryKey('projects', 'list', userId)` (defense in depth at the query layer) OR `queryClient.clear()` inside SessionProvider's `signOut()` (defense in depth at the session boundary). I lean toward the former because it's localized to the projects domain and the test contract already exercises it; the latter is broader and cheaper. **Either is fine; the gap is real but not Step 7's blocker.**
+
+### Issues Found
+
+None blocking. Editorial:
+
+1. **Inaccurate code comment** at `screens/Home/index.tsx:24–27` — claims the query key "includes user ID." Suggest tightening: "the SessionProvider invalidates the projects list cache on session change so User B never sees User A's titles." Or just patch `projectsKeys.list()` to actually include `userId` and the comment becomes true.
+2. **`mockFetch.mockClear()` redundancy** at `index.test.tsx:426–427`: the second `mockListOk([])` re-queues the same response onto the cleared queue. Functionally fine, mildly confusing. Not a fix-this-now issue.
+3. **T-0001-110 assertion lattice** at `:451` `toBeGreaterThanOrEqual(10)` then `:456` `toBe(100)` — the loose first assert is a hedge that's never exercised because the tight one runs immediately after. The 100-card render with `initialNumToRender={100}` (`index.tsx:203`) does land all 100 in the test renderer; the hedge can be removed in a follow-up.
+
+### Carry-forwards from Step 6
+
+- **M-10 cleanup discipline.** Step 6 cooldown test (`SignIn/index.test.tsx:211`) still leaks a residual `setInterval` past `useRealTimers()` — the "worker process force exited" warning continues to print on every mobile run. **Accept the scoping.** Colby was right not to retroactively touch a passing Step 6 test under Step 7's clock. Step 7's cross-user test (`index.test.tsx:514`) explicitly calls `unmount()` per M-10. **Follow-up recommendation:** when ADR-0002 lands, add an explicit `screen.unmount()` to the Step 6 cooldown test as the cleanup-pattern reference impl.
+- **Settings tap = "coming soon" toast.** `homeCopy.settingsComingSoonToast = 'Settings coming soon'` (`copy.ts:16`). Verified end-to-end at `index.test.tsx:582–588`. **Accept.** Sable's UX deck §Screen 2 lists Settings only as a top-bar icon with hit-target ≥44pt — no Settings screen at M1. The toast is the correct M1 behavior; pushing back would be making up scope. The toast copy is in `homeCopy` (not inlined), so the i18n codemod sees it.
+
+### NEW carry-forwards (for ADR-0002 or follow-up)
+
+- **`projectsKeys.list()` should include `userId`** OR `SessionProvider.signOut()` should call `queryClient.clear()`. Either closes the cross-user cache-leak gap that T-0001-127 only verifies under explicit invalidation. Defense-in-depth at the query-key layer is cheaper and more localized. Track as a Step 5 follow-up.
+- **Update the misleading comment** at `screens/Home/index.tsx:24–27`. Documentation drift is a future-Roz tax.
+- **Remove the redundant hedge** at `index.test.tsx:451` (T-0001-110 lattice).
+- **`accessibilityElementsHidden` vs `accessible={false}`** in `Skeleton.tsx:74–80` — Colby annotated the choice (RNTL `getAllByTestId` skips elements with `accessibilityElementsHidden` by default). The choice is fine for the testing scenario; there's a small a11y concern that `accessible={false}` on an Animated.View with content children doesn't fully hide the subtree on iOS VoiceOver in some RN versions. Empirically it does for a leaf `Animated.View` with no children, which is the case here. **Accept; record for the M1 a11y audit pass.**
+
+### ADR-0001 close-out summary
+
+- **Total ADR-0001 mandatory T-IDs (per Cal's ADR §Test Totals row):** 135 (steps 1–7) + 4 integration = 139.
+- **Cumulative across 7 steps + integration (test counts as run by jest):** Server 97 (Steps 1–4 + integration) + a2ui-schema 5 + mobile 87 (Steps 5/6/7 = 24/29/34) = **189 jest cases**, all green. The mandatory T-IDs (135 + 4) are covered by a subset of these cases, with bonus tests filling out behaviors Colby and Roz flagged in review.
+- **Outstanding non-blocking items:**
+  1. SignIn cooldown test (Step 6) M-10 cleanup — passes with force-exit warning.
+  2. `projectsKeys.list()` user-scoping or SessionProvider `queryClient.clear()` — pick one before ADR-0002.
+  3. Misleading comment in `screens/Home/index.tsx:24–27`.
+  4. Hedge assertion in T-0001-110.
+- **Tier 1 failures:** none.
+- **Steps 1–6 regression:** clean across all suites I re-ran (server 97/97, schema 5/5, deepLink+SignIn 29/29).
+
+### Roz's assessment
+
+Step 7 is the cleanest landing of the seven. The state matrix from Sable's UX deck — empty / loading / populated / error — has a code path, a testID, and a non-tautological assertion for each. The exactly-3-skeleton boundary (T-0001-128) is asserted with `expect(skeletons.length).toBe(3)`, not the looser `>= 1` Colby could have gotten away with. The 100-project test (T-0001-110) actually renders all 100 because Colby raised `initialNumToRender` to match the test contract — the right call when library lists are bounded by user behavior, not by adversarial pagination.
+
+The `showExpiredBanner` wire is the part I expected to find broken. It isn't. Colby pivoted from `initialParams` (which captures once and would have ignored the `setLinkExpired(true)` call after first mount) to a render-prop closing over the parent's React state. That's the React Navigation idiom for reactive params, and the end-to-end test at `index.test.tsx:597–630` exercises the full path: deep-link with bad token → `redeemToken` rejects → `onRedeemError` fires → `setLinkExpired(true)` → SignIn re-renders with the banner. The Step 6 carry-forward closes cleanly.
+
+The cross-user test (T-0001-127) is the one I want to flag in writing. It passes against the code Colby shipped — the explicit `invalidateQueries` flush works as the test mocks it. But the source comment at `index.tsx:24–27` claims the query key includes the user ID, and that claim is false (`projectsKeys.list()` is `['projects', 'list']`, no user ID). On a real signOut → re-sign-in, the only thing protecting User B from User A's stale cache is whatever SessionProvider does at the session boundary — and I haven't seen the test that proves SessionProvider invalidates this specific query. **The leak surface is genuine, the fix is small (either user-scope the key or `queryClient.clear()` on signOut), but it's a Step 5 cross-cutting concern rather than a Step 7 blocker.** Colby flagged this discipline herself, which is the discipline I want to see. Carry-forward to ADR-0002 with a recommended fix.
+
+The Settings "coming soon" toast is correct M1 behavior. The placeholder Chat and AppRunner screens type-check the navigator and exist for the cards/CTA to navigate to without runtime crashes. The `timeAgo` helper (`lib/timeAgo.ts`) is hand-rolled rather than `Intl.RelativeTimeFormat`-based — defensible because Hermes ICU support is uneven and Sable's deck specifies "a week ago" not "1 week ago." Five minutes of code, ten boundary cases, deterministic.
+
+The `console.*` discipline holds. Two pre-existing call sites (`api.ts:161` env-boot, `SessionProvider.tsx:255` secure-store clear) — Step 7 added zero. `MMKV`/`AsyncStorage` not imported in any Step 7 surface. `specJson` not present in any Home rendering or query path. Token-leak audit: clean.
+
+ADR-0001 closes. The foundation is built. Auth, schema, projects API, session, sign-in, deep-link, home library — all green. Next step is Ellis (commit), then ADR-0002 starts (Generation: Anthropic API call + the 30-prompt eval set). The carry-forwards above belong to ADR-0002's intake.
+
+Reluctantly complimentary: this was a hard final step and Colby landed it. The render-prop pivot for `showExpiredBanner` was the right call, the exactly-3 skeleton assertion was the right call, raising `initialNumToRender` to honor the test contract was the right call. The one inaccurate comment about user-scoped query keys is a 30-second fix and a real finding — record it, ship it, fix it before ADR-0002 lands.
+
+— Roz

@@ -352,6 +352,10 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 - State: `@tanstack/react-query`, `react-native-mmkv`.
 - Networking/streaming: `eventsource-parser`.
 - UI: nothing except RN core + our renderer. **No** UI kits (no NativeBase, no Tamagui, no Gluestack at M1).
+- Bottom sheet / gestures / animations (sanctioned ADR-0002 Step 9):
+  - `@gorhom/bottom-sheet` — bottom sheet primitive with keyboard avoidance, swipe-to-dismiss, a11y modal marking, focus trap. Required by the Publish sheet (PublishSheet.tsx).
+  - `react-native-reanimated` — peer dep of `@gorhom/bottom-sheet`. Also requires `react-native-reanimated/plugin` in `babel.config.js` (listed last).
+  - `react-native-gesture-handler` — peer dep of `@gorhom/bottom-sheet`. Requires `<GestureHandlerRootView>` at the root of `App.tsx`.
 - Telemetry: `@sentry/react-native`.
 
 **Backend (`services/api/`):**

@@ -1,4 +1,6 @@
-# CLAUDE.md — App Creator MVP tactical patterns
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 > Companion to `ARCHITECTURE.md`. Where ARCHITECTURE.md says **what the
 > rules are**, this file says **how to apply them in code**. When the two
@@ -7,6 +9,67 @@
 >
 > This file grows with the codebase. Tentative entries are marked
 > **[tentative]** and will solidify after the bootstrap PR lands.
+
+---
+
+## Big picture
+
+App Creator is a chat-driven app builder. The user describes an idea, an LLM (Anthropic Claude via tool use) emits a structured **A2UI spec**, and the mobile app renders that spec from a fixed catalog of 10 components. Edits use RFC 6902 JSON Patches against the stored spec; every accepted edit is a new immutable `project_versions` row.
+
+Three things hold the system together:
+
+1. **The A2UI schema is the contract.** It lives in `packages/a2ui-schema` (Zod), is shared verbatim between server (validates LLM output) and mobile (validates before render), and is what the model is forced to emit via `tool_choice`. There is no free-text JSON path — adding a component type touches schema + renderer + system-prompt catalog + evals together (see ARCHITECTURE.md §6).
+2. **Two component layers, never mixed.** `apps/mobile/src/components/` builds the App Creator's own UI (chat, library, settings). `packages/a2ui-renderer/components/` renders generated apps from spec nodes — pure functions of `{node, state, dispatch}`, no side effects, no app-specific contexts.
+3. **One LLM entry point.** All Anthropic calls go through `services/api/src/llm/`. Routes never call the SDK. Every call is wrapped in a Langfuse `trace`, splits the system prompt into a static block + cacheable catalog block, and uses `tool_choice` to force structured output.
+
+**Workspaces** (pnpm monorepo):
+- `apps/mobile/` — Expo RN 0.76 app (iOS-only at M1, dev-client required, Expo Go is not supported)
+- `services/api/` — Fastify + Drizzle + Postgres backend
+- `packages/a2ui-schema/` — shared Zod schema + canonicalization for `render_hash`
+- `packages/a2ui-renderer/` — RN renderer for A2UI specs (consumed only by `apps/mobile`)
+
+**Read `ARCHITECTURE.md` before non-trivial changes.** It is the binding spec; this file is just code-level patterns.
+
+---
+
+## Commands
+
+All commands run from the repo root unless noted. The repo uses **pnpm 9** workspaces (Node 20+, see `.nvmrc`).
+
+```bash
+# Install
+pnpm install
+
+# Across the whole workspace
+pnpm typecheck         # tsc --noEmit in every package, in parallel
+pnpm lint              # ESLint over the repo
+pnpm lint:fix
+pnpm test              # jest in every package, in parallel
+pnpm format            # prettier --write
+pnpm format:check
+
+# Per workspace (preferred when iterating)
+pnpm --filter @app-creator/api dev          # tsx watch services/api/src/index.ts
+pnpm --filter @app-creator/api build        # tsc -p tsconfig.build.json
+pnpm --filter @app-creator/api test
+pnpm --filter @app-creator/api eval         # eval harness — M1 acceptance gate
+pnpm --filter @app-creator/api db:generate  # drizzle-kit generate (review SQL!)
+pnpm --filter @app-creator/api db:migrate
+pnpm --filter @app-creator/api db:studio
+
+pnpm --filter @app-creator/mobile start     # expo start --dev-client (NOT Expo Go)
+pnpm --filter @app-creator/mobile ios
+pnpm --filter @app-creator/mobile typecheck
+pnpm --filter @app-creator/mobile test
+
+pnpm --filter @app-creator/a2ui-schema test
+pnpm --filter @app-creator/a2ui-renderer test
+```
+
+**Run a single test file:** `pnpm --filter @app-creator/<pkg> test -- <path-or-pattern>` (e.g. `pnpm --filter @app-creator/api test -- src/llm/generate.test.ts`).
+**Update a snapshot:** `pnpm --filter @app-creator/a2ui-renderer test -- -u <pattern>` — and write a code-review note explaining why (per §8).
+
+**Mobile dev loop.** Expo Go does not work (native deps: `react-native-mmkv`, `@sentry/react-native`, `expo-secure-store`). You must produce a dev-client first: `eas build --profile development`, install on the device/simulator, then `pnpm --filter @app-creator/mobile start`.
 
 ---
 
