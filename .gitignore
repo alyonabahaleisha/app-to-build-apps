@@ -45,3 +45,4 @@ Thumbs.db
 .claude/state/*/telemetry.jsonl
 .claude/state/*/.allowlist.txt
 .claude/.active_ticket_env
+.claude/scheduled_tasks.lock
