@@ -61,6 +61,11 @@ function buildSchema(nodeEnv: string) {
     // shadow mode must coexist with legacy traffic, not replace it entirely.
     PLAN_BUILD_PIPELINE_PERCENT: z.coerce.number().int().min(0).max(100).default(0),
     PLAN_BUILD_PIPELINE_SHADOW: z.enum(['true', 'false']).default('false'),
+    // ADR-0004 Step 8 — Eval mode short-circuit for telemetry.
+    // 'true' = writeEvent validates payload whitelist but skips the DB insert.
+    // Prevents eval runs from polluting the analytics events table.
+    // Default 'false'. Orthogonal to SHADOW and PERCENT.
+    PLAN_BUILD_EVAL_MODE: z.enum(['true', 'false']).default('false'),
   })
 }
 

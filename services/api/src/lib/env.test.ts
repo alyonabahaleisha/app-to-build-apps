@@ -7,6 +7,9 @@
  *
  * T-0004-060 through T-0004-069, T-0004-123, T-0004-124
  * Tests for PLAN_BUILD_PIPELINE_PERCENT and PLAN_BUILD_PIPELINE_SHADOW.
+ *
+ * T-0004-EVAL-001 through T-0004-EVAL-006 (Step 8)
+ * Tests for PLAN_BUILD_EVAL_MODE.
  */
 import {loadEnv} from './env.js'
 
@@ -120,6 +123,55 @@ describe('loadEnv — PLAN_BUILD_PIPELINE_SHADOW', () => {
   // Asymmetry vs T-0004-123 is intentional: only exact empty string '' is coerced.
   it("T-0004-124: PLAN_BUILD_PIPELINE_SHADOW=' true ' (whitespace-padded) — boot rejects (z.enum exact-match; not coerced)", () => {
     expect(() => loadEnv({...BASE_ENV, PLAN_BUILD_PIPELINE_SHADOW: ' true '})).toThrow(
+      /Invalid environment/,
+    )
+  })
+})
+
+describe("loadEnv — PLAN_BUILD_EVAL_MODE (Step 8)", () => {
+  // T-0004-EVAL-001
+  // EVAL_MODE unset → z.enum(['true','false']).default('false') → 'false'.
+  it("T-0004-EVAL-001: PLAN_BUILD_EVAL_MODE unset — defaults to 'false'", () => {
+    const env = loadEnv({...BASE_ENV})
+    expect(env.PLAN_BUILD_EVAL_MODE).toBe('false')
+  })
+
+  // T-0004-EVAL-002
+  it("T-0004-EVAL-002: PLAN_BUILD_EVAL_MODE='true' — boots successfully with value 'true'", () => {
+    const env = loadEnv({...BASE_ENV, PLAN_BUILD_EVAL_MODE: 'true'})
+    expect(env.PLAN_BUILD_EVAL_MODE).toBe('true')
+  })
+
+  // T-0004-EVAL-003
+  it("T-0004-EVAL-003: PLAN_BUILD_EVAL_MODE='false' — boots successfully with value 'false'", () => {
+    const env = loadEnv({...BASE_ENV, PLAN_BUILD_EVAL_MODE: 'false'})
+    expect(env.PLAN_BUILD_EVAL_MODE).toBe('false')
+  })
+
+  // T-0004-EVAL-004
+  // Empty string '' is coerced to undefined by env.ts:75 (the empty-string cleanup loop),
+  // then z.enum(['true','false']).default('false') applies → value is 'false'.
+  // Mirrors the established convention for SHADOW (T-0004-123).
+  it("T-0004-EVAL-004: PLAN_BUILD_EVAL_MODE='' (empty string) — coerced to undefined, defaults to 'false'; boot succeeds", () => {
+    const env = loadEnv({...BASE_ENV, PLAN_BUILD_EVAL_MODE: ''})
+    expect(env.PLAN_BUILD_EVAL_MODE).toBe('false')
+  })
+
+  // T-0004-EVAL-005
+  // ' true ' (whitespace-padded): NOT coerced (only exact '' is coerced).
+  // Reaches z.enum which requires exact 'true' or 'false'. Rejects.
+  // Mirrors T-0004-124 for SHADOW.
+  it("T-0004-EVAL-005: PLAN_BUILD_EVAL_MODE=' true ' (whitespace-padded) — boot rejects (z.enum exact-match)", () => {
+    expect(() => loadEnv({...BASE_ENV, PLAN_BUILD_EVAL_MODE: ' true '})).toThrow(
+      /Invalid environment/,
+    )
+  })
+
+  // T-0004-EVAL-006
+  // 'True' (mixed case): z.enum is case-sensitive. Does not match 'true' or 'false'. Rejects.
+  // Mirrors T-0004-067 for SHADOW.
+  it("T-0004-EVAL-006: PLAN_BUILD_EVAL_MODE='True' (mixed case) — boot rejects (z.enum is case-sensitive)", () => {
+    expect(() => loadEnv({...BASE_ENV, PLAN_BUILD_EVAL_MODE: 'True'})).toThrow(
       /Invalid environment/,
     )
   })

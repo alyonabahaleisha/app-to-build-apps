@@ -30,8 +30,6 @@ import {createHash} from 'crypto'
 import pino from 'pino'
 import {applyPatch} from 'fast-json-patch'
 import {env} from '../lib/env.js'
-import {db} from '../db/index.js'
-import {schema} from '../db/index.js'
 import {safeMessage} from '../lib/logger.js'
 import {generateAppSpec, type GenerateEvent} from './generate.js'
 import {producePlan} from './planner.js'
@@ -50,10 +48,10 @@ import {SYSTEM_PROMPT_STATIC, SYSTEM_PROMPT_CATALOG} from './prompts/system.js'
 import {serializePlan} from './serializePlan.js'
 import {hashUserId, flattenZodIssues, sleep} from './util.js'
 import {validatePatchAgainstIntent} from './patchValidation.js'
+import {writeEvent} from './telemetry.js'
 
-// Module-level logger for telemetry write failures. Pino is already a dep;
-// this logger is a sibling to Fastify's built-in logger — same format, separate
-// instance. Step 8 will consolidate when telemetry.ts is extracted.
+// Module-level logger for non-telemetry error logging in the orchestrator.
+// Telemetry errors are logged in telemetry.ts via its own pino instance.
 const log = pino({level: env.LOG_LEVEL})
 
 // ---------------------------------------------------------------------------
@@ -155,36 +153,6 @@ function plannerErrorEventType(
 }
 
 // ---------------------------------------------------------------------------
-// writeEvent — private DB telemetry helper
-//
-// Step 8 will extract this into services/api/src/llm/telemetry.ts and add
-// whitelist enforcement. For now: best-effort insert, never throws.
-//
-// IMPORTANT: callers must NEVER pass prompt text, user email, or any free-text
-// user content in the payload. Allowed keys are structural metadata only:
-// generationId, archetype, screens_count, navigation, mode, plan_duration_ms,
-// build_duration_ms, error_code, reason. T-0004-080 verifies this at the
-// orchestrator level; T-0004-104/105 will verify it at the telemetry level
-// (Step 8).
-//
-// TODO: Step 8 will extract this into services/api/src/llm/telemetry.ts and add whitelist enforcement.
-// ---------------------------------------------------------------------------
-
-async function writeEvent(
-  eventType: string,
-  payload: Record<string, unknown>,
-): Promise<void> {
-  try {
-    await db.insert(schema.events).values({
-      eventType,
-      payloadJson: payload,
-    })
-  } catch (err) {
-    log.error({err: safeMessage(err), eventType}, 'writeEvent failed — telemetry lost, generation unaffected')
-  }
-}
-
-// ---------------------------------------------------------------------------
 // runPipeline — the orchestrator
 // ---------------------------------------------------------------------------
 
@@ -230,14 +198,19 @@ export async function* runPipeline(
     clearTimeout(plannerTimer)
 
     const planDurationMs = Date.now() - planStart
-    await writeEvent('plan.completed', {
-      generationId,
-      archetype: plan.archetype,
-      screens_count: plan.screens.length,
-      navigation: plan.navigation,
-      mode: shadowMode ? 'shadow' : 'live',
-      plan_duration_ms: planDurationMs,
-    })
+    try {
+      await writeEvent('plan.completed', {
+        generationId,
+        archetype: plan.archetype,
+        screens_count: plan.screens.length,
+        navigation: plan.navigation,
+        mode: shadowMode ? 'shadow' : 'live',
+        plan_duration_ms: planDurationMs,
+      })
+    } catch (telErr) {
+      // Telemetry validation or write failure must not block generation.
+      log.error({err: safeMessage(telErr), eventType: 'plan.completed'}, 'telemetry write failed — generation unaffected')
+    }
   } catch (err) {
     clearTimeout(plannerTimer)
     const eventType = plannerErrorEventType(err)
@@ -248,11 +221,15 @@ export async function* runPipeline(
           ? err.code
           : (err as {code?: string}).code ?? 'unknown'
 
-    await writeEvent(eventType, {
-      generationId,
-      error_code: errorCode,
-      mode: shadowMode ? 'shadow' : 'live',
-    })
+    try {
+      await writeEvent(eventType, {
+        generationId,
+        error_code: errorCode,
+        mode: shadowMode ? 'shadow' : 'live',
+      })
+    } catch (telErr) {
+      log.error({err: safeMessage(telErr), eventType}, 'telemetry write failed — generation unaffected')
+    }
     plan = null
   }
 
@@ -273,10 +250,14 @@ export async function* runPipeline(
   }
 
   if (plan.archetype === 'unknown') {
-    await writeEvent('plan.unknown_fallback', {
-      generationId,
-      mode: 'live',
-    })
+    try {
+      await writeEvent('plan.unknown_fallback', {
+        generationId,
+        mode: 'live',
+      })
+    } catch (telErr) {
+      log.error({err: safeMessage(telErr), eventType: 'plan.unknown_fallback'}, 'telemetry write failed — generation unaffected')
+    }
     yield* generateAppSpec(opts)
     return
   }
@@ -304,22 +285,30 @@ export async function* runPipeline(
     }
 
     const buildDurationMs = Date.now() - buildStart
-    await writeEvent('build.completed', {
-      generationId,
-      archetype: plan.archetype,
-      screens_count: plan.screens.length,
-      navigation: plan.navigation,
-      build_duration_ms: buildDurationMs,
-    })
+    try {
+      await writeEvent('build.completed', {
+        generationId,
+        archetype: plan.archetype,
+        screens_count: plan.screens.length,
+        navigation: plan.navigation,
+        build_duration_ms: buildDurationMs,
+      })
+    } catch (telErr) {
+      log.error({err: safeMessage(telErr), eventType: 'build.completed'}, 'telemetry write failed — generation unaffected')
+    }
   } catch (err) {
     if (err instanceof PlanConformanceError) {
       // Conformance failure after builder retry — fall back to legacy.
       // Do NOT propagate to caller; this is a fallback signal, not a user-facing error.
-      await writeEvent('build.conformance_fallback', {
-        generationId,
-        reason: err.reason,
-        archetype: plan.archetype,
-      })
+      try {
+        await writeEvent('build.conformance_fallback', {
+          generationId,
+          reason: err.reason,
+          archetype: plan.archetype,
+        })
+      } catch (telErr) {
+        log.error({err: safeMessage(telErr), eventType: 'build.conformance_fallback'}, 'telemetry write failed — generation unaffected')
+      }
       yield* generateAppSpec(opts)
       return
     }
@@ -392,14 +381,19 @@ export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipel
     ])
     clearTimeout(plannerTimer)
 
-    await writeEvent('plan.completed', {
-      generationId,
-      archetype: plan.archetype,
-      screens_count: plan.screens.length,
-      navigation: plan.navigation,
-      mode: 'live',
-      plan_duration_ms: Date.now() - planStart,
-    })
+    try {
+      await writeEvent('plan.completed', {
+        generationId,
+        archetype: plan.archetype,
+        screens_count: plan.screens.length,
+        navigation: plan.navigation,
+        mode: 'live',
+        plan_duration_ms: Date.now() - planStart,
+      })
+    } catch (telErr) {
+      // Telemetry failure must not block the edit pipeline.
+      log.error({err: safeMessage(telErr), eventType: 'plan.completed'}, 'telemetry write failed — edit pipeline unaffected')
+    }
   } catch (err) {
     clearTimeout(plannerTimer)
     // All planner errors propagate for edits — there is no legacy fallback path.
@@ -504,11 +498,15 @@ export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipel
         continue
       }
       // Second violation: give up
-      await writeEvent('edit.patch_out_of_scope_fallback', {
-        generationId,
-        offendingOp: validation.offendingOp,
-        reason: validation.reason,
-      })
+      try {
+        await writeEvent('edit.patch_out_of_scope_fallback', {
+          generationId,
+          offendingOp: validation.offendingOp,
+          reason: validation.reason,
+        })
+      } catch (telErr) {
+        log.error({err: safeMessage(telErr), eventType: 'edit.patch_out_of_scope_fallback'}, 'telemetry write failed — edit pipeline unaffected')
+      }
       throw new PatchOutOfScopeError(validation.offendingOp, validation.reason)
     }
 
@@ -531,13 +529,17 @@ export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipel
     }
 
     const buildDurationMs = Date.now() - buildStart
-    await writeEvent('edit.completed', {
-      generationId,
-      archetype: plan.archetype,
-      screens_count: plan.screens.length,
-      navigation: plan.navigation,
-      build_duration_ms: buildDurationMs,
-    })
+    try {
+      await writeEvent('edit.completed', {
+        generationId,
+        archetype: plan.archetype,
+        screens_count: plan.screens.length,
+        navigation: plan.navigation,
+        build_duration_ms: buildDurationMs,
+      })
+    } catch (telErr) {
+      log.error({err: safeMessage(telErr), eventType: 'edit.completed'}, 'telemetry write failed — edit pipeline unaffected')
+    }
 
     return {newSpec, plan}
   }
