@@ -191,3 +191,23 @@ export const MINIMAL_VALID_PLAN: Plan = {
   ],
   navigation: 'none',
 }
+
+// ---------------------------------------------------------------------------
+// Builder conformance mock helpers (Step 3 / T-0004-039 through T-0004-053)
+// ---------------------------------------------------------------------------
+
+/**
+ * A spec that does NOT conform to MINIMAL_VALID_PLAN — view id is 'wrong_id'
+ * instead of 'main', which triggers view_id_mismatch.
+ */
+export const NON_CONFORMING_SPEC = {
+  version: 1 as const,
+  views: [
+    {
+      id: 'wrong_id',
+      root: {type: 'Heading' as const, text: 'Wrong'},
+    },
+  ],
+  initialViewId: 'wrong_id',
+}
+

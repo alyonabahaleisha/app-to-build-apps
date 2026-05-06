@@ -21,6 +21,7 @@
  * write.
  */
 import type {A2UIAction, A2UINode, A2UISpec} from '@app-creator/a2ui-schema'
+import type {Plan} from '@app-creator/a2ui-schema'
 
 /**
  * Per ARCHITECTURE.md §6: the renderer expects bounded specs. 8 levels of
@@ -29,10 +30,7 @@ import type {A2UIAction, A2UINode, A2UISpec} from '@app-creator/a2ui-schema'
  */
 export const MAX_NESTING_DEPTH = 8
 
-export type ValidationCode =
-  | 'unresolved_target_id'
-  | 'unresolved_view_id'
-  | 'max_depth_exceeded'
+export type ValidationCode = 'unresolved_target_id' | 'unresolved_view_id' | 'max_depth_exceeded'
 
 export class ValidationError extends Error {
   override readonly name = 'ValidationError'
@@ -87,7 +85,7 @@ const TARGETABLE_TYPES = new Set(['TextInput', 'Toggle', 'Counter'])
 /** Collect every node's `id` whose type is in TARGETABLE_TYPES. */
 function collectTargetableIds(spec: A2UISpec): Set<string> {
   const ids = new Set<string>()
-  walk(spec, (node) => {
+  walk(spec, node => {
     if (TARGETABLE_TYPES.has(node.type)) {
       // TextInput/Toggle/Counter make `id` required at the schema level, so
       // the cast is safe. Belt-and-braces: only add when present + non-empty.
@@ -101,7 +99,7 @@ function collectTargetableIds(spec: A2UISpec): Set<string> {
 /** Yield every Action carried by the spec — Button.action and Form.submitAction. */
 function* allActions(spec: A2UISpec): Iterable<A2UIAction> {
   const seen: A2UIAction[] = []
-  walk(spec, (node) => {
+  walk(spec, node => {
     if (node.type === 'Button') seen.push(node.action)
     if (node.type === 'Form' && node.submitAction) seen.push(node.submitAction)
   })
@@ -124,7 +122,7 @@ export function validateActionTargets(spec: A2UISpec): void {
 // ---------------------------------------------------------------------------
 
 export function validateNavigateTargets(spec: A2UISpec): void {
-  const viewIds = new Set(spec.views.map((v) => v.id))
+  const viewIds = new Set(spec.views.map(v => v.id))
   for (const action of allActions(spec)) {
     if (action.type === 'navigate' && !viewIds.has(action.viewId)) {
       throw new ValidationError({code: 'unresolved_view_id', detail: action.viewId})
@@ -168,4 +166,100 @@ export function deepValidateSpec(spec: A2UISpec): void {
   validateMaxDepth(spec)
   validateActionTargets(spec)
   validateNavigateTargets(spec)
+}
+
+// ---------------------------------------------------------------------------
+// validatePlanConformance — Step 3 (ADR-0004)
+// ---------------------------------------------------------------------------
+
+/**
+ * Walk a single node and all of its descendants, returning true on the first
+ * `navigate` action found. Short-circuits immediately — does not walk the
+ * rest of the tree once a navigate action is found.
+ *
+ * Action lookup: Button.action and Form.submitAction.
+ * Recursive descent into Container.children, List.items, Form.fields.
+ */
+function nodeHasNavigateAction(node: A2UINode): boolean {
+  // Check the action(s) on this node before recursing.
+  if (node.type === 'Button' && node.action.type === 'navigate') {
+    return true
+  }
+  if (node.type === 'Form' && node.submitAction?.type === 'navigate') {
+    return true
+  }
+
+  // Recurse into composite nodes.
+  switch (node.type) {
+    case 'Container':
+      for (const child of node.children) {
+        if (nodeHasNavigateAction(child)) return true
+      }
+      return false
+    case 'List':
+      for (const item of node.items) {
+        if (nodeHasNavigateAction(item)) return true
+      }
+      return false
+    case 'Form':
+      for (const field of node.fields) {
+        if (nodeHasNavigateAction(field)) return true
+      }
+      return false
+    default:
+      // Leaf nodes: Heading, Text, Image, TextInput, Toggle, Counter.
+      return false
+  }
+}
+
+/**
+ * Returns true if the spec contains at least one `navigate` action anywhere
+ * in any view's node tree (including nested Containers, Lists, and Forms).
+ */
+function hasNavigateAction(spec: A2UISpec): boolean {
+  for (const view of spec.views) {
+    if (nodeHasNavigateAction(view.root)) return true
+  }
+  return false
+}
+
+/**
+ * Check that a builder-produced spec conforms to the plan it was conditioned on.
+ *
+ * Called after A2UISpecSchema.parse succeeds. Returns {ok: true} when the spec
+ * matches the plan on all four axes, or {ok: false, reason} on the first
+ * violation (short-circuits). The reason strings are stable identifiers used
+ * for the diagnostic re-prompt and the PlanConformanceError code.
+ *
+ * Reason codes:
+ *   'view_count_mismatch'         — spec.views.length !== plan.screens.length
+ *   'view_id_mismatch:<id>'       — a plan screen id is absent from spec view ids
+ *   'initial_view_mismatch'       — spec.initialViewId !== plan.screens[0].id
+ *   'navigation_violation'        — plan.navigation === 'none' but a navigate action exists
+ */
+export function validatePlanConformance(
+  spec: A2UISpec,
+  plan: Plan,
+): {ok: true} | {ok: false; reason: string} {
+  if (spec.views.length !== plan.screens.length) {
+    return {ok: false, reason: 'view_count_mismatch'}
+  }
+
+  const specIds = new Set(spec.views.map(v => v.id))
+  for (const screen of plan.screens) {
+    if (!specIds.has(screen.id)) {
+      return {ok: false, reason: `view_id_mismatch:${screen.id}`}
+    }
+  }
+
+  // plan.screens is validated min(1) by PlanSchema; screens[0] is always present.
+  if (spec.initialViewId !== plan.screens[0]!.id) {
+    return {ok: false, reason: 'initial_view_mismatch'}
+  }
+
+  if (plan.navigation === 'none' && hasNavigateAction(spec)) {
+    return {ok: false, reason: 'navigation_violation'}
+  }
+
+  return {ok: true}
 }

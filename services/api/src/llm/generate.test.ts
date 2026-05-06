@@ -14,10 +14,16 @@ import {
   mockAnthropicStream,
   mockAnthropicError,
   MINIMAL_VALID_SPEC,
+  NON_CONFORMING_SPEC,
+  MINIMAL_VALID_PLAN,
   makeToolUseMessage,
   makeToolUseStartEvent,
   makeSuccessEvents,
 } from '../../test/mocks/anthropic.js'
+import {
+  SYSTEM_PROMPT_STATIC,
+  SYSTEM_PROMPT_CATALOG,
+} from './prompts/system.js'
 
 // ---------------------------------------------------------------------------
 // Module-level mock — applied before any imports of the mocked modules
@@ -337,5 +343,255 @@ describe('generateAppSpec', () => {
       (e: unknown) => (e as {type: string}).type === 'building_started',
     )
     expect(buildingEvents).toHaveLength(1)
+  })
+
+  // ---------------------------------------------------------------------------
+  // Plan conditioning + conformance tests (T-0004-039 through T-0004-053)
+  // ---------------------------------------------------------------------------
+
+  // T-0004-039: no plan supplied → system array byte-for-byte identical to M1
+  it('T-0004-039: system array has exactly 2 blocks with correct text content when no plan is supplied', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    await collectEvents(generateAppSpec(OPTS))
+
+    const call = capturedStreamCall(streamMock)
+    const system = call['system'] as Array<{type: string; text: string; cache_control?: unknown}>
+
+    // Byte-for-byte M1 equivalence: exactly 2 blocks, static + cached catalog.
+    expect(system).toHaveLength(2)
+    // Block 0: static prompt — not cached, exact text content matches
+    expect(system.at(0)?.cache_control).toBeUndefined()
+    expect(system.at(0)?.text).toBe(SYSTEM_PROMPT_STATIC)
+    // Block 1: catalog — cached, exact text content matches
+    expect(system.at(1)?.cache_control).toEqual({type: 'ephemeral'})
+    expect(system.at(1)?.text).toBe(SYSTEM_PROMPT_CATALOG)
+  })
+
+  // T-0004-040: plan supplied → system array has 3 blocks, third contains the plan
+  it('T-0004-040: system array has 3 blocks when plan is supplied, third block contains serialized plan', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+
+    const call = capturedStreamCall(streamMock)
+    const system = call['system'] as Array<{type: string; text: string; cache_control?: unknown}>
+
+    expect(system).toHaveLength(3)
+    // First two blocks unchanged from M1
+    expect(system.at(0)?.cache_control).toBeUndefined()
+    expect(system.at(1)?.cache_control).toEqual({type: 'ephemeral'})
+    // Third block is uncached and contains plan JSON
+    expect(system.at(2)?.cache_control).toBeUndefined()
+    expect(system.at(2)?.text).toContain('"main"') // plan screen id
+    expect(system.at(2)?.text).toContain('PLAN:')
+  })
+
+  // T-0004-041: serializePlan output is deterministic (snapshot)
+  it('T-0004-041: serializePlan produces deterministic output for a given plan (snapshot)', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {serializePlan} = require('./serializePlan.js')
+    const output = serializePlan(MINIMAL_VALID_PLAN)
+    expect(output).toMatchSnapshot()
+    // Calling again must produce identical string
+    expect(serializePlan(MINIMAL_VALID_PLAN)).toBe(output)
+  })
+
+  // T-0004-041b: serializePlan uses plural 'views' for multi-screen plans (snapshot)
+  it('T-0004-041b: serializePlan uses plural "views" and lists all screen ids for a multi-screen plan (snapshot)', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {serializePlan} = require('./serializePlan.js')
+    const multiScreenPlan = {
+      version: 1,
+      archetype: 'Tracker',
+      screens: [
+        {id: 'dashboard', role: 'home', purpose: 'show summary', key_components: ['List', 'Text']},
+        {id: 'add_entry', role: 'detail', purpose: 'add a new entry', key_components: ['Form']},
+      ],
+      navigation: 'stack',
+    }
+    const output = serializePlan(multiScreenPlan)
+    // Plural branch: "Output exactly 2 views"
+    expect(output).toContain('Output exactly 2 views')
+    expect(output).toMatchSnapshot()
+  })
+
+  // T-0004-042: happy path with plan — conforming spec yields done
+  it('T-0004-042: yields done with conforming spec when plan is supplied', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    const events = await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+
+    const done = events.find((e: unknown) => (e as {type: string}).type === 'done') as {
+      type: 'done'
+      spec: unknown
+    }
+    expect(done).toBeDefined()
+    expect(done.spec).toMatchObject(MINIMAL_VALID_SPEC)
+    // Only one stream call — no retry was needed
+    expect(streamMock).toHaveBeenCalledTimes(1)
+  })
+
+  // T-0004-048: first conformance fail then success → retries once, yields done
+  it('T-0004-048: retries once on conformance failure then yields done when second attempt conforms', async () => {
+    const streamMock = getStreamMock()
+    // First call: returns spec with wrong view id (non-conforming)
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(NON_CONFORMING_SPEC)),
+    )
+    // Second call: returns conforming spec
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    const events = await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+
+    const done = events.find((e: unknown) => (e as {type: string}).type === 'done') as {
+      type: 'done'
+      spec: unknown
+    }
+    expect(done).toBeDefined()
+    expect(done.spec).toMatchObject(MINIMAL_VALID_SPEC)
+    // Two stream calls total: original + one conformance retry
+    expect(streamMock).toHaveBeenCalledTimes(2)
+  })
+
+  // T-0004-048b: diagnostic turn on conformance retry echoes prior tool_use input + correction
+  it('T-0004-048b: conformance retry messages include assistant echo of prior spec and user correction', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(NON_CONFORMING_SPEC)),
+    )
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+
+    // Inspect the second call's messages array
+    const secondCallArg = streamMock.mock.calls[1]?.[0] as Record<string, unknown>
+    const messages = secondCallArg['messages'] as Array<{role: string; content: string}>
+
+    // messages[0] is the original user prompt
+    // messages[1] is the assistant echo of the non-conforming spec
+    // messages[2] is the user correction
+    expect(messages.length).toBeGreaterThanOrEqual(3)
+    const assistantTurn = messages.find(m => m.role === 'assistant')
+    expect(assistantTurn).toBeDefined()
+    expect(assistantTurn?.content).toContain('wrong_id') // echoed prior spec view id
+
+    const correctionTurn = messages.at(-1)
+    expect(correctionTurn?.role).toBe('user')
+    expect(correctionTurn?.content).toContain('did not conform to the plan')
+  })
+
+  // T-0004-049: two consecutive conformance failures → throws PlanConformanceError
+  it('T-0004-049: throws PlanConformanceError after two consecutive conformance failures', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(NON_CONFORMING_SPEC)),
+    )
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(NON_CONFORMING_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+
+    let caught: unknown
+    try {
+      await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+    } catch (err) {
+      caught = err
+    }
+
+    expect(caught).toBeDefined()
+    expect((caught as {name: string}).name).toBe('PlanConformanceError')
+    expect((caught as {code: string}).code).toBe('plan_conformance')
+    expect((caught as {reason: string}).reason).toMatch(
+      /view_id_mismatch|view_count_mismatch|initial_view_mismatch|navigation_violation/,
+    )
+    expect(streamMock).toHaveBeenCalledTimes(2)
+  })
+
+  // T-0004-052: SSE event order preserved — thinking_started, building_started, done
+  it('T-0004-052: SSE event order (thinking_started → building_started → done) is preserved with plan', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    const events = await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+    const types = events.map((e: unknown) => (e as {type: string}).type)
+
+    expect(types[0]).toBe('thinking_started')
+    expect(types[1]).toBe('building_started')
+    expect(types[2]).toBe('done')
+    expect(types).toHaveLength(3)
+  })
+
+  // T-0004-053: building_started not re-emitted on conformance retry
+  it('T-0004-053: building_started is emitted exactly once even when a conformance retry occurs', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(NON_CONFORMING_SPEC)),
+    )
+    streamMock.mockImplementationOnce(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    const events = await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+
+    const buildingEvents = events.filter(
+      (e: unknown) => (e as {type: string}).type === 'building_started',
+    )
+    expect(buildingEvents).toHaveLength(1)
+  })
+
+  // T-0004-052r: regression — InvalidSpecError still thrown for bad Zod parse (with plan)
+  it('T-0004-052r: InvalidSpecError still thrown for Zod-invalid spec even when plan is supplied', async () => {
+    const invalidInput = {version: 1, views: [], initialViewId: 'missing'}
+
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(invalidInput)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+
+    let caught: unknown
+    try {
+      await collectEvents(generateAppSpec({...OPTS, plan: MINIMAL_VALID_PLAN}))
+    } catch (err) {
+      caught = err
+    }
+
+    expect(caught).toBeDefined()
+    expect((caught as {name: string}).name).toBe('InvalidSpecError')
+    expect((caught as {code: string}).code).toBe('invalid_spec')
   })
 })
