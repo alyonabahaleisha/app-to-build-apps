@@ -1,0 +1,103 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`producePlanTool input_schema round-trips via JSON.stringify+parse and matches snapshot 1`] = `
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "archetype": {
+      "enum": [
+        "ListCRUD",
+        "Tracker",
+        "Calculator",
+        "Journal",
+        "Dashboard",
+        "SocialFeed",
+        "InfoDisplay",
+        "SimpleGame",
+        "unknown",
+      ],
+      "type": "string",
+    },
+    "edit_intent": {
+      "additionalProperties": false,
+      "properties": {
+        "target_paths": {
+          "items": {
+            "pattern": "^\\/",
+            "type": "string",
+          },
+          "maxItems": 20,
+          "minItems": 1,
+          "type": "array",
+        },
+      },
+      "required": [
+        "target_paths",
+      ],
+      "type": "object",
+    },
+    "navigation": {
+      "enum": [
+        "none",
+        "stack",
+        "tabs",
+        "tabs+stack",
+        "modal-overlay",
+      ],
+      "type": "string",
+    },
+    "screens": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "pattern": "^[a-z][a-z0-9_]{0,31}$",
+            "type": "string",
+          },
+          "key_components": {
+            "items": {
+              "minLength": 1,
+              "type": "string",
+            },
+            "maxItems": 8,
+            "minItems": 1,
+            "type": "array",
+          },
+          "purpose": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string",
+          },
+          "role": {
+            "maxLength": 40,
+            "minLength": 1,
+            "type": "string",
+          },
+        },
+        "required": [
+          "id",
+          "role",
+          "purpose",
+          "key_components",
+        ],
+        "type": "object",
+      },
+      "maxItems": 4,
+      "minItems": 1,
+      "type": "array",
+    },
+    "version": {
+      "const": 1,
+      "type": "number",
+    },
+  },
+  "required": [
+    "version",
+    "archetype",
+    "screens",
+    "navigation",
+  ],
+  "type": "object",
+}
+`;

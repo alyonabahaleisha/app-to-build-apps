@@ -169,6 +169,17 @@ export const A2UISpecSchema = z
   })
 export type A2UISpec = z.infer<typeof A2UISpecSchema>
 
+// Plan schema — re-exported for consumers that import from the package root.
+export {
+  PLAN_VERSION,
+  PlanArchetypeSchema,
+  PlanNavigationSchema,
+  PlanScreenSchema,
+  PlanEditIntentSchema,
+  PlanSchema,
+} from './plan.js'
+export type {Plan, PlanArchetype} from './plan.js'
+
 // JSON Patch — minimal RFC 6902 shape. Used by the edit tool.
 export const JsonPatchOperationSchema = z.object({
   op: z.enum(['add', 'remove', 'replace', 'move', 'copy', 'test']),
