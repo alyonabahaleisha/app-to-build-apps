@@ -177,6 +177,63 @@ export function mockPlannerZodInvalid(): Partial<Message> {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Builder patch mock helpers (Step 7)
+// ---------------------------------------------------------------------------
+
+import type {JsonPatch} from '@app-creator/a2ui-schema'
+
+/**
+ * Build a mock messages.create() return value wrapping an RFC 6902 patch as a
+ * produce_app_spec_patch tool_use block. Use as:
+ *   jest.fn().mockResolvedValue(mockBuilderPatchResponse(patch))
+ */
+export function mockBuilderPatchResponse(patch: JsonPatch): Partial<Message> {
+  return {
+    id: 'msg_patch_test',
+    role: 'assistant',
+    stop_reason: 'tool_use',
+    stop_sequence: null,
+    type: 'message',
+    model: 'claude-sonnet-4-6',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    content: [{type: 'tool_use', id: 'tu_patch_test', name: 'produce_app_spec_patch', input: patch}] as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    usage: {input_tokens: 100, output_tokens: 200} as any,
+  }
+}
+
+/**
+ * Build a mock messages.create() return value for an out-of-scope patch.
+ * The patch contains an op that touches a path outside target_paths.
+ * `reason` is included for debugging.
+ */
+export function mockBuilderPatchOutOfScope(reason = 'patch targets unintended path'): {
+  response: Partial<Message>
+  patch: JsonPatch
+} {
+  // A patch op that modifies /views/1/root — typically outside any
+  // single-screen edit_intent targeting /views/0/root/...
+  const patch: JsonPatch = [
+    {op: 'replace', path: '/views/1/root', value: {type: 'Heading', text: reason}},
+  ]
+  return {
+    patch,
+    response: {
+      id: 'msg_oos_test',
+      role: 'assistant',
+      stop_reason: 'tool_use',
+      stop_sequence: null,
+      type: 'message',
+      model: 'claude-sonnet-4-6',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      content: [{type: 'tool_use', id: 'tu_oos_test', name: 'produce_app_spec_patch', input: patch}] as any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      usage: {input_tokens: 100, output_tokens: 150} as any,
+    },
+  }
+}
+
 /** Minimal valid plan for use in planner tests. */
 export const MINIMAL_VALID_PLAN: Plan = {
   version: 1,

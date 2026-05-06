@@ -160,6 +160,25 @@ export interface ProjectsService {
    * planJson is included here (owner-only path; ADR-0004 §G).
    */
   getVersion: (versionId: string) => Promise<ProjectVersion | null>
+  /**
+   * ADR-0004 Step 7: Apply an edit result to a project.
+   *
+   * Inside a single transaction:
+   *   1. Insert a new project_versions row with the updated spec, render hash,
+   *      and the reconstructed/updated plan from the edit pipeline.
+   *   2. Update projects.current_version_id to the new version's id.
+   *
+   * Last-writer-wins on simultaneous edits — both writes succeed but
+   * current_version_id ends at the latest committed (T-0004-089).
+   *
+   * `plan` is always populated for edit-path versions — the planner
+   * reconstructs a plan even for legacy versions with plan_json IS NULL.
+   */
+  applyEdit: (
+    projectId: string,
+    newSpec: A2UISpec,
+    plan: Plan,
+  ) => Promise<ProjectDetail>
 }
 
 export function createProjectsService(db: Db): ProjectsService {
@@ -323,6 +342,53 @@ export function createProjectsService(db: Db): ProjectsService {
         .from(projectVersions)
         .where(eq(projectVersions.id, versionId))
       return rows[0] ?? null
+    },
+
+    /**
+     * ADR-0004 Step 7: Apply an edit result to a project.
+     *
+     * Transactional two-step: insert new version row, update project's
+     * current_version_id. The plan is always populated (edit pipeline
+     * reconstructs a plan even for legacy NULL-plan versions).
+     *
+     * Returns the updated project + new version. T-0004-089 verifies last-
+     * writer-wins: two concurrent calls both insert rows; the final
+     * current_version_id is whichever committed last.
+     */
+    async applyEdit(
+      projectId: string,
+      newSpec: A2UISpec,
+      plan: Plan,
+    ): Promise<ProjectDetail> {
+      // Validate both artifacts before touching the DB.
+      const parsed = A2UISpecSchema.parse(newSpec)
+      const validatedPlan = PlanSchema.parse(plan)
+      const hash = renderHash(parsed)
+
+      return await db.transaction(async tx => {
+        const [versionRow] = await tx
+          .insert(projectVersions)
+          .values({
+            projectId,
+            specJson: parsed,
+            renderHash: hash,
+            planJson: validatedPlan,
+          })
+          .returning()
+        if (!versionRow) throw new Error('project_versions insert returned no row')
+
+        const [updatedProject] = await tx
+          .update(projects)
+          .set({currentVersionId: versionRow.id})
+          .where(eq(projects.id, projectId))
+          .returning()
+        if (!updatedProject) throw new Error('projects update returned no row')
+
+        return {
+          project: {...updatedProject, currentVersionId: versionRow.id},
+          currentVersion: versionRow,
+        }
+      })
     },
   }
 }

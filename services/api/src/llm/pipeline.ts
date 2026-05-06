@@ -28,6 +28,7 @@
 import {randomUUID} from 'crypto'
 import {createHash} from 'crypto'
 import pino from 'pino'
+import {applyPatch} from 'fast-json-patch'
 import {env} from '../lib/env.js'
 import {db} from '../db/index.js'
 import {schema} from '../db/index.js'
@@ -38,13 +39,31 @@ import {
   PlannerInvalidError,
   PlannerTimeoutError,
   PlanConformanceError,
+  PatchOutOfScopeError,
+  InvalidSpecError,
 } from './errors.js'
-import type {A2UISpec, Plan} from '@app-creator/a2ui-schema'
+import type {A2UISpec, JsonPatch, Plan} from '@app-creator/a2ui-schema'
+import {A2UISpecSchema, JsonPatchSchema} from '@app-creator/a2ui-schema'
+import {anthropic} from './anthropic.js'
+import {produceAppSpecPatchTool} from './tools/produceAppSpecPatch.js'
+import {SYSTEM_PROMPT_STATIC, SYSTEM_PROMPT_CATALOG} from './prompts/system.js'
+import {serializePlan} from './serializePlan.js'
+import {hashUserId, flattenZodIssues, sleep} from './util.js'
+import {validatePatchAgainstIntent} from './patchValidation.js'
 
 // Module-level logger for telemetry write failures. Pino is already a dep;
 // this logger is a sibling to Fastify's built-in logger — same format, separate
 // instance. Step 8 will consolidate when telemetry.ts is extracted.
 const log = pino({level: env.LOG_LEVEL})
+
+// ---------------------------------------------------------------------------
+// Edit pipeline result type
+// ---------------------------------------------------------------------------
+
+export type EditPipelineResult = {
+  newSpec: A2UISpec
+  plan: Plan
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -307,4 +326,223 @@ export async function* runPipeline(
     // All other errors (transport, timeout, invalid spec, rate limit) propagate.
     throw err
   }
+}
+
+// ---------------------------------------------------------------------------
+// runPipelineEdit — edit pipeline orchestrator
+//
+// Mirrors runPipeline's structure but:
+//   1. Always runs the planner (no percent routing / shadow mode — edits are
+//      always new-path; the legacy single-call path has no edit concept).
+//   2. Builder uses the patch tool (produce_app_spec_patch), not produce_app_spec.
+//   3. Patch is validated against edit_intent.target_paths. Out-of-scope:
+//      re-prompt once with diagnostic; second failure throws PatchOutOfScopeError.
+//   4. Returns {newSpec, plan} — NOT an AsyncGenerator; edits are not SSE-streamed.
+//
+// The planner accepts currentPlan: undefined (legacy versions with plan_json IS NULL);
+// in that case it reconstructs an implicit plan from the spec alone (T-0004-100).
+//
+// Telemetry events: edit.completed on success, edit.patch_out_of_scope_fallback
+// on out-of-scope after one retry (before throwing PatchOutOfScopeError).
+// ---------------------------------------------------------------------------
+
+export type EditPipelineOpts = {
+  userId: string
+  prompt: string
+  currentSpec: A2UISpec
+  currentPlan: Plan | undefined
+}
+
+/**
+ * Run the plan → patch build pipeline for a single-intent edit.
+ *
+ * Always runs the planner (no percent routing; edits have no legacy fallback).
+ * The planner receives currentSpec and currentPlan (may be undefined for legacy
+ * projects — the planner reconstructs an implicit plan in that case).
+ *
+ * Returns {newSpec, plan} on success. Throws:
+ *   PatchOutOfScopeError — builder patch violated target_paths after 1 retry
+ *   InvalidSpecError     — patch result failed A2UISpecSchema validation
+ *   PlannerInvalidError  — planner failed after retry
+ *   PlannerTimeoutError  — planner timed out (12 s)
+ *   (other transport errors propagate as-is)
+ */
+export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipelineResult> {
+  const generationId = randomUUID()
+
+  // ---------------------------------------------------------------------------
+  // Planner stage — 12 s wall-clock, same belt-and-suspenders as runPipeline
+  // ---------------------------------------------------------------------------
+  const plannerController = new AbortController()
+  const plannerSignal = plannerController.signal
+  const plannerTimer = setTimeout(() => plannerController.abort(), 12_000)
+  const planStart = Date.now()
+
+  let plan: Plan
+  try {
+    plan = await Promise.race([
+      producePlan({
+        userId: opts.userId,
+        prompt: opts.prompt,
+        currentSpec: opts.currentSpec,
+        currentPlan: opts.currentPlan,
+        signal: plannerSignal,
+      }),
+      plannerTimeoutReject(12_000),
+    ])
+    clearTimeout(plannerTimer)
+
+    await writeEvent('plan.completed', {
+      generationId,
+      archetype: plan.archetype,
+      screens_count: plan.screens.length,
+      navigation: plan.navigation,
+      mode: 'live',
+      plan_duration_ms: Date.now() - planStart,
+    })
+  } catch (err) {
+    clearTimeout(plannerTimer)
+    // All planner errors propagate for edits — there is no legacy fallback path.
+    // The route maps them to appropriate HTTP responses.
+    throw err
+  }
+
+  // ---------------------------------------------------------------------------
+  // Edit_intent: the plan must have edit_intent.target_paths for patch validation.
+  // If the planner omitted edit_intent (shouldn't happen for an edit prompt),
+  // treat as an empty targetPaths list — the validator will reject all ops.
+  // ---------------------------------------------------------------------------
+  const targetPaths: string[] = plan.edit_intent?.target_paths ?? []
+
+  // ---------------------------------------------------------------------------
+  // Builder stage — 90 s wall-clock. Uses messages.create (not .stream).
+  // Edits are not SSE-streamed in this ADR.
+  // ---------------------------------------------------------------------------
+  const buildStart = Date.now()
+
+  let patchAttempts = 0
+
+  // Build a serialized representation of the current spec for the system block.
+  const currentSpecBlock = `Current spec (apply your patch to this):\n${JSON.stringify(opts.currentSpec, null, 2)}`
+
+  // System: static + cached catalog + plan (with edit_intent) + current spec
+  const buildSystemBlocks = [
+    {type: 'text' as const, text: SYSTEM_PROMPT_STATIC},
+    {
+      type: 'text' as const,
+      text: SYSTEM_PROMPT_CATALOG,
+      cache_control: {type: 'ephemeral' as const},
+    },
+    {type: 'text' as const, text: serializePlan(plan)},
+    {type: 'text' as const, text: currentSpecBlock},
+  ]
+
+  let buildMessages: Array<{role: 'user' | 'assistant'; content: string}> = [
+    {role: 'user', content: opts.prompt},
+  ]
+
+  while (patchAttempts < 2) {
+    let rawOutput: unknown
+    try {
+      const response = await Promise.race([
+        anthropic.messages.create(
+          {
+            model: 'claude-sonnet-4-6',
+            max_tokens: 8000,
+            metadata: {user_id: hashUserId(opts.userId)},
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            system: buildSystemBlocks as any,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            tools: [produceAppSpecPatchTool] as any,
+            tool_choice: {type: 'tool', name: 'produce_app_spec_patch'},
+            messages: buildMessages,
+          },
+        ),
+        builderTimeoutReject(90_000),
+      ])
+
+      const toolBlock = (response as {content: Array<{type: string; input?: unknown}>}).content.find(
+        b => b.type === 'tool_use',
+      )
+      if (!toolBlock) {
+        throw new InvalidSpecError('no_tool_use')
+      }
+      rawOutput = toolBlock.input
+    } catch (err) {
+      const sdkErr = err as {status?: number; code?: string}
+      if (sdkErr?.status === 429 && patchAttempts < 1) {
+        patchAttempts++
+        await sleep(1000)
+        continue
+      }
+      if (err instanceof InvalidSpecError) throw err
+      throw err
+    }
+
+    // Parse the patch (Zod validation)
+    let patch: JsonPatch
+    try {
+      patch = JsonPatchSchema.parse(rawOutput)
+    } catch (zerr) {
+      throw new InvalidSpecError('invalid_spec', flattenZodIssues(zerr))
+    }
+
+    // Validate patch against edit_intent.target_paths
+    const validation = validatePatchAgainstIntent(patch, targetPaths)
+    if (!validation.ok) {
+      if (patchAttempts === 0) {
+        // First violation: re-prompt with diagnostic
+        patchAttempts++
+        buildMessages = [
+          ...buildMessages,
+          {role: 'assistant', content: JSON.stringify(patch)},
+          {
+            role: 'user',
+            content: `Patch op at index ${validation.offendingOp} violates edit_intent.target_paths: ${validation.reason}. Revise the patch so every op path is within the declared target_paths.`,
+          },
+        ]
+        continue
+      }
+      // Second violation: give up
+      await writeEvent('edit.patch_out_of_scope_fallback', {
+        generationId,
+        offendingOp: validation.offendingOp,
+        reason: validation.reason,
+      })
+      throw new PatchOutOfScopeError(validation.offendingOp, validation.reason)
+    }
+
+    // Apply the patch (validate=true, mutate=false per CLAUDE.md §9).
+    // Cast our generic JsonPatch to fast-json-patch's discriminated Operation[]
+    // — the runtime values are identical; the difference is only TypeScript's
+    // ability to narrow by `op`. Our Zod schema guarantees the same op values.
+    let newSpec: A2UISpec
+    try {
+      const result = applyPatch(
+        JSON.parse(JSON.stringify(opts.currentSpec)), // deep clone — mutate: false equivalent
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        patch as any,
+        /*validate*/ true,
+        /*mutate*/ false,
+      )
+      newSpec = A2UISpecSchema.parse(result.newDocument)
+    } catch (err) {
+      throw new InvalidSpecError('invalid_spec', String(err))
+    }
+
+    const buildDurationMs = Date.now() - buildStart
+    await writeEvent('edit.completed', {
+      generationId,
+      archetype: plan.archetype,
+      screens_count: plan.screens.length,
+      navigation: plan.navigation,
+      build_duration_ms: buildDurationMs,
+    })
+
+    return {newSpec, plan}
+  }
+
+  // Unreachable in practice — all exits are via throw or return.
+  // TypeScript needs this for exhaustiveness.
+  throw new PatchOutOfScopeError(0, 'unexpected loop exit')
 }

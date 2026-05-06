@@ -8,6 +8,8 @@
  *               T-0002-121
  *   Negative:   T-0002-122
  *   Regression: T-0002-123
+ *   Security:   T-0004-121 (ADR-0004 Step 7 — plan_json must never appear in
+ *               library response, even when populated via new pipeline)
  *
  * Service-level T-IDs (099, 100, 103-105, 111-115) live in
  * library.service.test.ts.
@@ -20,7 +22,6 @@ import {eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 import Fastify from 'fastify'
 import pino from 'pino'
-
 import * as schema from '../db/schema.js'
 import {projects, users} from '../db/schema.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
@@ -28,6 +29,57 @@ import {uniqueEmail, userJwt, validSpec} from '../../test/factories.js'
 import {createProjectsService} from '../services/projects.service.js'
 import {resetRateLimitForTests} from '../lib/rateLimit.js'
 import type {LibraryService} from '../services/library.service.js'
+import {MINIMAL_VALID_PLAN} from '../../test/mocks/anthropic.js'
+
+// ---------------------------------------------------------------------------
+// T-0004-121 / T-0004-121b helpers — plan-leak detection
+//
+// Curated allow-list (rather than schema-derived) avoids false-positives on
+// common keys (`id`, `version`) while still catching every realistic leak
+// path. Keys like `id`/`role`/`version` are excluded because they
+// legitimately appear in non-plan response data (project id, version id,
+// etc.) and would false-positive on CI.
+//
+// A future serializer that accidentally leaks plan content (either as a
+// `plan_json` field or via spread destructuring) will surface at least one
+// of these keys. New PlanSchema fields with plan-distinctive names should
+// be added here. New PlanSchema fields with common names (e.g., a future
+// `id` on `edit_intent`) should NOT be added — they would false-positive.
+// ---------------------------------------------------------------------------
+const FORBIDDEN_PLAN_KEYS = [
+  // Column / property names that indicate the plan column is being exposed:
+  'plan_json',
+  'planJson',
+  // Plan-distinctive content keys that would only appear in a leaked plan:
+  'archetype',
+  'screens',
+  'navigation',
+  'edit_intent',
+  'target_paths',
+  'key_components',
+  'purpose',
+] as const
+
+const FORBIDDEN_PLAN_KEYS_SET = new Set<string>(FORBIDDEN_PLAN_KEYS)
+
+/**
+ * Recursively walks the entire JSON response tree and asserts that no key in
+ * `FORBIDDEN_PLAN_KEYS_SET` appears anywhere. This catches both direct leaks
+ * (`response.plan_json`) and deeply-nested leaks (`response.current_version
+ * .archetype`).
+ */
+function walkAndCheck(node: unknown, path: string): void {
+  if (node === null || node === undefined || typeof node !== 'object') return
+  if (Array.isArray(node)) {
+    node.forEach((item, i) => walkAndCheck(item, `${path}[${i}]`))
+    return
+  }
+  const obj = node as Record<string, unknown>
+  for (const [key, value] of Object.entries(obj)) {
+    expect(FORBIDDEN_PLAN_KEYS_SET.has(key)).toBe(false)
+    walkAndCheck(value, `${path}.${key}`)
+  }
+}
 
 // SUPABASE_JWT_SECRET must be set BEFORE auth.js imports.
 const TEST_JWT_SECRET = 'library-route-test-secret-' + randomUUID()
@@ -446,6 +498,57 @@ describe('ADR-0002 Step 6 — library routes', () => {
   // T-0002-123: EXPLAIN uses projects_library_idx partial index
   // -------------------------------------------------------------------------
 
+  // -------------------------------------------------------------------------
+  // T-0004-121: GET /library/:id MUST NOT leak plan_json for pipeline versions
+  //
+  // ADR-0004 Step 7 / rev-2 Roz finding (P0 security).
+  // A project generated via the new Plan→Build pipeline has plan_json populated.
+  // The public /library/:id endpoint must NOT include plan_json, planJson, or
+  // any plan-distinctive key (see FORBIDDEN_PLAN_KEYS above).
+  //
+  // Uses a curated allow-list rather than a schema-derived key walk to avoid
+  // false-positives on common response keys like `id` and `version`.
+  //
+  // This test walks the entire JSON response tree exhaustively via walkAndCheck.
+  // -------------------------------------------------------------------------
+
+  it('T-0004-121: GET /library/:id for a new-pipeline project does not leak plan_json or any plan-distinctive key', async () => {
+    const server = await buildLibraryServer({db})
+    const {id: ownerId, email} = await makeUser(db, 'planjsoncheck')
+
+    // Create a project with plan_json populated (new pipeline path)
+    const svc = createProjectsService(db)
+    const detail = await svc.create({
+      ownerId,
+      spec: validSpec(),
+      originalPrompt: 'test prompt for plan leak check',
+      plan: MINIMAL_VALID_PLAN,
+    })
+    const projectId = detail.project.id
+
+    // Publish it so /library/:id returns it
+    await db
+      .update(projects)
+      .set({visibility: 'public', publishedAt: new Date()})
+      .where(eq(projects.id, projectId))
+
+    // Verify plan_json IS in the DB (confirming the setup is valid)
+    const savedVersion = await svc.getVersion(detail.currentVersion.id)
+    expect(savedVersion!.planJson).not.toBeNull()
+
+    // Fetch via public library endpoint
+    const res = await server.inject({
+      method: 'GET',
+      url: `/library/${projectId}`,
+      headers: {authorization: 'Bearer ' + userJwt({sub: ownerId, email, secret: TEST_JWT_SECRET})},
+    })
+    expect(res.statusCode).toBe(200)
+
+    // Walk the entire response body tree exhaustively, asserting no
+    // plan-distinctive key appears anywhere (see FORBIDDEN_PLAN_KEYS).
+    walkAndCheck(JSON.parse(res.payload), 'response')
+  })
+
   it('T-0002-123: EXPLAIN on library list query uses projects_library_idx', async () => {
     const pool = await getTestPool()
 
@@ -484,5 +587,61 @@ describe('ADR-0002 Step 6 — library routes', () => {
 
     // Verify the index is referenced by name in the plan
     expect(plan2).toContain('projects_library_idx')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0004-121b: walkAndCheck defensive unit tests (no Docker / DB required)
+//
+// Verifies that walkAndCheck correctly fires an assertion failure when a
+// plan-distinctive key appears anywhere in a nested response object. Guards
+// against future regressions that would silently weaken the walker (e.g.,
+// someone short-circuiting the recursion or clearing FORBIDDEN_PLAN_KEYS).
+// ---------------------------------------------------------------------------
+
+describe('walkAndCheck — plan-leak detection (T-0004-121b)', () => {
+  it('T-0004-121b: fails when a top-level forbidden key is present (plan_json)', () => {
+    // Direct column leak at the response root
+    expect(() => walkAndCheck({plan_json: '{}'}, 'response')).toThrow()
+  })
+
+  it('T-0004-121b: fails when a deeply-nested forbidden key is present (archetype)', () => {
+    // Simulate a deeply-nested serializer bug: plan data spread into
+    // current_version — the exact regression path that FORBIDDEN_PLAN_KEYS
+    // was designed to catch.
+    const fakeResponse = {
+      project: {
+        id: 'some-project-id',
+        title: 'My App',
+        current_version: {
+          id: 'some-version-id',
+          spec_json: {},
+          archetype: 'Tracker',
+        },
+      },
+    }
+    // walkAndCheck should trigger a jest assertion failure for `archetype`.
+    // jest's expect() throws when a matcher fails, so the inner expect() in
+    // walkAndCheck is catchable by toThrow() here.
+    expect(() => walkAndCheck(fakeResponse, 'response')).toThrow()
+  })
+
+  it('T-0004-121b: passes for a clean response with no forbidden keys', () => {
+    const cleanResponse = {
+      project: {id: 'abc', title: 'Hello', owner_handle: 'user1'},
+      current_version: {id: 'v1', spec_json: {}, render_hash: 'h'},
+    }
+    // Should not throw — no plan-distinctive keys present
+    expect(() => walkAndCheck(cleanResponse, 'response')).not.toThrow()
+  })
+
+  it('T-0004-121b: detects forbidden key nested inside an array element', () => {
+    const responseWithArrayLeak = {
+      items: [
+        {id: '1', title: 'OK'},
+        {id: '2', screens: [{id: 'home', role: 'main'}]},
+      ],
+    }
+    expect(() => walkAndCheck(responseWithArrayLeak, 'response')).toThrow()
   })
 })

@@ -1114,6 +1114,7 @@ describe('ADR-0004 Step 6 — T-0004-084: done event includes plan when pipeline
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      applyEdit: jest.fn(),
     }
 
     setupPipelineMock(MINIMAL_VALID_PLAN)
@@ -1296,6 +1297,7 @@ describe('ADR-0004 Step 6 — T-0004-087: plan field in SSE response is schema-e
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      applyEdit: jest.fn(),
     }
 
     setupPipelineMock(MINIMAL_VALID_PLAN)
