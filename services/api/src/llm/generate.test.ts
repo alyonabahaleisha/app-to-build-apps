@@ -28,12 +28,8 @@ jest.mock('@anthropic-ai/sdk')
 // Mock the singleton so it never tries to read ANTHROPIC_API_KEY.
 jest.mock('./anthropic.js', () => ({
   anthropic: {
-    beta: {
-      promptCaching: {
-        messages: {
-          stream: jest.fn(),
-        },
-      },
+    messages: {
+      stream: jest.fn(),
     },
   },
 }))
@@ -53,7 +49,7 @@ async function collectEvents(gen: AsyncGenerator<unknown>): Promise<unknown[]> {
 function getStreamMock(): jest.Mock {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const {anthropic} = require('./anthropic.js')
-  return anthropic.beta.promptCaching.messages.stream as jest.Mock
+  return anthropic.messages.stream as jest.Mock
 }
 
 function capturedStreamCall(streamMock: jest.Mock): Record<string, unknown> {
@@ -301,7 +297,8 @@ describe('generateAppSpec', () => {
   })
 
   // T-0002-038
-  it('sends exactly max_tokens=8000, thinking.budget_tokens=4000, tool_choice={type:tool,name:produce_app_spec}', async () => {
+  // ADR-0002 §D was wrong; corrected in generate.ts:73-81 — thinking incompatible with forced tool_choice.
+  it('sends exactly max_tokens=8000, thinking is omitted (incompatible with forced tool_choice; see generate.ts:73-81), tool_choice={type:tool,name:produce_app_spec}', async () => {
     const streamMock = getStreamMock()
     streamMock.mockImplementation(
       mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
@@ -314,7 +311,7 @@ describe('generateAppSpec', () => {
     const call = capturedStreamCall(streamMock)
 
     expect(call['max_tokens']).toBe(8000)
-    expect(call['thinking']).toEqual({type: 'enabled', budget_tokens: 4000})
+    expect(call['thinking']).toBeUndefined()
     expect(call['tool_choice']).toEqual({type: 'tool', name: 'produce_app_spec'})
   })
 

@@ -3,19 +3,13 @@
  *
  * Usage:
  *   jest.mock('@anthropic-ai/sdk')
- *   import Anthropic from '@anthropic-ai/sdk'
- *
- *   beforeEach(() => {
- *     (Anthropic as jest.Mock).mockImplementation(() => ({
- *       beta: {
- *         promptCaching: {
- *           messages: {
- *             stream: mockAnthropicStream(events, finalMessage),
- *           },
- *         },
+ *   jest.mock('./anthropic.js', () => ({
+ *     anthropic: {
+ *       messages: {
+ *         stream: jest.fn(),
  *       },
- *     }))
- *   })
+ *     },
+ *   }))
  */
 
 import type {Message, RawContentBlockStartEvent} from '@anthropic-ai/sdk/resources/messages'
