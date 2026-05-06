@@ -53,6 +53,14 @@ function buildSchema(nodeEnv: string) {
     LANGFUSE_PUBLIC_KEY: z.string().optional(),
     LANGFUSE_SECRET_KEY: z.string().optional(),
     LANGFUSE_HOST: z.string().url().optional(),
+
+    // ADR-0004 Step 5 — Plan → Build pipeline feature flags.
+    // PERCENT: 0..100 integer; 0 = off, 100 = all users routed to new pipeline.
+    // SHADOW: 'true' = planner runs but legacy result returned to client (Phase B).
+    // Contradictory state: PERCENT=100 + SHADOW=true is rejected at boot —
+    // shadow mode must coexist with legacy traffic, not replace it entirely.
+    PLAN_BUILD_PIPELINE_PERCENT: z.coerce.number().int().min(0).max(100).default(0),
+    PLAN_BUILD_PIPELINE_SHADOW: z.enum(['true', 'false']).default('false'),
   })
 }
 
@@ -75,6 +83,17 @@ export function loadEnv(rawEnv: NodeJS.ProcessEnv = process.env): Env {
     const fieldErrors = parsed.error.flatten().fieldErrors
     const summary = JSON.stringify(fieldErrors)
     throw new Error(`Invalid environment: ${summary}`)
+  }
+  // Post-parse contradictory-state check (T-0004-068): PERCENT=100 + SHADOW=true
+  // is logically impossible — shadow mode requires a legacy path to coexist with;
+  // routing 100% of traffic to the new pipeline leaves nothing to shadow.
+  if (
+    parsed.data.PLAN_BUILD_PIPELINE_PERCENT === 100 &&
+    parsed.data.PLAN_BUILD_PIPELINE_SHADOW === 'true'
+  ) {
+    throw new Error(
+      'Invalid environment: PLAN_BUILD_PIPELINE_PERCENT=100 with SHADOW=true is contradictory; shadow mode must run alongside legacy, not replace it',
+    )
   }
   return parsed.data
 }
