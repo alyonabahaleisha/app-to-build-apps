@@ -25,7 +25,11 @@ export type MockStreamEvent =
   | {type: 'message_start'; message: Partial<Message>}
   | RawContentBlockStartEvent
   | {type: 'content_block_stop'; index: number}
-  | {type: 'message_delta'; delta: {stop_reason: string; stop_sequence: null}; usage: {output_tokens: number}}
+  | {
+      type: 'message_delta'
+      delta: {stop_reason: string; stop_sequence: null}
+      usage: {output_tokens: number}
+    }
   | {type: 'message_stop'}
 
 /**
@@ -34,10 +38,7 @@ export type MockStreamEvent =
  * The stream is AsyncIterable<MockStreamEvent>; finalMessage() resolves
  * with the provided message after the iteration completes.
  */
-export function mockAnthropicStream(
-  events: MockStreamEvent[],
-  final: Partial<Message>,
-): jest.Mock {
+export function mockAnthropicStream(events: MockStreamEvent[], final: Partial<Message>): jest.Mock {
   return jest.fn().mockReturnValue({
     [Symbol.asyncIterator]: async function* () {
       for (const event of events) {
@@ -120,4 +121,79 @@ export function makeSuccessEvents(): MockStreamEvent[] {
     makeToolUseStartEvent(),
     {type: 'message_stop'},
   ]
+}
+
+// ---------------------------------------------------------------------------
+// Planner mock helpers
+// ---------------------------------------------------------------------------
+
+import type {Plan} from '@app-creator/a2ui-schema'
+
+/**
+ * Build a mock messages.create() return value wrapping a Plan as a tool_use block.
+ * Use as: jest.fn().mockResolvedValue(mockPlannerResponse(plan))
+ */
+export function mockPlannerResponse(plan: Plan): Partial<Message> {
+  return {
+    id: 'msg_planner_test',
+    role: 'assistant',
+    stop_reason: 'tool_use',
+    stop_sequence: null,
+    type: 'message',
+    model: 'claude-haiku-4-5-20251001',
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    content: [{type: 'tool_use', id: 'tu_plan_test', name: 'produce_plan', input: plan}] as any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    usage: {input_tokens: 50, output_tokens: 100} as any,
+  }
+}
+
+/**
+ * Build a mock messages.create() that rejects with an HTTP error.
+ * Use as: jest.fn().mockRejectedValue(makePlannerError(429))
+ */
+export function makePlannerError(status: number, message = 'Anthropic API error'): Error {
+  return Object.assign(new Error(message), {status})
+}
+
+/**
+ * Build a mock messages.create() return value with a tool_use block containing
+ * invalid plan data (will fail PlanSchema.parse).
+ */
+export function mockPlannerZodInvalid(): Partial<Message> {
+  return {
+    id: 'msg_planner_invalid',
+    role: 'assistant',
+    stop_reason: 'tool_use',
+    stop_sequence: null,
+    type: 'message',
+    model: 'claude-haiku-4-5-20251001',
+    content: [
+      {
+        type: 'tool_use',
+        id: 'tu_plan_invalid',
+        name: 'produce_plan',
+        // Missing required fields: archetype enum is wrong, no screens
+        input: {version: 1, archetype: 'NotAnArchetype', screens: [], navigation: 'none'},
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
+    ],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    usage: {input_tokens: 50, output_tokens: 80} as any,
+  }
+}
+
+/** Minimal valid plan for use in planner tests. */
+export const MINIMAL_VALID_PLAN: Plan = {
+  version: 1,
+  archetype: 'Calculator',
+  screens: [
+    {
+      id: 'main',
+      role: 'home',
+      purpose: 'enter inputs and see result',
+      key_components: ['Form', 'Button', 'Text'],
+    },
+  ],
+  navigation: 'none',
 }

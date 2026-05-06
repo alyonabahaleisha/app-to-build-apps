@@ -17,7 +17,11 @@ export class InvalidSpecError extends Error {
   readonly detail?: unknown
 
   constructor(code: 'invalid_spec' | 'no_tool_use', detail?: unknown) {
-    super(code === 'no_tool_use' ? 'Anthropic response contained no tool_use block' : 'LLM output failed A2UISpecSchema validation')
+    super(
+      code === 'no_tool_use'
+        ? 'Anthropic response contained no tool_use block'
+        : 'LLM output failed A2UISpecSchema validation',
+    )
     this.name = 'InvalidSpecError'
     this.code = code
     this.detail = detail
@@ -39,5 +43,60 @@ export class AnthropicTransportError extends Error {
   constructor(safeMsg: string) {
     super(safeMsg)
     this.name = 'AnthropicTransportError'
+  }
+}
+
+export class PlannerInvalidError extends Error {
+  readonly code: 'no_tool_use' | 'invalid_plan'
+  readonly detail?: unknown
+
+  constructor(code: 'no_tool_use' | 'invalid_plan', detail?: unknown) {
+    super(
+      code === 'no_tool_use'
+        ? 'Planner response contained no tool_use block'
+        : 'Planner output failed PlanSchema validation after retry',
+    )
+    this.name = 'PlannerInvalidError'
+    this.code = code
+    this.detail = detail
+  }
+}
+
+export class PlannerTimeoutError extends Error {
+  readonly code = 'planner_timeout' as const
+
+  constructor() {
+    super('Planner call aborted — timeout exceeded')
+    this.name = 'PlannerTimeoutError'
+  }
+}
+
+export class PlannerTransportError extends Error {
+  readonly code = 'planner_transport' as const
+
+  constructor(safeMsg: string) {
+    super(safeMsg)
+    this.name = 'PlannerTransportError'
+  }
+}
+
+export class PlanConformanceError extends Error {
+  readonly code = 'plan_conformance' as const
+
+  constructor(public readonly reason: string) {
+    super(`Builder spec did not conform to plan: ${reason}`)
+    this.name = 'PlanConformanceError'
+  }
+}
+
+export class PatchOutOfScopeError extends Error {
+  readonly code = 'patch_out_of_scope' as const
+
+  constructor(
+    public readonly offendingOpIndex: number,
+    public readonly reason: string,
+  ) {
+    super(`Patch op at index ${offendingOpIndex} is outside edit_intent.target_paths: ${reason}`)
+    this.name = 'PatchOutOfScopeError'
   }
 }

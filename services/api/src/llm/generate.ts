@@ -1,11 +1,10 @@
-import {createHash} from 'crypto'
 import {A2UISpecSchema, type A2UISpec} from '@app-creator/a2ui-schema'
-import {ZodError} from 'zod'
 import {anthropic} from './anthropic.js'
 import {produceAppSpecTool} from './tools/produceAppSpec.js'
 import {SYSTEM_PROMPT_STATIC, SYSTEM_PROMPT_CATALOG} from './prompts/system.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from './errors.js'
 import {safeMessage} from '../lib/logger.js'
+import {hashUserId, flattenZodIssues, sleep} from './util.js'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -25,25 +24,6 @@ export type GenerateEvent = ThinkingStartedEvent | BuildingStartedEvent | DoneEv
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function hashUserId(userId: string): string {
-  return createHash('sha256').update(userId).digest('hex').slice(0, 16)
-}
-
-function flattenZodIssues(err: unknown): unknown {
-  if (err instanceof ZodError) {
-    return err.issues.map((issue) => ({
-      path: issue.path.join('.'),
-      message: issue.message,
-      code: issue.code,
-    }))
-  }
-  return String(err)
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 function buildMessages(opts: {prompt: string; parentPromptContext?: string}) {
   if (opts.parentPromptContext) {
@@ -137,7 +117,7 @@ export async function* generateAppSpec(opts: {
         phase2Start = Date.now()
       }
 
-      const toolBlock = final.content.find((b) => b.type === 'tool_use')
+      const toolBlock = final.content.find(b => b.type === 'tool_use')
       if (!toolBlock) {
         throw new InvalidSpecError('no_tool_use')
       }
