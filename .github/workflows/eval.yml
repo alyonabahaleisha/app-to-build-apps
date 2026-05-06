@@ -1,0 +1,56 @@
+name: Eval
+
+# Triggers on changes to LLM modules or the shared A2UI schema —
+# the two areas most likely to regress generation quality.
+on:
+  push:
+    paths:
+      - 'services/api/src/llm/**'
+      - 'packages/a2ui-schema/**'
+  pull_request:
+    paths:
+      - 'services/api/src/llm/**'
+      - 'packages/a2ui-schema/**'
+
+# CI gate: --mode=new runs the full Plan → Build pipeline against the
+# 30-prompt M1 eval set. Pass threshold ≥ 80% (matches legacy threshold).
+# --mode=legacy remains available for regression checks but is not the gate.
+#
+# ADR-0004 Step 9 change note (Eva — DevOps review required post-merge):
+#   Changed from: pnpm --filter @app-creator/api eval
+#   Changed to:   pnpm --filter @app-creator/api eval -- --mode=new
+#   Rationale: Step 9 ships the Plan → Build pipeline; CI gate moves to
+#   the new pipeline path. Legacy fallback is preserved but not the gate.
+
+jobs:
+  eval:
+    name: Generation Quality Eval
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      # Prevents eval runs from polluting the analytics events table.
+      PLAN_BUILD_EVAL_MODE: 'true'
+      # Force the new pipeline path for the CI gate.
+      PLAN_BUILD_PIPELINE_PERCENT: '100'
+      PLAN_BUILD_PIPELINE_SHADOW: 'false'
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run eval — mode=new (CI gate ≥ 80% pass rate)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: pnpm --filter @app-creator/api eval -- --mode=new
