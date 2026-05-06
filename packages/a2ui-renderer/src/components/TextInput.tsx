@@ -50,11 +50,7 @@ export interface TextInputNodeProps {
 
 // -- Component ----------------------------------------------------------------
 
-export function TextInputRenderer({
-  node,
-  state,
-  dispatch,
-}: TextInputNodeProps): React.ReactElement {
+export function TextInputRenderer({node, state, dispatch}: TextInputNodeProps): React.ReactElement {
   const theme = useRendererTheme()
   const logger = useRendererLogger()
   const [focused, setFocused] = useState(false)
@@ -78,9 +74,7 @@ export function TextInputRenderer({
   }
   // null, undefined, number → silently render empty (T-0003-088, T-0003-088b).
 
-  const borderColor = focused
-    ? theme.palette.primary
-    : theme.palette.border.subtle
+  const borderColor = focused ? theme.palette.primary : theme.palette.border.subtle
 
   return (
     <View>

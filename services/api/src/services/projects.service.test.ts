@@ -123,8 +123,8 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
     const c = await service.create({ownerId, spec: specWithHeading('Charlie')})
 
     const list = await service.list(ownerId)
-    expect(list.map((p) => p.id)).toEqual([c.project.id, b.project.id, a.project.id])
-    expect(list.map((p) => p.title)).toEqual(['Charlie', 'Bravo', 'Alpha'])
+    expect(list.map(p => p.id)).toEqual([c.project.id, b.project.id, a.project.id])
+    expect(list.map(p => p.title)).toEqual(['Charlie', 'Bravo', 'Alpha'])
   })
 
   // -------------------------------------------------------------------------
@@ -235,7 +235,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
           return async (cb: (tx: Db) => Promise<unknown>) =>
             // Cast through unknown: Drizzle's tx type isn't trivially named
             // here; the structural Db shape is the only surface we use.
-            (target as Db).transaction(async (innerTx) => {
+            (target as Db).transaction(async innerTx => {
               const wrapped = new Proxy(innerTx as unknown as Db, {
                 get(t, k, r) {
                   if (k === 'update') {
@@ -284,7 +284,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
 
     const list = await service.list(ownerId)
     expect(list).toHaveLength(2)
-    expect(list.every((p) => p.currentVersionId !== null)).toBe(true)
+    expect(list.every(p => p.currentVersionId !== null)).toBe(true)
   })
 
   // -------------------------------------------------------------------------
@@ -384,7 +384,11 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   it('ADR-0002: create stores originalPrompt on the project row when provided', async () => {
     const ownerId = await makeUser(db)
     const prompt = 'Build me a recipe app'
-    const detail = await service.create({ownerId, spec: specWithHeading('Recipe'), originalPrompt: prompt})
+    const detail = await service.create({
+      ownerId,
+      spec: specWithHeading('Recipe'),
+      originalPrompt: prompt,
+    })
 
     const projectRows = await db.select().from(projects).where(eq(projects.id, detail.project.id))
     expect(projectRows[0]?.originalPrompt).toBe(prompt)
@@ -401,9 +405,16 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   it('ADR-0002: create inserts a messages row with role=user and content=originalPrompt when prompt is non-empty', async () => {
     const ownerId = await makeUser(db)
     const prompt = 'Build me a fitness tracker'
-    const detail = await service.create({ownerId, spec: specWithHeading('Fitness'), originalPrompt: prompt})
+    const detail = await service.create({
+      ownerId,
+      spec: specWithHeading('Fitness'),
+      originalPrompt: prompt,
+    })
 
-    const msgRows = await db.select().from(messages).where(eq(messages.projectId, detail.project.id))
+    const msgRows = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.projectId, detail.project.id))
     expect(msgRows).toHaveLength(1)
     expect(msgRows[0]?.role).toBe('user')
     expect(msgRows[0]?.content).toBe(prompt)
@@ -413,7 +424,10 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({ownerId, spec: specWithHeading('No Prompt')})
 
-    const msgRows = await db.select().from(messages).where(eq(messages.projectId, detail.project.id))
+    const msgRows = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.projectId, detail.project.id))
     expect(msgRows).toHaveLength(0)
   })
 
@@ -426,7 +440,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
       get(target, prop, receiver) {
         if (prop === 'transaction') {
           return async (cb: (tx: Db) => Promise<unknown>) =>
-            (target as Db).transaction(async (innerTx) => {
+            (target as Db).transaction(async innerTx => {
               let insertCount = 0
               const wrapped = new Proxy(innerTx as unknown as Db, {
                 get(t, k, r) {
@@ -456,7 +470,11 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
 
     const failingService = createProjectsService(sabotaged)
     await expect(
-      failingService.create({ownerId, spec: specWithHeading('Rollback'), originalPrompt: 'some prompt'}),
+      failingService.create({
+        ownerId,
+        spec: specWithHeading('Rollback'),
+        originalPrompt: 'some prompt',
+      }),
     ).rejects.toThrow(/forced_messages_insert_failure/)
 
     // Neither project nor messages should exist after the rollback

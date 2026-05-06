@@ -17,18 +17,9 @@
  * app (see App.tsx) and `BottomSheetModalProvider` must be mounted above
  * this component (typically in AppRunner or a shared layout provider).
  */
-import {
-  BottomSheetModal,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet'
+import {BottomSheetModal, BottomSheetScrollView} from '@gorhom/bottom-sheet'
 import {forwardRef, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  AccessibilityInfo,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {AccessibilityInfo, Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {Button} from '#/components/Button'
 import {HandleField, type HandleValidationState} from '#/components/HandleField'
@@ -66,302 +57,281 @@ interface Props {
 
 // -- Component ---------------------------------------------------------------
 
-export const PublishSheet = forwardRef<BottomSheetModal, Props>(
-  function PublishSheet(
-    {projectId, firstPublish, currentHandle, onPublishSuccess},
-    ref,
-  ) {
-    const theme = useTheme()
-    const toast = useToast()
-    const publishMutation = usePublishMutation()
+export const PublishSheet = forwardRef<BottomSheetModal, Props>(function PublishSheet(
+  {projectId, firstPublish, currentHandle, onPublishSuccess},
+  ref,
+) {
+  const theme = useTheme()
+  const toast = useToast()
+  const publishMutation = usePublishMutation()
 
-    // Handle field state
-    const [handleValue, setHandleValue] = useState('')
-    const [debouncedHandle, setDebouncedHandle] = useState('')
-    const [checkEnabled, setCheckEnabled] = useState(false)
-    const [inlineError, setInlineError] = useState<string | null>(null)
-    const [reduced, setReduced] = useState(false)
+  // Handle field state
+  const [handleValue, setHandleValue] = useState('')
+  const [debouncedHandle, setDebouncedHandle] = useState('')
+  const [checkEnabled, setCheckEnabled] = useState(false)
+  const [inlineError, setInlineError] = useState<string | null>(null)
+  const [reduced, setReduced] = useState(false)
 
-    // Handle suggestion pre-fill (first-time only)
-    const suggestQuery = useHandleSuggestQuery(firstPublish)
+  // Handle suggestion pre-fill (first-time only)
+  const suggestQuery = useHandleSuggestQuery(firstPublish)
 
-    // Availability check (debounced)
-    const checkQuery = useCheckHandleQuery(debouncedHandle, checkEnabled)
+  // Availability check (debounced)
+  const checkQuery = useCheckHandleQuery(debouncedHandle, checkEnabled)
 
-    // Resolve reduced motion once on mount
-    useEffect(() => {
-      let mounted = true
-      AccessibilityInfo.isReduceMotionEnabled()
-        .then((flag) => {
-          if (mounted) setReduced(flag)
-        })
-        .catch(() => {})
-      return () => {
-        mounted = false
-      }
-    }, [])
+  // Resolve reduced motion once on mount
+  useEffect(() => {
+    let mounted = true
+    AccessibilityInfo.isReduceMotionEnabled()
+      .then(flag => {
+        if (mounted) setReduced(flag)
+      })
+      .catch(() => {})
+    return () => {
+      mounted = false
+    }
+  }, [])
 
-    // Pre-fill handle from suggestion when it arrives. Also seed the debounced
-    // value + enable the availability check so the Publish button can leave
-    // its 'checking' state without the user having to retype.
-    useEffect(() => {
-      if (
-        firstPublish &&
-        suggestQuery.data?.handle &&
-        handleValue === ''
-      ) {
-        const suggestion = suggestQuery.data.handle.toLowerCase()
-        setHandleValue(suggestion)
-        if (isValidHandleFormat(suggestion)) {
-          setDebouncedHandle(suggestion)
-          setCheckEnabled(true)
-        }
-      }
-    }, [firstPublish, suggestQuery.data, handleValue])
-
-    // Debounce: arm a 500ms timer on every keystroke.
-    // When it fires: validate regex → if passes, trigger check.
-    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-    const handleChange = useCallback((v: string) => {
-      setHandleValue(v)
-      setInlineError(null)
-
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current)
-      }
-
-      const lowered = v.toLowerCase()
-
-      if (lowered.length === 0) {
-        setCheckEnabled(false)
-        setDebouncedHandle('')
-        return
-      }
-
-      if (!isValidHandleFormat(lowered)) {
-        setCheckEnabled(false)
-        setDebouncedHandle('')
-        return
-      }
-
-      debounceRef.current = setTimeout(() => {
-        setDebouncedHandle(lowered)
+  // Pre-fill handle from suggestion when it arrives. Also seed the debounced
+  // value + enable the availability check so the Publish button can leave
+  // its 'checking' state without the user having to retype.
+  useEffect(() => {
+    if (firstPublish && suggestQuery.data?.handle && handleValue === '') {
+      const suggestion = suggestQuery.data.handle.toLowerCase()
+      setHandleValue(suggestion)
+      if (isValidHandleFormat(suggestion)) {
+        setDebouncedHandle(suggestion)
         setCheckEnabled(true)
-      }, 500)
-    }, [])
-
-    // Clean up debounce timer on unmount
-    useEffect(() => {
-      return () => {
-        if (debounceRef.current) clearTimeout(debounceRef.current)
       }
-    }, [])
+    }
+  }, [firstPublish, suggestQuery.data, handleValue])
 
-    // Derive validation state
-    const validationState = useMemo((): HandleValidationState => {
-      if (!firstPublish) return 'idle'
-      const lowered = handleValue.toLowerCase()
-      if (lowered.length === 0) return 'idle'
-      if (!isValidHandleFormat(lowered)) return 'invalid'
-      // Regex passes — are we waiting for debounce?
-      if (debouncedHandle !== lowered) return 'checking'
-      // Debounce fired — are we waiting for the check?
-      if (checkEnabled && checkQuery.isFetching) return 'checking'
-      if (checkQuery.data) {
-        if (checkQuery.data.available) return 'available'
-        if (checkQuery.data.reason === 'reserved') return 'reserved'
-        return 'taken'
-      }
-      if (checkQuery.isSuccess) return 'available'
-      // Default while idle / pre-debounce
-      return 'idle'
-    }, [
-      firstPublish,
-      handleValue,
-      debouncedHandle,
-      checkEnabled,
-      checkQuery.isFetching,
-      checkQuery.data,
-      checkQuery.isSuccess,
-    ])
+  // Debounce: arm a 500ms timer on every keystroke.
+  // When it fires: validate regex → if passes, trigger check.
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-    // Submit disabled conditions
-    const submitDisabled = useMemo(() => {
-      if (publishMutation.isPending) return true
-      if (firstPublish) {
-        return validationState !== 'available'
-      }
-      return false
-    }, [firstPublish, validationState, publishMutation.isPending])
+  const handleChange = useCallback((v: string) => {
+    setHandleValue(v)
+    setInlineError(null)
 
-    // Snap points per Sable's spec
-    const snapPoints = useMemo(
-      () => (firstPublish ? ['50%'] : ['30%']),
-      [firstPublish],
-    )
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
 
-    const handleDismiss = useCallback(() => {
-      if (ref && 'current' in ref && ref.current) {
-        ref.current.dismiss()
-      }
-    }, [ref])
+    const lowered = v.toLowerCase()
 
-    const handlePublish = useCallback(async () => {
-      setInlineError(null)
-      try {
-        await publishMutation.mutateAsync({
-          projectId,
-          handle: firstPublish ? handleValue.toLowerCase() : undefined,
-        })
-        handleDismiss()
-        toast.show('✓ Published to Library', {durationMs: 2000})
-        onPublishSuccess?.()
-      } catch (err) {
-        if (err instanceof PublishError) {
-          if (err.code === 'handle_taken') {
-            setInlineError('Handle taken — that one was just claimed. Try another.')
-            // Reset check so the field shows 'taken'
-            setCheckEnabled(true)
-            return
-          }
-          if (err.code === 'network') {
-            setInlineError("Couldn't publish. Try again.")
-            return
-          }
-          if (err.code === 'invalid_state') {
-            handleDismiss()
-            toast.show("This app couldn't be published. Try recreating it.", {
-              variant: 'error',
-            })
-            return
-          }
+    if (lowered.length === 0) {
+      setCheckEnabled(false)
+      setDebouncedHandle('')
+      return
+    }
+
+    if (!isValidHandleFormat(lowered)) {
+      setCheckEnabled(false)
+      setDebouncedHandle('')
+      return
+    }
+
+    debounceRef.current = setTimeout(() => {
+      setDebouncedHandle(lowered)
+      setCheckEnabled(true)
+    }, 500)
+  }, [])
+
+  // Clean up debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [])
+
+  // Derive validation state
+  const validationState = useMemo((): HandleValidationState => {
+    if (!firstPublish) return 'idle'
+    const lowered = handleValue.toLowerCase()
+    if (lowered.length === 0) return 'idle'
+    if (!isValidHandleFormat(lowered)) return 'invalid'
+    // Regex passes — are we waiting for debounce?
+    if (debouncedHandle !== lowered) return 'checking'
+    // Debounce fired — are we waiting for the check?
+    if (checkEnabled && checkQuery.isFetching) return 'checking'
+    if (checkQuery.data) {
+      if (checkQuery.data.available) return 'available'
+      if (checkQuery.data.reason === 'reserved') return 'reserved'
+      return 'taken'
+    }
+    if (checkQuery.isSuccess) return 'available'
+    // Default while idle / pre-debounce
+    return 'idle'
+  }, [
+    firstPublish,
+    handleValue,
+    debouncedHandle,
+    checkEnabled,
+    checkQuery.isFetching,
+    checkQuery.data,
+    checkQuery.isSuccess,
+  ])
+
+  // Submit disabled conditions
+  const submitDisabled = useMemo(() => {
+    if (publishMutation.isPending) return true
+    if (firstPublish) {
+      return validationState !== 'available'
+    }
+    return false
+  }, [firstPublish, validationState, publishMutation.isPending])
+
+  // Snap points per Sable's spec
+  const snapPoints = useMemo(() => (firstPublish ? ['50%'] : ['30%']), [firstPublish])
+
+  const handleDismiss = useCallback(() => {
+    if (ref && 'current' in ref && ref.current) {
+      ref.current.dismiss()
+    }
+  }, [ref])
+
+  const handlePublish = useCallback(async () => {
+    setInlineError(null)
+    try {
+      await publishMutation.mutateAsync({
+        projectId,
+        handle: firstPublish ? handleValue.toLowerCase() : undefined,
+      })
+      handleDismiss()
+      toast.show('✓ Published to Library', {durationMs: 2000})
+      onPublishSuccess?.()
+    } catch (err) {
+      if (err instanceof PublishError) {
+        if (err.code === 'handle_taken') {
+          setInlineError('Handle taken — that one was just claimed. Try another.')
+          // Reset check so the field shows 'taken'
+          setCheckEnabled(true)
+          return
         }
-        setInlineError("Couldn't publish. Try again.")
+        if (err.code === 'network') {
+          setInlineError("Couldn't publish. Try again.")
+          return
+        }
+        if (err.code === 'invalid_state') {
+          handleDismiss()
+          toast.show("This app couldn't be published. Try recreating it.", {
+            variant: 'error',
+          })
+          return
+        }
       }
-    }, [
-      firstPublish,
-      handleValue,
-      projectId,
-      publishMutation,
-      handleDismiss,
-      toast,
-      onPublishSuccess,
-    ])
+      setInlineError("Couldn't publish. Try again.")
+    }
+  }, [
+    firstPublish,
+    handleValue,
+    projectId,
+    publishMutation,
+    handleDismiss,
+    toast,
+    onPublishSuccess,
+  ])
 
-    const sheetBg = theme.palette.bg.surface
+  const sheetBg = theme.palette.bg.surface
 
-    return (
-      <BottomSheetModal
-        ref={ref}
-        snapPoints={snapPoints}
-        backgroundStyle={{backgroundColor: sheetBg}}
-        handleIndicatorStyle={{backgroundColor: theme.palette.border.subtle}}
-        animateOnMount={!reduced}
-        enableDismissOnClose
-        enablePanDownToClose
-        accessible
+  return (
+    <BottomSheetModal
+      ref={ref}
+      snapPoints={snapPoints}
+      backgroundStyle={{backgroundColor: sheetBg}}
+      handleIndicatorStyle={{backgroundColor: theme.palette.border.subtle}}
+      animateOnMount={!reduced}
+      enableDismissOnClose
+      enablePanDownToClose
+      accessible
+    >
+      <BottomSheetScrollView
+        contentContainerStyle={styles.content}
+        // a11y: trap VoiceOver focus inside the sheet (T-0002-161)
+        accessible={false}
       >
-        <BottomSheetScrollView
-          contentContainerStyle={styles.content}
-          // a11y: trap VoiceOver focus inside the sheet (T-0002-161)
-          accessible={false}
-        >
-          {/* Invisible a11y modal marker — VoiceOver focuses inside */}
-          <View accessibilityViewIsModal style={styles.modalWrapper}>
-            {/* Heading */}
+        {/* Invisible a11y modal marker — VoiceOver focuses inside */}
+        <View accessibilityViewIsModal style={styles.modalWrapper}>
+          {/* Heading */}
+          <Text
+            style={[styles.heading, theme.typography.heading2, {color: theme.palette.text.primary}]}
+            accessibilityRole="header"
+            testID="publish-sheet-heading"
+          >
+            Publish to Library?
+          </Text>
+
+          {firstPublish ? (
+            <FirstTimeContent
+              handleValue={handleValue}
+              onChange={handleChange}
+              validationState={validationState}
+              inlineError={inlineError}
+              theme={theme}
+            />
+          ) : (
+            <SubsequentContent
+              currentHandle={currentHandle}
+              inlineError={inlineError}
+              theme={theme}
+            />
+          )}
+
+          {/* Warning copy */}
+          <Text
+            style={[
+              styles.warningCopy,
+              theme.typography.caption,
+              {color: theme.palette.text.muted},
+            ]}
+          >
+            Publishing exposes the words you typed.
+          </Text>
+
+          {/* Inline error (network/race) */}
+          {inlineError && (
             <Text
               style={[
-                styles.heading,
-                theme.typography.heading2,
-                {color: theme.palette.text.primary},
-              ]}
-              accessibilityRole="header"
-              testID="publish-sheet-heading"
-            >
-              Publish to Library?
-            </Text>
-
-            {firstPublish ? (
-              <FirstTimeContent
-                handleValue={handleValue}
-                onChange={handleChange}
-                validationState={validationState}
-                inlineError={inlineError}
-                theme={theme}
-              />
-            ) : (
-              <SubsequentContent
-                currentHandle={currentHandle}
-                inlineError={inlineError}
-                theme={theme}
-              />
-            )}
-
-            {/* Warning copy */}
-            <Text
-              style={[
-                styles.warningCopy,
+                styles.inlineError,
                 theme.typography.caption,
-                {color: theme.palette.text.muted},
+                {color: theme.palette.text.destructive},
               ]}
+              accessibilityLiveRegion="polite"
+              testID="publish-sheet-inline-error"
             >
-              Publishing exposes the words you typed.
+              {inlineError}
             </Text>
+          )}
 
-            {/* Inline error (network/race) */}
-            {inlineError && (
-              <Text
-                style={[
-                  styles.inlineError,
-                  theme.typography.caption,
-                  {color: theme.palette.text.destructive},
-                ]}
-                accessibilityLiveRegion="polite"
-                testID="publish-sheet-inline-error"
-              >
-                {inlineError}
+          {/* CTA row */}
+          <View style={styles.ctaRow}>
+            <Pressable
+              onPress={handleDismiss}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel — close without publishing"
+              style={[styles.cancelButton, {borderColor: theme.palette.border.subtle}]}
+            >
+              <Text style={[theme.typography.bodyStrong, {color: theme.palette.text.primary}]}>
+                Cancel
               </Text>
-            )}
+            </Pressable>
 
-            {/* CTA row */}
-            <View style={styles.ctaRow}>
-              <Pressable
-                onPress={handleDismiss}
-                accessibilityRole="button"
-                accessibilityLabel="Cancel — close without publishing"
-                style={[
-                  styles.cancelButton,
-                  {borderColor: theme.palette.border.subtle},
-                ]}
-              >
-                <Text
-                  style={[
-                    theme.typography.bodyStrong,
-                    {color: theme.palette.text.primary},
-                  ]}
-                >
-                  Cancel
-                </Text>
-              </Pressable>
-
-              <Button
-                label={publishMutation.isPending ? 'Publishing…' : 'Publish'}
-                onPress={handlePublish}
-                accessibilityLabel="Publish to Library"
-                disabled={submitDisabled}
-                loading={publishMutation.isPending}
-                variant="primary"
-                style={styles.publishButton}
-                testID="publish-sheet-submit"
-              />
-            </View>
+            <Button
+              label={publishMutation.isPending ? 'Publishing…' : 'Publish'}
+              onPress={handlePublish}
+              accessibilityLabel="Publish to Library"
+              disabled={submitDisabled}
+              loading={publishMutation.isPending}
+              variant="primary"
+              style={styles.publishButton}
+              testID="publish-sheet-submit"
+            />
           </View>
-        </BottomSheetScrollView>
-      </BottomSheetModal>
-    )
-  },
-)
+        </View>
+      </BottomSheetScrollView>
+    </BottomSheetModal>
+  )
+})
 
 // -- Sub-components ----------------------------------------------------------
 
@@ -382,13 +352,7 @@ function FirstTimeContent({
 }: FirstTimeProps) {
   return (
     <>
-      <Text
-        style={[
-          styles.bodyText,
-          theme.typography.body,
-          {color: theme.palette.text.muted},
-        ]}
-      >
+      <Text style={[styles.bodyText, theme.typography.body, {color: theme.palette.text.muted}]}>
         Pick a handle other makers will see.
       </Text>
 
@@ -402,13 +366,7 @@ function FirstTimeContent({
         testID="publish-sheet-handle-input"
       />
 
-      <Text
-        style={[
-          styles.lockCopy,
-          theme.typography.caption,
-          {color: theme.palette.text.muted},
-        ]}
-      >
+      <Text style={[styles.lockCopy, theme.typography.caption, {color: theme.palette.text.muted}]}>
         You can't change this later.
       </Text>
     </>
@@ -425,11 +383,7 @@ function SubsequentContent({currentHandle, inlineError: _inlineError, theme}: Su
   return (
     <>
       <Text
-        style={[
-          styles.bodyText,
-          theme.typography.body,
-          {color: theme.palette.text.muted},
-        ]}
+        style={[styles.bodyText, theme.typography.body, {color: theme.palette.text.muted}]}
         testID="publish-sheet-subsequent-copy"
       >
         {currentHandle

@@ -1,18 +1,19 @@
 # QA Report — ADR-0003 Step 2: Container + List
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
 ---
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | `pnpm typecheck` clean across all 4 workspaces. |
-| Lint | PASS WITH NOTES | 0 errors. 27 `@typescript-eslint/no-explicit-any` warnings in Container/List test files — intentional test-level casts for `react-test-renderer`'s untyped `toJSON()`. No workspace-boundary violations. |
-| Tests | PASS | 91/91 in renderer package. 7 suites, 0 failures. AppRunner 7/7 in isolation. |
-| Coverage | PASS WITH NOTES | 98.23% stmts / 95.89% branches. Gates met. Two coverage gaps reported in Issues. |
-| Complexity | PASS | Container.tsx 99 LOC, List.tsx 79 LOC. |
-| Security | PASS | No workspace boundary violations. T-0003-006b lint runtime test still passing. |
+| Check      | Status          | Details                                                                                                                                                                                                  |
+| ---------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type Check | PASS            | `pnpm typecheck` clean across all 4 workspaces.                                                                                                                                                          |
+| Lint       | PASS WITH NOTES | 0 errors. 27 `@typescript-eslint/no-explicit-any` warnings in Container/List test files — intentional test-level casts for `react-test-renderer`'s untyped `toJSON()`. No workspace-boundary violations. |
+| Tests      | PASS            | 91/91 in renderer package. 7 suites, 0 failures. AppRunner 7/7 in isolation.                                                                                                                             |
+| Coverage   | PASS WITH NOTES | 98.23% stmts / 95.89% branches. Gates met. Two coverage gaps reported in Issues.                                                                                                                         |
+| Complexity | PASS            | Container.tsx 99 LOC, List.tsx 79 LOC.                                                                                                                                                                   |
+| Security   | PASS            | No workspace boundary violations. T-0003-006b lint runtime test still passing.                                                                                                                           |
 
 ---
 

@@ -59,11 +59,7 @@ const SAFE_AREA_METRICS = {
 }
 
 function renderSheet(opts: RenderOptions = {}) {
-  const {
-    firstPublish = true,
-    currentHandle = null,
-    projectId = 'proj-123',
-  } = opts
+  const {firstPublish = true, currentHandle = null, projectId = 'proj-123'} = opts
   const qc = makeQc()
   const ref = createRef<BottomSheetModal>()
 
@@ -197,9 +193,7 @@ describe('PublishSheet', () => {
 
   // T-0002-157: Race-loss handle_taken → inline error shown
   it('shows inline error on handle_taken race-loss from server', async () => {
-    mockApiFetch.mockRejectedValueOnce(
-      new ApiError(409, JSON.stringify({error: 'handle_taken'})),
-    )
+    mockApiFetch.mockRejectedValueOnce(new ApiError(409, JSON.stringify({error: 'handle_taken'})))
 
     const {getByTestId} = renderSheet({
       firstPublish: false,

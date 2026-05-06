@@ -48,7 +48,7 @@ const emailSchema = z
   .string()
   .min(1)
   .max(320)
-  .refine((v) => v.includes('@') && v.includes('.'), {message: 'email format'})
+  .refine(v => v.includes('@') && v.includes('.'), {message: 'email format'})
 
 const magicLinkBody = z.object({email: emailSchema})
 

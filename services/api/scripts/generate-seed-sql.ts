@@ -186,7 +186,10 @@ const decisionFlipper: SeedProject = {
             {
               type: 'Button',
               label: 'Pick for me!',
-              action: {type: 'toast', message: "The coin says: Option A! (flip again to change your mind)"},
+              action: {
+                type: 'toast',
+                message: 'The coin says: Option A! (flip again to change your mind)',
+              },
               variant: 'primary',
             },
           ],
@@ -203,7 +206,7 @@ const decisionFlipper: SeedProject = {
 const expenseLogger: SeedProject = {
   id: '00000000-0000-0000-0000-000000000013',
   title: "Today's spend",
-  originalPrompt: "A simple daily expense logger",
+  originalPrompt: 'A simple daily expense logger',
   spec: {
     version: 1,
     initialViewId: 'main',
@@ -389,7 +392,9 @@ function generateSql(hashes: Map<string, string>): string {
     lines.push(`-- Seed: ${seed.title}`)
 
     // Step 1: INSERT project (current_version_id = NULL initially)
-    lines.push(`INSERT INTO projects (id, owner_id, title, visibility, published_at, original_prompt, created_at, updated_at)`)
+    lines.push(
+      `INSERT INTO projects (id, owner_id, title, visibility, published_at, original_prompt, created_at, updated_at)`,
+    )
     lines.push(`VALUES (`)
     lines.push(`  '${seed.id}',`)
     lines.push(`  '${EXAMPLE_USER_ID}',`)

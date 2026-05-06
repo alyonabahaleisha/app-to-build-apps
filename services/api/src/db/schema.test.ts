@@ -151,7 +151,9 @@ describe('ADR-0001 Step 1 — db schema', () => {
         AND ccu.table_schema    = tc.table_schema
        WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = 'public'`,
     )
-    const seen = rows.map(r => `${r.table_name}.${r.column_name}->${r.foreign_table_name}.${r.foreign_column_name}`)
+    const seen = rows.map(
+      r => `${r.table_name}.${r.column_name}->${r.foreign_table_name}.${r.foreign_column_name}`,
+    )
     expect(seen).toEqual(
       expect.arrayContaining([
         'projects.owner_id->users.id',
@@ -257,8 +259,7 @@ describe('ADR-0001 Step 1 — db schema', () => {
       // junk table must NOT survive.
       await writeFile(
         join(tempDir, '0001_broken.sql'),
-        `CREATE TABLE adr0001_junk (id int);\n` +
-          `THIS IS NOT VALID SQL;\n`,
+        `CREATE TABLE adr0001_junk (id int);\n` + `THIS IS NOT VALID SQL;\n`,
       )
       await expect(
         runMigrations({pool: midRunPool, migrationsDir: tempDir}),
@@ -295,7 +296,10 @@ describe('ADR-0001 Step 1 — db schema', () => {
     await db.insert(users).values({id, email: sneaky})
 
     // Row exists with the exact literal email.
-    const found = await db.select().from(users).where(sql`${users.id} = ${id}`)
+    const found = await db
+      .select()
+      .from(users)
+      .where(sql`${users.id} = ${id}`)
     expect(found).toHaveLength(1)
     expect(found[0]?.email).toBe(sneaky)
 
@@ -322,10 +326,10 @@ describe('ADR-0001 Step 1 — db schema', () => {
 
     // (a) plain text: no implicit cast from text to vector — rejected.
     await expect(
-      pool.query(
-        `INSERT INTO memory_embeddings (fact_id, embedding) VALUES ($1, $2)`,
-        [factId, 'this is not a vector'],
-      ),
+      pool.query(`INSERT INTO memory_embeddings (fact_id, embedding) VALUES ($1, $2)`, [
+        factId,
+        'this is not a vector',
+      ]),
     ).rejects.toThrow()
 
     // (b) wrong-dimension array — vector(1536) refuses 4-d input.
@@ -351,9 +355,7 @@ describe('ADR-0001 Step 1 — db schema', () => {
     const u = userRow()
     await db.insert(users).values(u)
     const projectId = randomUUID()
-    await db
-      .insert(projects)
-      .values({id: projectId, ownerId: u.id!, title: 'p'})
+    await db.insert(projects).values({id: projectId, ownerId: u.id!, title: 'p'})
 
     const pool = await getTestPool()
 
@@ -575,11 +577,13 @@ describe('ADR-0002 Step 1 — marketplace columns', () => {
       title: 'Default columns test',
     })
 
-    const rows = await db2.select({
-      visibility: projects.visibility,
-      publishedAt: projects.publishedAt,
-      originalPrompt: projects.originalPrompt,
-    }).from(projects)
+    const rows = await db2
+      .select({
+        visibility: projects.visibility,
+        publishedAt: projects.publishedAt,
+        originalPrompt: projects.originalPrompt,
+      })
+      .from(projects)
 
     expect(rows).toHaveLength(1)
     expect(rows[0]?.visibility).toBe('private')
@@ -618,9 +622,7 @@ describe('ADR-0002 Step 1 — marketplace columns', () => {
     const uA = userRow()
     const uB = userRow()
     await db2.insert(users).values({...uA, handle})
-    await expect(
-      db2.insert(users).values({...uB, handle}),
-    ).rejects.toThrow(/duplicate|unique/i)
+    await expect(db2.insert(users).values({...uB, handle})).rejects.toThrow(/duplicate|unique/i)
   })
 
   // -------------------------------------------------------------------------
@@ -643,10 +645,12 @@ describe('ADR-0002 Step 1 — marketplace columns', () => {
 
     // null: column is NOT NULL
     await expect(
-      pool.query(
-        `INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`,
-        [randomUUID(), u.id, 'p', null],
-      ),
+      pool.query(`INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`, [
+        randomUUID(),
+        u.id,
+        'p',
+        null,
+      ]),
     ).rejects.toThrow(/null|not[- ]null|violates/i)
   })
 
@@ -801,7 +805,12 @@ describe('ADR-0002 Step 2 seeds', () => {
   // -------------------------------------------------------------------------
   it('T-0002-012: ≥5 seed projects with visibility=public, published_at set, owner=@example', async () => {
     const pool = await getTestPool()
-    const result = await pool.query<{id: string; visibility: string; published_at: string | null; owner_id: string}>(
+    const result = await pool.query<{
+      id: string
+      visibility: string
+      published_at: string | null
+      owner_id: string
+    }>(
       `SELECT id, visibility, published_at, owner_id
        FROM projects
        WHERE owner_id = $1`,
@@ -883,10 +892,9 @@ describe('ADR-0002 Step 2 seeds', () => {
   // -------------------------------------------------------------------------
   it("T-0002-016: @example user has email 'example@reserved.localhost'", async () => {
     const pool = await getTestPool()
-    const result = await pool.query<{email: string}>(
-      `SELECT email FROM users WHERE id = $1`,
-      [EXAMPLE_USER_ID],
-    )
+    const result = await pool.query<{email: string}>(`SELECT email FROM users WHERE id = $1`, [
+      EXAMPLE_USER_ID,
+    ])
     expect(result.rows[0]?.email).toBe('example@reserved.localhost')
   })
 
@@ -900,10 +908,9 @@ describe('ADR-0002 Step 2 seeds', () => {
   // -------------------------------------------------------------------------
   it('T-0002-017: @example email uses .localhost TLD — unroutable by design', async () => {
     const pool = await getTestPool()
-    const result = await pool.query<{email: string}>(
-      `SELECT email FROM users WHERE id = $1`,
-      [EXAMPLE_USER_ID],
-    )
+    const result = await pool.query<{email: string}>(`SELECT email FROM users WHERE id = $1`, [
+      EXAMPLE_USER_ID,
+    ])
     const email = result.rows[0]?.email ?? ''
     // Must end with .localhost — the IANA-reserved TLD that MX records cannot
     // resolve. Supabase will fail to send a magic link to this address.

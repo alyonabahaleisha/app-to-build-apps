@@ -107,9 +107,8 @@ export function ChatScreen({route, navigation}: Props) {
 
   useEffect(() => {
     if (phase === 'error' && error && error.code !== 'connection_lost') {
-      const copy =
-        chatCopy.errorCodes[error.code] ?? chatCopy.errorCodes['internal']!
-      setMessages((prev) => [...prev, {id: nextId(), role: 'error', text: copy}])
+      const copy = chatCopy.errorCodes[error.code] ?? chatCopy.errorCodes['internal']!
+      setMessages(prev => [...prev, {id: nextId(), role: 'error', text: copy}])
     }
     // Intentionally only runs when phase flips to 'error'; error.code is stable
     // within a single error phase so omitting it from deps is safe.
@@ -132,7 +131,7 @@ export function ChatScreen({route, navigation}: Props) {
     const capturedParentId = remixActive ? parentProjectId : undefined
 
     // Add user bubble immediately.
-    setMessages((prev) => [...prev, {id: nextId(), role: 'user', text: sentPrompt}])
+    setMessages(prev => [...prev, {id: nextId(), role: 'user', text: sentPrompt}])
     setPrompt('')
 
     // Dismiss remix chip on send.
@@ -145,7 +144,7 @@ export function ChatScreen({route, navigation}: Props) {
     } catch {
       // In-flight guard or other sync throw — surface as error bubble.
       const errMsg = chatCopy.errorCodes['internal']!
-      setMessages((prev) => [...prev, {id: nextId(), role: 'error', text: errMsg}])
+      setMessages(prev => [...prev, {id: nextId(), role: 'error', text: errMsg}])
     }
   }, [prompt, isGenerating, remixActive, parentProjectId, generate])
 
@@ -192,10 +191,7 @@ export function ChatScreen({route, navigation}: Props) {
           testID="chat-back-button"
         />
         <Text
-          style={[
-            theme.typography.heading2,
-            {color: theme.palette.text.primary},
-          ]}
+          style={[theme.typography.heading2, {color: theme.palette.text.primary}]}
           accessibilityRole="header"
         >
           {chatCopy.topBarTitle}
@@ -220,17 +216,17 @@ export function ChatScreen({route, navigation}: Props) {
             keyboardDismissMode="interactive"
             testID="chat-thread"
           >
-            {messages.map((msg) => (
+            {messages.map(msg => (
               <ChatBubble
                 key={msg.id}
-                variant={msg.role === 'user' ? 'user' : msg.role === 'error' ? 'error' : 'assistant'}
+                variant={
+                  msg.role === 'user' ? 'user' : msg.role === 'error' ? 'error' : 'assistant'
+                }
                 text={msg.text}
                 testID={`chat-bubble-${msg.role}`}
               />
             ))}
-            {isActivePhase(phase) ? (
-              <LoadingBubble phase={phase} />
-            ) : null}
+            {isActivePhase(phase) ? <LoadingBubble phase={phase} /> : null}
           </ScrollView>
         )}
 

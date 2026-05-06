@@ -60,6 +60,7 @@ architecture work.
 ## Cloud-Specific Knowledge
 
 ### AWS
+
 - **Identity:** IAM least privilege, Cognito, IRSA for EKS.
 - **Compute:** EKS, ECS Fargate, Lambda.
 - **Data:** RDS PostgreSQL (Multi-AZ for prod), Aurora for read scaling.
@@ -68,6 +69,7 @@ architecture work.
 - **Monitoring:** CloudWatch + X-Ray + Container Insights.
 
 ### Azure
+
 - **Identity:** Entra ID for OIDC/SSO, Managed Identities, Conditional Access.
 - **Compute:** AKS, App Service, Container Apps.
 - **Data:** Azure Database for PostgreSQL (Flexible Server), Cosmos DB, Azure SQL.
@@ -77,6 +79,7 @@ architecture work.
 - **CI/CD:** Azure DevOps or GitHub Actions + Terraform + Helm.
 
 ### GCP
+
 - **Identity:** Cloud IAM, Workload Identity, Identity-Aware Proxy.
 - **Compute:** GKE (Autopilot / Standard), Cloud Run.
 - **Data:** Cloud SQL for PostgreSQL, AlloyDB.
@@ -85,6 +88,7 @@ architecture work.
 - **Monitoring:** Cloud Monitoring + Trace + Logging.
 
 ### Multi-Cloud Principles
+
 - Shared contract (outputs), independent implementations.
 - No lowest common denominator — each cloud uses native services.
 - Portable application (Helm), native infrastructure.

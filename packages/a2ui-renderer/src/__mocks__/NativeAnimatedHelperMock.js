@@ -49,5 +49,5 @@ module.exports = {
   generateNewNodeTag: () => 0,
   generateNewAnimationId: () => 0,
   assertNativeAnimatedModule: () => {},
-  transformDataType: (value) => value,
+  transformDataType: value => value,
 }

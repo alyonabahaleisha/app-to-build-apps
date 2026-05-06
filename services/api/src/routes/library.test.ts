@@ -68,10 +68,7 @@ async function makeUser(db: Db, handle?: string): Promise<{id: string; email: st
 }
 
 function authHeader(userId: string, email: string): string {
-  return (
-    'Bearer ' +
-    userJwt({sub: userId, email, secret: TEST_JWT_SECRET})
-  )
+  return 'Bearer ' + userJwt({sub: userId, email, secret: TEST_JWT_SECRET})
 }
 
 async function makePublicProject(
@@ -463,10 +460,10 @@ describe('ADR-0002 Step 6 — library routes', () => {
     // planner has statistics. With empty tables the planner may choose a seq
     // scan regardless of index availability.
     const userId = randomUUID()
-    await pool.query(
-      `INSERT INTO users (id, email) VALUES ($1, $2) ON CONFLICT DO NOTHING`,
-      [userId, `idx-test-${Date.now()}@test.com`],
-    )
+    await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [
+      userId,
+      `idx-test-${Date.now()}@test.com`,
+    ])
     await pool.query(
       `INSERT INTO project_versions (id, project_id, spec_json, render_hash)
        SELECT gen_random_uuid(), p.id, '{"version":"0.1","views":[],"initialViewId":"x"}'::jsonb, 'hash'

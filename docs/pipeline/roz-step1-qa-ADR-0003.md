@@ -1,5 +1,6 @@
 # QA Report — ADR-0003 Step 1: State engine + theme provider + logger sink + render-error infrastructure
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
@@ -7,18 +8,18 @@
 
 ## Gate Results
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | `pnpm typecheck` clean across all 4 workspaces. `Dispatch` narrowing and the full `RendererTheme` expansion type-check without error. |
-| Lint | PASS | `pnpm lint` clean. `.eslintrc.cjs` workspace-boundary rules present and structurally correct. |
-| Tests | PASS | 61/61 in the renderer package. 5 test suites, 0 failures. |
-| Coverage | PASS | 90% statements / 88.67% branches. ADR gates: ≥90% stmts, ≥85% branches. Both met. Step 1 source files at 100% statements; blended numbers include untouched `render.tsx` / `index.ts` (Step 2+ responsibility). |
-| Complexity | PASS | `useA2UIState.ts` 184 LOC; `reducer.ts` 121 LOC; no function over 20 LOC; nesting ≤ 3. |
-| DB Migrations | N/A | No DB changes in Step 1. |
-| Security | PASS WITH NOTES | See security section. |
-| CI/CD Compat | N/A | No auth/RBAC/middleware/env-var changes. |
-| Docs Impact | N/A | No new endpoints, env vars, or user-visible behavior in Step 1. |
-| Dependencies | PASS | `@testing-library/react-native@^12.4.0` and `eslint@^9.10.0` (Cal's Notes-for-Colby item 17) added. MIT licenses, no surprise transitives. |
+| Check         | Status          | Details                                                                                                                                                                                                         |
+| ------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type Check    | PASS            | `pnpm typecheck` clean across all 4 workspaces. `Dispatch` narrowing and the full `RendererTheme` expansion type-check without error.                                                                           |
+| Lint          | PASS            | `pnpm lint` clean. `.eslintrc.cjs` workspace-boundary rules present and structurally correct.                                                                                                                   |
+| Tests         | PASS            | 61/61 in the renderer package. 5 test suites, 0 failures.                                                                                                                                                       |
+| Coverage      | PASS            | 90% statements / 88.67% branches. ADR gates: ≥90% stmts, ≥85% branches. Both met. Step 1 source files at 100% statements; blended numbers include untouched `render.tsx` / `index.ts` (Step 2+ responsibility). |
+| Complexity    | PASS            | `useA2UIState.ts` 184 LOC; `reducer.ts` 121 LOC; no function over 20 LOC; nesting ≤ 3.                                                                                                                          |
+| DB Migrations | N/A             | No DB changes in Step 1.                                                                                                                                                                                        |
+| Security      | PASS WITH NOTES | See security section.                                                                                                                                                                                           |
+| CI/CD Compat  | N/A             | No auth/RBAC/middleware/env-var changes.                                                                                                                                                                        |
+| Docs Impact   | N/A             | No new endpoints, env vars, or user-visible behavior in Step 1.                                                                                                                                                 |
+| Dependencies  | PASS            | `@testing-library/react-native@^12.4.0` and `eslint@^9.10.0` (Cal's Notes-for-Colby item 17) added. MIT licenses, no surprise transitives.                                                                      |
 
 ---
 
@@ -67,6 +68,7 @@ The `increment`/`decrement` cases in the dispatch switch translate to `INCREMENT
 **Consequence:** ADR §I's stated behavior — "a `Button.action: increment(counter_id, 100)` on `max:50` clamps to 50" — cannot be implemented through the `dispatch` pathway as currently wired. **T-0003-076b will not pass with this dispatch translation** unless Step 5 introduces a mechanism to pass bounds to the reducer.
 
 **Three options:**
+
 - **(a)** Counter component wraps dispatch to inject bounds from its node spec (a Counter-specific dispatch wrapper, not the standard `Dispatch` type).
 - **(b)** New internal `BOUNDED_INCREMENT` action type; hook walks spec for bounds.
 - **(c)** Reducer gains access to spec via closure; looks up bounds by `targetId`.

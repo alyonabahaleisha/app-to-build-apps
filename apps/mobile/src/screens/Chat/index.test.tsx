@@ -35,8 +35,7 @@ jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Icon = (props: any) =>
-    ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
+  const Icon = (props: any) => ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
   return {__esModule: true, Feather: Icon}
 })
 
@@ -151,11 +150,7 @@ function renderChat(opts: HarnessOptions = {}) {
       <ToastProvider>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name="Chat"
-              component={ChatWithSpies}
-              initialParams={opts.routeParams}
-            />
+            <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
             <Stack.Screen name="AppRunner" component={() => null} />
             <Stack.Screen name="Home" component={() => null} />
             <Stack.Screen name="SignIn" component={() => null} />
@@ -186,10 +181,7 @@ afterEach(() => {
 // Helper: type a prompt and submit
 // ---------------------------------------------------------------------------
 
-async function typeAndSend(
-  screen: ReturnType<typeof renderChat>,
-  text = 'A habit tracker',
-) {
+async function typeAndSend(screen: ReturnType<typeof renderChat>, text = 'A habit tracker') {
   await act(async () => {
     fireEvent.changeText(screen.getByTestId('prompt-input'), text)
   })
@@ -217,9 +209,7 @@ it('T-0002-134: phase=thinking → loading bubble shows "Thinking about your ide
   })
 
   await waitFor(() => {
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingThinking,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingThinking)
   })
 })
 
@@ -241,9 +231,7 @@ it('T-0002-135: phase=building → loading bubble shows "Building your app…"',
   })
 
   await waitFor(() => {
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingBuilding,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingBuilding)
   })
 })
 
@@ -340,9 +328,7 @@ it('T-0002-145: copy stays "Thinking…" for 31s — no timer-driven cycling', a
   })
 
   await waitFor(() => {
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingThinking,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingThinking)
   })
 
   // Advance 31s — screen must not advance copy via its own timer.

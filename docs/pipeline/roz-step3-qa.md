@@ -1,29 +1,30 @@
 ## QA Report — Step 3 of ADR-0001
-*Reviewed by Roz, 2026-05-01*
+
+_Reviewed by Roz, 2026-05-01_
 
 ### Verdict: PASS
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | `pnpm typecheck` — all 4 workspaces clean (api, a2ui-schema, a2ui-renderer, mobile). |
-| Lint | PASS | `pnpm lint` — eslint clean, no output. |
-| Tests | PASS | 23/23 Step 3 (20 routes + 3 users.service). 55/55 server total: schema 16 + lib auth 15 + routes auth 20 + users.service 3 + health 1, 6.2 s. |
-| Coverage (proxy) | PASS | Every Step 3 T-ID maps to a non-tautological assertion; T-0001-047 correctly N/A. |
-| Complexity | PASS | `auth.ts` 116 LOC, longest handler 23 LOC, nesting ≤2; `users.service.ts` 64 LOC, single 19-LOC function; `rateLimit.ts` 72 LOC, longest function 18 LOC, nesting ≤2; `auth.service.ts` 31 LOC. All within thresholds. |
-| Security | PASS | No hardcoded secrets. Zero `console.*` in Step 3 source (env.ts:91 boot fail-fast carry-over from Step 2). Drizzle parameterization upheld in `findOrCreate` (`.values({id, email}).onConflictDoNothing()` — no string concatenation). 401/400/500/429 bodies all key-strict. Email never logged at INFO across the request lifecycle. `getSupabaseAdmin()` still lazy. |
-| Step 1+2 regression | PASS | schema.test.ts 16/16, lib/auth.test.ts 15/15, health 1/1 — all green against the env.ts SUPABASE_URL tightening. |
+| Check               | Status | Details                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type Check          | PASS   | `pnpm typecheck` — all 4 workspaces clean (api, a2ui-schema, a2ui-renderer, mobile).                                                                                                                                                                                                                                                                                    |
+| Lint                | PASS   | `pnpm lint` — eslint clean, no output.                                                                                                                                                                                                                                                                                                                                  |
+| Tests               | PASS   | 23/23 Step 3 (20 routes + 3 users.service). 55/55 server total: schema 16 + lib auth 15 + routes auth 20 + users.service 3 + health 1, 6.2 s.                                                                                                                                                                                                                           |
+| Coverage (proxy)    | PASS   | Every Step 3 T-ID maps to a non-tautological assertion; T-0001-047 correctly N/A.                                                                                                                                                                                                                                                                                       |
+| Complexity          | PASS   | `auth.ts` 116 LOC, longest handler 23 LOC, nesting ≤2; `users.service.ts` 64 LOC, single 19-LOC function; `rateLimit.ts` 72 LOC, longest function 18 LOC, nesting ≤2; `auth.service.ts` 31 LOC. All within thresholds.                                                                                                                                                  |
+| Security            | PASS   | No hardcoded secrets. Zero `console.*` in Step 3 source (env.ts:91 boot fail-fast carry-over from Step 2). Drizzle parameterization upheld in `findOrCreate` (`.values({id, email}).onConflictDoNothing()` — no string concatenation). 401/400/500/429 bodies all key-strict. Email never logged at INFO across the request lifecycle. `getSupabaseAdmin()` still lazy. |
+| Step 1+2 regression | PASS   | schema.test.ts 16/16, lib/auth.test.ts 15/15, health 1/1 — all green against the env.ts SUPABASE_URL tightening.                                                                                                                                                                                                                                                        |
 
 ### AC Coverage trace
 
-| AC (ADR §Step 3) | Test ID | Status |
-|---|---|---|
-| `/auth/magic-link` calls Supabase admin & returns `{sent: true}` | T-0001-030 | PASS — `mockGenerateLink` called once with `{type: 'magiclink', email}`; body `=== {sent: true}` |
-| Email validation 400 `{error: 'invalid_input', detail: 'email format'}` | T-0001-033, 034, 035 | PASS — three sub-cases (`notanemail`, missing field, empty string), all assert exact body shape |
-| Supabase API failure → 500 `{error: 'internal'}`; SDK error logged via safeMessage but NOT in body | T-0001-040 | PASS — see "Pino spy" below |
-| `/auth/sync` inserts row if absent; returns `{user: {id, email}}` | T-0001-031 | PASS — row asserted via `db.select().from(users).where(eq(users.id, sub))` length 1 |
-| `/auth/sync` no duplicate on existing | T-0001-032 | PASS — two sync calls, post-state row count 1 |
-| `/auth/sync` without auth → 401 | T-0001-036 | PASS — body `=== {error: 'unauthorized'}` |
-| Concurrent `/auth/sync` → exactly one row | T-0001-045 | PASS — `Promise.all` of two injects; SQL `COUNT(*)` returns `'1'` |
+| AC (ADR §Step 3)                                                                                   | Test ID              | Status                                                                                           |
+| -------------------------------------------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------ |
+| `/auth/magic-link` calls Supabase admin & returns `{sent: true}`                                   | T-0001-030           | PASS — `mockGenerateLink` called once with `{type: 'magiclink', email}`; body `=== {sent: true}` |
+| Email validation 400 `{error: 'invalid_input', detail: 'email format'}`                            | T-0001-033, 034, 035 | PASS — three sub-cases (`notanemail`, missing field, empty string), all assert exact body shape  |
+| Supabase API failure → 500 `{error: 'internal'}`; SDK error logged via safeMessage but NOT in body | T-0001-040           | PASS — see "Pino spy" below                                                                      |
+| `/auth/sync` inserts row if absent; returns `{user: {id, email}}`                                  | T-0001-031           | PASS — row asserted via `db.select().from(users).where(eq(users.id, sub))` length 1              |
+| `/auth/sync` no duplicate on existing                                                              | T-0001-032           | PASS — two sync calls, post-state row count 1                                                    |
+| `/auth/sync` without auth → 401                                                                    | T-0001-036           | PASS — body `=== {error: 'unauthorized'}`                                                        |
+| Concurrent `/auth/sync` → exactly one row                                                          | T-0001-045           | PASS — `Promise.all` of two injects; SQL `COUNT(*)` returns `'1'`                                |
 
 All seven AC bullets covered. No uncovered AC.
 

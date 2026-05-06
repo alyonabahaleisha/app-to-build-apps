@@ -52,23 +52,13 @@ export function EmptyState({
         />
       </View>
       <Text
-        style={[
-          styles.headline,
-          theme.typography.heading2,
-          {color: theme.palette.text.primary},
-        ]}
+        style={[styles.headline, theme.typography.heading2, {color: theme.palette.text.primary}]}
         accessibilityRole="header"
       >
         {headline}
       </Text>
       {subhead ? (
-        <Text
-          style={[
-            styles.subhead,
-            theme.typography.body,
-            {color: theme.palette.text.muted},
-          ]}
-        >
+        <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
           {subhead}
         </Text>
       ) : null}

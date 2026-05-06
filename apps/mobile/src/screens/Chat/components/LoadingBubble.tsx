@@ -52,7 +52,7 @@ export function LoadingBubble({phase}: Props) {
   useEffect(() => {
     let active = true
     AccessibilityInfo.isReduceMotionEnabled()
-      .then((flag) => {
+      .then(flag => {
         if (active) setReduced(flag)
       })
       .catch(() => {})
@@ -82,7 +82,12 @@ export function LoadingBubble({phase}: Props) {
   }, [phase, opacity])
 
   return (
-    <View style={[styles.bubble, {backgroundColor: theme.palette.bg.subtle, borderRadius: theme.radius.md}]}>
+    <View
+      style={[
+        styles.bubble,
+        {backgroundColor: theme.palette.bg.subtle, borderRadius: theme.radius.md},
+      ]}
+    >
       <Animated.View style={{opacity, flexDirection: 'row', alignItems: 'center', gap: 8}}>
         <Text
           style={[theme.typography.body, {color: theme.palette.text.primary}]}
@@ -179,4 +184,3 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
 })
-

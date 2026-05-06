@@ -76,7 +76,7 @@ export const projectsRoutes: FastifyPluginAsync<ProjectsRoutesOptions> = async (
       // ISO-string the timestamps so the JSON body is deterministic and
       // JSON-Schema-validatable. Drizzle returns Dates; we control the wire
       // shape here (the ProjectListItem type still uses Date in TS-land).
-      const projects = items.map((p) => ({
+      const projects = items.map(p => ({
         id: p.id,
         title: p.title,
         currentVersionId: p.currentVersionId,

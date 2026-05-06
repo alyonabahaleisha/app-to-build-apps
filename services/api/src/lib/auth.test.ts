@@ -69,7 +69,7 @@ async function buildTestServer(opts: BuildOpts = {}) {
     : pino({level: 'silent'})
 
   const server = Fastify({loggerInstance})
-  server.get('/protected', {preHandler: requireAuth}, async (req) => {
+  server.get('/protected', {preHandler: requireAuth}, async req => {
     const user = (req as unknown as AuthenticatedRequest).user
     // Echo only the id; never echo email back even on success — keeps the
     // route handler's response shape independent of email-handling rules
@@ -415,7 +415,7 @@ describe('ADR-0001 Step 2 — auth middleware (verifyJwt + requireAuth)', () => 
     try {
       const subs = Array.from({length: 100}, () => uuid())
       const responses = await Promise.all(
-        subs.map((sub) => {
+        subs.map(sub => {
           const token = signToken({
             sub,
             email: `user-${sub}@example.com`,

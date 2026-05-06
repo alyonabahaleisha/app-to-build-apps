@@ -37,11 +37,7 @@ export interface NodeProps<T> {
 
 // -- Component ----------------------------------------------------------------
 
-export function ListRenderer({
-  node,
-  state,
-  dispatch,
-}: NodeProps<A2UIListNode>): React.ReactElement {
+export function ListRenderer({node, state, dispatch}: NodeProps<A2UIListNode>): React.ReactElement {
   const theme = useRendererTheme()
   const useSeparator = node.separator === true
 

@@ -18,10 +18,7 @@ import {projectsKeys} from '#/state/queries/projects'
 
 export class PublishError extends Error {
   readonly code: PublishErrorCode
-  constructor(
-    code: PublishErrorCode,
-    message?: string,
-  ) {
+  constructor(code: PublishErrorCode, message?: string) {
     super(message ?? code)
     this.name = 'PublishError'
     this.code = code
@@ -217,10 +214,7 @@ export function useSetHandleMutation() {
 export function useCheckHandleQuery(handle: string, enabled: boolean) {
   return useQuery<HandleCheckResult, Error>({
     queryKey: marketplaceKeys.handleCheck(handle),
-    queryFn: () =>
-      apiFetch<HandleCheckResult>(
-        `/handles/check?h=${encodeURIComponent(handle)}`,
-      ),
+    queryFn: () => apiFetch<HandleCheckResult>(`/handles/check?h=${encodeURIComponent(handle)}`),
     enabled: enabled && handle.length > 0,
     staleTime: STALE.SECONDS(30),
     retry: false,

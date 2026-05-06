@@ -95,7 +95,11 @@ describe('ImageRenderer — alt prop', () => {
 describe('ImageRenderer — boundary: portrait aspectRatio', () => {
   // T-0003-050
   it('aspectRatio:0.5 (portrait) — aspectRatio is locked on the Image', () => {
-    const tree = renderImage({type: 'Image', src: 'https://example.com/portrait.png', aspectRatio: 0.5})
+    const tree = renderImage({
+      type: 'Image',
+      src: 'https://example.com/portrait.png',
+      aspectRatio: 0.5,
+    })
     const root = tree.toJSON() as any
     expect(root.type).toBe('Image')
     expect(root.props.style).toMatchObject({aspectRatio: 0.5})

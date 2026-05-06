@@ -69,7 +69,8 @@ export function ImageRenderer({node}: NodeProps<A2UIImageNode>): React.ReactElem
         borderRadius: theme.radius.md,
         overflow: 'hidden',
         maxHeight: 240,
-      }}>
+      }}
+    >
       <Image
         source={{uri: node.src}}
         accessibilityLabel={node.alt}

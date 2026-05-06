@@ -15,8 +15,7 @@ export const homeCopy = {
   settingsA11y: 'Settings',
   settingsComingSoonToast: 'Settings coming soon',
   emptyHeadline: 'Your library is empty.',
-  emptySubhead:
-    'Tap Create new app to make your first one. It takes about a minute.',
+  emptySubhead: 'Tap Create new app to make your first one. It takes about a minute.',
   errorHeadline: "Couldn't load your library.",
   errorSubhead: 'Pull to retry.',
   errorRetryCta: 'Retry',

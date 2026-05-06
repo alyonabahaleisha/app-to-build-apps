@@ -35,16 +35,16 @@ import {Linter} from 'eslint'
 // test runtime. Importing .cjs from ESM requires dynamic import + default
 // export, which is brittle across CJS/ESM module boundaries.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const eslintrc = require(
-  path.resolve(__dirname, '../../.eslintrc.cjs'),
-) as {rules: {[key: string]: unknown}}
+const eslintrc = require(path.resolve(__dirname, '../../.eslintrc.cjs')) as {
+  rules: {[key: string]: unknown}
+}
 
 // Verify the rule exists before continuing.
 const noRestrictedImportsConfig = eslintrc.rules['no-restricted-imports']
 if (!noRestrictedImportsConfig) {
   throw new Error(
     'T-0003-006b: .eslintrc.cjs does not contain no-restricted-imports rule. ' +
-    'Step 1 acceptance criteria require workspace boundary enforcement.',
+      'Step 1 acceptance criteria require workspace boundary enforcement.',
   )
 }
 
@@ -118,9 +118,7 @@ describe('T-0003-006b: workspace boundary lint rule enforcement', () => {
   })
 
   it('import from @app-creator/a2ui-schema is permitted (control test)', () => {
-    const messages = lintCode(
-      `import type {A2UISpec} from '@app-creator/a2ui-schema'`,
-    )
+    const messages = lintCode(`import type {A2UISpec} from '@app-creator/a2ui-schema'`)
     const violations = messages.filter(m => m.ruleId === 'no-restricted-imports')
     expect(violations).toHaveLength(0)
   })

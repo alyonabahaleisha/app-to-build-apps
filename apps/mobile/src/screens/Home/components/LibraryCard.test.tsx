@@ -17,8 +17,7 @@ jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Icon = (props: any) =>
-    ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
+  const Icon = (props: any) => ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
   return {__esModule: true, Feather: Icon}
 })
 
@@ -108,8 +107,6 @@ describe('LibraryCard', () => {
       />,
     )
     const card = screen.getByTestId('library-card')
-    expect(card.props.accessibilityLabel).toBe(
-      'Open Habit Tracker, created 3 days ago',
-    )
+    expect(card.props.accessibilityLabel).toBe('Open Habit Tracker, created 3 days ago')
   })
 })

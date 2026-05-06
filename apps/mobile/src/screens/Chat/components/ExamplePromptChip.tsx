@@ -29,14 +29,7 @@ export function ExamplePromptChip({label, onPress}: Props) {
       ]}
       testID="example-chip"
     >
-      <Text
-        style={[
-          theme.typography.caption,
-          {color: theme.palette.text.primary},
-        ]}
-      >
-        {label}
-      </Text>
+      <Text style={[theme.typography.caption, {color: theme.palette.text.primary}]}>{label}</Text>
     </Pressable>
   )
 }

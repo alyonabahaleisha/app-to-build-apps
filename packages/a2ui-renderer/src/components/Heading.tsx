@@ -41,8 +41,7 @@ export function HeadingRenderer({node}: NodeProps<A2UIHeadingNode>): React.React
   const theme = useRendererTheme()
 
   // Default to level 1; also clamp any out-of-range value (T-0003-042, T-0003-050c).
-  const level: 1 | 2 | 3 =
-    node.level === 1 || node.level === 2 || node.level === 3 ? node.level : 1
+  const level: 1 | 2 | 3 = node.level === 1 || node.level === 2 || node.level === 3 ? node.level : 1
 
   const typography =
     level === 1
@@ -52,16 +51,13 @@ export function HeadingRenderer({node}: NodeProps<A2UIHeadingNode>): React.React
         : theme.typography.heading2
 
   const paddingTop =
-    level === 1
-      ? theme.spacing.lg
-      : level === 2
-        ? theme.spacing.md
-        : theme.spacing.sm
+    level === 1 ? theme.spacing.lg : level === 2 ? theme.spacing.md : theme.spacing.sm
 
   return (
     <Text
       accessibilityRole="header"
-      style={[typography, {color: theme.palette.text.primary, paddingTop}]}>
+      style={[typography, {color: theme.palette.text.primary, paddingTop}]}
+    >
       {node.text}
     </Text>
   )

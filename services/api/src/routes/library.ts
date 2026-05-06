@@ -126,7 +126,7 @@ export const libraryRoutes: FastifyPluginAsync<LibraryRoutesOptions> = async (
       )
 
       return reply.code(200).send({
-        items: result.items.map((item) => ({
+        items: result.items.map(item => ({
           id: item.id,
           title: item.title,
           author_handle: item.author_handle,

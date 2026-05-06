@@ -27,8 +27,7 @@ jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Icon = (props: any) =>
-    ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
+  const Icon = (props: any) => ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
   return {__esModule: true, Feather: Icon}
 })
 
@@ -81,11 +80,7 @@ function renderChatWithRemix(params: NonNullable<RootStackParamList['Chat']>) {
       <ToastProvider>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name="Chat"
-              component={ChatWithSpies}
-              initialParams={params}
-            />
+            <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={params} />
             <Stack.Screen name="AppRunner" component={() => null} />
             <Stack.Screen name="Home" component={() => null} />
             <Stack.Screen name="SignIn" component={() => null} />

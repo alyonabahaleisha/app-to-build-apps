@@ -58,11 +58,7 @@ export function HandleField({
         ]}
       >
         <Text
-          style={[
-            styles.prefix,
-            theme.typography.body,
-            {color: theme.palette.text.muted},
-          ]}
+          style={[styles.prefix, theme.typography.body, {color: theme.palette.text.muted}]}
           accessibilityElementsHidden
           importantForAccessibility="no"
         >
@@ -78,11 +74,7 @@ export function HandleField({
           keyboardType="default"
           accessibilityLabel="Your handle"
           accessibilityHint="3 to 20 lowercase letters, numbers, or dashes. You can't change this later."
-          style={[
-            styles.input,
-            theme.typography.body,
-            {color: theme.palette.text.primary},
-          ]}
+          style={[styles.input, theme.typography.body, {color: theme.palette.text.primary}]}
           testID={testID ?? 'handle-field-input'}
           placeholderTextColor={theme.palette.text.muted}
           placeholder="yourhandle"
@@ -105,10 +97,7 @@ export function HandleField({
   )
 }
 
-function getBorderColor(
-  state: HandleValidationState,
-  theme: ReturnType<typeof useTheme>,
-): string {
+function getBorderColor(state: HandleValidationState, theme: ReturnType<typeof useTheme>): string {
   switch (state) {
     case 'available':
       return '#16a34a' // green — not a theme token, Sable-spec for valid
@@ -121,10 +110,7 @@ function getBorderColor(
   }
 }
 
-function getHelperColor(
-  state: HandleValidationState,
-  theme: ReturnType<typeof useTheme>,
-): string {
+function getHelperColor(state: HandleValidationState, theme: ReturnType<typeof useTheme>): string {
   switch (state) {
     case 'available':
       return '#16a34a'

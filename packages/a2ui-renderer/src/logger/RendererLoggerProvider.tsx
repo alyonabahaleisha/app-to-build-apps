@@ -33,11 +33,7 @@ export function RendererLoggerProvider({
   logger,
   children,
 }: RendererLoggerProviderProps): React.ReactElement {
-  return (
-    <RendererLoggerContext.Provider value={logger}>
-      {children}
-    </RendererLoggerContext.Provider>
-  )
+  return <RendererLoggerContext.Provider value={logger}>{children}</RendererLoggerContext.Provider>
 }
 
 // -- Hook ---------------------------------------------------------------------

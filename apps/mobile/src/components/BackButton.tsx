@@ -17,11 +17,7 @@ interface Props {
   testID?: string
 }
 
-export function BackButton({
-  onPress,
-  accessibilityLabel = 'Back',
-  testID,
-}: Props) {
+export function BackButton({onPress, accessibilityLabel = 'Back', testID}: Props) {
   const theme = useTheme()
   return (
     <Pressable

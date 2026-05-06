@@ -1,18 +1,19 @@
 # QA Report — ADR-0003 Step 5: Counter + bounds-injection wiring (§I.1)
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
 ---
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | All 4 workspaces clean. |
-| Lint | PASS WITH NOTES | 0 errors. 62 `no-explicit-any` warnings (pre-existing). Counter.tsx itself: 0 warnings. |
-| Tests | PASS | 156/156 in renderer. 13 suites. 24 snapshots match. |
-| Coverage | PASS WITH NOTES | Aggregate 93.68% stmts / 90.9% branches. Counter.tsx 84%/75% (uncovered: onAccessibilityAction handler). useA2UIState.ts 91%/87% (uncovered: List + Form walk in buildCounterBoundsMap). Above thresholds at aggregate, but the gaps are NEW code in Step 5. |
-| Complexity | PASS | Counter.tsx 204 LOC, CCN ≤ 5. useA2UIState.ts 267 LOC. No animation primitives in Counter — Phase 2 deferral confirmed. |
-| Security | PASS | Workspace boundary clean. No PII in dispatched payloads. |
+| Check      | Status          | Details                                                                                                                                                                                                                                                      |
+| ---------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Type Check | PASS            | All 4 workspaces clean.                                                                                                                                                                                                                                      |
+| Lint       | PASS WITH NOTES | 0 errors. 62 `no-explicit-any` warnings (pre-existing). Counter.tsx itself: 0 warnings.                                                                                                                                                                      |
+| Tests      | PASS            | 156/156 in renderer. 13 suites. 24 snapshots match.                                                                                                                                                                                                          |
+| Coverage   | PASS WITH NOTES | Aggregate 93.68% stmts / 90.9% branches. Counter.tsx 84%/75% (uncovered: onAccessibilityAction handler). useA2UIState.ts 91%/87% (uncovered: List + Form walk in buildCounterBoundsMap). Above thresholds at aggregate, but the gaps are NEW code in Step 5. |
+| Complexity | PASS            | Counter.tsx 204 LOC, CCN ≤ 5. useA2UIState.ts 267 LOC. No animation primitives in Counter — Phase 2 deferral confirmed.                                                                                                                                      |
+| Security   | PASS            | Workspace boundary clean. No PII in dispatched payloads.                                                                                                                                                                                                     |
 
 ## All 17+2 Mandatory T-IDs Verified
 

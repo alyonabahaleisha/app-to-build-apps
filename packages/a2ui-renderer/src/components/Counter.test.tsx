@@ -64,7 +64,6 @@ function makeNode(overrides?: Partial<A2UICounterNode>): A2UICounterNode {
   }
 }
 
-
 // -- T-0003-069: Three elements rendered (−, value, +) ------------------------
 
 describe('CounterRenderer — T-0003-069: three elements rendered', () => {

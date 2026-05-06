@@ -41,8 +41,7 @@ jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Icon = (props: any) =>
-    ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
+  const Icon = (props: any) => ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
   return {__esModule: true, Feather: Icon}
 })
 
@@ -87,10 +86,7 @@ jest.mock('#/state/session/useSession', () => ({
   __esModule: true,
   useSession: () => ({
     status: mockSessionStatus,
-    user:
-      mockSessionStatus === 'authenticated'
-        ? {id: mockUserId, email: 'a@b.co'}
-        : null,
+    user: mockSessionStatus === 'authenticated' ? {id: mockUserId, email: 'a@b.co'} : null,
     redeemToken: mockRedeemToken,
     signOut: mockSignOut,
     skipAuth: jest.fn(),
@@ -122,8 +118,7 @@ function makeProject(overrides: Partial<Project> = {}, idx = 0): ProjectFixture 
     createdAt: overrides.createdAt ?? '2026-04-01T12:00:00.000Z',
     updatedAt: overrides.updatedAt ?? `2026-05-${String(28 - idx).padStart(2, '0')}T12:00:00.000Z`,
     currentVersionId:
-      overrides.currentVersionId ??
-      `99999999-9999-9999-9999-${String(idx).padStart(12, '0')}`,
+      overrides.currentVersionId ?? `99999999-9999-9999-9999-${String(idx).padStart(12, '0')}`,
     parentProjectId: overrides.parentProjectId ?? null,
   }
 }
@@ -155,9 +150,7 @@ function mockList401() {
 }
 
 function mockListOffline() {
-  mockFetch.mockImplementationOnce(() =>
-    Promise.reject(new TypeError('Network request failed')),
-  )
+  mockFetch.mockImplementationOnce(() => Promise.reject(new TypeError('Network request failed')))
 }
 
 function mockListShapeMismatch() {
@@ -274,7 +267,7 @@ function renderHome(opts: HarnessOptions = {}) {
 // =========================================================================
 
 describe('Home screen', () => {
-  it('T-0001-103: 0 projects → empty state visible with copy from Sable\'s deck', async () => {
+  it("T-0001-103: 0 projects → empty state visible with copy from Sable's deck", async () => {
     mockListOk([])
     const screen = renderHome()
     await waitFor(() => {
@@ -310,9 +303,10 @@ describe('Home screen', () => {
     // Block the fetch so the query stays in 'pending' state during the assert.
     let resolve: ((v: unknown) => void) | null = null
     mockFetch.mockImplementationOnce(
-      () => new Promise((r) => {
-        resolve = r
-      }),
+      () =>
+        new Promise(r => {
+          resolve = r
+        }),
     )
     const screen = renderHome()
 
@@ -473,7 +467,7 @@ describe('Home screen', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2)
   })
 
-  it('T-0001-127 (security): cross-user — User A\'s titles never leak into User B\'s view', async () => {
+  it("T-0001-127 (security): cross-user — User A's titles never leak into User B's view", async () => {
     // User A has 3 projects.
     const userAProjects: ProjectFixture[] = [
       makeProject({title: 'A-Newest'}, 0),
@@ -519,9 +513,10 @@ describe('Home screen', () => {
     // Block the first fetch.
     let resolve: ((v: unknown) => void) | null = null
     mockFetch.mockImplementationOnce(
-      () => new Promise((r) => {
-        resolve = r
-      }),
+      () =>
+        new Promise(r => {
+          resolve = r
+        }),
     )
     const screen = renderHome()
 

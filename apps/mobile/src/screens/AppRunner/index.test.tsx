@@ -157,9 +157,7 @@ function makeDetailResponse(overrides?: {
   }
 }
 
-function renderScreen(
-  opts: {projectId?: string; visibility?: 'public' | 'private'} = {},
-) {
+function renderScreen(opts: {projectId?: string; visibility?: 'public' | 'private'} = {}) {
   const qc = makeQc()
   const nav = makeNavigation()
   const route = makeRoute(opts.projectId)
@@ -184,8 +182,7 @@ function renderScreen(
 describe('AppRunnerScreen Owner mode', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(ActionSheetIOS, 'showActionSheetWithOptions')
-      .mockImplementation(mockShowActionSheet)
+    jest.spyOn(ActionSheetIOS, 'showActionSheetWithOptions').mockImplementation(mockShowActionSheet)
   })
 
   // T-0002-148 / T-0003-115a: Owner-mode shows Publish CTA when visibility='private'

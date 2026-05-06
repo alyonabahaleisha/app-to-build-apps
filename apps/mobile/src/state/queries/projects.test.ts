@@ -188,9 +188,9 @@ describe('parseProjectDetailResponse', () => {
   })
 
   it('throws ProjectDetailShapeError when "currentVersion" is missing', () => {
-    expect(() =>
-      parseProjectDetailResponse({project: VALID_DETAIL_RESPONSE.project}),
-    ).toThrow(ProjectDetailShapeError)
+    expect(() => parseProjectDetailResponse({project: VALID_DETAIL_RESPONSE.project})).toThrow(
+      ProjectDetailShapeError,
+    )
   })
 
   it('throws ProjectDetailShapeError when project.id is not a uuid', () => {

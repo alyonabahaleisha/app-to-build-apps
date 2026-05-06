@@ -1,7 +1,9 @@
 # ADR-0002: Generation, Publish API, Eval Harness
-*Authored by Cal — 2026-05-02*
+
+_Authored by Cal — 2026-05-02_
 
 ## Status
+
 Proposed
 
 ## Context
@@ -18,7 +20,7 @@ Three forces push toward sub-slicing into ADR-0002 + ADR-0003:
 
 2. **Renderer is a real slice.** Building 10 components (Toggle, Counter, Form, Container nested layouts, etc.) with snapshot tests per props matrix is multiple days of work. It blocks the Library/Try/Remix UX (no rendering = no marketplace), but doesn't block the Generation API or the Maker's own Publish flow. Different blast radius, different ADR.
 
-3. **Per Robert's note:** *"ADR-0002 and ADR-0003 will be drafted after 0001 lands — not preemptively. We learn things during 0001 that will sharpen 0002."* That convention extends here: write 0002, ship 0002, then sharpen 0003 against what we learned (eval pass rate, real generation latencies, schema friction). Don't preemptively design 0003.
+3. **Per Robert's note:** _"ADR-0002 and ADR-0003 will be drafted after 0001 lands — not preemptively. We learn things during 0001 that will sharpen 0002."_ That convention extends here: write 0002, ship 0002, then sharpen 0003 against what we learned (eval pass rate, real generation latencies, schema friction). Don't preemptively design 0003.
 
 > **What if we do nothing (don't write this ADR):** the engineer wires `/generate` against a single Anthropic call, skips extended thinking ("we'll add it later"), persists prompts and visibility ad hoc, and discovers two weeks later that the SSE protocol the mobile app expects doesn't match the wire format the server emits. That's the failure mode this ADR exists to prevent.
 
@@ -40,13 +42,13 @@ Why not a separate `published_projects` table? It would require joining on every
 
 #### C. SSE on `/generate` for phase events (per ARCHITECTURE.md §4, CLAUDE.md §7)
 
-Three event types: `thinking_started`, `building_started`, `done` (+ `error`). The wire format is text/event-stream with `data: <JSON>\n\n` framing and a `data: [DONE]\n\n` sentinel. Distinct from the umbrella's deferred *content* streaming — we stream **only phase events**, not LLM tokens. The `done` event carries the full validated spec + project metadata in one payload.
+Three event types: `thinking_started`, `building_started`, `done` (+ `error`). The wire format is text/event-stream with `data: <JSON>\n\n` framing and a `data: [DONE]\n\n` sentinel. Distinct from the umbrella's deferred _content_ streaming — we stream **only phase events**, not LLM tokens. The `done` event carries the full validated spec + project metadata in one payload.
 
-Server taps Anthropic's streaming API (`messages.stream()`). The phase transition `thinking_started → building_started` is observable from Anthropic's streamed `content_block_start` events: type `thinking` for the thinking block, type `tool_use` for the tool call. Server emits `thinking_started` *immediately* on request acceptance (so the client never sees a blank loading state); it emits `building_started` on the first `content_block_start` event with type `tool_use`.
+Server taps Anthropic's streaming API (`messages.stream()`). The phase transition `thinking_started → building_started` is observable from Anthropic's streamed `content_block_start` events: type `thinking` for the thinking block, type `tool_use` for the tool call. Server emits `thinking_started` _immediately_ on request acceptance (so the client never sees a blank loading state); it emits `building_started` on the first `content_block_start` event with type `tool_use`.
 
 #### D. Extended thinking with `budget_tokens: 4000`, `tool_choice` forced (per Robert AC-CG-G2)
 
-`thinking: {type: 'enabled', budget_tokens: 4000}` paired with `tool_choice: {type: 'tool', name: 'produce_app_spec'}`. The model deliberates inside the thinking block, then emits the spec via the forced tool. Output cap stays at `max_tokens: 8000` (umbrella ARCHITECTURE.md §4). Total token budget is bounded: 12K input (system + catalog + messages, pre-checked at the route), 8K output, 4K thinking — the thinking budget is *separate* from the output budget per Anthropic's API contract.
+`thinking: {type: 'enabled', budget_tokens: 4000}` paired with `tool_choice: {type: 'tool', name: 'produce_app_spec'}`. The model deliberates inside the thinking block, then emits the spec via the forced tool. Output cap stays at `max_tokens: 8000` (umbrella ARCHITECTURE.md §4). Total token budget is bounded: 12K input (system + catalog + messages, pre-checked at the route), 8K output, 4K thinking — the thinking budget is _separate_ from the output budget per Anthropic's API contract.
 
 #### E. Anthropic SDK 0.30.1 supports streaming + extended thinking + tool use simultaneously
 
@@ -66,7 +68,7 @@ Sentinel email: `example@reserved.localhost`. The Supabase auth flow has no path
 
 #### I. Reserved handles list is application-side (services/api/src/lib/reservedHandles.ts)
 
-Six entries: `admin`, `system`, `official`, `support`, `app`, `creator`. Plus `example` (the seed user owns this; no real maker can claim it). DB-level UNIQUE catches the @example collision; application-level list catches the rest *before* hitting the DB and gives a meaningful error code (`handle_reserved`).
+Six entries: `admin`, `system`, `official`, `support`, `app`, `creator`. Plus `example` (the seed user owns this; no real maker can claim it). DB-level UNIQUE catches the @example collision; application-level list catches the rest _before_ hitting the DB and gives a meaningful error code (`handle_reserved`).
 
 #### J. Handle availability check is a separate `GET /handles/check?h=<handle>` endpoint
 
@@ -88,7 +90,7 @@ The `/library` query is the only consumer of `visibility = 'public'` rows; makin
 
 Re-publishing a public project: 200, no state change, no `published_at` update (we don't bump on re-publish — `published_at` is "first publish time at the current visibility cycle"). Unpublishing a private project: 200, no state change. This matches Robert's AC-CG-P1, AC-CG-P4 and protects against client retries on flaky networks.
 
-#### O. SSE response is *not* aborted when the client disconnects
+#### O. SSE response is _not_ aborted when the client disconnects
 
 The `/generate` handler keeps the Anthropic call alive until completion regardless of client connection state. On completion, the project still persists. This matches umbrella's "cancel-during-generation" behavior (Sable's UX): the user finds their project in My apps on next refresh. Implementation: the SSE handler ignores `req.raw.on('close')`; the Anthropic stream consumption proceeds inside its own promise. We log `client_disconnect_during_generate` for observability.
 
@@ -112,7 +114,7 @@ Per Sable's UX ask. v5.x for RN 0.76 compatibility. Pulls in `react-native-reani
 
 - **Upside:** Simpler server code. No SSE infra. ~30s latency instead of ~60–120s.
 - **Downside:** Sable's UX explicitly relies on real server-emitted phase events for the loading state ("Thinking…" → "Building…"). Without extended thinking, we'd revert to the umbrella's three-timer cosmetic fiction — exactly the pattern Robert called out and rejected (Q5 of his discovery).
-- **Why not:** Honesty in the loading UX is worth the +20s latency. The 30-prompt eval also benefits from extended thinking — early Anthropic data suggests 5–15% pass-rate uplift on structured-output prompts. We can drop extended thinking later if eval data shows it doesn't help; we can't *add* it later without a redo.
+- **Why not:** Honesty in the loading UX is worth the +20s latency. The 30-prompt eval also benefits from extended thinking — early Anthropic data suggests 5–15% pass-rate uplift on structured-output prompts. We can drop extended thinking later if eval data shows it doesn't help; we can't _add_ it later without a redo.
 
 ### Alternative 3: NDJSON instead of SSE for phase events
 
@@ -141,28 +143,30 @@ Per Sable's UX ask. v5.x for RN 0.76 compatibility. Pulls in `react-native-reani
 ## Consequences
 
 ### Positive
+
 - ADR-0002 ships a complete chat-create-publish loop that's testable end-to-end via the eval harness without any UI glue.
-- The renderer staying skeleton in 0002 is *expected* — owners see partial renders for their generated apps. Acceptable for internal-only validation.
+- The renderer staying skeleton in 0002 is _expected_ — owners see partial renders for their generated apps. Acceptable for internal-only validation.
 - ADR-0003's design surface is constrained: it's "build the renderer + tabbed Home + three AppRunner modes," not "design the marketplace from scratch." Smaller blast radius.
 - Eval harness running in CI (PRs touching `services/api/src/llm/` or `packages/a2ui-schema/`) gives us a regression net for system prompt changes.
 
 ### Negative
-- A maker who publishes in 0002 sees their public app in the Library *only after ADR-0003 ships*. The Library tab doesn't exist in 0002. This is documented in the publish toast ("Published to Library") and accepted; the maker has confidence their app is public even though they can't browse it yet.
-- The renderer producing "[Unimplemented: Toggle]" placeholders for non-Heading/Text components is awkward in 0002 internally. Mitigated: the eval harness validates spec *structure*, not rendered output, so the gate is unaffected. Internal testers will see partial renders and can give feedback on copy/loading UX without renderer-related noise.
+
+- A maker who publishes in 0002 sees their public app in the Library _only after ADR-0003 ships_. The Library tab doesn't exist in 0002. This is documented in the publish toast ("Published to Library") and accepted; the maker has confidence their app is public even though they can't browse it yet.
+- The renderer producing "[Unimplemented: Toggle]" placeholders for non-Heading/Text components is awkward in 0002 internally. Mitigated: the eval harness validates spec _structure_, not rendered output, so the gate is unaffected. Internal testers will see partial renders and can give feedback on copy/loading UX without renderer-related noise.
 - `@example` user with sentinel email `example@reserved.localhost` is a defensive shape — if Supabase ever syncs `auth.users` against our local mirror and treats the @example row as a real auth user, we have a small surface for misuse. Accepted; documented in §17 D10 below.
 - Renaming `/projects` → `/me/projects` is a breaking change to ADR-0001's routes. Mobile updates in lockstep. No prod users.
 
 ### Risks
 
-| Risk | Likelihood | Mitigation |
-|---|---|---|
-| Anthropic streaming + tool use + extended thinking has subtle quirks the SDK 0.30.1 hasn't documented | Medium | Step 3 includes a manual smoke test against a single prompt before SSE wrapping. Document any discovered quirks in Notes for Colby. |
-| Extended thinking budget of 4K is too low and pass rate drops | Medium | Step 10 (eval harness) is the gate. If pass rate <80%, raise budget to 6K and re-run. Robert is on the hook for the call-to-disable if the data justifies. |
-| Handle uniqueness race between two simultaneous first-publishes | Low | DB UNIQUE constraint catches it. Application surfaces 409 / `handle_taken`. T-0002-052 verifies the race. |
-| Client disconnects mid-generation; project still persists; user is confused next refresh | Low | Acceptable per umbrella behavior. Server-side log `client_disconnect_during_generate` for observability. T-0002-035 verifies persistence works regardless. |
-| Seed projects' specs use catalog components the renderer doesn't yet handle (everything except Heading + Text in 0002) | High *(but accepted)* | Internal testers will see "[Unimplemented: <Type>]" for seeds in any rare 0002-only AppRunner viewing. Library tab isn't shipped in 0002, so the impact is bounded to direct-URL access. ADR-0003 fixes by shipping the renderer. |
-| `@gorhom/bottom-sheet` v5.x + RN 0.76 compatibility issue surfaces during integration | Low | Step 9 has an explicit smoke-test acceptance criterion. If incompatible, fall back to a `Modal`-based bottom-sheet (uglier, but unblocks). |
-| Eval harness costs (Anthropic API spend) overrun on iteration | Medium | $30/engineer/day cap from Robert's spec. Manual override only with explicit approval. |
+| Risk                                                                                                                   | Likelihood            | Mitigation                                                                                                                                                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Anthropic streaming + tool use + extended thinking has subtle quirks the SDK 0.30.1 hasn't documented                  | Medium                | Step 3 includes a manual smoke test against a single prompt before SSE wrapping. Document any discovered quirks in Notes for Colby.                                                                                               |
+| Extended thinking budget of 4K is too low and pass rate drops                                                          | Medium                | Step 10 (eval harness) is the gate. If pass rate <80%, raise budget to 6K and re-run. Robert is on the hook for the call-to-disable if the data justifies.                                                                        |
+| Handle uniqueness race between two simultaneous first-publishes                                                        | Low                   | DB UNIQUE constraint catches it. Application surfaces 409 / `handle_taken`. T-0002-052 verifies the race.                                                                                                                         |
+| Client disconnects mid-generation; project still persists; user is confused next refresh                               | Low                   | Acceptable per umbrella behavior. Server-side log `client_disconnect_during_generate` for observability. T-0002-035 verifies persistence works regardless.                                                                        |
+| Seed projects' specs use catalog components the renderer doesn't yet handle (everything except Heading + Text in 0002) | High _(but accepted)_ | Internal testers will see "[Unimplemented: <Type>]" for seeds in any rare 0002-only AppRunner viewing. Library tab isn't shipped in 0002, so the impact is bounded to direct-URL access. ADR-0003 fixes by shipping the renderer. |
+| `@gorhom/bottom-sheet` v5.x + RN 0.76 compatibility issue surfaces during integration                                  | Low                   | Step 9 has an explicit smoke-test acceptance criterion. If incompatible, fall back to a `Modal`-based bottom-sheet (uglier, but unblocks).                                                                                        |
+| Eval harness costs (Anthropic API spend) overrun on iteration                                                          | Medium                | $30/engineer/day cap from Robert's spec. Manual override only with explicit approval.                                                                                                                                             |
 
 ## Implementation Plan
 
@@ -381,7 +385,7 @@ fastify.post('/generate', {preHandler: [requireAuth]}, async (req, reply) => {
 
 ```ts
 async function publish(input: {userId: string; projectId: string; handle?: string}) {
-  return await db.transaction(async (tx) => {
+  return await db.transaction(async tx => {
     const project = await tx.select().from(projects).where(eq(projects.id, input.projectId))
     if (!project[0] || project[0].ownerId !== input.userId) throw new NotFoundError()
     if (project[0].visibility === 'public') return project[0] // idempotent
@@ -394,11 +398,17 @@ async function publish(input: {userId: string; projectId: string; handle?: strin
         throw err
       }
     } else {
-      const user = await tx.select({handle: users.handle}).from(users).where(eq(users.id, input.userId))
+      const user = await tx
+        .select({handle: users.handle})
+        .from(users)
+        .where(eq(users.id, input.userId))
       if (!user[0]?.handle) throw new HandleRequiredError()
     }
-    return await tx.update(projects).set({visibility: 'public', publishedAt: new Date()})
-      .where(eq(projects.id, input.projectId)).returning()[0]
+    return await tx
+      .update(projects)
+      .set({visibility: 'public', publishedAt: new Date()})
+      .where(eq(projects.id, input.projectId))
+      .returning()[0]
   })
 }
 ```
@@ -428,7 +438,13 @@ async function publish(input: {userId: string; projectId: string; handle?: strin
 
 ```ts
 // library.service.ts
-export async function list({cursor, limit}: {cursor?: string; limit: number}): Promise<LibraryListResult> {
+export async function list({
+  cursor,
+  limit,
+}: {
+  cursor?: string
+  limit: number
+}): Promise<LibraryListResult> {
   const decoded = cursor ? decodeCursor(cursor) : null
   const rows = await db
     .select({
@@ -446,10 +462,14 @@ export async function list({cursor, limit}: {cursor?: string; limit: number}): P
     .innerJoin(projectVersions, eq(projects.currentVersionId, projectVersions.id))
     .leftJoin(parent, eq(projects.parentProjectId, parent.id))
     .leftJoin(parentAuthor, eq(parent.ownerId, parentAuthor.id))
-    .where(and(
-      eq(projects.visibility, 'public'),
-      decoded ? sql`(${projects.publishedAt}, ${projects.id}) < (${decoded.publishedAt}, ${decoded.projectId})` : undefined
-    ))
+    .where(
+      and(
+        eq(projects.visibility, 'public'),
+        decoded
+          ? sql`(${projects.publishedAt}, ${projects.id}) < (${decoded.publishedAt}, ${decoded.projectId})`
+          : undefined,
+      ),
+    )
     .orderBy(desc(projects.publishedAt), desc(projects.id))
     .limit(limit + 1)
   const hasMore = rows.length > limit
@@ -506,13 +526,27 @@ export function useGenerateMutation() {
   const generate = useCallback(async (input: {prompt: string; parentProjectId?: string}) => {
     setPhase('thinking')
     const res = await fetch(url, {method: 'POST', headers, body: JSON.stringify(input)})
-    const parser = createParser((event) => {
+    const parser = createParser(event => {
       if (event.type !== 'event' || event.data === '[DONE]') return
       const data = JSON.parse(event.data)
-      if (data.type === 'thinking_started') { armStallTimer(); setPhase('thinking') }
-      if (data.type === 'building_started') { armStallTimer(); setPhase('building') }
-      if (data.type === 'done') { clearStallTimer(); setPhase('done'); setResult(data) }
-      if (data.type === 'error') { clearStallTimer(); setPhase('error'); setError(data) }
+      if (data.type === 'thinking_started') {
+        armStallTimer()
+        setPhase('thinking')
+      }
+      if (data.type === 'building_started') {
+        armStallTimer()
+        setPhase('building')
+      }
+      if (data.type === 'done') {
+        clearStallTimer()
+        setPhase('done')
+        setResult(data)
+      }
+      if (data.type === 'error') {
+        clearStallTimer()
+        setPhase('error')
+        setError(data)
+      }
     })
     // ... read loop, feed parser ...
   }, [])
@@ -570,412 +604,412 @@ export function useGenerateMutation() {
 
 ### Test File Mapping
 
-| Step | Test File | Env |
-|---|---|---|
-| 1 | `services/api/src/db/schema.test.ts` | testcontainers Postgres |
-| 1 | `services/api/migrations/0003_marketplace_columns.test.ts` | testcontainers Postgres |
-| 2 | `services/api/migrations/0004_example_seeds.test.ts` | testcontainers Postgres |
-| 2 | `services/api/src/lib/reservedHandles.test.ts` | Jest unit |
-| 3 | `services/api/src/llm/generate.test.ts` | Jest unit + Anthropic mock |
-| 3 | `services/api/src/llm/tools/produceAppSpec.test.ts` | Jest unit |
-| 3 | `services/api/src/llm/anthropic.test.ts` | Jest unit |
-| 4 | `services/api/src/routes/generate.test.ts` | Jest + supertest + Anthropic mock |
-| 5 | `services/api/src/services/marketplace.service.test.ts` | testcontainers Postgres |
-| 5 | `services/api/src/routes/marketplace.test.ts` | Jest + supertest |
-| 6 | `services/api/src/services/library.service.test.ts` | testcontainers Postgres |
-| 6 | `services/api/src/routes/library.test.ts` | Jest + supertest |
-| 7 | `services/api/src/routes/projects.test.ts` (existing — modified) | Jest + supertest |
-| 7 | `apps/mobile/src/state/queries/projects.test.ts` (existing — modified) | Jest |
-| 8 | `apps/mobile/src/state/queries/generate.test.ts` | Jest + msw |
-| 8 | `apps/mobile/src/screens/Chat/index.test.tsx` | jest-expo + RTL |
-| 8 | `apps/mobile/src/screens/Chat/components/RemixChip.test.tsx` | jest-expo + RTL |
-| 8 | `apps/mobile/src/screens/Chat/components/LoadingBubble.test.tsx` | jest-expo + RTL |
-| 9 | `apps/mobile/src/screens/AppRunner/components/PublishSheet.test.tsx` | jest-expo + RTL |
-| 9 | `apps/mobile/src/components/HandleField.test.tsx` | jest-expo + RTL |
-| 9 | `apps/mobile/src/state/queries/marketplace.test.ts` | Jest + msw |
-| 10 | `services/api/eval/run.test.ts` | Jest unit |
-| 10 | `services/api/eval/structuralAssertions.test.ts` | Jest unit |
+| Step | Test File                                                              | Env                               |
+| ---- | ---------------------------------------------------------------------- | --------------------------------- |
+| 1    | `services/api/src/db/schema.test.ts`                                   | testcontainers Postgres           |
+| 1    | `services/api/migrations/0003_marketplace_columns.test.ts`             | testcontainers Postgres           |
+| 2    | `services/api/migrations/0004_example_seeds.test.ts`                   | testcontainers Postgres           |
+| 2    | `services/api/src/lib/reservedHandles.test.ts`                         | Jest unit                         |
+| 3    | `services/api/src/llm/generate.test.ts`                                | Jest unit + Anthropic mock        |
+| 3    | `services/api/src/llm/tools/produceAppSpec.test.ts`                    | Jest unit                         |
+| 3    | `services/api/src/llm/anthropic.test.ts`                               | Jest unit                         |
+| 4    | `services/api/src/routes/generate.test.ts`                             | Jest + supertest + Anthropic mock |
+| 5    | `services/api/src/services/marketplace.service.test.ts`                | testcontainers Postgres           |
+| 5    | `services/api/src/routes/marketplace.test.ts`                          | Jest + supertest                  |
+| 6    | `services/api/src/services/library.service.test.ts`                    | testcontainers Postgres           |
+| 6    | `services/api/src/routes/library.test.ts`                              | Jest + supertest                  |
+| 7    | `services/api/src/routes/projects.test.ts` (existing — modified)       | Jest + supertest                  |
+| 7    | `apps/mobile/src/state/queries/projects.test.ts` (existing — modified) | Jest                              |
+| 8    | `apps/mobile/src/state/queries/generate.test.ts`                       | Jest + msw                        |
+| 8    | `apps/mobile/src/screens/Chat/index.test.tsx`                          | jest-expo + RTL                   |
+| 8    | `apps/mobile/src/screens/Chat/components/RemixChip.test.tsx`           | jest-expo + RTL                   |
+| 8    | `apps/mobile/src/screens/Chat/components/LoadingBubble.test.tsx`       | jest-expo + RTL                   |
+| 9    | `apps/mobile/src/screens/AppRunner/components/PublishSheet.test.tsx`   | jest-expo + RTL                   |
+| 9    | `apps/mobile/src/components/HandleField.test.tsx`                      | jest-expo + RTL                   |
+| 9    | `apps/mobile/src/state/queries/marketplace.test.ts`                    | Jest + msw                        |
+| 10   | `services/api/eval/run.test.ts`                                        | Jest unit                         |
+| 10   | `services/api/eval/structuralAssertions.test.ts`                       | Jest unit                         |
 
 ---
 
 ### Step 1 Tests — Schema additions
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-001 | Happy | Migration 0003 runs cleanly on a fresh db; subsequent `\d users` shows `handle` column with UNIQUE constraint |
-| T-0002-002 | Happy | Migration 0003 runs cleanly against an ADR-0001-migrated db; existing rows get `visibility='private'`, `published_at=null`, `original_prompt=''` |
-| T-0002-003 | Boundary | Re-running migration 0003 is a no-op (idempotent) |
-| T-0002-004 | Boundary | `users.handle` allows null (existing rows preserved) |
-| T-0002-005 | Boundary | `users.handle` UNIQUE catches duplicate non-null inserts (raise unique_violation) |
-| T-0002-006 | Security | `projects.visibility` CHECK rejects `'unlisted'`, `'PUBLIC'`, `''`, `null` (the column is NOT NULL) — only `'private'` and `'public'` accepted |
-| T-0002-007 | Happy | Index `projects_library_idx` exists post-migration; `EXPLAIN` on `SELECT … WHERE visibility='public' ORDER BY published_at DESC LIMIT 20` uses the index |
-| T-0002-008 | Boundary | `projects.original_prompt` accepts empty string (default) and 10000-char value |
-| T-0002-009 | Regression | All ADR-0001 schema tests still pass (T-0001-001…T-0001-013) |
-| T-0002-010 | Negative | `ALTER TABLE projects DROP COLUMN visibility` would break Step 6 — verified by attempting `INSERT INTO projects … visibility='public'` after migration; the row inserts |
+| ID         | Category   | Test Description                                                                                                                                                        |
+| ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-001 | Happy      | Migration 0003 runs cleanly on a fresh db; subsequent `\d users` shows `handle` column with UNIQUE constraint                                                           |
+| T-0002-002 | Happy      | Migration 0003 runs cleanly against an ADR-0001-migrated db; existing rows get `visibility='private'`, `published_at=null`, `original_prompt=''`                        |
+| T-0002-003 | Boundary   | Re-running migration 0003 is a no-op (idempotent)                                                                                                                       |
+| T-0002-004 | Boundary   | `users.handle` allows null (existing rows preserved)                                                                                                                    |
+| T-0002-005 | Boundary   | `users.handle` UNIQUE catches duplicate non-null inserts (raise unique_violation)                                                                                       |
+| T-0002-006 | Security   | `projects.visibility` CHECK rejects `'unlisted'`, `'PUBLIC'`, `''`, `null` (the column is NOT NULL) — only `'private'` and `'public'` accepted                          |
+| T-0002-007 | Happy      | Index `projects_library_idx` exists post-migration; `EXPLAIN` on `SELECT … WHERE visibility='public' ORDER BY published_at DESC LIMIT 20` uses the index                |
+| T-0002-008 | Boundary   | `projects.original_prompt` accepts empty string (default) and 10000-char value                                                                                          |
+| T-0002-009 | Regression | All ADR-0001 schema tests still pass (T-0001-001…T-0001-013)                                                                                                            |
+| T-0002-010 | Negative   | `ALTER TABLE projects DROP COLUMN visibility` would break Step 6 — verified by attempting `INSERT INTO projects … visibility='public'` after migration; the row inserts |
 
 #### Step 1 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 3 |
-| Boundary | 3 |
-| Security | 1 |
-| Regression | 1 |
-| Negative | 1 |
-| **Total** | **9** |
+| Category   | Count |
+| ---------- | ----- |
+| Happy      | 3     |
+| Boundary   | 3     |
+| Security   | 1     |
+| Regression | 1     |
+| Negative   | 1     |
+| **Total**  | **9** |
 
 ---
 
 ### Step 2 Tests — Seed migration + reserved handles
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-011 | Happy | Migration 0004 inserts @example user with handle='example' |
-| T-0002-012 | Happy | Migration 0004 inserts ≥5 seed projects with `visibility='public'`, `published_at='2020-01-01'`, owner_id=@example |
-| T-0002-013 | Happy | Each seed project's spec_json passes `A2UISpecSchema.parse` |
-| T-0002-014 | Happy | Each seed project's spec_json passes `deepValidateSpec` (depth ≤ 8, all action targets resolve, all view ids resolve) |
-| T-0002-015 | Boundary | Re-running migration 0004 is idempotent (`ON CONFLICT DO NOTHING`) |
-| T-0002-016 | Security | @example user has email `'example@reserved.localhost'`; this email format is filtered from any Supabase admin signup flow (no real domain owns `.localhost`) |
-| T-0002-017 | Security | Signing in as @example via Supabase magic-link returns no JWT (the email is unroutable; no magic link arrives) |
-| T-0002-018 | Happy | `RESERVED_HANDLES` includes: admin, system, official, support, app, creator, example |
-| T-0002-019 | Boundary | `isReservedHandle('admin')` returns true; `isReservedHandle('Admin')` returns true (case-insensitive); `isReservedHandle('admin1')` returns false |
-| T-0002-020 | Negative | `isReservedHandle('')` returns false (empty isn't reserved; it's invalid — caught upstream by regex) |
-| T-0002-021 | Regression | Existing ADR-0001 migrations 0001 + 0002 still apply after 0003 + 0004 |
+| ID         | Category   | Test Description                                                                                                                                             |
+| ---------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| T-0002-011 | Happy      | Migration 0004 inserts @example user with handle='example'                                                                                                   |
+| T-0002-012 | Happy      | Migration 0004 inserts ≥5 seed projects with `visibility='public'`, `published_at='2020-01-01'`, owner_id=@example                                           |
+| T-0002-013 | Happy      | Each seed project's spec_json passes `A2UISpecSchema.parse`                                                                                                  |
+| T-0002-014 | Happy      | Each seed project's spec_json passes `deepValidateSpec` (depth ≤ 8, all action targets resolve, all view ids resolve)                                        |
+| T-0002-015 | Boundary   | Re-running migration 0004 is idempotent (`ON CONFLICT DO NOTHING`)                                                                                           |
+| T-0002-016 | Security   | @example user has email `'example@reserved.localhost'`; this email format is filtered from any Supabase admin signup flow (no real domain owns `.localhost`) |
+| T-0002-017 | Security   | Signing in as @example via Supabase magic-link returns no JWT (the email is unroutable; no magic link arrives)                                               |
+| T-0002-018 | Happy      | `RESERVED_HANDLES` includes: admin, system, official, support, app, creator, example                                                                         |
+| T-0002-019 | Boundary   | `isReservedHandle('admin')` returns true; `isReservedHandle('Admin')` returns true (case-insensitive); `isReservedHandle('admin1')` returns false            |
+| T-0002-020 | Negative   | `isReservedHandle('')` returns false (empty isn't reserved; it's invalid — caught upstream by regex)                                                         |
+| T-0002-021 | Regression | Existing ADR-0001 migrations 0001 + 0002 still apply after 0003 + 0004                                                                                       |
 
 #### Step 2 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 5 |
-| Boundary | 2 |
-| Security | 2 |
-| Negative | 1 |
-| Regression | 1 |
-| **Total** | **11** |
+| Category   | Count  |
+| ---------- | ------ |
+| Happy      | 5      |
+| Boundary   | 2      |
+| Security   | 2      |
+| Negative   | 1      |
+| Regression | 1      |
+| **Total**  | **11** |
 
 ---
 
 ### Step 3 Tests — Anthropic LLM module
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-022 | Config exhaustion | `ANTHROPIC_API_KEY` unset → module load throws `EnvMissingError` |
-| T-0002-023 | Config exhaustion | `ANTHROPIC_API_KEY=''` → throws `EnvMissingError` |
-| T-0002-024 | Config exhaustion | `ANTHROPIC_API_KEY='   '` (whitespace only) → throws `EnvMissingError` |
-| T-0002-025 | Config exhaustion | `ANTHROPIC_API_KEY='sk-ant-...'` (valid format) → loads cleanly |
-| T-0002-026 | Config exhaustion | `ANTHROPIC_API_KEY='garbage'` (no format check at module load) → loads cleanly; first call returns Anthropic auth error |
-| T-0002-027 | Happy | `produceAppSpecTool.input_schema` snapshot matches `zodToJsonSchema(A2UISpecSchema)` |
-| T-0002-028 | Happy | `generateAppSpec` yields `thinking_started` synchronously (before first `await`) |
-| T-0002-029 | Happy | `generateAppSpec` yields `building_started` when mocked Anthropic stream emits `content_block_start` with type `tool_use` |
-| T-0002-030 | Happy | `generateAppSpec` yields `done` with parsed spec from valid mocked tool input |
-| T-0002-031 | Failure | Mocked Anthropic emits malformed tool input (missing required field) → `generateAppSpec` throws `InvalidSpecError(code: 'invalid_spec', detail: <flat zod issues>)` |
-| T-0002-032 | Failure | Mocked Anthropic emits no tool_use block → throws `InvalidSpecError('no_tool_use')` |
-| T-0002-033 | Failure | Mocked Anthropic 429 response → retries 2× with exponential backoff (1s, 2s), throws `RateLimitedError` if still 429 |
-| T-0002-034 | Failure | Mocked Anthropic 500 response → throws `AnthropicTransportError` with `safeMessage(err)` (no SDK stack leakage) |
-| T-0002-035 | Security | Anthropic call payload includes `metadata.user_id = sha256(userId).slice(0,16)`, NOT raw userId |
-| T-0002-036 | Security | Anthropic call payload's system block array has `cache_control: {type: 'ephemeral'}` on the catalog block, absent on the static block |
-| T-0002-037 | Security | API key never appears in any logged output — `safeMessage(err)` strips the SDK error message that may include the key |
-| T-0002-038 | Boundary | Anthropic call has exactly `max_tokens: 8000`, `thinking.budget_tokens: 4000`, `tool_choice: {type: 'tool', name: 'produce_app_spec'}` |
-| T-0002-039 | Negative | `generateAppSpec` MUST NOT yield two `building_started` events even if Anthropic stream emits multiple `tool_use` blocks (only first triggers; subsequent are silenced) |
+| ID         | Category          | Test Description                                                                                                                                                        |
+| ---------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-022 | Config exhaustion | `ANTHROPIC_API_KEY` unset → module load throws `EnvMissingError`                                                                                                        |
+| T-0002-023 | Config exhaustion | `ANTHROPIC_API_KEY=''` → throws `EnvMissingError`                                                                                                                       |
+| T-0002-024 | Config exhaustion | `ANTHROPIC_API_KEY='   '` (whitespace only) → throws `EnvMissingError`                                                                                                  |
+| T-0002-025 | Config exhaustion | `ANTHROPIC_API_KEY='sk-ant-...'` (valid format) → loads cleanly                                                                                                         |
+| T-0002-026 | Config exhaustion | `ANTHROPIC_API_KEY='garbage'` (no format check at module load) → loads cleanly; first call returns Anthropic auth error                                                 |
+| T-0002-027 | Happy             | `produceAppSpecTool.input_schema` snapshot matches `zodToJsonSchema(A2UISpecSchema)`                                                                                    |
+| T-0002-028 | Happy             | `generateAppSpec` yields `thinking_started` synchronously (before first `await`)                                                                                        |
+| T-0002-029 | Happy             | `generateAppSpec` yields `building_started` when mocked Anthropic stream emits `content_block_start` with type `tool_use`                                               |
+| T-0002-030 | Happy             | `generateAppSpec` yields `done` with parsed spec from valid mocked tool input                                                                                           |
+| T-0002-031 | Failure           | Mocked Anthropic emits malformed tool input (missing required field) → `generateAppSpec` throws `InvalidSpecError(code: 'invalid_spec', detail: <flat zod issues>)`     |
+| T-0002-032 | Failure           | Mocked Anthropic emits no tool_use block → throws `InvalidSpecError('no_tool_use')`                                                                                     |
+| T-0002-033 | Failure           | Mocked Anthropic 429 response → retries 2× with exponential backoff (1s, 2s), throws `RateLimitedError` if still 429                                                    |
+| T-0002-034 | Failure           | Mocked Anthropic 500 response → throws `AnthropicTransportError` with `safeMessage(err)` (no SDK stack leakage)                                                         |
+| T-0002-035 | Security          | Anthropic call payload includes `metadata.user_id = sha256(userId).slice(0,16)`, NOT raw userId                                                                         |
+| T-0002-036 | Security          | Anthropic call payload's system block array has `cache_control: {type: 'ephemeral'}` on the catalog block, absent on the static block                                   |
+| T-0002-037 | Security          | API key never appears in any logged output — `safeMessage(err)` strips the SDK error message that may include the key                                                   |
+| T-0002-038 | Boundary          | Anthropic call has exactly `max_tokens: 8000`, `thinking.budget_tokens: 4000`, `tool_choice: {type: 'tool', name: 'produce_app_spec'}`                                  |
+| T-0002-039 | Negative          | `generateAppSpec` MUST NOT yield two `building_started` events even if Anthropic stream emits multiple `tool_use` blocks (only first triggers; subsequent are silenced) |
 
 #### Step 3 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 4 |
-| Failure | 4 |
-| Boundary | 1 |
-| Security | 3 |
-| Config exhaustion | 5 |
-| Negative | 1 |
-| **Total** | **18** |
+| Category          | Count  |
+| ----------------- | ------ |
+| Happy             | 4      |
+| Failure           | 4      |
+| Boundary          | 1      |
+| Security          | 3      |
+| Config exhaustion | 5      |
+| Negative          | 1      |
+| **Total**         | **18** |
 
 ---
 
 ### Step 4 Tests — SSE /generate route
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-040 | Happy | POST `/generate` with valid prompt → SSE stream emits in order: `thinking_started`, `building_started`, `done`, then `[DONE]` |
-| T-0002-041 | Happy | Successful generation persists project with `visibility='private'`, `original_prompt=<input.prompt>`, `parent_project_id=null` (no parent provided) |
-| T-0002-042 | Happy | `done` event payload includes `{project: {id, title, visibility, ...}, spec, render_hash, thinking_duration_ms, generation_duration_ms}` |
-| T-0002-043 | Happy | A `messages` row is INSERTed with `role='user'`, `content=<input.prompt>`, `project_id=<new project id>` (umbrella memory carryover) |
-| T-0002-044 | Happy | `parent_project_id` provided → server fetches parent's `original_prompt` and the new project links to parent via `parent_project_id` column |
-| T-0002-045 | Failure | Body without prompt → 400 `{error: 'invalid_input'}` (no SSE stream opened) |
-| T-0002-046 | Failure | Prompt > 2000 chars → 400 `{error: 'invalid_input'}` |
-| T-0002-047 | Failure | Total input (system + catalog + messages) > 12000 chars → 400 `{error: 'prompt_too_large'}` |
-| T-0002-048 | Failure | Anthropic emits invalid tool input → SSE emits `error` event with `code='invalid_spec'`, then `[DONE]`. Project is NOT persisted (T-0002-049 verifies count) |
-| T-0002-049 | Negative | After T-0002-048 fires, `SELECT COUNT(*) FROM projects WHERE owner_id=<user>` is unchanged from before the failed call |
-| T-0002-050 | Failure | Anthropic 429 (after retries) → SSE emits `error` event with `code='rate_limited'`; HTTP status header is 503 |
-| T-0002-051 | Failure | Generic Anthropic transport error → SSE emits `error` event with `code='internal'`. Logged via `safeMessage(err)`; raw err message NOT in response or in INFO logs |
-| T-0002-052 | Boundary | Empty prompt (1 char `' '` — whitespace) → 400 `invalid_input` (server-side trim + length check) |
-| T-0002-053 | Boundary | Exactly 2000-char prompt → accepted |
-| T-0002-054 | Boundary | Exactly 12000-char total input (1-char prompt + 11999 catalog) → rejected as `prompt_too_large` (boundary is exclusive) — verified at boundary -1 = accepted |
-| T-0002-055 | Concurrency | Client disconnects 1s into Anthropic call → server completes Anthropic call, persists project, logs `client_disconnect_during_generate`; project visible via `GET /me/projects` |
-| T-0002-056 | Concurrency | Two simultaneous /generate calls from same user → both succeed independently (no shared state); both projects persist; rate-limit accounts both against the per-user bucket |
-| T-0002-057 | Security | SSE response NEVER contains thinking trace text (only the four event types) — verified by mocking Anthropic to emit a thinking block with text "this is a secret" and asserting it's not in the SSE output |
-| T-0002-058 | Security | SSE Content-Type is `text/event-stream`; `Cache-Control: no-cache`; `X-Accel-Buffering: no` — verified by inspecting response headers |
-| T-0002-059 | Security | Auth-gated: 401 on missing JWT (no SSE opened) |
-| T-0002-060 | Security | `parent_project_id` referencing a private project NOT owned by the caller → 404 `{error: 'not_found'}` (don't leak existence). Same as private project's behavior elsewhere. |
-| T-0002-061 | Security | `parent_project_id` referencing a public project owned by anyone → accepted; new project links via `parent_project_id` |
-| T-0002-062 | Security | Rate-limited: 31st call within 60s by same user → 429; previous 30 still produce normal SSE responses |
-| T-0002-063 | Negative | SSE response MUST NOT include the raw user prompt text in Anthropic-call telemetry (Langfuse handles that; our application logs do not duplicate) |
-| T-0002-064 | Regression | Pre-existing ADR-0001 routes (`/health`, `/auth/sync`) remain unaffected |
+| ID         | Category    | Test Description                                                                                                                                                                                           |
+| ---------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-040 | Happy       | POST `/generate` with valid prompt → SSE stream emits in order: `thinking_started`, `building_started`, `done`, then `[DONE]`                                                                              |
+| T-0002-041 | Happy       | Successful generation persists project with `visibility='private'`, `original_prompt=<input.prompt>`, `parent_project_id=null` (no parent provided)                                                        |
+| T-0002-042 | Happy       | `done` event payload includes `{project: {id, title, visibility, ...}, spec, render_hash, thinking_duration_ms, generation_duration_ms}`                                                                   |
+| T-0002-043 | Happy       | A `messages` row is INSERTed with `role='user'`, `content=<input.prompt>`, `project_id=<new project id>` (umbrella memory carryover)                                                                       |
+| T-0002-044 | Happy       | `parent_project_id` provided → server fetches parent's `original_prompt` and the new project links to parent via `parent_project_id` column                                                                |
+| T-0002-045 | Failure     | Body without prompt → 400 `{error: 'invalid_input'}` (no SSE stream opened)                                                                                                                                |
+| T-0002-046 | Failure     | Prompt > 2000 chars → 400 `{error: 'invalid_input'}`                                                                                                                                                       |
+| T-0002-047 | Failure     | Total input (system + catalog + messages) > 12000 chars → 400 `{error: 'prompt_too_large'}`                                                                                                                |
+| T-0002-048 | Failure     | Anthropic emits invalid tool input → SSE emits `error` event with `code='invalid_spec'`, then `[DONE]`. Project is NOT persisted (T-0002-049 verifies count)                                               |
+| T-0002-049 | Negative    | After T-0002-048 fires, `SELECT COUNT(*) FROM projects WHERE owner_id=<user>` is unchanged from before the failed call                                                                                     |
+| T-0002-050 | Failure     | Anthropic 429 (after retries) → SSE emits `error` event with `code='rate_limited'`; HTTP status header is 503                                                                                              |
+| T-0002-051 | Failure     | Generic Anthropic transport error → SSE emits `error` event with `code='internal'`. Logged via `safeMessage(err)`; raw err message NOT in response or in INFO logs                                         |
+| T-0002-052 | Boundary    | Empty prompt (1 char `' '` — whitespace) → 400 `invalid_input` (server-side trim + length check)                                                                                                           |
+| T-0002-053 | Boundary    | Exactly 2000-char prompt → accepted                                                                                                                                                                        |
+| T-0002-054 | Boundary    | Exactly 12000-char total input (1-char prompt + 11999 catalog) → rejected as `prompt_too_large` (boundary is exclusive) — verified at boundary -1 = accepted                                               |
+| T-0002-055 | Concurrency | Client disconnects 1s into Anthropic call → server completes Anthropic call, persists project, logs `client_disconnect_during_generate`; project visible via `GET /me/projects`                            |
+| T-0002-056 | Concurrency | Two simultaneous /generate calls from same user → both succeed independently (no shared state); both projects persist; rate-limit accounts both against the per-user bucket                                |
+| T-0002-057 | Security    | SSE response NEVER contains thinking trace text (only the four event types) — verified by mocking Anthropic to emit a thinking block with text "this is a secret" and asserting it's not in the SSE output |
+| T-0002-058 | Security    | SSE Content-Type is `text/event-stream`; `Cache-Control: no-cache`; `X-Accel-Buffering: no` — verified by inspecting response headers                                                                      |
+| T-0002-059 | Security    | Auth-gated: 401 on missing JWT (no SSE opened)                                                                                                                                                             |
+| T-0002-060 | Security    | `parent_project_id` referencing a private project NOT owned by the caller → 404 `{error: 'not_found'}` (don't leak existence). Same as private project's behavior elsewhere.                               |
+| T-0002-061 | Security    | `parent_project_id` referencing a public project owned by anyone → accepted; new project links via `parent_project_id`                                                                                     |
+| T-0002-062 | Security    | Rate-limited: 31st call within 60s by same user → 429; previous 30 still produce normal SSE responses                                                                                                      |
+| T-0002-063 | Negative    | SSE response MUST NOT include the raw user prompt text in Anthropic-call telemetry (Langfuse handles that; our application logs do not duplicate)                                                          |
+| T-0002-064 | Regression  | Pre-existing ADR-0001 routes (`/health`, `/auth/sync`) remain unaffected                                                                                                                                   |
 
 #### Step 4 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 5 |
-| Failure | 5 |
-| Boundary | 3 |
-| Concurrency | 2 |
-| Security | 6 |
-| Negative | 2 |
-| Regression | 1 |
-| **Total** | **24** |
+| Category    | Count  |
+| ----------- | ------ |
+| Happy       | 5      |
+| Failure     | 5      |
+| Boundary    | 3      |
+| Concurrency | 2      |
+| Security    | 6      |
+| Negative    | 2      |
+| Regression  | 1      |
+| **Total**   | **24** |
 
 ---
 
 ### Step 5 Tests — Publish/Unpublish + Handle endpoints
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-065 | Happy | `POST /projects/:id/publish` with no `users.handle` set + body `{handle: 'alyona'}` → sets handle + flips visibility=public + sets published_at |
-| T-0002-066 | Happy | `POST /projects/:id/publish` with `users.handle` already set + no body handle → flips visibility=public + sets published_at |
-| T-0002-067 | Happy | Re-publish (project already public) → 200, no published_at update, no state change |
-| T-0002-068 | Happy | `POST /projects/:id/unpublish` on public project → flips visibility=private + sets published_at=null |
-| T-0002-069 | Happy | Re-unpublish (project already private) → 200, no state change |
-| T-0002-070 | Failure | Publish without handle when user has none → 400 `{error: 'handle_required'}` |
-| T-0002-071 | Failure | Publish with handle `'AB'` (2 chars) → 400 `{error: 'invalid_handle'}` |
-| T-0002-072 | Failure | Publish with handle `'a'.repeat(21)` (21 chars) → 400 `{error: 'invalid_handle'}` |
-| T-0002-073 | Failure | Publish with handle `'has space'` → 400 `{error: 'invalid_handle'}` |
-| T-0002-074 | Failure | Publish with handle `'CAPS'` → 400 `{error: 'invalid_handle'}` |
-| T-0002-075 | Failure | Publish with handle `'-startswith-dash'` → 400 `{error: 'invalid_handle'}` (regex requires letter/digit start; we'll use `^[a-z0-9][a-z0-9-]{1,18}[a-z0-9]$` — Cal note: tightened from spec's plain `^[a-z0-9-]{3,20}$` to disallow leading/trailing dashes) |
-| T-0002-076 | Failure | Publish with reserved handle `'admin'` → 400 `{error: 'handle_reserved'}` |
-| T-0002-077 | Failure | Publish with reserved handle `'Admin'` (case mixed) → 400 `{error: 'handle_reserved'}` |
-| T-0002-078 | Failure | Publish with handle `'example'` → 400 `{error: 'handle_reserved'}` (the @example seed user owns it) |
-| T-0002-079 | Failure | Publish with handle already taken by another user → 400 `{error: 'handle_taken'}` |
-| T-0002-080 | Failure | Publish someone else's project → 404 `{error: 'not_found'}` (don't reveal existence) |
-| T-0002-081 | Failure | Publish a project that doesn't exist → 404 `{error: 'not_found'}` |
-| T-0002-082 | Boundary | Handle exactly 3 chars `'abc'` → accepted |
-| T-0002-083 | Boundary | Handle exactly 20 chars → accepted |
-| T-0002-084 | Boundary | Handle with internal dashes `'al-yo-na'` → accepted |
-| T-0002-085 | Concurrency | Two simultaneous first-publish requests from different users with same handle body → first commits, second receives 400 `handle_taken`; both projects' visibility state is consistent (only the winner is public) |
-| T-0002-086 | Concurrency | Two simultaneous publish requests from same user on same project → both return 200; published_at is set once |
-| T-0002-087 | Concurrency | Publish then immediately unpublish (race) → final state is consistent (last-write-wins on visibility); published_at is null after unpublish |
-| T-0002-088 | Security | `users.handle` UPDATE is atomic in the publish transaction (no half-state where handle is set but visibility didn't flip) |
-| T-0002-089 | Security | `POST /users/me/handle` on a user that already has a handle → 400 `{error: 'handle_immutable'}` |
-| T-0002-090 | Security | `POST /users/me/handle` is auth-gated; 401 without JWT |
-| T-0002-091 | Happy | `GET /handles/check?h=alyona` (available) → 200 `{available: true}` |
-| T-0002-092 | Happy | `GET /handles/check?h=alyona` (taken) → 200 `{available: false, reason: 'taken'}` |
-| T-0002-093 | Happy | `GET /handles/check?h=admin` (reserved) → 200 `{available: false, reason: 'reserved'}` |
-| T-0002-094 | Happy | `GET /handles/check?h=AB` (invalid) → 200 `{available: false, reason: 'invalid'}` |
-| T-0002-095 | Boundary | `GET /handles/check?h=` (empty) → 400 `{error: 'invalid_input'}` (querystring required) |
-| T-0002-096 | Negative | Publish endpoint MUST NOT return raw email in the response body — verified by inspecting the JSON response |
-| T-0002-097 | Negative | Publish endpoint MUST NOT return `original_prompt` in the response body (it's stored, not returned on this endpoint) |
-| T-0002-098 | Regression | ADR-0001 `/auth/sync` upsert still works (creates a `users` row with handle=null, default values for new columns) |
+| ID         | Category    | Test Description                                                                                                                                                                                                                                              |
+| ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-065 | Happy       | `POST /projects/:id/publish` with no `users.handle` set + body `{handle: 'alyona'}` → sets handle + flips visibility=public + sets published_at                                                                                                               |
+| T-0002-066 | Happy       | `POST /projects/:id/publish` with `users.handle` already set + no body handle → flips visibility=public + sets published_at                                                                                                                                   |
+| T-0002-067 | Happy       | Re-publish (project already public) → 200, no published_at update, no state change                                                                                                                                                                            |
+| T-0002-068 | Happy       | `POST /projects/:id/unpublish` on public project → flips visibility=private + sets published_at=null                                                                                                                                                          |
+| T-0002-069 | Happy       | Re-unpublish (project already private) → 200, no state change                                                                                                                                                                                                 |
+| T-0002-070 | Failure     | Publish without handle when user has none → 400 `{error: 'handle_required'}`                                                                                                                                                                                  |
+| T-0002-071 | Failure     | Publish with handle `'AB'` (2 chars) → 400 `{error: 'invalid_handle'}`                                                                                                                                                                                        |
+| T-0002-072 | Failure     | Publish with handle `'a'.repeat(21)` (21 chars) → 400 `{error: 'invalid_handle'}`                                                                                                                                                                             |
+| T-0002-073 | Failure     | Publish with handle `'has space'` → 400 `{error: 'invalid_handle'}`                                                                                                                                                                                           |
+| T-0002-074 | Failure     | Publish with handle `'CAPS'` → 400 `{error: 'invalid_handle'}`                                                                                                                                                                                                |
+| T-0002-075 | Failure     | Publish with handle `'-startswith-dash'` → 400 `{error: 'invalid_handle'}` (regex requires letter/digit start; we'll use `^[a-z0-9][a-z0-9-]{1,18}[a-z0-9]$` — Cal note: tightened from spec's plain `^[a-z0-9-]{3,20}$` to disallow leading/trailing dashes) |
+| T-0002-076 | Failure     | Publish with reserved handle `'admin'` → 400 `{error: 'handle_reserved'}`                                                                                                                                                                                     |
+| T-0002-077 | Failure     | Publish with reserved handle `'Admin'` (case mixed) → 400 `{error: 'handle_reserved'}`                                                                                                                                                                        |
+| T-0002-078 | Failure     | Publish with handle `'example'` → 400 `{error: 'handle_reserved'}` (the @example seed user owns it)                                                                                                                                                           |
+| T-0002-079 | Failure     | Publish with handle already taken by another user → 400 `{error: 'handle_taken'}`                                                                                                                                                                             |
+| T-0002-080 | Failure     | Publish someone else's project → 404 `{error: 'not_found'}` (don't reveal existence)                                                                                                                                                                          |
+| T-0002-081 | Failure     | Publish a project that doesn't exist → 404 `{error: 'not_found'}`                                                                                                                                                                                             |
+| T-0002-082 | Boundary    | Handle exactly 3 chars `'abc'` → accepted                                                                                                                                                                                                                     |
+| T-0002-083 | Boundary    | Handle exactly 20 chars → accepted                                                                                                                                                                                                                            |
+| T-0002-084 | Boundary    | Handle with internal dashes `'al-yo-na'` → accepted                                                                                                                                                                                                           |
+| T-0002-085 | Concurrency | Two simultaneous first-publish requests from different users with same handle body → first commits, second receives 400 `handle_taken`; both projects' visibility state is consistent (only the winner is public)                                             |
+| T-0002-086 | Concurrency | Two simultaneous publish requests from same user on same project → both return 200; published_at is set once                                                                                                                                                  |
+| T-0002-087 | Concurrency | Publish then immediately unpublish (race) → final state is consistent (last-write-wins on visibility); published_at is null after unpublish                                                                                                                   |
+| T-0002-088 | Security    | `users.handle` UPDATE is atomic in the publish transaction (no half-state where handle is set but visibility didn't flip)                                                                                                                                     |
+| T-0002-089 | Security    | `POST /users/me/handle` on a user that already has a handle → 400 `{error: 'handle_immutable'}`                                                                                                                                                               |
+| T-0002-090 | Security    | `POST /users/me/handle` is auth-gated; 401 without JWT                                                                                                                                                                                                        |
+| T-0002-091 | Happy       | `GET /handles/check?h=alyona` (available) → 200 `{available: true}`                                                                                                                                                                                           |
+| T-0002-092 | Happy       | `GET /handles/check?h=alyona` (taken) → 200 `{available: false, reason: 'taken'}`                                                                                                                                                                             |
+| T-0002-093 | Happy       | `GET /handles/check?h=admin` (reserved) → 200 `{available: false, reason: 'reserved'}`                                                                                                                                                                        |
+| T-0002-094 | Happy       | `GET /handles/check?h=AB` (invalid) → 200 `{available: false, reason: 'invalid'}`                                                                                                                                                                             |
+| T-0002-095 | Boundary    | `GET /handles/check?h=` (empty) → 400 `{error: 'invalid_input'}` (querystring required)                                                                                                                                                                       |
+| T-0002-096 | Negative    | Publish endpoint MUST NOT return raw email in the response body — verified by inspecting the JSON response                                                                                                                                                    |
+| T-0002-097 | Negative    | Publish endpoint MUST NOT return `original_prompt` in the response body (it's stored, not returned on this endpoint)                                                                                                                                          |
+| T-0002-098 | Regression  | ADR-0001 `/auth/sync` upsert still works (creates a `users` row with handle=null, default values for new columns)                                                                                                                                             |
 
 #### Step 5 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 9 |
-| Failure | 12 |
-| Boundary | 4 |
-| Concurrency | 3 |
-| Security | 4 |
-| Negative | 2 |
-| Regression | 1 |
-| **Total** | **35** |
+| Category    | Count  |
+| ----------- | ------ |
+| Happy       | 9      |
+| Failure     | 12     |
+| Boundary    | 4      |
+| Concurrency | 3      |
+| Security    | 4      |
+| Negative    | 2      |
+| Regression  | 1      |
+| **Total**   | **35** |
 
 ---
 
 ### Step 6 Tests — Library endpoints
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-099 | Happy | `GET /library` returns seed projects + any published maker projects, ordered by `published_at DESC` |
-| T-0002-100 | Happy | `GET /library` items include `author_handle` (from join), exclude `spec_json`, exclude raw email, exclude `owner_id` |
-| T-0002-101 | Happy | `GET /library?limit=5` returns ≤5 items + `next_cursor` |
-| T-0002-102 | Happy | Following the `next_cursor` returns the next page; cursor-based pagination is stable across publish/unpublish events between pages |
-| T-0002-103 | Happy | `GET /library/:id` returns project + current_version + author handle + parent (if remixed) |
-| T-0002-104 | Happy | Project with `parent_project_id` set returns `parent: {id, author_handle, title}` populated |
-| T-0002-105 | Happy | Project without `parent_project_id` returns `parent: null` |
-| T-0002-106 | Failure | `GET /library/:id` for a private project → 404 `{error: 'not_found'}` (don't leak existence) |
-| T-0002-107 | Failure | `GET /library/:id` for a non-existent project → 404 |
-| T-0002-108 | Failure | `GET /library?limit=51` → 400 `{error: 'invalid_input'}` (max 50) |
-| T-0002-109 | Failure | `GET /library?limit=0` → 400 `{error: 'invalid_input'}` (min 1) |
-| T-0002-110 | Failure | `GET /library?cursor=garbage` → 400 `{error: 'invalid_input'}` (cursor doesn't decode) |
-| T-0002-111 | Boundary | `GET /library` empty (no public projects, seeds were deleted) → 200 `{items: [], next_cursor: null}` |
-| T-0002-112 | Boundary | `GET /library` with exactly `limit` items → `next_cursor: null` (no more) |
-| T-0002-113 | Boundary | `GET /library` with `limit + 1` items → first `limit` returned, `next_cursor` set |
+| ID         | Category    | Test Description                                                                                                                                             |
+| ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| T-0002-099 | Happy       | `GET /library` returns seed projects + any published maker projects, ordered by `published_at DESC`                                                          |
+| T-0002-100 | Happy       | `GET /library` items include `author_handle` (from join), exclude `spec_json`, exclude raw email, exclude `owner_id`                                         |
+| T-0002-101 | Happy       | `GET /library?limit=5` returns ≤5 items + `next_cursor`                                                                                                      |
+| T-0002-102 | Happy       | Following the `next_cursor` returns the next page; cursor-based pagination is stable across publish/unpublish events between pages                           |
+| T-0002-103 | Happy       | `GET /library/:id` returns project + current_version + author handle + parent (if remixed)                                                                   |
+| T-0002-104 | Happy       | Project with `parent_project_id` set returns `parent: {id, author_handle, title}` populated                                                                  |
+| T-0002-105 | Happy       | Project without `parent_project_id` returns `parent: null`                                                                                                   |
+| T-0002-106 | Failure     | `GET /library/:id` for a private project → 404 `{error: 'not_found'}` (don't leak existence)                                                                 |
+| T-0002-107 | Failure     | `GET /library/:id` for a non-existent project → 404                                                                                                          |
+| T-0002-108 | Failure     | `GET /library?limit=51` → 400 `{error: 'invalid_input'}` (max 50)                                                                                            |
+| T-0002-109 | Failure     | `GET /library?limit=0` → 400 `{error: 'invalid_input'}` (min 1)                                                                                              |
+| T-0002-110 | Failure     | `GET /library?cursor=garbage` → 400 `{error: 'invalid_input'}` (cursor doesn't decode)                                                                       |
+| T-0002-111 | Boundary    | `GET /library` empty (no public projects, seeds were deleted) → 200 `{items: [], next_cursor: null}`                                                         |
+| T-0002-112 | Boundary    | `GET /library` with exactly `limit` items → `next_cursor: null` (no more)                                                                                    |
+| T-0002-113 | Boundary    | `GET /library` with `limit + 1` items → first `limit` returned, `next_cursor` set                                                                            |
 | T-0002-114 | Concurrency | Project unpublished between page 1 and page 2 fetch → cursor's `WHERE (published_at, id) <` clause excludes the unpublished project; user sees a stable feed |
-| T-0002-115 | Concurrency | New publish during pagination → does NOT appear retroactively in already-fetched pages (stable cursor semantics) |
-| T-0002-116 | Security | `GET /library` MUST NOT return private projects — verified by creating a private project and checking it's absent |
-| T-0002-117 | Security | `GET /library` MUST NOT return `spec_json` — verified by checking response body schema |
-| T-0002-118 | Security | `GET /library` MUST NOT return raw email — verified by absence of `email` field in any item |
-| T-0002-119 | Security | `GET /library/:id` MUST NOT return server prompt content or thinking trace — verified by absence of those fields |
-| T-0002-120 | Security | `GET /library/:id` for a private project owned by the caller → still 404 (the endpoint serves PUBLIC; owners use `GET /me/projects/:id`) |
-| T-0002-121 | Security | Auth-gated: 401 on missing JWT |
-| T-0002-122 | Negative | `GET /library` MUST NOT include `original_prompt` in items — only the detail endpoint surfaces the prompt |
-| T-0002-123 | Regression | `EXPLAIN` on the library list query uses `projects_library_idx` (the partial index) |
+| T-0002-115 | Concurrency | New publish during pagination → does NOT appear retroactively in already-fetched pages (stable cursor semantics)                                             |
+| T-0002-116 | Security    | `GET /library` MUST NOT return private projects — verified by creating a private project and checking it's absent                                            |
+| T-0002-117 | Security    | `GET /library` MUST NOT return `spec_json` — verified by checking response body schema                                                                       |
+| T-0002-118 | Security    | `GET /library` MUST NOT return raw email — verified by absence of `email` field in any item                                                                  |
+| T-0002-119 | Security    | `GET /library/:id` MUST NOT return server prompt content or thinking trace — verified by absence of those fields                                             |
+| T-0002-120 | Security    | `GET /library/:id` for a private project owned by the caller → still 404 (the endpoint serves PUBLIC; owners use `GET /me/projects/:id`)                     |
+| T-0002-121 | Security    | Auth-gated: 401 on missing JWT                                                                                                                               |
+| T-0002-122 | Negative    | `GET /library` MUST NOT include `original_prompt` in items — only the detail endpoint surfaces the prompt                                                    |
+| T-0002-123 | Regression  | `EXPLAIN` on the library list query uses `projects_library_idx` (the partial index)                                                                          |
 
 #### Step 6 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 7 |
-| Failure | 5 |
-| Boundary | 3 |
-| Concurrency | 2 |
-| Security | 6 |
-| Negative | 1 |
-| Regression | 1 |
-| **Total** | **25** |
+| Category    | Count  |
+| ----------- | ------ |
+| Happy       | 7      |
+| Failure     | 5      |
+| Boundary    | 3      |
+| Concurrency | 2      |
+| Security    | 6      |
+| Negative    | 1      |
+| Regression  | 1      |
+| **Total**   | **25** |
 
 ---
 
 ### Step 7 Tests — Route renames
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-124 | Happy | `GET /me/projects` returns the same shape as the umbrella's `GET /projects` did |
-| T-0002-125 | Happy | `GET /me/projects/:id` returns the same shape as the umbrella's `GET /projects/:id` did |
-| T-0002-126 | Breaking | `GET /projects` returns 404 (no longer registered) |
-| T-0002-127 | Breaking | `GET /projects/:id` returns 404 (no longer registered) |
-| T-0002-128 | Regression | All ADR-0001 tests targeting `/projects/*` are updated to `/me/projects/*` and pass |
-| T-0002-129 | Happy | Mobile `useProjectsListQuery` calls the new path |
-| T-0002-130 | Happy | Mobile `useProjectQuery` calls the new path |
+| ID         | Category   | Test Description                                                                        |
+| ---------- | ---------- | --------------------------------------------------------------------------------------- |
+| T-0002-124 | Happy      | `GET /me/projects` returns the same shape as the umbrella's `GET /projects` did         |
+| T-0002-125 | Happy      | `GET /me/projects/:id` returns the same shape as the umbrella's `GET /projects/:id` did |
+| T-0002-126 | Breaking   | `GET /projects` returns 404 (no longer registered)                                      |
+| T-0002-127 | Breaking   | `GET /projects/:id` returns 404 (no longer registered)                                  |
+| T-0002-128 | Regression | All ADR-0001 tests targeting `/projects/*` are updated to `/me/projects/*` and pass     |
+| T-0002-129 | Happy      | Mobile `useProjectsListQuery` calls the new path                                        |
+| T-0002-130 | Happy      | Mobile `useProjectQuery` calls the new path                                             |
 
 #### Step 7 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 4 |
-| Breaking | 2 |
-| Regression | 1 |
-| **Total** | **7** |
+| Category   | Count |
+| ---------- | ----- |
+| Happy      | 4     |
+| Breaking   | 2     |
+| Regression | 1     |
+| **Total**  | **7** |
 
 ---
 
 ### Step 8 Tests — Mobile Chat with two-stage SSE loading
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-131 | Happy | `useGenerateMutation()` sets `phase: 'thinking'` synchronously on `generate()` invocation |
-| T-0002-132 | Happy | On SSE `building_started` event, `phase` transitions to `'building'` |
-| T-0002-133 | Happy | On SSE `done` event, `phase: 'done'`, `result` populated |
-| T-0002-134 | Happy | Loading bubble copy: `phase='thinking'` → "Thinking about your idea…" |
-| T-0002-135 | Happy | Loading bubble copy: `phase='building'` → "Building your app…" |
-| T-0002-136 | Happy | Stall: 30s without phase transition → copy becomes "Still working…" |
-| T-0002-137 | Happy | Stall timer clears on phase transition (no spurious "Still working…" once moved on) |
-| T-0002-138 | Happy | On `done`, navigation pushes AppRunner with project id |
-| T-0002-139 | Failure | SSE `error` event with `code='invalid_spec'` → error bubble shows "Hmm, I couldn't turn that into an app. Try a different idea." |
-| T-0002-140 | Failure | SSE `error` event with `code='rate_limited'` → error bubble shows "We're a bit busy right now. Try again in a minute." |
-| T-0002-141 | Failure | SSE silence > 30s after no events → toast "Connection lost. We saved your draft — check My apps" + pop to Home |
-| T-0002-142 | Boundary | RemixChip: appears when route has `parentProjectId` and `prefilledPrompt` params |
-| T-0002-143 | Boundary | RemixChip: dismissed via × → params cleared, chip removed, parent_project_id NOT included in next /generate |
-| T-0002-144 | Security | `useGenerateMutation` sends Authorization header with current session JWT |
-| T-0002-145 | Negative | Loading bubble MUST NOT cycle through three messages on a client timer (no fake-progress fiction) — verified by mocking SSE silence and asserting copy stays on phase-1 message until server emits the next event |
-| T-0002-146 | Concurrency | Calling `generate()` while previous call is in-flight → second call rejected (`{error: 'in_flight'}`); UI shows the existing generation |
-| T-0002-147 | Regression | Existing Chat ADR-0001 stub behavior superseded; back arrow during loading still triggers the umbrella's confirmation alert |
+| ID         | Category    | Test Description                                                                                                                                                                                                  |
+| ---------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-131 | Happy       | `useGenerateMutation()` sets `phase: 'thinking'` synchronously on `generate()` invocation                                                                                                                         |
+| T-0002-132 | Happy       | On SSE `building_started` event, `phase` transitions to `'building'`                                                                                                                                              |
+| T-0002-133 | Happy       | On SSE `done` event, `phase: 'done'`, `result` populated                                                                                                                                                          |
+| T-0002-134 | Happy       | Loading bubble copy: `phase='thinking'` → "Thinking about your idea…"                                                                                                                                             |
+| T-0002-135 | Happy       | Loading bubble copy: `phase='building'` → "Building your app…"                                                                                                                                                    |
+| T-0002-136 | Happy       | Stall: 30s without phase transition → copy becomes "Still working…"                                                                                                                                               |
+| T-0002-137 | Happy       | Stall timer clears on phase transition (no spurious "Still working…" once moved on)                                                                                                                               |
+| T-0002-138 | Happy       | On `done`, navigation pushes AppRunner with project id                                                                                                                                                            |
+| T-0002-139 | Failure     | SSE `error` event with `code='invalid_spec'` → error bubble shows "Hmm, I couldn't turn that into an app. Try a different idea."                                                                                  |
+| T-0002-140 | Failure     | SSE `error` event with `code='rate_limited'` → error bubble shows "We're a bit busy right now. Try again in a minute."                                                                                            |
+| T-0002-141 | Failure     | SSE silence > 30s after no events → toast "Connection lost. We saved your draft — check My apps" + pop to Home                                                                                                    |
+| T-0002-142 | Boundary    | RemixChip: appears when route has `parentProjectId` and `prefilledPrompt` params                                                                                                                                  |
+| T-0002-143 | Boundary    | RemixChip: dismissed via × → params cleared, chip removed, parent_project_id NOT included in next /generate                                                                                                       |
+| T-0002-144 | Security    | `useGenerateMutation` sends Authorization header with current session JWT                                                                                                                                         |
+| T-0002-145 | Negative    | Loading bubble MUST NOT cycle through three messages on a client timer (no fake-progress fiction) — verified by mocking SSE silence and asserting copy stays on phase-1 message until server emits the next event |
+| T-0002-146 | Concurrency | Calling `generate()` while previous call is in-flight → second call rejected (`{error: 'in_flight'}`); UI shows the existing generation                                                                           |
+| T-0002-147 | Regression  | Existing Chat ADR-0001 stub behavior superseded; back arrow during loading still triggers the umbrella's confirmation alert                                                                                       |
 
 #### Step 8 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 8 |
-| Failure | 3 |
-| Boundary | 2 |
-| Security | 1 |
-| Concurrency | 1 |
-| Negative | 1 |
-| Regression | 1 |
-| **Total** | **17** |
+| Category    | Count  |
+| ----------- | ------ |
+| Happy       | 8      |
+| Failure     | 3      |
+| Boundary    | 2      |
+| Security    | 1      |
+| Concurrency | 1      |
+| Negative    | 1      |
+| Regression  | 1      |
+| **Total**   | **17** |
 
 ---
 
 ### Step 9 Tests — Mobile AppRunner Owner-mode + PublishSheet
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-148 | Happy | AppRunner Owner-mode shows Publish CTA when `visibility='private'` |
-| T-0002-149 | Happy | AppRunner Owner-mode shows Unpublish CTA when `visibility='public'` |
-| T-0002-150 | Happy | Tap Publish → bottom sheet opens; first-time variant renders if `users.handle` is null |
-| T-0002-151 | Happy | First-time sheet pre-fills handle field from `GET /me/handle/suggest` response |
-| T-0002-152 | Happy | Subsequent variant: handle already set, sheet renders without field, copy reads "You'll publish as @{handle}." |
-| T-0002-153 | Happy | Handle field debounced 500ms; check fires once per stable input |
-| T-0002-154 | Happy | Inline indicator: ✓ Available / ✗ Taken / ✗ Reserved / ✗ Invalid |
-| T-0002-155 | Happy | Submit publishes; sheet dismisses; toast "✓ Published to Library"; top-bar swaps to Unpublish |
-| T-0002-156 | Failure | Network error during publish → inline error in sheet, sheet stays open |
-| T-0002-157 | Failure | Race-loss `handle_taken` from server → inline error, field re-focuses |
-| T-0002-158 | Failure | Submit disabled until: regex passes + check returns Available + no in-flight check |
-| T-0002-159 | Boundary | iPhone SE: sheet content does not cover the keyboard when handle field focused |
-| T-0002-160 | Concurrency | Publish in flight, user taps back → confirmation alert (carries from umbrella's cancel-during pattern) |
-| T-0002-161 | Security | Sheet's a11y: `accessibilityViewIsModal: true`, focus trapped inside |
-| T-0002-162 | Security | Handle field a11y: `accessibilityHint` describes immutability |
-| T-0002-163 | Negative | Sheet MUST NOT pre-fill the handle field on subsequent (non-first) publishes — only first-time variant has the field |
-| T-0002-164 | Regression | Owner-mode AppRunner top bar still has the back arrow with umbrella's "Back to library" a11y label |
+| ID         | Category    | Test Description                                                                                                     |
+| ---------- | ----------- | -------------------------------------------------------------------------------------------------------------------- |
+| T-0002-148 | Happy       | AppRunner Owner-mode shows Publish CTA when `visibility='private'`                                                   |
+| T-0002-149 | Happy       | AppRunner Owner-mode shows Unpublish CTA when `visibility='public'`                                                  |
+| T-0002-150 | Happy       | Tap Publish → bottom sheet opens; first-time variant renders if `users.handle` is null                               |
+| T-0002-151 | Happy       | First-time sheet pre-fills handle field from `GET /me/handle/suggest` response                                       |
+| T-0002-152 | Happy       | Subsequent variant: handle already set, sheet renders without field, copy reads "You'll publish as @{handle}."       |
+| T-0002-153 | Happy       | Handle field debounced 500ms; check fires once per stable input                                                      |
+| T-0002-154 | Happy       | Inline indicator: ✓ Available / ✗ Taken / ✗ Reserved / ✗ Invalid                                                     |
+| T-0002-155 | Happy       | Submit publishes; sheet dismisses; toast "✓ Published to Library"; top-bar swaps to Unpublish                        |
+| T-0002-156 | Failure     | Network error during publish → inline error in sheet, sheet stays open                                               |
+| T-0002-157 | Failure     | Race-loss `handle_taken` from server → inline error, field re-focuses                                                |
+| T-0002-158 | Failure     | Submit disabled until: regex passes + check returns Available + no in-flight check                                   |
+| T-0002-159 | Boundary    | iPhone SE: sheet content does not cover the keyboard when handle field focused                                       |
+| T-0002-160 | Concurrency | Publish in flight, user taps back → confirmation alert (carries from umbrella's cancel-during pattern)               |
+| T-0002-161 | Security    | Sheet's a11y: `accessibilityViewIsModal: true`, focus trapped inside                                                 |
+| T-0002-162 | Security    | Handle field a11y: `accessibilityHint` describes immutability                                                        |
+| T-0002-163 | Negative    | Sheet MUST NOT pre-fill the handle field on subsequent (non-first) publishes — only first-time variant has the field |
+| T-0002-164 | Regression  | Owner-mode AppRunner top bar still has the back arrow with umbrella's "Back to library" a11y label                   |
 
 #### Step 9 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 8 |
-| Failure | 3 |
-| Boundary | 1 |
-| Concurrency | 1 |
-| Security | 2 |
-| Negative | 1 |
-| Regression | 1 |
-| **Total** | **17** |
+| Category    | Count  |
+| ----------- | ------ |
+| Happy       | 8      |
+| Failure     | 3      |
+| Boundary    | 1      |
+| Concurrency | 1      |
+| Security    | 2      |
+| Negative    | 1      |
+| Regression  | 1      |
+| **Total**   | **17** |
 
 ---
 
 ### Step 10 Tests — Eval harness + CI
 
-| ID | Category | Test Description |
-|---|---|---|
-| T-0002-165 | Happy | Running `pnpm eval` against 30 prompts produces a valid JSON report with 30 entries |
-| T-0002-166 | Happy | Each report entry contains `{prompt, success, thinking_duration_ms, generation_duration_ms, error?}` |
-| T-0002-167 | Happy | Pass rate ≥ 80% on the Robert-authored prompt set |
-| T-0002-168 | Happy | Structural assertions verify: ≥1 view, only catalog component types, action targets resolve, depth ≤ 8, render_hash matches re-canonicalization |
-| T-0002-169 | Failure | If pass rate < 80%, harness exits 1 |
-| T-0002-170 | Boundary | Empty prompts.json → harness exits 1 with `{error: 'no_prompts'}` |
-| T-0002-171 | Concurrency | Harness runs prompts sequentially (not in parallel — Anthropic per-key rate limit risk; ~2 minutes wall-clock for 30 prompts) |
-| T-0002-172 | Security | Harness output JSON does NOT include the user's API key, raw thinking trace, or any prompt content under a key starting with `internal_` |
-| T-0002-173 | Regression | CI workflow runs on PRs touching `services/api/src/llm/` or `packages/a2ui-schema/`; runs after typecheck + unit tests pass |
+| ID         | Category    | Test Description                                                                                                                                |
+| ---------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| T-0002-165 | Happy       | Running `pnpm eval` against 30 prompts produces a valid JSON report with 30 entries                                                             |
+| T-0002-166 | Happy       | Each report entry contains `{prompt, success, thinking_duration_ms, generation_duration_ms, error?}`                                            |
+| T-0002-167 | Happy       | Pass rate ≥ 80% on the Robert-authored prompt set                                                                                               |
+| T-0002-168 | Happy       | Structural assertions verify: ≥1 view, only catalog component types, action targets resolve, depth ≤ 8, render_hash matches re-canonicalization |
+| T-0002-169 | Failure     | If pass rate < 80%, harness exits 1                                                                                                             |
+| T-0002-170 | Boundary    | Empty prompts.json → harness exits 1 with `{error: 'no_prompts'}`                                                                               |
+| T-0002-171 | Concurrency | Harness runs prompts sequentially (not in parallel — Anthropic per-key rate limit risk; ~2 minutes wall-clock for 30 prompts)                   |
+| T-0002-172 | Security    | Harness output JSON does NOT include the user's API key, raw thinking trace, or any prompt content under a key starting with `internal_`        |
+| T-0002-173 | Regression  | CI workflow runs on PRs touching `services/api/src/llm/` or `packages/a2ui-schema/`; runs after typecheck + unit tests pass                     |
 
 #### Step 10 Test Summary
 
-| Category | Count |
-|---|---|
-| Happy | 4 |
-| Failure | 1 |
-| Boundary | 1 |
-| Concurrency | 1 |
-| Security | 1 |
-| Regression | 1 |
-| **Total** | **9** |
+| Category    | Count |
+| ----------- | ----- |
+| Happy       | 4     |
+| Failure     | 1     |
+| Boundary    | 1     |
+| Concurrency | 1     |
+| Security    | 1     |
+| Regression  | 1     |
+| **Total**   | **9** |
 
 ---
 
 ### Test Totals
 
-| Step | New | Regression | Total |
-|---|---|---|---|
-| 1 | 8 | 1 | 9 |
-| 2 | 10 | 1 | 11 |
-| 3 | 18 | 0 | 18 |
-| 4 | 23 | 1 | 24 |
-| 5 | 34 | 1 | 35 |
-| 6 | 24 | 1 | 25 |
-| 7 | 6 | 1 | 7 |
-| 8 | 16 | 1 | 17 |
-| 9 | 16 | 1 | 17 |
-| 10 | 8 | 1 | 9 |
-| **Totals** | **163** | **9** | **172** |
+| Step       | New     | Regression | Total   |
+| ---------- | ------- | ---------- | ------- |
+| 1          | 8       | 1          | 9       |
+| 2          | 10      | 1          | 11      |
+| 3          | 18      | 0          | 18      |
+| 4          | 23      | 1          | 24      |
+| 5          | 34      | 1          | 35      |
+| 6          | 24      | 1          | 25      |
+| 7          | 6       | 1          | 7       |
+| 8          | 16      | 1          | 17      |
+| 9          | 16      | 1          | 17      |
+| 10         | 8       | 1          | 9       |
+| **Totals** | **163** | **9**      | **172** |
 
 ### Test Helpers & Mocks
 
@@ -1008,17 +1042,17 @@ ADR-0003 will own: two-tab Home, three AppRunner modes (Try mode), Library tile,
 
 ## Data Sensitivity
 
-| Store Method | Returns | Sensitivity | Excludes |
-|---|---|---|---|
-| `projectsService.create` | `{project, currentVersion}` (incl. `original_prompt`) | auth-only | — |
-| `projectsService.list` (renamed: `myProjectsService.list`) | `ProjectListItem[]` (no spec_json) | auth-only — owner-scoped | `spec_json`, `email`, `owner_id` |
-| `projectsService.get` | `{project, currentVersion}` (full incl. `original_prompt`) | auth-only — owner-only | `email` of owner (never returned) |
-| `marketplaceService.publish` | `{project: {id, visibility, published_at, ...}}` | auth-only | `email`, `original_prompt` (in response) — only DB-side stored |
-| `marketplaceService.unpublish` | `{project: {id, visibility, published_at: null}}` | auth-only | `email`, `original_prompt` |
-| `marketplaceService.setHandle` | `{user: {id, handle}}` | auth-only — self-only | `email`, `created_at` |
-| `marketplaceService.checkHandle` | `{available, reason?}` | public-safe | nothing leaked — handle isn't sensitive, response doesn't include the queried handle in error responses |
-| `libraryService.list` | `{items: [{id, title, author_handle, published_at, render_hash, parent: {...} \| null}], next_cursor}` | public-safe (auth still required for the route) | `spec_json`, `email`, `owner_id`, `original_prompt` |
-| `libraryService.get` | `{project: {id, title, author_handle, published_at, original_prompt, parent: {...} \| null}, current_version: {id, spec_json, render_hash, created_at}}` | public-safe (read-only of public projects) | `email`, `owner_id`, thinking trace |
+| Store Method                                               | Returns                                                                                                                                                  | Sensitivity                                     | Excludes                                                                                                |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `projectsService.create`                                   | `{project, currentVersion}` (incl. `original_prompt`)                                                                                                    | auth-only                                       | —                                                                                                       |
+| `projectsService.list` (renamed: `myProjectsService.list`) | `ProjectListItem[]` (no spec_json)                                                                                                                       | auth-only — owner-scoped                        | `spec_json`, `email`, `owner_id`                                                                        |
+| `projectsService.get`                                      | `{project, currentVersion}` (full incl. `original_prompt`)                                                                                               | auth-only — owner-only                          | `email` of owner (never returned)                                                                       |
+| `marketplaceService.publish`                               | `{project: {id, visibility, published_at, ...}}`                                                                                                         | auth-only                                       | `email`, `original_prompt` (in response) — only DB-side stored                                          |
+| `marketplaceService.unpublish`                             | `{project: {id, visibility, published_at: null}}`                                                                                                        | auth-only                                       | `email`, `original_prompt`                                                                              |
+| `marketplaceService.setHandle`                             | `{user: {id, handle}}`                                                                                                                                   | auth-only — self-only                           | `email`, `created_at`                                                                                   |
+| `marketplaceService.checkHandle`                           | `{available, reason?}`                                                                                                                                   | public-safe                                     | nothing leaked — handle isn't sensitive, response doesn't include the queried handle in error responses |
+| `libraryService.list`                                      | `{items: [{id, title, author_handle, published_at, render_hash, parent: {...} \| null}], next_cursor}`                                                   | public-safe (auth still required for the route) | `spec_json`, `email`, `owner_id`, `original_prompt`                                                     |
+| `libraryService.get`                                       | `{project: {id, title, author_handle, published_at, original_prompt, parent: {...} \| null}, current_version: {id, spec_json, render_hash, created_at}}` | public-safe (read-only of public projects)      | `email`, `owner_id`, thinking trace                                                                     |
 
 **Sensitivity discipline:** every method's TypeScript return type explicitly omits sensitive fields (per the umbrella `normalizeRow` retro-lesson). The `libraryService.list` and `libraryService.get` results have a different return shape from the owner-scoped reads — there is no shared "ProjectRow" type that could accidentally leak owner-only fields into a public response. T-0002-100, T-0002-117, T-0002-119 verify.
 
@@ -1026,12 +1060,12 @@ ADR-0003 will own: two-tab Home, three AppRunner modes (Try mode), Library tile,
 
 ## CI/CD Impact
 
-| Job | Config File | Impact | Required Change |
-|---|---|---|---|
-| `typecheck` | `.github/workflows/ci.yml` (existing) | Picks up new files automatically | None |
-| `unit-tests` | `.github/workflows/ci.yml` (existing) | New tests run automatically | None |
-| `eval` | `.github/workflows/eval.yml` (NEW) | Runs `pnpm --filter @app-creator/api eval` on PRs touching `services/api/src/llm/` or `packages/a2ui-schema/` | Create the workflow file. Configure `ANTHROPIC_API_KEY` as a GitHub Actions secret. Cache `node_modules`. |
-| `db-migration-test` | `.github/workflows/ci.yml` (existing) | Runs new migrations 0003 + 0004 in testcontainers | None — testcontainers spin-up handled |
+| Job                 | Config File                           | Impact                                                                                                        | Required Change                                                                                           |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `typecheck`         | `.github/workflows/ci.yml` (existing) | Picks up new files automatically                                                                              | None                                                                                                      |
+| `unit-tests`        | `.github/workflows/ci.yml` (existing) | New tests run automatically                                                                                   | None                                                                                                      |
+| `eval`              | `.github/workflows/eval.yml` (NEW)    | Runs `pnpm --filter @app-creator/api eval` on PRs touching `services/api/src/llm/` or `packages/a2ui-schema/` | Create the workflow file. Configure `ANTHROPIC_API_KEY` as a GitHub Actions secret. Cache `node_modules`. |
+| `db-migration-test` | `.github/workflows/ci.yml` (existing) | Runs new migrations 0003 + 0004 in testcontainers                                                             | None — testcontainers spin-up handled                                                                     |
 
 **Eval workflow shape:**
 
@@ -1062,12 +1096,12 @@ jobs:
 
 ## Documentation Impact
 
-| Doc | Path | What Changes |
-|---|---|---|
-| `ARCHITECTURE.md` | repo root | §14 — add `@gorhom/bottom-sheet` to mobile sanctioned deps. §17 — add D9 (in-memory rate limiter — already noted in ADR-0001), D10 (`@example` user is local-mirror only, Supabase auth.users does not have a corresponding row; documented compat note). |
-| `CLAUDE.md` | repo root | §3 — extend SSE example to show the phase-event pattern (`thinking_started`/`building_started`/`done`). §4 — note that `tool_choice` plus `thinking` are paired on `/generate`. |
-| `.claude/references/adr-index.md` | (Ellis updates on commit) | Add ADR-0002 row with tags `llm, supabase, mobile-shell, infra, tests`. |
-| `docs/product/chat-creation.md` | docs/product/ | After ADR-0002 lands, mark Open Question #1 (ADR sequencing) as resolved with "Split — see ADR-0002 + ADR-0003." |
+| Doc                               | Path                      | What Changes                                                                                                                                                                                                                                              |
+| --------------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ARCHITECTURE.md`                 | repo root                 | §14 — add `@gorhom/bottom-sheet` to mobile sanctioned deps. §17 — add D9 (in-memory rate limiter — already noted in ADR-0001), D10 (`@example` user is local-mirror only, Supabase auth.users does not have a corresponding row; documented compat note). |
+| `CLAUDE.md`                       | repo root                 | §3 — extend SSE example to show the phase-event pattern (`thinking_started`/`building_started`/`done`). §4 — note that `tool_choice` plus `thinking` are paired on `/generate`.                                                                           |
+| `.claude/references/adr-index.md` | (Ellis updates on commit) | Add ADR-0002 row with tags `llm, supabase, mobile-shell, infra, tests`.                                                                                                                                                                                   |
+| `docs/product/chat-creation.md`   | docs/product/             | After ADR-0002 lands, mark Open Question #1 (ADR sequencing) as resolved with "Split — see ADR-0002 + ADR-0003."                                                                                                                                          |
 
 ---
 
@@ -1099,6 +1133,7 @@ The high-leverage tactical reads:
 For Sable and Robert: this is an architectural sketch, not a binding plan. The full ADR gets drafted after 0002 ships and we know what we learned.
 
 **Scope:**
+
 - Full A2UI renderer: 10 components, all 4 actions, snapshot-tested per props matrix
 - AppRunner three modes (Owner-private, Owner-public, Try with banner + FAB)
 - Two-tab Home (Library + My apps) with segmented control + tab persistence
@@ -1113,6 +1148,7 @@ For Sable and Robert: this is an architectural sketch, not a binding plan. The f
 **Estimated complexity:** 5–6 days dev. Roughly even split between renderer (2–3 days) and the marketplace UX (2–3 days).
 
 **Open questions to revisit before drafting:**
+
 - Will the eval harness in 0002 surface any prompt-engineering needs that affect renderer (e.g., catalog gaps)?
 - Do internal testers respond positively to the publish flow? If publish-rate is low, redesign the post-generation prompt before adding browse on top.
 - Did `@gorhom/bottom-sheet` integration go cleanly? If not, swap for ADR-0003's other modal needs.

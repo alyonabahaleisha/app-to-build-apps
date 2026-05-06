@@ -8,11 +8,11 @@ import {z} from 'zod'
 const requiredString = (label: string) =>
   z
     .string({required_error: `${label} is required`})
-    .refine((v) => v.trim().length > 0, {message: `${label} must not be empty or whitespace`})
+    .refine(v => v.trim().length > 0, {message: `${label} must not be empty or whitespace`})
 
 const optionalNonEmpty = z
   .string()
-  .refine((v) => v === undefined || v.trim().length > 0, {message: 'must not be whitespace'})
+  .refine(v => v === undefined || v.trim().length > 0, {message: 'must not be whitespace'})
   .optional()
 
 /**
@@ -26,11 +26,8 @@ function buildSchema(nodeEnv: string) {
   // accept the relaxed shape so unit tests don't need a real Supabase URL.
   const supabaseUrl =
     nodeEnv === 'test'
-      ? z
-          .string()
-          .url()
-          .optional()
-      : requiredString('SUPABASE_URL').refine((v) => /^https:\/\//.test(v), {
+      ? z.string().url().optional()
+      : requiredString('SUPABASE_URL').refine(v => /^https:\/\//.test(v), {
           message: 'SUPABASE_URL must be an https:// URL',
         })
 

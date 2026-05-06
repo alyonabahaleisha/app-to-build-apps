@@ -23,6 +23,7 @@ Three things hold the system together:
 3. **One LLM entry point.** All Anthropic calls go through `services/api/src/llm/`. Routes never call the SDK. Every call is wrapped in a Langfuse `trace`, splits the system prompt into a static block + cacheable catalog block, and uses `tool_choice` to force structured output.
 
 **Workspaces** (pnpm monorepo):
+
 - `apps/mobile/` — Expo RN 0.76 app (iOS-only at M1, dev-client required, Expo Go is not supported)
 - `services/api/` — Fastify + Drizzle + Postgres backend
 - `packages/a2ui-schema/` — shared Zod schema + canonicalization for `render_hash`
@@ -94,7 +95,11 @@ pnpm --filter @app-creator/a2ui-renderer test
 ```tsx
 export function ProjectCard({project, onPress}: Props) {
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={`Open ${project.title}`}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Open ${project.title}`}
+    >
       <Text>{project.title}</Text>
     </Pressable>
   )
@@ -160,11 +165,11 @@ export function useDeleteProjectMutation() {
 
 ```ts
 useMutation({
-  mutationFn: (input) => apiClient.post('/x', {json: input}).json(),
-  onMutate: async (input) => {
+  mutationFn: input => apiClient.post('/x', {json: input}).json(),
+  onMutate: async input => {
     await qc.cancelQueries({queryKey: keys.list()})
     const previous = qc.getQueryData(keys.list())
-    qc.setQueryData(keys.list(), (old) => optimisticUpdate(old, input))
+    qc.setQueryData(keys.list(), old => optimisticUpdate(old, input))
     return {previous}
   },
   onError: (_err, _input, ctx) => {
@@ -214,6 +219,7 @@ export async function generateAppSpec(opts: {
 ```
 
 Required pieces in every LLM call:
+
 1. **Wrapped in `trace(...)`** for Langfuse (ARCHITECTURE.md §8).
 2. **`metadata.user_id`** is hashed, never raw.
 3. **System prompt is split into a static and a cacheable block** with `cache_control: {type: 'ephemeral'}` on the catalog. The first message's system content is always non-cacheable, the catalog is cacheable. (See `claude-api` skill.)
@@ -246,7 +252,11 @@ Every catalog component is a pure function of `{node, state, dispatch}`.
 // packages/a2ui-renderer/src/components/Button.tsx
 import type {A2UIButtonNode, RenderState, Dispatch} from '../types'
 
-export function ButtonRenderer({node, state, dispatch}: {
+export function ButtonRenderer({
+  node,
+  state,
+  dispatch,
+}: {
   node: A2UIButtonNode
   state: RenderState
   dispatch: Dispatch
@@ -305,19 +315,23 @@ Pino structured-first: object first, message second.
 
 ```ts
 // services/api/src/routes/projects.ts
-fastify.post('/projects', {
-  schema: {body: projectCreateSchema},
-  preHandler: [requireAuth],
-}, async (req, reply) => {
-  try {
-    const project = await projectsService.create(req.user.id, req.body)
-    return reply.code(201).send(project)
-  } catch (err) {
-    req.log.error({err: safeMessage(err)}, 'project create failed')
-    if (err instanceof ValidationError) return reply.code(400).send({error: err.message})
-    return reply.code(500).send({error: 'internal'})
-  }
-})
+fastify.post(
+  '/projects',
+  {
+    schema: {body: projectCreateSchema},
+    preHandler: [requireAuth],
+  },
+  async (req, reply) => {
+    try {
+      const project = await projectsService.create(req.user.id, req.body)
+      return reply.code(201).send(project)
+    } catch (err) {
+      req.log.error({err: safeMessage(err)}, 'project create failed')
+      if (err instanceof ValidationError) return reply.code(400).send({error: err.message})
+      return reply.code(500).send({error: 'internal'})
+    }
+  },
+)
 ```
 
 - Routes are thin: validate → delegate → return. No DB, no LLM.
@@ -416,7 +430,18 @@ import {ButtonRenderer} from './Button'
 
 describe('ButtonRenderer', () => {
   it('renders primary variant', () => {
-    const {toJSON} = render(<ButtonRenderer node={{type: 'Button', label: 'OK', action: {type: 'toast', message: 'hi'}, variant: 'primary'}} state={{}} dispatch={jest.fn()} />)
+    const {toJSON} = render(
+      <ButtonRenderer
+        node={{
+          type: 'Button',
+          label: 'OK',
+          action: {type: 'toast', message: 'hi'},
+          variant: 'primary',
+        }}
+        state={{}}
+        dispatch={jest.fn()}
+      />,
+    )
     expect(toJSON()).toMatchSnapshot()
   })
 })

@@ -65,9 +65,7 @@ export interface GenerateInput {
  * Type guard: returns true if `phase` is one of the three active loading
  * phases that LoadingBubble can render.
  */
-export function isActivePhase(
-  phase: GeneratePhase,
-): phase is 'thinking' | 'building' | 'stalled' {
+export function isActivePhase(phase: GeneratePhase): phase is 'thinking' | 'building' | 'stalled' {
   return phase === 'thinking' || phase === 'building' || phase === 'stalled'
 }
 
@@ -158,9 +156,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
           },
           body: JSON.stringify({
             prompt: input.prompt,
-            ...(input.parentProjectId
-              ? {parent_project_id: input.parentProjectId}
-              : {}),
+            ...(input.parentProjectId ? {parent_project_id: input.parentProjectId} : {}),
           }),
           signal: abortRef.current.signal,
         })

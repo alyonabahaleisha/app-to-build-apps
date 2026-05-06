@@ -212,7 +212,7 @@ export interface ApiFetchOptions extends RequestInit {
 }
 
 function isPublicPath(path: string): boolean {
-  return PUBLIC_PATH_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}?`))
+  return PUBLIC_PATH_PREFIXES.some(prefix => path === prefix || path.startsWith(`${prefix}?`))
 }
 
 export async function apiFetch<T>(path: string, init: ApiFetchOptions = {}): Promise<T> {

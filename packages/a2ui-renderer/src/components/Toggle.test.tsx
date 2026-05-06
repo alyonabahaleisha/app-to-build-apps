@@ -203,9 +203,7 @@ describe('ToggleRenderer — T-0003-095b: missing id → disabled Switch + warn-
       // id intentionally omitted
     } as unknown as A2UIToggleNode
     // Should not throw — Error Boundary must not trip.
-    expect(() =>
-      renderToggle(nodeWithoutId, {}, dispatch, logger),
-    ).not.toThrow()
+    expect(() => renderToggle(nodeWithoutId, {}, dispatch, logger)).not.toThrow()
     // The switch should be rendered as disabled — query by label
     const switchEl = screen.getByLabelText('Dark Mode')
     expect(switchEl.props.disabled).toBe(true)

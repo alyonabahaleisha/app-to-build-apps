@@ -61,10 +61,7 @@ type VariantStyle = {
   borderColor?: string
 }
 
-function buildVariantStyle(
-  variant: A2UIButtonVariant,
-  theme: RendererTheme,
-): VariantStyle {
+function buildVariantStyle(variant: A2UIButtonVariant, theme: RendererTheme): VariantStyle {
   switch (variant) {
     case 'secondary':
       return {
@@ -89,19 +86,14 @@ function buildVariantStyle(
 
 // -- Component ----------------------------------------------------------------
 
-export function ButtonRenderer({
-  node,
-  dispatch,
-}: NodeProps<A2UIButtonNode>): React.ReactElement {
+export function ButtonRenderer({node, dispatch}: NodeProps<A2UIButtonNode>): React.ReactElement {
   const theme = useRendererTheme()
 
   // Defend against runtime-injected unknown variant (T-0003-068b):
   // variantStyles[unknownKey] would return undefined, crashing on .color.
   // Normalise to 'primary' before looking up — no throw, no invalid access.
   const safeVariant: A2UIButtonVariant =
-    node.variant === 'primary' ||
-    node.variant === 'secondary' ||
-    node.variant === 'destructive'
+    node.variant === 'primary' || node.variant === 'secondary' || node.variant === 'destructive'
       ? node.variant
       : 'primary'
 
@@ -131,10 +123,9 @@ export function ButtonRenderer({
           borderColor: variantStyle.borderColor ?? 'transparent',
         },
         pressed && styles.pressed,
-      ]}>
-      <Text style={[theme.typography.bodyStrong, {color: variantStyle.color}]}>
-        {node.label}
-      </Text>
+      ]}
+    >
+      <Text style={[theme.typography.bodyStrong, {color: variantStyle.color}]}>{node.label}</Text>
     </Pressable>
   )
 }

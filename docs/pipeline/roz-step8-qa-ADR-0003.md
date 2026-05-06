@@ -1,25 +1,27 @@
 # QA Report — ADR-0003 Step 8: AppRunner integration finale
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
-| Check | Status | Details |
-|---|---|---|
-| Type Check | PASS | All 4 workspaces clean. |
-| Lint | PASS WITH NOTES | 0 errors. 62 pre-existing warnings. Zero new in Step 8. |
-| Tests (renderer) | PASS | 211/211 across 18 suites. +6 from Step 7 (T-0003-113a/b, 114a/b, 120, 121). |
-| Tests (AppRunner) | PASS | 31/31 across 3 suites: 13 index + 7 RenderErrorBoundary + 11 PublishSheet. |
-| Coverage (renderer) | PASS | 99.12% stmts / 96.64% branches. |
+| Check                | Status          | Details                                                                                                                                                                                                                                                                          |
+| -------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type Check           | PASS            | All 4 workspaces clean.                                                                                                                                                                                                                                                          |
+| Lint                 | PASS WITH NOTES | 0 errors. 62 pre-existing warnings. Zero new in Step 8.                                                                                                                                                                                                                          |
+| Tests (renderer)     | PASS            | 211/211 across 18 suites. +6 from Step 7 (T-0003-113a/b, 114a/b, 120, 121).                                                                                                                                                                                                      |
+| Tests (AppRunner)    | PASS            | 31/31 across 3 suites: 13 index + 7 RenderErrorBoundary + 11 PublishSheet.                                                                                                                                                                                                       |
+| Coverage (renderer)  | PASS            | 99.12% stmts / 96.64% branches.                                                                                                                                                                                                                                                  |
 | Coverage (AppRunner) | PASS WITH NOTES | RenderErrorBoundary 100/100/100 stmts/funcs/lines, 66.66% branches (`__DEV__` guard — Jest-resolved false). AppRunner/index.tsx 75.67%/57.69% — interaction paths in unpublish ActionSheet callback (lines 141–149) and PublishSheet ref (line 127) not exercised in unit tests. |
-| Complexity | PASS WITH NOTES | AppRunner/index.tsx 350 LOC (50 over threshold). Driven by JSX + StyleSheet, no functions exceed CCN 10. |
-| Security | PASS WITH NOTES | See Finding 1. |
-| Docs | PASS | T-0003-120 (`pipeline-state.md`) + T-0003-121 (`adr-index.md`) both pass. |
+| Complexity           | PASS WITH NOTES | AppRunner/index.tsx 350 LOC (50 over threshold). Driven by JSX + StyleSheet, no functions exceed CCN 10.                                                                                                                                                                         |
+| Security             | PASS WITH NOTES | See Finding 1.                                                                                                                                                                                                                                                                   |
+| Docs                 | PASS            | T-0003-120 (`pipeline-state.md`) + T-0003-121 (`adr-index.md`) both pass.                                                                                                                                                                                                        |
 
 ## All 16 Mandatory T-IDs Verified
 
 T-0003-106..121 present and assertions specific.
 
 **Critical assertion quality:**
+
 - T-0003-107: confirmed old reducer fully removed (only mention is in JSDoc removal-comment).
 - T-0003-110: exact `getByText` strings, not regex.
 - T-0003-112: exact object match `{projectId, renderHash, mode:'owner'}`.

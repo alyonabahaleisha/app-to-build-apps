@@ -98,14 +98,15 @@ it('T-0002-002: existing rows get visibility=private, published_at=null, origina
   // Insert a user and project (simulating pre-0003 data) AFTER migration.
   // Because migration already applied, the columns exist with defaults.
   const userId = randomUUID()
-  await pool.query(
-    `INSERT INTO users (id, email) VALUES ($1, $2)`,
-    [userId, `t002-002-${Date.now()}@example.com`],
-  )
-  await pool.query(
-    `INSERT INTO projects (id, owner_id, title) VALUES ($1, $2, $3)`,
-    [randomUUID(), userId, 'Pre-migration project'],
-  )
+  await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [
+    userId,
+    `t002-002-${Date.now()}@example.com`,
+  ])
+  await pool.query(`INSERT INTO projects (id, owner_id, title) VALUES ($1, $2, $3)`, [
+    randomUUID(),
+    userId,
+    'Pre-migration project',
+  ])
 
   // Read back — defaults must apply.
   const {rows} = await pool.query<{
@@ -146,10 +147,10 @@ it('T-0002-004: users.handle allows null', async () => {
   const id = randomUUID()
   // Insert without handle — should succeed.
   await expect(
-    pool.query(
-      `INSERT INTO users (id, email) VALUES ($1, $2)`,
-      [id, `t002-004-${Date.now()}@example.com`],
-    ),
+    pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [
+      id,
+      `t002-004-${Date.now()}@example.com`,
+    ]),
   ).resolves.toBeDefined()
 
   const {rows} = await pool.query<{handle: string | null}>(
@@ -167,15 +168,17 @@ it('T-0002-005: users.handle UNIQUE rejects duplicate non-null handles', async (
 
   const idA = randomUUID()
   const idB = randomUUID()
-  await pool.query(
-    `INSERT INTO users (id, email, handle) VALUES ($1, $2, $3)`,
-    [idA, `t002-005a-${Date.now()}@example.com`, handle],
-  )
+  await pool.query(`INSERT INTO users (id, email, handle) VALUES ($1, $2, $3)`, [
+    idA,
+    `t002-005a-${Date.now()}@example.com`,
+    handle,
+  ])
   await expect(
-    pool.query(
-      `INSERT INTO users (id, email, handle) VALUES ($1, $2, $3)`,
-      [idB, `t002-005b-${Date.now()}@example.com`, handle],
-    ),
+    pool.query(`INSERT INTO users (id, email, handle) VALUES ($1, $2, $3)`, [
+      idB,
+      `t002-005b-${Date.now()}@example.com`,
+      handle,
+    ]),
   ).rejects.toThrow(/duplicate|unique/i)
 })
 
@@ -185,41 +188,49 @@ it('T-0002-005: users.handle UNIQUE rejects duplicate non-null handles', async (
 // ---------------------------------------------------------------------------
 it("T-0002-006: visibility CHECK rejects 'unlisted', 'PUBLIC', '', null", async () => {
   const userId = randomUUID()
-  await pool.query(
-    `INSERT INTO users (id, email) VALUES ($1, $2)`,
-    [userId, `t002-006-${Date.now()}@example.com`],
-  )
+  await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [
+    userId,
+    `t002-006-${Date.now()}@example.com`,
+  ])
 
   // 'unlisted' — not in the allowed set.
   await expect(
-    pool.query(
-      `INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`,
-      [randomUUID(), userId, 'p', 'unlisted'],
-    ),
+    pool.query(`INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`, [
+      randomUUID(),
+      userId,
+      'p',
+      'unlisted',
+    ]),
   ).rejects.toThrow(/check|violates/i)
 
   // 'PUBLIC' — case-sensitive; not allowed.
   await expect(
-    pool.query(
-      `INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`,
-      [randomUUID(), userId, 'p', 'PUBLIC'],
-    ),
+    pool.query(`INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`, [
+      randomUUID(),
+      userId,
+      'p',
+      'PUBLIC',
+    ]),
   ).rejects.toThrow(/check|violates/i)
 
   // '' (empty string) — not in the allowed set.
   await expect(
-    pool.query(
-      `INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`,
-      [randomUUID(), userId, 'p', ''],
-    ),
+    pool.query(`INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`, [
+      randomUUID(),
+      userId,
+      'p',
+      '',
+    ]),
   ).rejects.toThrow(/check|violates/i)
 
   // null — the column is NOT NULL; null should be rejected.
   await expect(
-    pool.query(
-      `INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`,
-      [randomUUID(), userId, 'p', null],
-    ),
+    pool.query(`INSERT INTO projects (id, owner_id, title, visibility) VALUES ($1, $2, $3, $4)`, [
+      randomUUID(),
+      userId,
+      'p',
+      null,
+    ]),
   ).rejects.toThrow(/null|not[- ]null|violates/i)
 })
 
@@ -262,10 +273,10 @@ it('T-0002-007: projects_library_idx exists as a partial index (WHERE visibility
 // ---------------------------------------------------------------------------
 it('T-0002-008: original_prompt accepts empty string and a 10 000-char value', async () => {
   const userId = randomUUID()
-  await pool.query(
-    `INSERT INTO users (id, email) VALUES ($1, $2)`,
-    [userId, `t002-008-${Date.now()}@example.com`],
-  )
+  await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [
+    userId,
+    `t002-008-${Date.now()}@example.com`,
+  ])
 
   // Empty string (the default).
   const idA = randomUUID()
@@ -346,10 +357,10 @@ it('T-0002-009: ADR-0001 tables still exist and constraints are intact', async (
 // ---------------------------------------------------------------------------
 it("T-0002-010: visibility='public' INSERT succeeds post-migration", async () => {
   const userId = randomUUID()
-  await pool.query(
-    `INSERT INTO users (id, email) VALUES ($1, $2)`,
-    [userId, `t002-010-${Date.now()}@example.com`],
-  )
+  await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [
+    userId,
+    `t002-010-${Date.now()}@example.com`,
+  ])
 
   const projectId = randomUUID()
   await expect(

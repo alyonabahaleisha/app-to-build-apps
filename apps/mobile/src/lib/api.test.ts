@@ -29,9 +29,7 @@ const FAKE_TOKEN =
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error', 'debug'] as const
 
 function spyOnAllConsole() {
-  return CONSOLE_METHODS.map((m) =>
-    jest.spyOn(console, m).mockImplementation(() => {}),
-  )
+  return CONSOLE_METHODS.map(m => jest.spyOn(console, m).mockImplementation(() => {}))
 }
 
 function serializeArg(arg: unknown): string {
@@ -88,16 +86,16 @@ describe('expo-secure-store import boundary', () => {
     }
     const files = raw
       .split('\n')
-      .map((s) => s.trim())
+      .map(s => s.trim())
       .filter(Boolean)
-      .map((f) => path.relative(srcRoot, f))
+      .map(f => path.relative(srcRoot, f))
 
     const allowed = new Set([
       'state/persisted/secure.ts',
       // Tests are allowed to `jest.mock(...)` the package.
       'state/session/SessionProvider.test.tsx',
     ])
-    const violations = files.filter((f) => !allowed.has(f))
+    const violations = files.filter(f => !allowed.has(f))
     expect(violations).toEqual([])
   })
 })
@@ -169,16 +167,16 @@ describe('apiFetch — auth gate + token-leak grep', () => {
 
   afterEach(() => {
     global.fetch = realFetch
-    consoleSpies.forEach((s) => s.mockRestore())
+    consoleSpies.forEach(s => s.mockRestore())
   })
 
   it('rejects authenticated routes with NotAuthenticatedError when no session (T-0001-076)', async () => {
     const fetchSpy = jest.fn()
     global.fetch = fetchSpy as unknown as typeof fetch
 
-    await expect(
-      apiFetch('/projects', {baseUrl: 'http://localhost:3000'}),
-    ).rejects.toBeInstanceOf(NotAuthenticatedError)
+    await expect(apiFetch('/projects', {baseUrl: 'http://localhost:3000'})).rejects.toBeInstanceOf(
+      NotAuthenticatedError,
+    )
     expect(fetchSpy).not.toHaveBeenCalled()
   })
 
@@ -223,9 +221,9 @@ describe('apiFetch — auth gate + token-leak grep', () => {
       text: async () => 'boom',
     }) as unknown as typeof fetch
 
-    await expect(
-      apiFetch('/projects', {baseUrl: 'http://localhost:3000'}),
-    ).rejects.toBeInstanceOf(ApiError)
+    await expect(apiFetch('/projects', {baseUrl: 'http://localhost:3000'})).rejects.toBeInstanceOf(
+      ApiError,
+    )
 
     assertNoTokenLeak(consoleSpies, FAKE_TOKEN)
   })

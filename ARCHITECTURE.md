@@ -27,6 +27,7 @@
 - **Package manager**: `pnpm` (mobile and backend share a workspace at the repo root).
 
 **Repo layout (target):**
+
 ```
 app-creator/
 ├── apps/
@@ -50,29 +51,32 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 **Decision.** Layered split per app.
 
 ### `apps/mobile/src/`
-| Layer | Folder | Owns |
-|---|---|---|
-| Design tokens | `theme/` | Tokens, light/dark themes, spacing/typography scales. |
-| Primitives | `components/` | Reusable RN UI: Button, TextInput, Card, ListItem, Sheet. |
-| Features | `features/<name>/` | Cohesive cross-screen modules: `chat`, `library`, `appRunner`, `auth`. |
-| Screens | `screens/<Name>/index.tsx` | Route-level components. |
-| State | `state/queries/`, `state/session/`, `state/persisted/` | TanStack Query hooks, session, persisted store. |
-| Lib | `lib/` | Utilities, API client wrapper, constants, route types. |
+
+| Layer         | Folder                                                 | Owns                                                                   |
+| ------------- | ------------------------------------------------------ | ---------------------------------------------------------------------- |
+| Design tokens | `theme/`                                               | Tokens, light/dark themes, spacing/typography scales.                  |
+| Primitives    | `components/`                                          | Reusable RN UI: Button, TextInput, Card, ListItem, Sheet.              |
+| Features      | `features/<name>/`                                     | Cohesive cross-screen modules: `chat`, `library`, `appRunner`, `auth`. |
+| Screens       | `screens/<Name>/index.tsx`                             | Route-level components.                                                |
+| State         | `state/queries/`, `state/session/`, `state/persisted/` | TanStack Query hooks, session, persisted store.                        |
+| Lib           | `lib/`                                                 | Utilities, API client wrapper, constants, route types.                 |
 
 ### `services/api/src/`
-| Layer | Folder | Owns |
-|---|---|---|
-| Routes | `routes/` | Fastify route handlers — thin, validate, call services. |
-| Services | `services/` | Business logic: generation, memory, projects, edit. |
-| LLM | `llm/` | Anthropic client wrapper, prompts, tool schemas. |
-| DB | `db/` | Drizzle ORM client, migrations, repositories. |
-| Lib | `lib/` | Logger, error helpers, env. |
+
+| Layer    | Folder      | Owns                                                    |
+| -------- | ----------- | ------------------------------------------------------- |
+| Routes   | `routes/`   | Fastify route handlers — thin, validate, call services. |
+| Services | `services/` | Business logic: generation, memory, projects, edit.     |
+| LLM      | `llm/`      | Anthropic client wrapper, prompts, tool schemas.        |
+| DB       | `db/`       | Drizzle ORM client, migrations, repositories.           |
+| Lib      | `lib/`      | Logger, error helpers, env.                             |
 
 **Dependency direction.** `screens → state hooks → components → theme`. Features may own their own state and components but consume `theme/components`. Components never import from screens. Backend: `routes → services → (llm | db)`. Services never import from routes.
 
 **Rejected.** Flat `src/` layout; domain-first top-level folders (`src/projects/`, `src/chat/` as siblings of `lib/`); a barrel `src/index.ts` re-exporting everything; placing renderer code inside `apps/mobile/` (it must live in `packages/a2ui-renderer/`).
 
 **Rule.**
+
 - New screens land in `apps/mobile/src/screens/<Name>/index.tsx` with sibling `components/` when screen-specific.
 - New primitives land in `apps/mobile/src/components/<Name>/`.
 - New features land in `apps/mobile/src/features/<name>/`.
@@ -93,6 +97,7 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 **Rejected.** Expo Router; tab navigator at M1 (premature for 4 screens); nested stacks.
 
 **Rule.**
+
 - Add the route to `RootStackParamList` first.
 - Always type screen props with `NativeStackScreenProps<RootStackParamList, 'Name'>`.
 - Use the exported `navigate()` helper from `#/Navigation` for programmatic nav.
@@ -113,6 +118,7 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 **Rejected.** Apple/Google sign-in at M1 (deferred to M2 — adds App Store review complexity); password-based auth (defeats the point of magic-link); raw AsyncStorage for tokens; multiple HTTP clients.
 
 **Rule.**
+
 - Never read tokens directly from secure storage in components — use the agent.
 - Gate authenticated UI on `useSession().hasSession`.
 - Server routes that require auth use a `requireAuth` Fastify hook that 401s on missing/invalid JWT. Never inline auth checks.
@@ -132,6 +138,7 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 - LLM streaming: server → client via Server-Sent Events (SSE) over POST. Client uses `eventsource-parser` against a `fetch` ReadableStream — no third-party SSE lib at M1.
 
 **Server-side LLM rules.**
+
 - All Anthropic calls go through `services/api/src/llm/anthropic.ts`. No call site instantiates the SDK directly.
 - **Prompt caching is mandatory** for the system prompt and the component-catalog block — these are stable across requests. Use `cache_control: {type: 'ephemeral'}` markers per the `claude-api` skill.
 - Generation uses **structured tool-use**: the model must emit the spec via a `produce_app_spec` tool whose `input_schema` is the Zod-derived JSON schema. Free-text JSON is forbidden.
@@ -141,6 +148,7 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 **Rejected.** Apollo, urql, SWR, axios; raw fetch in components; LLM SDK calls outside `services/api/src/llm/`; streaming free-text JSON and parsing it ourselves.
 
 **Rule.**
+
 - Co-locate query + mutation hooks per domain in `apps/mobile/src/state/queries/<domain>.ts`.
 - Hook naming: `use<Name>Query`, `use<Name>Mutation`, `use<Name>InfiniteQuery`.
 - Export a `createXxxQueryKey({...})` factory; never inline array-literal keys.
@@ -154,17 +162,18 @@ Open question (decide at bootstrap): pnpm monorepo vs. two separate repos. **Def
 
 **Decision.** Five tiers, each with a clear owner.
 
-| # | Tier | Location | Backing | Contents |
-|---|---|---|---|---|
-| 1 | Auth tokens | `apps/mobile/src/state/persisted/secure.ts` | `expo-secure-store` | Access/refresh JWT only. |
-| 2 | Device state | `apps/mobile/src/state/persisted/device.ts` | MMKV (`appcreator_device`) | Device ID, theme toggle, last opened project ID. |
-| 3 | User state | `apps/mobile/src/state/persisted/user.ts` | MMKV scoped by user ID | Recent prompts, draft messages, NUX flags. |
-| 4 | Query cache | TanStack Query | In-memory (no persist at M1) | Server state cache. |
-| 5 | Server data | Postgres via Drizzle | Disk | Users, Projects, ProjectVersions, Messages, Facts, Embeddings, Events. |
+| #   | Tier         | Location                                    | Backing                      | Contents                                                               |
+| --- | ------------ | ------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------- |
+| 1   | Auth tokens  | `apps/mobile/src/state/persisted/secure.ts` | `expo-secure-store`          | Access/refresh JWT only.                                               |
+| 2   | Device state | `apps/mobile/src/state/persisted/device.ts` | MMKV (`appcreator_device`)   | Device ID, theme toggle, last opened project ID.                       |
+| 3   | User state   | `apps/mobile/src/state/persisted/user.ts`   | MMKV scoped by user ID       | Recent prompts, draft messages, NUX flags.                             |
+| 4   | Query cache  | TanStack Query                              | In-memory (no persist at M1) | Server state cache.                                                    |
+| 5   | Server data  | Postgres via Drizzle                        | Disk                         | Users, Projects, ProjectVersions, Messages, Facts, Embeddings, Events. |
 
 **Rejected.** AsyncStorage (replaced by MMKV for non-secret data, secure-store for secrets); SQLite on device (no offline editing at M1); persisting the TanStack cache (M1 doesn't need offline read of server data).
 
 **Rule.**
+
 - Never write tokens to MMKV or AsyncStorage. Only secure-store.
 - Never write user-scoped data to the device tier; scope by user ID.
 - Schema changes to MMKV-backed state require a `version` bump and a migration in `state/persisted/migrations.ts`.
@@ -195,20 +204,21 @@ events(id, user_id, type, payload_json, created_at)
 
 ### A2UI catalog (locked at M1)
 
-| Type | Purpose | Required props | Optional props |
-|---|---|---|---|
-| `Heading` | Title text | `text` | `level: 1\|2\|3` |
-| `Text` | Body text | `text` | `weight, color` |
-| `Image` | Static image | `src` | `aspectRatio, alt` |
-| `Button` | Tap target | `label, action` | `variant: primary\|secondary\|destructive` |
-| `TextInput` | Single-line input | `id, label` | `placeholder, multiline` |
-| `Toggle` | Boolean | `id, label` | `defaultValue` |
-| `Counter` | Integer +/- | `id, label` | `min, max, step` |
-| `List` | Vertical collection | `items: A2UINode[]` | `separator: bool` |
-| `Form` | Group of inputs | `id, fields: A2UINode[]` | `submitLabel, submitAction` |
-| `Container` | Layout box | `direction: row\|column, children: A2UINode[]` | `padding, gap, align, justify` |
+| Type        | Purpose             | Required props                                 | Optional props                             |
+| ----------- | ------------------- | ---------------------------------------------- | ------------------------------------------ |
+| `Heading`   | Title text          | `text`                                         | `level: 1\|2\|3`                           |
+| `Text`      | Body text           | `text`                                         | `weight, color`                            |
+| `Image`     | Static image        | `src`                                          | `aspectRatio, alt`                         |
+| `Button`    | Tap target          | `label, action`                                | `variant: primary\|secondary\|destructive` |
+| `TextInput` | Single-line input   | `id, label`                                    | `placeholder, multiline`                   |
+| `Toggle`    | Boolean             | `id, label`                                    | `defaultValue`                             |
+| `Counter`   | Integer +/-         | `id, label`                                    | `min, max, step`                           |
+| `List`      | Vertical collection | `items: A2UINode[]`                            | `separator: bool`                          |
+| `Form`      | Group of inputs     | `id, fields: A2UINode[]`                       | `submitLabel, submitAction`                |
+| `Container` | Layout box          | `direction: row\|column, children: A2UINode[]` | `padding, gap, align, justify`             |
 
 **Actions** (the closure of what `Button.action` and `Form.submitAction` can do at M1):
+
 - `set(targetId, value)` — write a state value.
 - `increment(targetId, by)` / `decrement(targetId, by)` — for Counter.
 - `toast(message)` — show a toast.
@@ -219,6 +229,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** A larger catalog at M1 (10 covers ~80% of test prompts; expand only when an eval prompt fails for catalog reasons); free-form JSX from the LLM (impossible to sandbox); per-component styling overrides at M1 (forces theme conformance).
 
 **Rule.**
+
 - Adding a component type to the catalog requires: (a) Zod schema entry in `packages/a2ui-schema`, (b) renderer implementation in `packages/a2ui-renderer/components/<Type>.tsx`, (c) catalog entry in the system prompt at `services/api/src/llm/prompts/catalog.ts`, (d) at least 3 eval prompts that exercise it, (e) entry in this section. All five together or not at all.
 - A2UI components must be pure functions of `{node, state, dispatch}`. No side effects, no refs to anything outside the spec.
 - App-shell components and A2UI components never share files. They live in disjoint packages.
@@ -250,6 +261,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 - Trace IDs propagate from client → server via `traceparent` header.
 
 **PII rules (mandatory).**
+
 - Never log raw email, full message content, or generated app source IP.
 - Always log via `safeMessage(error)` — strips stack-internal paths and known PII patterns.
 - The user-prompt text sent to Anthropic is **not logged at the application layer** — Langfuse stores it (intentional, for eval), but our app DB does not duplicate.
@@ -257,6 +269,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** `console.log` in production code; logging full prompts to stdout; logging tokens/JWTs anywhere.
 
 **Rule.**
+
 - No `console.*` in `apps/mobile/src/` or `services/api/src/` outside the logger module. ESLint enforces.
 - Every server error logged via `logger.error('msg', {safeMessage, traceId})`.
 - LLM calls without a Langfuse trace wrapper are forbidden.
@@ -274,6 +287,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Direct client → PostHog (adds an SDK and a network dependency we can drop); event tracking via free-text strings.
 
 **Rule.**
+
 - Adding an event requires updating `events.ts`, the server forwarder, and one consumer (PostHog dashboard or eval harness).
 - Events must not contain PII. Use `user_id` (UUID), never email.
 
@@ -304,6 +318,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Lingui at M1 (premature when the app is en-only); inlining strings into JSX expressions that mix variables and copy.
 
 **Rule.**
+
 - All user-facing copy is a single string literal in one place — no `'Hello, ' + name`.
 - No nested ternaries that produce different copy variants. Use early returns.
 
@@ -322,6 +337,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Accessibility props in the LLM output (it'll get them wrong; the renderer knows the right ones); skipping a11y on dev-internal screens (the "internal" / "public" line drifts).
 
 **Rule.**
+
 - Every interactive shell component takes a required `accessibilityLabel` prop.
 - Every A2UI Button/TextInput/Toggle/Counter renderer adds `accessibilityRole` automatically.
 - New components require a snapshot test of their a11y props.
@@ -339,6 +355,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Bare RN workflow at M1; targeting iOS 14/15 (drags in branching for marginal user share).
 
 **Rule.**
+
 - Any new native module requires (a) a §14 sanctioned-deps entry, (b) confirmation of Expo config-plugin availability (no manual `Podfile` edits), (c) a successful EAS dev-client build before merge.
 - Platform branching uses `Platform.OS === 'ios'` checks; do not author `.android.tsx` / `.web.tsx` files at M1 (no sibling platform exists yet).
 
@@ -347,6 +364,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 ## 14. Third-party dependencies (sanctioned by category)
 
 **Mobile (`apps/mobile/`):**
+
 - React Native: `react`, `react-native`, `expo`, `expo-secure-store`, `expo-haptics`.
 - Navigation: `@react-navigation/native`, `@react-navigation/native-stack`, `react-native-safe-area-context`, `react-native-screens`.
 - State: `@tanstack/react-query`, `react-native-mmkv`.
@@ -359,6 +377,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 - Telemetry: `@sentry/react-native`.
 
 **Backend (`services/api/`):**
+
 - HTTP: `fastify`, `@fastify/cors`, `@fastify/helmet`, `@fastify/jwt`.
 - LLM: `@anthropic-ai/sdk`, `langfuse`.
 - DB: `drizzle-orm`, `drizzle-kit`, `pg`, `pgvector`.
@@ -366,11 +385,13 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 - Telemetry: `@opentelemetry/sdk-node`, `pino`, `pino-pretty` (dev only).
 
 **Shared (`packages/`):**
+
 - `zod` (schema), `nanoid` (IDs).
 
 **Rejected.** Any package not listed above without an ADR justifying the addition (per §17 red flags).
 
 **Rule.**
+
 - Adding a runtime dep requires an ADR entry at minimum: what it does, what it replaces, why a smaller alternative or hand-rolled code won't do.
 - Dev-only deps (eslint plugins, type definitions) don't require an ADR but go through normal review.
 
@@ -380,11 +401,11 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 
 **Decision.** Three tiers.
 
-| Tier | Tool | Scope |
-|---|---|---|
-| Unit | Jest | Pure functions, hooks, the A2UI renderer (snapshot per component type). Server services. |
-| Integration | Jest + supertest | API routes hitting a test Postgres (Docker). |
-| Eval | Custom harness in `services/api/eval/` | 30-prompt set; runs end-to-end generation and scores success. |
+| Tier        | Tool                                   | Scope                                                                                    |
+| ----------- | -------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Unit        | Jest                                   | Pure functions, hooks, the A2UI renderer (snapshot per component type). Server services. |
+| Integration | Jest + supertest                       | API routes hitting a test Postgres (Docker).                                             |
+| Eval        | Custom harness in `services/api/eval/` | 30-prompt set; runs end-to-end generation and scores success.                            |
 
 - Co-location: tests live next to the file they test, named `<file>.test.ts(x)`.
 - Detox (E2E) deferred to M2 — too heavy for the POC payoff.
@@ -393,6 +414,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Mocha, Vitest (project-wide consistency wins; Jest works for both apps and services); separate `__tests__/` folder convention; Detox at M1.
 
 **Rule.**
+
 - Every step in `plan.json` produces at least one test before implementation (TDD).
 - Renderer changes always ship with a snapshot test per affected component type.
 - Eval harness runs in CI on every PR that touches `services/api/src/llm/` or `packages/a2ui-schema/`.
@@ -402,12 +424,14 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 ## 16. Build, release, env
 
 **Decision.**
+
 - **Mobile**: EAS Build profiles `development` (dev-client), `preview` (internal sharing), `production` (TestFlight / App Store). EAS Submit for App Store Connect upload.
 - **Backend**: single Docker image, pushed to a container registry, deployed to chosen host (Fly.io / Render / Cloud Run — pick at bootstrap).
 - **Environments**: `development` (local), `staging` (TestFlight internal + staging Postgres), `production` (App Store + production Postgres). No "test" env.
 - **Secrets**: Mobile via EAS Secrets, backend via host env, **never** in repo. `.env.example` lists keys without values.
 
 **Release sequence to TestFlight:**
+
 1. Bump version in `app.config.ts` (semver) and `buildNumber` (monotonic int).
 2. `eas build --platform ios --profile production`.
 3. `eas submit --platform ios --latest` → uploads to App Store Connect.
@@ -416,6 +440,7 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 **Rejected.** Local Xcode archive uploads (developer-keychain hell, not reproducible); Fastlane (EAS does the same job for our scale); promoting builds across environments (rebuild per env to keep secrets clean).
 
 **Rule.**
+
 - No code change ships to TestFlight without a passing CI run (lint, typecheck, unit, eval).
 - `buildNumber` is monotonic and never reused, even for failed uploads.
 - Secrets are added via `eas secret:create` or the host's secret manager — never committed.
@@ -426,18 +451,19 @@ No JS execution, no eval, no fetch. The renderer is a closed sandbox.
 
 These are the open architectural questions / acknowledged compromises at this revision. Each entry is a future ADR or a follow-up `architecture-discover refresh` trigger.
 
-| ID | Area | Debt | Trigger to address |
-|---|---|---|---|
-| D1 | §3 | Auth provider not chosen (Supabase vs. self-hosted vs. Clerk). | Bootstrap decision. |
-| D2 | §0 | DB host not chosen (Supabase vs. Neon vs. Fly Postgres). | Bootstrap decision. |
-| D3 | §6 | A2UI catalog locked at 10 components — coverage validated only after eval harness runs. | First eval run that fails for catalog reasons. |
-| D4 | §13 | iOS-only — Android and web join in M2. | Start of M2 planning. |
-| D5 | §11 | English-only — Lingui not wired. Codemod debt accumulates with every screen. | M2 planning, before first non-English market. |
-| D6 | §4 | SSE chosen over WebSocket for streaming — works for one-way only. Edit-by-chat uses request/response, not streaming. | First feature requiring bidirectional streaming. |
-| D7 | §16 | No CD pipeline at M1 — manual `eas build` triggered by engineer. | Second engineer joins, or M2. |
-| D8 | §15 | Eval harness scoring is partly manual (some prompts need human judgement). | Eval prompt count > 60. |
+| ID  | Area | Debt                                                                                                                 | Trigger to address                               |
+| --- | ---- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| D1  | §3   | Auth provider not chosen (Supabase vs. self-hosted vs. Clerk).                                                       | Bootstrap decision.                              |
+| D2  | §0   | DB host not chosen (Supabase vs. Neon vs. Fly Postgres).                                                             | Bootstrap decision.                              |
+| D3  | §6   | A2UI catalog locked at 10 components — coverage validated only after eval harness runs.                              | First eval run that fails for catalog reasons.   |
+| D4  | §13  | iOS-only — Android and web join in M2.                                                                               | Start of M2 planning.                            |
+| D5  | §11  | English-only — Lingui not wired. Codemod debt accumulates with every screen.                                         | M2 planning, before first non-English market.    |
+| D6  | §4   | SSE chosen over WebSocket for streaming — works for one-way only. Edit-by-chat uses request/response, not streaming. | First feature requiring bidirectional streaming. |
+| D7  | §16  | No CD pipeline at M1 — manual `eas build` triggered by engineer.                                                     | Second engineer joins, or M2.                    |
+| D8  | §15  | Eval harness scoring is partly manual (some prompts need human judgement).                                           | Eval prompt count > 60.                          |
 
 **Red flags** (do these and an architect must reject the PR):
+
 - Adding a UI kit dependency (NativeBase, Tamagui, Gluestack).
 - Calling Anthropic SDK from a route handler instead of `services/api/src/llm/`.
 - Putting renderer code anywhere outside `packages/a2ui-renderer/`.
@@ -452,6 +478,7 @@ These are the open architectural questions / acknowledged compromises at this re
 This document is currently **inferred from the product spec**, not from code, because the project is pre-bootstrap. The first refresh must happen after the vertical-slice PR lands (chat → render → save → reopen). At that point, run `/architecture-discover refresh` and reconcile any drift.
 
 Subsequent refreshes:
+
 - After every M-level milestone.
 - After any §17 debt item is resolved.
 - On demand, when an architect plan repeatedly hits `out_of_spec` in the same area.

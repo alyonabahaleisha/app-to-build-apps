@@ -86,7 +86,7 @@ export const projects = pgTable(
     // /generate; carried to Library remixers via /library/:id (AC-CG-P6).
     originalPrompt: text('original_prompt').notNull().default(''),
   },
-  (t) => ({
+  t => ({
     // Library list query: WHERE owner_id = $1 ORDER BY updated_at DESC.
     ownerIdx: index('projects_owner_idx').on(t.ownerId, t.updatedAt.desc()),
     // ADR-0002 §M: partial index for /library feed — only public rows,
@@ -113,7 +113,7 @@ export const projectVersions = pgTable(
     renderHash: text('render_hash').notNull(),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
-  (t) => ({
+  t => ({
     projectIdx: index('project_versions_project_idx').on(t.projectId),
   }),
 )
@@ -134,7 +134,7 @@ export const messages = pgTable(
     toolCallJson: jsonb('tool_call_json'),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
-  (t) => ({
+  t => ({
     projectIdx: index('messages_project_idx').on(t.projectId, t.createdAt),
   }),
 )
@@ -155,7 +155,7 @@ export const facts = pgTable(
     }),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
-  (t) => ({
+  t => ({
     userIdx: index('facts_user_idx').on(t.userId, t.createdAt),
   }),
 )
@@ -175,7 +175,7 @@ export const memoryEmbeddings = pgTable(
     embedding: vector('embedding', {dimensions: 1536}).notNull(),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
-  (t) => ({
+  t => ({
     factIdx: index('memory_embeddings_fact_idx').on(t.factId),
   }),
 )
@@ -191,11 +191,13 @@ export const events = pgTable(
     projectId: uuid('project_id').references(() => projects.id, {onDelete: 'set null'}),
     eventType: text('event_type').notNull(),
     // Per ARCHITECTURE.md §9: scrubbed of PII before write.
-    payloadJson: jsonb('payload_json').notNull().default(sql`'{}'::jsonb`),
+    payloadJson: jsonb('payload_json')
+      .notNull()
+      .default(sql`'{}'::jsonb`),
     durationMs: integer('duration_ms'),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
-  (t) => ({
+  t => ({
     userIdx: index('events_user_idx').on(t.userId, t.createdAt),
     typeIdx: index('events_type_idx').on(t.eventType, t.createdAt),
   }),

@@ -34,10 +34,7 @@ export function RemixChip({authorHandle, onClear}: Props) {
     >
       <Feather name="git-branch" size={16} color={theme.palette.text.muted} />
       <Text
-        style={[
-          theme.typography.caption,
-          {color: theme.palette.text.muted, flex: 1},
-        ]}
+        style={[theme.typography.caption, {color: theme.palette.text.muted, flex: 1}]}
         numberOfLines={1}
       >
         {chatCopy.remixChipPrefix}

@@ -97,9 +97,10 @@ describe('parseAuthDeepLink', () => {
   })
 
   it('parser: includes refresh_token when present', () => {
-    expect(
-      parseAuthDeepLink('appcreator://auth?token=abc&refresh_token=rrr'),
-    ).toEqual({token: 'abc', refreshToken: 'rrr'})
+    expect(parseAuthDeepLink('appcreator://auth?token=abc&refresh_token=rrr')).toEqual({
+      token: 'abc',
+      refreshToken: 'rrr',
+    })
   })
 })
 

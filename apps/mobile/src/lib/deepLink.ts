@@ -75,8 +75,7 @@ export function parseAuthDeepLink(url: string | null): ParsedDeepLink | null {
   const token = pickParam((params as Record<string, unknown>).token)
   if (!token) return null
 
-  const refreshToken =
-    pickParam((params as Record<string, unknown>).refresh_token) ?? ''
+  const refreshToken = pickParam((params as Record<string, unknown>).refresh_token) ?? ''
 
   return {token, refreshToken}
 }

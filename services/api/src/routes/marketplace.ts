@@ -152,10 +152,7 @@ export const marketplaceRoutes: FastifyPluginAsync<MarketplaceRoutesOptions> = a
           handle: body.handle,
         })
 
-        req.log.info(
-          {userId, projectId, action: 'project.publish'},
-          'project_published',
-        )
+        req.log.info({userId, projectId, action: 'project.publish'}, 'project_published')
 
         return reply.code(200).send({
           project: {
@@ -195,10 +192,7 @@ export const marketplaceRoutes: FastifyPluginAsync<MarketplaceRoutesOptions> = a
       try {
         const result = await service.unpublish({userId, projectId})
 
-        req.log.info(
-          {userId, projectId, action: 'project.unpublish'},
-          'project_unpublished',
-        )
+        req.log.info({userId, projectId, action: 'project.unpublish'}, 'project_unpublished')
 
         return reply.code(200).send({
           project: {
@@ -218,71 +212,63 @@ export const marketplaceRoutes: FastifyPluginAsync<MarketplaceRoutesOptions> = a
   // -------------------------------------------------------------------------
   // POST /users/me/handle
   // -------------------------------------------------------------------------
-  fastify.post(
-    '/users/me/handle',
-    {preHandler: [requireAuth]},
-    async (req, reply) => {
-      const userId = (req as unknown as AuthenticatedRequest).user.id
+  fastify.post('/users/me/handle', {preHandler: [requireAuth]}, async (req, reply) => {
+    const userId = (req as unknown as AuthenticatedRequest).user.id
 
-      const rl = rateLimit(`setHandle:${userId}`, RL_SET_HANDLE, RATE_LIMIT_WINDOW_MS)
-      if (!rl.allowed) {
-        reply.header('Retry-After', String(rl.retryAfter))
-        return reply.code(429).send({error: 'rate_limited'})
-      }
+    const rl = rateLimit(`setHandle:${userId}`, RL_SET_HANDLE, RATE_LIMIT_WINDOW_MS)
+    if (!rl.allowed) {
+      reply.header('Retry-After', String(rl.retryAfter))
+      return reply.code(429).send({error: 'rate_limited'})
+    }
 
-      let body: z.infer<typeof SetHandleBodySchema>
-      try {
-        body = SetHandleBodySchema.parse(req.body)
-      } catch {
-        return reply.code(400).send({error: 'invalid_input'})
-      }
+    let body: z.infer<typeof SetHandleBodySchema>
+    try {
+      body = SetHandleBodySchema.parse(req.body)
+    } catch {
+      return reply.code(400).send({error: 'invalid_input'})
+    }
 
-      try {
-        const result = await service.setHandle({userId, handle: body.handle})
+    try {
+      const result = await service.setHandle({userId, handle: body.handle})
 
-        req.log.info({userId, action: 'user.set_handle'}, 'user_handle_set')
+      req.log.info({userId, action: 'user.set_handle'}, 'user_handle_set')
 
-        return reply.code(200).send({user: result.user})
-      } catch (err) {
-        const mapped = mapServiceError(err)
-        if (mapped) return reply.code(mapped.status).send(mapped.body)
-        req.log.error({err: safeMessage(err), userId}, 'set_handle_failed')
-        return reply.code(500).send({error: 'internal'})
-      }
-    },
-  )
+      return reply.code(200).send({user: result.user})
+    } catch (err) {
+      const mapped = mapServiceError(err)
+      if (mapped) return reply.code(mapped.status).send(mapped.body)
+      req.log.error({err: safeMessage(err), userId}, 'set_handle_failed')
+      return reply.code(500).send({error: 'internal'})
+    }
+  })
 
   // -------------------------------------------------------------------------
   // GET /handles/check?h=<handle>
   // -------------------------------------------------------------------------
-  fastify.get(
-    '/handles/check',
-    {preHandler: [requireAuth]},
-    async (req, reply) => {
-      const userId = (req as unknown as AuthenticatedRequest).user.id
+  fastify.get('/handles/check', {preHandler: [requireAuth]}, async (req, reply) => {
+    const userId = (req as unknown as AuthenticatedRequest).user.id
 
-      const rl = rateLimit(`checkHandle:${userId}`, RL_CHECK_HANDLE, RATE_LIMIT_WINDOW_MS)
-      if (!rl.allowed) {
-        reply.header('Retry-After', String(rl.retryAfter))
-        return reply.code(429).send({error: 'rate_limited'})
-      }
+    const rl = rateLimit(`checkHandle:${userId}`, RL_CHECK_HANDLE, RATE_LIMIT_WINDOW_MS)
+    if (!rl.allowed) {
+      reply.header('Retry-After', String(rl.retryAfter))
+      return reply.code(429).send({error: 'rate_limited'})
+    }
 
-      let query: z.infer<typeof HandleCheckQuerySchema>
-      try {
-        query = HandleCheckQuerySchema.parse(req.query)
-      } catch {
-        return reply.code(400).send({error: 'invalid_input'})
-      }
+    let query: z.infer<typeof HandleCheckQuerySchema>
+    try {
+      query = HandleCheckQuerySchema.parse(req.query)
+    } catch {
+      return reply.code(400).send({error: 'invalid_input'})
+    }
 
-      try {
-        const result = await service.checkHandle(query.h)
-        return reply.code(200).send(result)
-      } catch (err) {
-        req.log.error({err: safeMessage(err), userId}, 'check_handle_failed')
-        return reply.code(500).send({error: 'internal'})
-      }
-    },
-  )
+    try {
+      const result = await service.checkHandle(query.h)
+      return reply.code(200).send(result)
+    } catch (err) {
+      req.log.error({err: safeMessage(err), userId}, 'check_handle_failed')
+      return reply.code(500).send({error: 'internal'})
+    }
+  })
 
   // -------------------------------------------------------------------------
   // GET /me/handle/suggest
@@ -290,27 +276,23 @@ export const marketplaceRoutes: FastifyPluginAsync<MarketplaceRoutesOptions> = a
   // email (or their current handle if they already have one). The publish
   // sheet uses this to prefill its handle field on first publish.
   // -------------------------------------------------------------------------
-  fastify.get(
-    '/me/handle/suggest',
-    {preHandler: [requireAuth]},
-    async (req, reply) => {
-      const userId = (req as unknown as AuthenticatedRequest).user.id
+  fastify.get('/me/handle/suggest', {preHandler: [requireAuth]}, async (req, reply) => {
+    const userId = (req as unknown as AuthenticatedRequest).user.id
 
-      const rl = rateLimit(`suggestHandle:${userId}`, RL_SUGGEST_HANDLE, RATE_LIMIT_WINDOW_MS)
-      if (!rl.allowed) {
-        reply.header('Retry-After', String(rl.retryAfter))
-        return reply.code(429).send({error: 'rate_limited'})
-      }
+    const rl = rateLimit(`suggestHandle:${userId}`, RL_SUGGEST_HANDLE, RATE_LIMIT_WINDOW_MS)
+    if (!rl.allowed) {
+      reply.header('Retry-After', String(rl.retryAfter))
+      return reply.code(429).send({error: 'rate_limited'})
+    }
 
-      try {
-        const result = await service.suggestHandle({userId})
-        return reply.code(200).send(result)
-      } catch (err) {
-        const mapped = mapServiceError(err)
-        if (mapped) return reply.code(mapped.status).send(mapped.body)
-        req.log.error({err: safeMessage(err), userId}, 'suggest_handle_failed')
-        return reply.code(500).send({error: 'internal'})
-      }
-    },
-  )
+    try {
+      const result = await service.suggestHandle({userId})
+      return reply.code(200).send(result)
+    } catch (err) {
+      const mapped = mapServiceError(err)
+      if (mapped) return reply.code(mapped.status).send(mapped.body)
+      req.log.error({err: safeMessage(err), userId}, 'suggest_handle_failed')
+      return reply.code(500).send({error: 'internal'})
+    }
+  })
 }

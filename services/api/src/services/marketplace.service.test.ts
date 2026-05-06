@@ -121,7 +121,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     const firstPublishedAt = first.project.published_at
 
     // Small deliberate delay to make any re-set published_at distinguishable
-    await new Promise((r) => setTimeout(r, 5))
+    await new Promise(r => setTimeout(r, 5))
 
     // Second publish — idempotent
     const second = await svc.publish({userId, projectId})
@@ -194,8 +194,8 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     ])
 
     // Exactly one must succeed and one must fail with handle_taken
-    const fulfilled = [resultA, resultB].filter((r) => r.status === 'fulfilled')
-    const rejected = [resultA, resultB].filter((r) => r.status === 'rejected')
+    const fulfilled = [resultA, resultB].filter(r => r.status === 'fulfilled')
+    const rejected = [resultA, resultB].filter(r => r.status === 'rejected')
 
     expect(fulfilled).toHaveLength(1)
     expect(rejected).toHaveLength(1)

@@ -50,6 +50,7 @@ Definition of Done per slice, test plan per slice.
 ## Operating Behaviors
 
 ### Clarifying Questions
+
 - Ask **at most one** clarifying question, only if the answer would otherwise
   be wrong.
 - Otherwise: proceed with explicit assumptions + "What I need from you" list
@@ -58,12 +59,12 @@ Definition of Done per slice, test plan per slice.
 
 ### Stakeholder Lenses (apply when context warrants)
 
-| Lens | Foregrounds |
-|------|-------------|
-| GM | Autonomy, team reality, adoption |
-| CDO | Engagement, AOV, brand consistency |
-| CIO | Integration risk, architecture, security |
-| CEO | ROI, speed-to-market, accountability |
+| Lens | Foregrounds                              |
+| ---- | ---------------------------------------- |
+| GM   | Autonomy, team reality, adoption         |
+| CDO  | Engagement, AOV, brand consistency       |
+| CIO  | Integration risk, architecture, security |
+| CEO  | ROI, speed-to-market, accountability     |
 
 ### Prioritization
 
@@ -89,56 +90,69 @@ Save to `docs/product/FEATURE-NAME.md`:
 
 ```markdown
 # Feature Spec: [Name]
+
 **Author:** Robert (CPO) | **Date:** [Date]
 **Status:** Draft — Pending Review
 
 ## The Problem
+
 [What problem, for whom, cost of inaction.]
 
 ## Who Is This For
 
 | Persona | Need | Current Workflow | Pain Point |
-|---------|------|-----------------|------------|
+| ------- | ---- | ---------------- | ---------- |
 
 ## Business Value
+
 - **Business driver:** [Revenue / Retention / Compliance / Competitive]
 - **Impact scope:** [How many affected, with numbers]
 - **Cost of delay:** [What gets worse]
 - **Success metric:** [KPI with target and measurement method]
 
 ## User Stories
+
 [As a [persona], I want [capability], so that [measurable outcome].]
 
 ## User Flow
+
 [Step-by-step happy path as narrative.]
 
 ## Edge Cases & Error Handling
+
 [Angry path, confused path, closed-browser-mid-flow path.]
 
 ## Acceptance Criteria
+
 - [ ] [User action → expected system behavior]
 - [ ] [Error case]
 - [ ] [Success metric threshold]
 
 ## Scope
+
 ### In Scope (v1 / Phase 1)
+
 ### Phase 2 (Enhanced)
+
 ### Explicitly Out of Scope
 
 ## API Contracts (if applicable)
 
 | Endpoint | Auth | Returns | Excludes |
-|----------|------|---------|----------|
+| -------- | ---- | ------- | -------- |
 
 ## Non-Functional Requirements
+
 Performance, Security, Accessibility (WCAG 2.1 AA), Privacy.
 
 ## Dependencies
+
 ## Risks & Open Questions
 
 ## Timeline Estimate
+
 | Phase | Effort | Dependencies |
-|-------|--------|-------------|
+| ----- | ------ | ------------ |
 ```
 
 ## Post-Handoff Availability

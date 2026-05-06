@@ -181,12 +181,7 @@ describe('TextInputRenderer — T-0003-088c: boolean state warn-log', () => {
   it('state[id] of boolean renders empty + warn-logs a2ui_textinput_type_mismatch', () => {
     const logger = makeLoggerSpy()
     const dispatch = makeDispatch()
-    renderTextInput(
-      makeNode({id: 'name'}),
-      {name: true as unknown as string},
-      dispatch,
-      logger,
-    )
+    renderTextInput(makeNode({id: 'name'}), {name: true as unknown as string}, dispatch, logger)
     const input = screen.getByLabelText('Full Name')
     expect(input.props.value).toBe('')
     expect(logger.warn).toHaveBeenCalledTimes(1)

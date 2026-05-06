@@ -31,11 +31,7 @@ function makeDispatch(): jest.Mock {
  * Wrap render() output in a RendererThemeProvider so all component hooks
  * resolve — mirrors how AppRunner will mount the tree in Step 8.
  */
-function renderSpec(
-  spec: A2UISpec,
-  state: RenderState = {},
-  dispatch: Dispatch = makeDispatch(),
-) {
+function renderSpec(spec: A2UISpec, state: RenderState = {}, dispatch: Dispatch = makeDispatch()) {
   return create(
     <RendererThemeProvider value={DEFAULT_LIGHT_THEME}>
       {render({spec, state, dispatch})}
@@ -118,7 +114,9 @@ describe('render() — initialViewId-not-found fallback (Roz Issue 2 / line 19)'
     )
     const json = tree.toJSON() as any
     // Outer View containing the error Text
-    const errorText = json.children?.find((c: any) => c.children?.includes('Invalid spec: initialViewId not found'))
+    const errorText = json.children?.find((c: any) =>
+      c.children?.includes('Invalid spec: initialViewId not found'),
+    )
     expect(errorText).toBeDefined()
   })
 })

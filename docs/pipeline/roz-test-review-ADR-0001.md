@@ -7,7 +7,7 @@
 
 ## Verdict: REVISE
 
-Cal's spec is structurally serious work — the data-sensitivity table, the 404-not-403 discipline, and the explicit `specJson` exclusion test (T-0001-064) tell me he read the retro lessons and meant it. But his headline claim — *"failure ≥ happy holds globally and per-step"* — does not survive an independent count. That, plus several specific gaps and vague descriptions, gates approval.
+Cal's spec is structurally serious work — the data-sensitivity table, the 404-not-403 discipline, and the explicit `specJson` exclusion test (T-0001-064) tell me he read the retro lessons and meant it. But his headline claim — _"failure ≥ happy holds globally and per-step"_ — does not survive an independent count. That, plus several specific gaps and vague descriptions, gates approval.
 
 ---
 
@@ -15,15 +15,15 @@ Cal's spec is structurally serious work — the data-sensitivity table, the 404-
 
 Legend: ✅ covered | ⚠️ thin / vague | ❌ missing | N/A justified
 
-| Step | Happy | Failure | Boundary | Error | Security | Concurrency | Regression | Breaking | Config |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| 1 — DB schema | ✅ | ⚠️ thin | ✅ | ✅ | ⚠️ one | ✅ | ⚠️ thin | N/A first migration | ✅ |
-| 2 — Auth middleware | ⚠️ only one | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A new | ✅ |
-| 3 — Magic-link routes | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | N/A new | ✅ |
-| 4 — Projects service | ✅ | ⚠️ Happy>Failure | ✅ | ✅ | ✅ | ✅ | ✅ | N/A new | N/A justified |
-| 5 — Session hook | ⚠️ Happy>Failure | ⚠️ thin | ⚠️ one | ✅ | ✅ | ✅ | ⚠️ thin | N/A new | ❌ no env config tests |
-| 6 — Sign-In + deep link | ⚠️ Happy>Failure | ✅ | ✅ | ✅ | ✅ | ❌ debounce/double-tap-send | ⚠️ one | N/A | ❌ |
-| 7 — Home screen | ⚠️ Happy>Failure | ⚠️ thin | ✅ | ✅ | ❌ no security | ⚠️ one | ⚠️ one | N/A | N/A justified |
+| Step                    |      Happy       |     Failure      | Boundary | Error |    Security    |         Concurrency         | Regression |      Breaking       |         Config         |
+| ----------------------- | :--------------: | :--------------: | :------: | :---: | :------------: | :-------------------------: | :--------: | :-----------------: | :--------------------: |
+| 1 — DB schema           |        ✅        |     ⚠️ thin      |    ✅    |  ✅   |     ⚠️ one     |             ✅              |  ⚠️ thin   | N/A first migration |           ✅           |
+| 2 — Auth middleware     |   ⚠️ only one    |        ✅        |    ✅    |  ✅   |       ✅       |             ✅              |     ✅     |       N/A new       |           ✅           |
+| 3 — Magic-link routes   |        ✅        |        ✅        |    ✅    |  ✅   |       ✅       |             ✅              |     ✅     |       N/A new       |           ✅           |
+| 4 — Projects service    |        ✅        | ⚠️ Happy>Failure |    ✅    |  ✅   |       ✅       |             ✅              |     ✅     |       N/A new       |     N/A justified      |
+| 5 — Session hook        | ⚠️ Happy>Failure |     ⚠️ thin      |  ⚠️ one  |  ✅   |       ✅       |             ✅              |  ⚠️ thin   |       N/A new       | ❌ no env config tests |
+| 6 — Sign-In + deep link | ⚠️ Happy>Failure |        ✅        |    ✅    |  ✅   |       ✅       | ❌ debounce/double-tap-send |   ⚠️ one   |         N/A         |           ❌           |
+| 7 — Home screen         | ⚠️ Happy>Failure |     ⚠️ thin      |    ✅    |  ✅   | ❌ no security |           ⚠️ one            |   ⚠️ one   |         N/A         |     N/A justified      |
 
 ---
 
@@ -31,16 +31,16 @@ Legend: ✅ covered | ⚠️ thin / vague | ❌ missing | N/A justified
 
 Cal's claim: **Failure 27 / Happy 28, ratio holds globally and per-step.** This is wrong on two axes.
 
-| Step | Happy | Failure | Per-step holds? |
-|---|---:|---:|:-:|
-| 1 | 4 | 2 | ❌ |
-| 2 | 1 | 4 | ✅ |
-| 3 | 3 | 4 | ✅ |
-| 4 | 6 | 4 | ❌ |
-| 5 | 4 | 2 | ❌ |
-| 6 | 6 | 4 | ❌ |
-| 7 | 5 | 2 | ❌ |
-| **Global** | **29** | **22** | **❌** |
+| Step       |  Happy | Failure | Per-step holds? |
+| ---------- | -----: | ------: | :-------------: |
+| 1          |      4 |       2 |       ❌        |
+| 2          |      1 |       4 |       ✅        |
+| 3          |      3 |       4 |       ✅        |
+| 4          |      6 |       4 |       ❌        |
+| 5          |      4 |       2 |       ❌        |
+| 6          |      6 |       4 |       ❌        |
+| 7          |      5 |       2 |       ❌        |
+| **Global** | **29** |  **22** |     **❌**      |
 
 Failure < Happy globally and in 5 of 7 steps. Cal's table also says Step 2 has 15 tests; I count 14 (T-0001-028 is "N/A — no breaking change," not a test). Step 3 says 19; I count 18 for the same reason. The summary tables don't add up.
 
@@ -74,30 +74,30 @@ This is not a categorical-coverage finding. It is a scope finding: Cal needs mor
 
 ## Independently Identified Missing Tests
 
-| # | Step | Missing test |
-|---|---|---|
-| M-1 | 2 | JWT with valid signature but `sub` not a UUID → 401 (we use `sub` as FK, malformed FK breaks `/auth/sync`). |
-| M-2 | 3 | `POST /auth/sync` rate-limit test — Cal documents 30 req/min/user but no test asserts it on `/auth/sync` specifically. AC-Q3 needs a test. |
-| M-3 | 3 | `users.email` updates on subsequent `/auth/sync` if Supabase email changed. Or: assert it does NOT update (whichever is the intended behavior — currently undefined). |
-| M-4 | 4 | `GET /projects/:id` audit/log output — does the request log emit `{userId, projectId, action: 'project.read'}` without leaking `specJson` or `email`? Per ADR §J Logger discipline. |
-| M-5 | 4 | Title derivation when first-Heading text is whitespace-only — falls back to "Untitled" or fails noisily? Edge case Robert's spec doesn't pin down. |
-| M-6 | 4 | `parentProjectId` field exists in schema but no test exercises it on create/list/get. Either test or remove from this ADR's scope. |
-| M-7 | 5 | `signOut` while a request is in-flight — does the in-flight request still resolve? Does it still attach a now-revoked token? |
-| M-8 | 6 | "Resend" cooldown — Cal predicted I'd flag this. He's right. Add the test: `useFakeTimers`, click Send, advance 29s, assert disabled, advance 1s, assert enabled. |
-| M-9 | 7 | Skeleton card count: spec says "3 skeleton cards." Test asserts the count is exactly 3, not "at least one skeleton element." |
-| M-10 | All | Cleanup/teardown: any test that opens a DB connection or starts a timer must `afterEach` close it. Not a test — a test-infra requirement that Cal hasn't called out. Otherwise a flaky CI awaits. |
-| M-11 | Integration | The four claimed integration tests are referenced in the totals table (`Integration | 4 | 0 | 4`) but never enumerated. Where are T-IDs for the integration scenarios? This is a 4-test hole. |
+| #    | Step        | Missing test                                                                                                                                                                                      |
+| ---- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- | ----------------------------------------------------------------------------------------------- |
+| M-1  | 2           | JWT with valid signature but `sub` not a UUID → 401 (we use `sub` as FK, malformed FK breaks `/auth/sync`).                                                                                       |
+| M-2  | 3           | `POST /auth/sync` rate-limit test — Cal documents 30 req/min/user but no test asserts it on `/auth/sync` specifically. AC-Q3 needs a test.                                                        |
+| M-3  | 3           | `users.email` updates on subsequent `/auth/sync` if Supabase email changed. Or: assert it does NOT update (whichever is the intended behavior — currently undefined).                             |
+| M-4  | 4           | `GET /projects/:id` audit/log output — does the request log emit `{userId, projectId, action: 'project.read'}` without leaking `specJson` or `email`? Per ADR §J Logger discipline.               |
+| M-5  | 4           | Title derivation when first-Heading text is whitespace-only — falls back to "Untitled" or fails noisily? Edge case Robert's spec doesn't pin down.                                                |
+| M-6  | 4           | `parentProjectId` field exists in schema but no test exercises it on create/list/get. Either test or remove from this ADR's scope.                                                                |
+| M-7  | 5           | `signOut` while a request is in-flight — does the in-flight request still resolve? Does it still attach a now-revoked token?                                                                      |
+| M-8  | 6           | "Resend" cooldown — Cal predicted I'd flag this. He's right. Add the test: `useFakeTimers`, click Send, advance 29s, assert disabled, advance 1s, assert enabled.                                 |
+| M-9  | 7           | Skeleton card count: spec says "3 skeleton cards." Test asserts the count is exactly 3, not "at least one skeleton element."                                                                      |
+| M-10 | All         | Cleanup/teardown: any test that opens a DB connection or starts a timer must `afterEach` close it. Not a test — a test-infra requirement that Cal hasn't called out. Otherwise a flaky CI awaits. |
+| M-11 | Integration | The four claimed integration tests are referenced in the totals table (`Integration                                                                                                               | 4   | 0   | 4`) but never enumerated. Where are T-IDs for the integration scenarios? This is a 4-test hole. |
 
 ---
 
 ## Retro-Lesson Defenses
 
-| Lesson | Defended? | Evidence |
-|---|---|---|
-| `normalizeRow` sensitive-field leakage | ✅ Partial. T-0001-064 explicitly excludes `specJson` from list response. Data Sensitivity table tags methods `auth-only`. **Gap:** see G-6 — assertion needs to be shape-strict, not field-absence. |
-| `userCount` response-shape discipline | ⚠️ Cal cites Robert's response shapes but the tests don't pin them with a JSON-schema or strict-equal assertion. T-0001-053, T-0001-054 say "with the expected shape" without naming the schema. Add explicit shape contracts. |
-| CI/CD blast radius | ⚠️ Acknowledged ("no CI yet"). Acceptable for this ADR. But ADR-0002 and ADR-0003 must not inherit this free pass. Flag for Cal's next ADR. |
-| Incomplete tests from ADR-only reading | ✅ Cal cross-references Sable's UX doc and Robert's edge-case table by name. The Step 6 / Step 7 acceptance criteria pull copy from Sable's deck explicitly. Good practice. |
+| Lesson                                 | Defended?                                                                                                                                                                                                                      | Evidence |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
+| `normalizeRow` sensitive-field leakage | ✅ Partial. T-0001-064 explicitly excludes `specJson` from list response. Data Sensitivity table tags methods `auth-only`. **Gap:** see G-6 — assertion needs to be shape-strict, not field-absence.                           |
+| `userCount` response-shape discipline  | ⚠️ Cal cites Robert's response shapes but the tests don't pin them with a JSON-schema or strict-equal assertion. T-0001-053, T-0001-054 say "with the expected shape" without naming the schema. Add explicit shape contracts. |
+| CI/CD blast radius                     | ⚠️ Acknowledged ("no CI yet"). Acceptable for this ADR. But ADR-0002 and ADR-0003 must not inherit this free pass. Flag for Cal's next ADR.                                                                                    |
+| Incomplete tests from ADR-only reading | ✅ Cal cross-references Sable's UX doc and Robert's edge-case table by name. The Step 6 / Step 7 acceptance criteria pull copy from Sable's deck explicitly. Good practice.                                                    |
 
 ---
 

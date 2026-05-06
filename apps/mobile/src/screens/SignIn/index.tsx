@@ -67,11 +67,14 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
   // Tick to recompute the resend cooldown disabled state every second.
   const [, setNowTick] = useState(0)
 
-  const handleEmailChange = useCallback((value: string, isValid: boolean) => {
-    if (!touched && value.length > 0) setTouched(true)
-    setEmail(value)
-    setEmailValid(isValid)
-  }, [touched])
+  const handleEmailChange = useCallback(
+    (value: string, isValid: boolean) => {
+      if (!touched && value.length > 0) setTouched(true)
+      setEmail(value)
+      setEmailValid(isValid)
+    },
+    [touched],
+  )
 
   /**
    * In-flight ref — synchronously gates rapid re-taps before React state
@@ -116,7 +119,7 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
   useEffect(() => {
     if (sentAt === null) return
     const timer = setInterval(() => {
-      setNowTick((n) => n + 1)
+      setNowTick(n => n + 1)
       // Stop ticking once cooldown elapses.
       if (Date.now() - sentAt >= RESEND_COOLDOWN_MS) {
         clearInterval(timer)
@@ -184,13 +187,9 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
           >
             {signInCopy.sentHeadlinePrefix}
           </Text>
-          <Text
-            style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}
-          >
+          <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
             {signInCopy.sentSubheadPrefix}
-            <Text
-              style={[theme.typography.bodyStrong, {color: theme.palette.text.primary}]}
-            >
+            <Text style={[theme.typography.bodyStrong, {color: theme.palette.text.primary}]}>
               {sentToEmail}
             </Text>
             {signInCopy.sentSubheadSuffix}
@@ -215,9 +214,7 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
 
   const showInlineError = touched && email.length > 0 && !emailValid
   const sendLabel = mutation.isPending ? signInCopy.primarySending : signInCopy.primaryDefault
-  const a11ySendLabel = mutation.isPending
-    ? signInCopy.a11ySendSending
-    : signInCopy.a11ySendDefault
+  const a11ySendLabel = mutation.isPending ? signInCopy.a11ySendSending : signInCopy.a11ySendDefault
   const sendDisabled = !emailValid || mutation.isPending
 
   return (
@@ -256,18 +253,12 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
           </View>
         ) : null}
         <Text
-          style={[
-            styles.headline,
-            theme.typography.heading1,
-            {color: theme.palette.text.primary},
-          ]}
+          style={[styles.headline, theme.typography.heading1, {color: theme.palette.text.primary}]}
           accessibilityRole="header"
         >
           {signInCopy.headline}
         </Text>
-        <Text
-          style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}
-        >
+        <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
           {signInCopy.subhead}
         </Text>
         <EmailInput
@@ -294,17 +285,12 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
           testID="sign-in-skip"
         >
           <Text
-            style={[
-              theme.typography.body,
-              {color: theme.palette.text.muted, textAlign: 'center'},
-            ]}
+            style={[theme.typography.body, {color: theme.palette.text.muted, textAlign: 'center'}]}
           >
             {signInCopy.skipAuth}
           </Text>
         </Pressable>
-        <Text
-          style={[styles.footer, theme.typography.caption, {color: theme.palette.text.muted}]}
-        >
+        <Text style={[styles.footer, theme.typography.caption, {color: theme.palette.text.muted}]}>
           {signInCopy.footer}
         </Text>
       </View>

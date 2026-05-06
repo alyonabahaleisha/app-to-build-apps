@@ -102,7 +102,10 @@ export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}:
       </View>
       {charCount > 0 && (
         <Text
-          style={[theme.typography.caption, {color: counterColor, alignSelf: 'flex-end', marginRight: 4}]}
+          style={[
+            theme.typography.caption,
+            {color: counterColor, alignSelf: 'flex-end', marginRight: 4},
+          ]}
           testID="char-counter"
         >
           {charCount}/{MAX_CHARS}

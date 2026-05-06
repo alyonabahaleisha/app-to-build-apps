@@ -86,7 +86,7 @@ export function ToastProvider({children}: ProviderProps) {
     if (current === null) return
     const id = current.id
     timerRef.current = setTimeout(() => {
-      setCurrent((c) => (c?.id === id ? null : c))
+      setCurrent(c => (c?.id === id ? null : c))
     }, current.durationMs)
     return clearTimer
   }, [current, clearTimer])

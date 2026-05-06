@@ -6,14 +6,7 @@
  * Owned by `ToastProvider`; not used directly by screens.
  */
 import {useEffect, useRef, useState} from 'react'
-import {
-  AccessibilityInfo,
-  Animated,
-  Easing,
-  Pressable,
-  StyleSheet,
-  Text,
-} from 'react-native'
+import {AccessibilityInfo, Animated, Easing, Pressable, StyleSheet, Text} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme} from '#/theme'
@@ -40,7 +33,7 @@ export function Toast({message, variant, onDismiss}: Props) {
   useEffect(() => {
     let mounted = true
     AccessibilityInfo.isReduceMotionEnabled()
-      .then((flag) => {
+      .then(flag => {
         if (mounted) setReduced(flag)
       })
       .catch(() => {
@@ -52,8 +45,7 @@ export function Toast({message, variant, onDismiss}: Props) {
   }, [])
 
   const opacity = useRef(new Animated.Value(0)).current
-  const translateY = useRef(new Animated.Value(reduced ? 0 : -SLIDE_DISTANCE))
-    .current
+  const translateY = useRef(new Animated.Value(reduced ? 0 : -SLIDE_DISTANCE)).current
 
   useEffect(() => {
     const anims = reduced
@@ -87,17 +79,10 @@ export function Toast({message, variant, onDismiss}: Props) {
   const palette = theme.palette
   const bg = variant === 'error' ? palette.destructive : palette.bg.elevated
   const fg = variant === 'error' ? palette.destructiveFg : palette.text.primary
-  const borderColor =
-    variant === 'error' ? palette.destructive : palette.border.subtle
+  const borderColor = variant === 'error' ? palette.destructive : palette.border.subtle
 
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[
-        styles.host,
-        {paddingTop: insets.top + 8},
-      ]}
-    >
+    <Animated.View pointerEvents="box-none" style={[styles.host, {paddingTop: insets.top + 8}]}>
       <Animated.View style={{opacity, transform: [{translateY}]}}>
         <Pressable
           onPress={onDismiss}
@@ -114,11 +99,7 @@ export function Toast({message, variant, onDismiss}: Props) {
           ]}
           testID="toast"
         >
-          <Text
-            style={[styles.text, theme.typography.bodyStrong, {color: fg}]}
-          >
-            {message}
-          </Text>
+          <Text style={[styles.text, theme.typography.bodyStrong, {color: fg}]}>{message}</Text>
         </Pressable>
       </Animated.View>
     </Animated.View>

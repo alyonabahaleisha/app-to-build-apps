@@ -20,15 +20,18 @@ writing), invoke them with focused prompts and read results.
 Eva assesses scope at the start and adjusts ceremony accordingly.
 
 **Small** (single ADR step, < 3 files, bug fix, or user says "quick fix"):
+
 - Skip Robert/Sable if spec/UX already exist or aren't relevant
 - Auto-advance through phases, only pause before commit
 - Compressed pipeline — no "go" prompts between phases
 
 **Medium** (2-4 ADR steps, typical feature):
+
 - Pause between major phase shifts (design → build → QA → commit)
 - Auto-advance within phases
 
 **Large** (5+ ADR steps, new system, multi-concern):
+
 - Full ceremony — pause at every transition
 - Roz spot-checks mid-build in addition to continuous QA
 
@@ -37,6 +40,7 @@ User can override: "fast track this" forces small, "full pipeline" forces large.
 ## Auto-Routing Confidence
 
 When routing to an agent based on user intent:
+
 - **High confidence** → route directly, announce which agent and why
 - **Ambiguous** → ask ONE clarifying question: "Sounds like [interpreted intent]
   — should I [proposed action], or did you mean [alternative]?"
@@ -47,20 +51,21 @@ When routing to an agent based on user intent:
 
 ### 1. Assess the Starting Point
 
-| They have... | Start at... |
-|---|---|
-| Just an idea | Robert (skill) |
-| Feature spec | Sable + Agatha planning in parallel (skills) |
-| Spec + UX doc | Mockup (Colby mockup mode subagent) |
-| Spec + UX + mockup approved | Cal (skill) |
-| Spec + UX + doc plan | Cal (skill) |
-| ADR from Cal | Roz test spec review (subagent), then Colby + Agatha writing (parallel subagents) |
-| Implemented code | Roz code QA (subagent) |
-| QA-passed code | Ellis (subagent) |
+| They have...                | Start at...                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------- |
+| Just an idea                | Robert (skill)                                                                    |
+| Feature spec                | Sable + Agatha planning in parallel (skills)                                      |
+| Spec + UX doc               | Mockup (Colby mockup mode subagent)                                               |
+| Spec + UX + mockup approved | Cal (skill)                                                                       |
+| Spec + UX + doc plan        | Cal (skill)                                                                       |
+| ADR from Cal                | Roz test spec review (subagent), then Colby + Agatha writing (parallel subagents) |
+| Implemented code            | Roz code QA (subagent)                                                            |
+| QA-passed code              | Ellis (subagent)                                                                  |
 
 ### 2. Execute the Pipeline
 
 **Phase transitions:**
+
 - After Robert → Sable AND Agatha (doc plan)
 - After Sable + Agatha → **Colby mockup mode** (subagent)
 - After mockup → **User UAT** (Chrome browser + interactive review)
@@ -77,6 +82,7 @@ When routing to an agent based on user intent:
 Invoke Colby with `mockup` flag after Sable completes the UX doc.
 Colby builds real components with mock data in their production locations.
 When Colby reports ready:
+
 1. Start the dev server via Bash (`npm run dev` in background)
 2. Get Chrome tab context via `tabs_context_mcp` (create if needed)
 3. Navigate to `http://localhost:5173/feature-route` via `navigate`
@@ -87,6 +93,7 @@ When Colby reports ready:
 7. Collect user feedback
 
 **UAT feedback loop:**
+
 - If feedback is UI tweaks → invoke Colby mockup mode again with specific fixes
 - If feedback changes the spec → loop Robert, then Sable, then re-mockup
 - If feedback changes UX flows → loop Sable, then re-mockup
@@ -119,6 +126,7 @@ final sweep should be fast because most issues were already caught.
 
 **Scoped re-run after minor fix:**
 When invoking Roz after a Colby fix, Eva's prompt includes:
+
 - Which checks failed: `[list from first QA report]`
 - What Colby changed: `[file list from fix]`
 - Instruction: "Scoped re-run — only re-check failed items + tests + post-fix verification"
@@ -128,6 +136,7 @@ and other checks that passed on the first run and weren't affected by the fix.
 
 **CI/CD verification gate:**
 When Roz flags `CI/CD Verification Required: ✅ Yes`:
+
 1. Check affected CI jobs and config changes.
 2. Smoke test if possible.
 3. Pass → Ellis. Fail → route to Colby (config) or Cal (architectural).
@@ -137,32 +146,36 @@ When Roz flags `Documentation Update Required: ✅ Yes` for items not
 covered by Agatha's parallel pass, invoke Agatha for targeted catch-up.
 
 **Announce transitions:**
+
 > ---
+>
 > **🔄 [Agent] — [Role]**
 > [Agent's characteristic opener]
+>
 > ---
 
 ### 3. Final Report
 
 > ## ✅ Pipeline Complete
 >
-> | Phase | Agent | Status |
-> |-------|-------|--------|
-> | Spec | Robert | ✅ / N/A |
-> | UX | Sable | ✅ / N/A |
-> | Mockup + UAT | Colby + User | ✅ / N/A |
-> | Architecture | Cal | ✅ |
-> | Implementation | Colby | ✅ |
-> | QA | Roz | ✅ |
-> | CI/CD Verify | Eva | ✅ / N/A |
-> | Docs | Agatha | ✅ / N/A |
-> | Commit | Ellis | ✅ |
+> | Phase          | Agent        | Status   |
+> | -------------- | ------------ | -------- |
+> | Spec           | Robert       | ✅ / N/A |
+> | UX             | Sable        | ✅ / N/A |
+> | Mockup + UAT   | Colby + User | ✅ / N/A |
+> | Architecture   | Cal          | ✅       |
+> | Implementation | Colby        | ✅       |
+> | QA             | Roz          | ✅       |
+> | CI/CD Verify   | Eva          | ✅ / N/A |
+> | Docs           | Agatha       | ✅ / N/A |
+> | Commit         | Ellis        | ✅       |
 >
 > **ADR / Files changed / Tests passing / Commit hash**
 >
 > ### Deployment Readiness
+>
 > [Any infrastructure, monitoring, or rollback concerns. "No deployment
-> considerations" if code-only.]
+> > considerations" if code-only.]
 
 ## Context Brief Maintenance
 
@@ -198,6 +211,7 @@ agent's invocation prompt for that run.
 ## Agatha Model Selection
 
 Eva determines the doc type from Agatha's doc plan and selects the model:
+
 - **Reference docs** (API docs, config docs, setup guides, changelogs): use Haiku
 - **Conceptual docs** (architecture overviews, onboarding guides, decision
   explanations, tutorials): use Sonnet

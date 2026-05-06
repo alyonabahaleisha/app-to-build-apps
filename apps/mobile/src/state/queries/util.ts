@@ -13,10 +13,7 @@
  *   createQueryKey('projects', userId)             // ['projects', '<uuid>']
  *   createQueryKey('projects', userId, {page: 1})  // ['projects', '<uuid>', {page: 1}]
  */
-export function createQueryKey(
-  root: string,
-  ...args: ReadonlyArray<unknown>
-): readonly unknown[] {
+export function createQueryKey(root: string, ...args: ReadonlyArray<unknown>): readonly unknown[] {
   return [root, ...args] as const
 }
 

@@ -99,17 +99,10 @@ export interface UseA2UIStateResult {
 
 // -- Hook ---------------------------------------------------------------------
 
-export function useA2UIState(
-  spec: A2UISpec,
-  opts?: UseA2UIStateOpts,
-): UseA2UIStateResult {
+export function useA2UIState(spec: A2UISpec, opts?: UseA2UIStateOpts): UseA2UIStateResult {
   const logger = useRendererLogger()
 
-  const [fullState, internalDispatch] = useReducer(
-    reducer,
-    spec,
-    buildInitialReducerState,
-  )
+  const [fullState, internalDispatch] = useReducer(reducer, spec, buildInitialReducerState)
 
   // Spec-change reset (T-0003-013b):
   // If the spec reference changed since the last render, dispatch RESET
@@ -149,20 +142,14 @@ export function useA2UIState(
 
   // Memoize knownViewIds so NAVIGATE dispatch doesn't allocate a new Set
   // every render.
-  const knownViewIds = useMemo(
-    () => new Set(spec.views.map(v => v.id)),
-    [spec],
-  )
+  const knownViewIds = useMemo(() => new Set(spec.views.map(v => v.id)), [spec])
 
   // §I.1 — counterBoundsMap: walk spec.views once to collect all Counter
   // node bounds. Memoized on spec reference. Rebuilt only when spec changes
   // (same trigger as the RESET path above). This lets programmatic
   // Button→Counter dispatches clamp correctly without Counter injecting
   // its own bounds into the action (bounds belong to the spec, not the UI).
-  const counterBoundsMap = useMemo(
-    () => buildCounterBoundsMap(spec),
-    [spec],
-  )
+  const counterBoundsMap = useMemo(() => buildCounterBoundsMap(spec), [spec])
 
   const dispatch: Dispatch = useCallback(
     (action: A2UIAction) => {

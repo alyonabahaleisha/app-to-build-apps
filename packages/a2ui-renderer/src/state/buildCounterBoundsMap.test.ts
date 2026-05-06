@@ -28,9 +28,7 @@ describe('buildCounterBoundsMap — Counter inside List items', () => {
           id: 'main',
           root: {
             type: 'List',
-            items: [
-              {type: 'Counter', id: 'qty', label: 'Quantity', min: 0, max: 99, step: 1},
-            ],
+            items: [{type: 'Counter', id: 'qty', label: 'Quantity', min: 0, max: 99, step: 1}],
           },
         },
       ],
@@ -83,9 +81,7 @@ describe('buildCounterBoundsMap — Counter inside Form fields', () => {
           root: {
             type: 'Form',
             formId: 'checkout',
-            fields: [
-              {type: 'Counter', id: 'guests', label: 'Guests', min: 1, max: 20, step: 1},
-            ],
+            fields: [{type: 'Counter', id: 'guests', label: 'Guests', min: 1, max: 20, step: 1}],
           },
         },
       ],

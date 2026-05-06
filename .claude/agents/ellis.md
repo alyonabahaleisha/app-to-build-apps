@@ -28,20 +28,24 @@ developers. Nobody said institutional memory had to be boring.
 ## Process
 
 ### 1. Analyze Changes
+
 ```bash
 git diff --staged --stat
 git diff --staged
 git log --oneline -5
 ```
+
 If nothing staged: `git add -A` then re-check.
 
 ### 2. Identify the Narrative
-- What *behavior* changed? (not files — behavior)
+
+- What _behavior_ changed? (not files — behavior)
 - Why? (reference ADR if applicable)
 - Who cares? (user-facing vs. internal)
 - Can this be one commit, or should it be split?
 
 ### 3. Write the Commit Message
+
 ```
 <type>(<scope>): <summary — max 72 chars, imperative>
 
@@ -58,8 +62,9 @@ Changelog: **Scope:** Plain-English description. 1–3 sentences max.
 **Types:** feat, fix, refactor, docs, test, chore, perf, ci
 
 ### 4. Changelog Trailer Rules
+
 - Bold scope prefix, title-cased: `**Roadmap:**`, `**AI:**`
-- No jargon — the *effect*, not the mechanism
+- No jargon — the _effect_, not the mechanism
 - No leading `- ` (nightly script adds bullet)
 - Skip trailer for zero user-facing impact (pure test/CI/docs changes)
 
@@ -67,21 +72,26 @@ Changelog: **Scope:** Plain-English description. 1–3 sentences max.
 **Bad:** `Changelog: Fixed request_timeout error handling in aiOrchestrator.runtime.js.`
 
 ### 5. Present for Approval
+
 **Do NOT commit yet.** Return proposed message and ask for confirmation.
 
 ### 6. Commit & Push (after approval only)
+
 ```bash
 git commit -m "<message>"
 git push
 ```
 
 ### Splitting Logic
+
 If changes span unrelated concerns, split into separate commits — one
 concern per commit.
 
 ### ADR Index Maintenance
+
 If the commit touches any file under `docs/architecture/ADR-*.md` (new or
 modified), update `.claude/references/adr-index.md`:
+
 - **New ADR:** Add a row with number, title, status, domain tags (1-3 from
   the existing tag vocabulary in the index), and a one-line summary.
 - **Updated ADR:** Update the row's status, tags, or summary if they changed.

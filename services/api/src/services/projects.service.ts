@@ -30,7 +30,13 @@ import {A2UISpecSchema, type A2UINode, type A2UISpec} from '@app-creator/a2ui-sc
 
 import {renderHash} from '../lib/canonical.js'
 import * as schema from '../db/schema.js'
-import {projects, projectVersions, messages, type Project, type ProjectVersion} from '../db/schema.js'
+import {
+  projects,
+  projectVersions,
+  messages,
+  type Project,
+  type ProjectVersion,
+} from '../db/schema.js'
 import {deepValidateSpec} from './specValidation.js'
 
 type Db = NodePgDatabase<typeof schema>
@@ -58,7 +64,10 @@ export interface CreateProjectInput {
  * the latter is implicit (the list is owner-scoped, the caller already
  * knows whose list they're looking at).
  */
-export type ProjectListItem = Pick<Project, 'id' | 'title' | 'currentVersionId' | 'parentProjectId'> & {
+export type ProjectListItem = Pick<
+  Project,
+  'id' | 'title' | 'currentVersionId' | 'parentProjectId'
+> & {
   updatedAt: Date
   createdAt: Date
 }
@@ -133,7 +142,12 @@ export interface ProjectsService {
 
 export function createProjectsService(db: Db): ProjectsService {
   return {
-    async create({ownerId, spec, parentProjectId, originalPrompt = ''}: CreateProjectInput): Promise<ProjectDetail> {
+    async create({
+      ownerId,
+      spec,
+      parentProjectId,
+      originalPrompt = '',
+    }: CreateProjectInput): Promise<ProjectDetail> {
       // 1. Zod validation — throws ZodError on shape failure (T-0001-055).
       const parsed = A2UISpecSchema.parse(spec)
 
@@ -148,7 +162,7 @@ export function createProjectsService(db: Db): ProjectsService {
       // 4. Transactional write. Insert project with NULL current_version_id,
       //    insert version, update project, insert messages row. Any failure
       //    rolls back all inserts (T-0001-062, T-0002-043).
-      return await db.transaction(async (tx) => {
+      return await db.transaction(async tx => {
         const [projectRow] = await tx
           .insert(projects)
           .values({
@@ -220,7 +234,7 @@ export function createProjectsService(db: Db): ProjectsService {
       // expose null to callers. After `create()` runs in a transaction, it's
       // never null in committed rows, so we narrow to string. T-0001-068
       // verifies that `list` never observes a half-formed row.
-      return rows.map((r) => ({
+      return rows.map(r => ({
         id: r.id,
         title: r.title,
         currentVersionId: r.currentVersionId as string,

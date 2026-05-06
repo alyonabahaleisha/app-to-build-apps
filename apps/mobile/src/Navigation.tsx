@@ -63,10 +63,7 @@ export function Navigation() {
         ) : (
           <Stack.Screen name="SignIn">
             {() => (
-              <SignIn
-                showExpiredBanner={linkExpired}
-                onDismissExpiredBanner={dismissExpired}
-              />
+              <SignIn showExpiredBanner={linkExpired} onDismissExpiredBanner={dismissExpired} />
             )}
           </Stack.Screen>
         )}
@@ -82,11 +79,7 @@ function HydrationSplash() {
       <View style={styles.splash}>
         <ActivityIndicator size="large" color={theme.palette.primary} />
         <Text
-          style={[
-            styles.splashText,
-            theme.typography.body,
-            {color: theme.palette.text.muted},
-          ]}
+          style={[styles.splashText, theme.typography.body, {color: theme.palette.text.muted}]}
           accessibilityRole="header"
         >
           {signInCopy.verifyingHeadline}

@@ -51,7 +51,9 @@ function resolveDatabaseUrl(): string {
   try {
     const url = new URL(raw)
     if (!['postgres:', 'postgresql:'].includes(url.protocol)) {
-      throw new ConfigError(`DATABASE_URL must use postgres:// or postgresql:// — got ${url.protocol}`)
+      throw new ConfigError(
+        `DATABASE_URL must use postgres:// or postgresql:// — got ${url.protocol}`,
+      )
     }
   } catch (err) {
     if (err instanceof ConfigError) throw err

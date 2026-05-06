@@ -418,7 +418,7 @@ describe('ADR-0001 Step 3 — auth routes', () => {
 
       // Pino test-stream spy — find the error-level record from the route.
       const errorRecords = sink.byLevel(PINO_LEVEL.ERROR)
-      const failureRecord = errorRecords.find((r) => r.msg === 'magic_link_failed')
+      const failureRecord = errorRecords.find(r => r.msg === 'magic_link_failed')
       expect(failureRecord).toBeDefined()
       // safeMessage(err) — for a real Error this is err.message.
       expect(failureRecord?.err).toBe(sdkErrorMessage)

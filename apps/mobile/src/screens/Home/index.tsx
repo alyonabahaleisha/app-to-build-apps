@@ -98,10 +98,7 @@ export function HomeScreen({navigation}: Props) {
     <SafeContainer>
       <View style={styles.topBar}>
         <Text
-          style={[
-            theme.typography.heading2,
-            {color: theme.palette.text.primary},
-          ]}
+          style={[theme.typography.heading2, {color: theme.palette.text.primary}]}
           accessibilityRole="header"
         >
           {homeCopy.title}
@@ -159,14 +156,9 @@ function LoadingBody() {
   return (
     <View style={styles.skeletonList}>
       <SectionDivider />
-      {skeletons.map((i) => (
+      {skeletons.map(i => (
         <View key={i} style={styles.skeletonRow}>
-          <Skeleton
-            width="100%"
-            height={68}
-            radius={16}
-            testID="library-skeleton"
-          />
+          <Skeleton width="100%" height={68} radius={16} testID="library-skeleton" />
         </View>
       ))}
     </View>
@@ -277,11 +269,7 @@ function ErrorBody({onRetry}: ErrorBodyProps) {
             {homeCopy.errorHeadline}
           </Text>
           <Text
-            style={[
-              theme.typography.body,
-              styles.errorSubhead,
-              {color: theme.palette.text.muted},
-            ]}
+            style={[theme.typography.body, styles.errorSubhead, {color: theme.palette.text.muted}]}
           >
             {homeCopy.errorSubhead}
           </Text>
@@ -316,11 +304,7 @@ function SectionDivider() {
   const theme = useTheme()
   return (
     <Text
-      style={[
-        styles.sectionDivider,
-        theme.typography.caption,
-        {color: theme.palette.text.muted},
-      ]}
+      style={[styles.sectionDivider, theme.typography.caption, {color: theme.palette.text.muted}]}
     >
       {homeCopy.recentSection}
     </Text>

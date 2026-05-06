@@ -49,25 +49,20 @@ function RenderErrorFallback({onBack}: {onBack: () => void}): React.ReactElement
         ⚠️
       </Text>
 
-      <Text
-        style={[styles.heading, {color: t.palette.text.primary}]}
-        accessibilityRole="header">
+      <Text style={[styles.heading, {color: t.palette.text.primary}]} accessibilityRole="header">
         This app didn't render correctly.
       </Text>
 
-      <Text style={[styles.body, {color: t.palette.text.muted}]}>
-        Try recreating it.
-      </Text>
+      <Text style={[styles.body, {color: t.palette.text.muted}]}>Try recreating it.</Text>
 
       <Pressable
         onPress={onBack}
         style={[styles.button, {backgroundColor: t.palette.primary}]}
         accessibilityRole="button"
         accessibilityLabel="Back to library"
-        testID="render-error-back-button">
-        <Text style={[styles.buttonText, {color: t.palette.primaryFg}]}>
-          Back to library
-        </Text>
+        testID="render-error-back-button"
+      >
+        <Text style={[styles.buttonText, {color: t.palette.primaryFg}]}>Back to library</Text>
       </Pressable>
     </View>
   )

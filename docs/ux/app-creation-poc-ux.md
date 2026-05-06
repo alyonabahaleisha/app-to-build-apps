@@ -7,7 +7,7 @@
 
 ## Design Intent
 
-The user should feel like they're talking to a **competent collaborator**, not interrogating a search box. The chat is a conversation, not a form. The wait for generation should feel like *the assistant is working*, not like *the spinner is broken*. When the app appears, it should feel like **theirs** — saved, shareable, alive — even though we're not yet showing them the marketplace.
+The user should feel like they're talking to a **competent collaborator**, not interrogating a search box. The chat is a conversation, not a form. The wait for generation should feel like _the assistant is working_, not like _the spinner is broken_. When the app appears, it should feel like **theirs** — saved, shareable, alive — even though we're not yet showing them the marketplace.
 
 Three feelings to optimize for, in order:
 
@@ -15,7 +15,7 @@ Three feelings to optimize for, in order:
 2. **Surprise** — "Oh, it actually made the thing I described."
 3. **Ownership** — "This is mine. It saves. It's still here tomorrow."
 
-Anti-feeling: *interrogated.* No required fields. No "select category." No "describe in 3 bullet points." The chat is the only input.
+Anti-feeling: _interrogated._ No required fields. No "select category." No "describe in 3 bullet points." The chat is the only input.
 
 ---
 
@@ -27,7 +27,7 @@ Anti-feeling: *interrogated.* No required fields. No "select category." No "desc
 
 **Current solution:** Notes app, voice memo, Pinterest board, paying a freelancer for the rare ones, or never building it.
 **Pain points:** The skill wall, the time wall, the cost wall. Most ideas die in the Notes app.
-**Consequences:** Compounded frustration over time — the gap between *imagination* and *reality* erodes confidence in your own ideas. People stop having them.
+**Consequences:** Compounded frustration over time — the gap between _imagination_ and _reality_ erodes confidence in your own ideas. People stop having them.
 
 ---
 
@@ -35,52 +35,52 @@ Anti-feeling: *interrogated.* No required fields. No "select category." No "desc
 
 ### Stage 1 — Discover & Sign Up
 
-| | |
-|---|---|
-| **Doing** | Opens the app for the first time. Sees Sign-In screen. |
-| **Thinking** | "OK, I'll try this. Don't ask me to make a password." |
-| **Feeling** | Cautious optimism. Slightly skeptical. |
-| **Pain** | Magic-link friction (have to leave the app, check email, come back). |
-| **Opportunity** | Make the wait feel productive. Show what's coming. |
+|                 |                                                                      |
+| --------------- | -------------------------------------------------------------------- |
+| **Doing**       | Opens the app for the first time. Sees Sign-In screen.               |
+| **Thinking**    | "OK, I'll try this. Don't ask me to make a password."                |
+| **Feeling**     | Cautious optimism. Slightly skeptical.                               |
+| **Pain**        | Magic-link friction (have to leave the app, check email, come back). |
+| **Opportunity** | Make the wait feel productive. Show what's coming.                   |
 
 ### Stage 2 — First Idea
 
-| | |
-|---|---|
-| **Doing** | Lands on empty Home. Taps "Create new app." Lands on empty Chat. |
-| **Thinking** | "What should I type? Will it understand me?" |
-| **Feeling** | Hesitant. Looking for permission to be vague. |
-| **Pain** | Blank-page paralysis. Don't know what's possible. |
+|                 |                                                                                              |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| **Doing**       | Lands on empty Home. Taps "Create new app." Lands on empty Chat.                             |
+| **Thinking**    | "What should I type? Will it understand me?"                                                 |
+| **Feeling**     | Hesitant. Looking for permission to be vague.                                                |
+| **Pain**        | Blank-page paralysis. Don't know what's possible.                                            |
 | **Opportunity** | Strong empty state with example prompts. Lower the activation energy with concrete starters. |
 
 ### Stage 3 — Generation Wait
 
-| | |
-|---|---|
-| **Doing** | Submitted prompt. Watching loading. |
-| **Thinking** | "Is it working? How long?" |
-| **Feeling** | Anticipatory. Vulnerable to a frozen-spinner read. |
-| **Pain** | Up to 90 seconds is a *long* time on mobile. |
+|                 |                                                                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Doing**       | Submitted prompt. Watching loading.                                                                                                                                |
+| **Thinking**    | "Is it working? How long?"                                                                                                                                         |
+| **Feeling**     | Anticipatory. Vulnerable to a frozen-spinner read.                                                                                                                 |
+| **Pain**        | Up to 90 seconds is a _long_ time on mobile.                                                                                                                       |
 | **Opportunity** | Honest progress messaging. "Reading your idea" → "Picking components" → "Putting it together." Not real progress, but honest about what's happening at each stage. |
 
 ### Stage 4 — First Reveal
 
-| | |
-|---|---|
-| **Doing** | App renders. User pokes at it. |
-| **Thinking** | "Is this real? Let me try the buttons. Wait, it actually works." |
-| **Feeling** | Surprise → delight → ownership. |
-| **Pain** | If it doesn't *do* anything (only static text), the magic dies. Buttons need to do something even if simple. |
+|                 |                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Doing**       | App renders. User pokes at it.                                                                                     |
+| **Thinking**    | "Is this real? Let me try the buttons. Wait, it actually works."                                                   |
+| **Feeling**     | Surprise → delight → ownership.                                                                                    |
+| **Pain**        | If it doesn't _do_ anything (only static text), the magic dies. Buttons need to do something even if simple.       |
 | **Opportunity** | Make the action feedback unmistakable. Toast on `toast` action. Visible state changes. Counter increments visibly. |
 
 ### Stage 5 — Return
 
-| | |
-|---|---|
-| **Doing** | Reopens the app the next day. Sees the library. |
-| **Thinking** | "Oh, it saved. Cool." |
-| **Feeling** | Quietly impressed. Trust forms. |
-| **Pain** | If the app looks different on reopen, trust collapses immediately. |
+|                 |                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| **Doing**       | Reopens the app the next day. Sees the library.                                                  |
+| **Thinking**    | "Oh, it saved. Cool."                                                                            |
+| **Feeling**     | Quietly impressed. Trust forms.                                                                  |
+| **Pain**        | If the app looks different on reopen, trust collapses immediately.                               |
 | **Opportunity** | Render must be byte-identical. The library card preview must accurately reflect the runtime app. |
 
 ---
@@ -129,19 +129,19 @@ AppRunner (identical render, instant — no LLM call)
 
 ### Error & Edge Cases
 
-| Trigger | Behavior |
-|---|---|
-| Send tapped with empty / whitespace-only prompt | Send button is disabled; no error needed. |
-| Send tapped with prompt > 2000 chars | Inline counter under input turns red at 1900 chars; Send disabled at 2001+. |
-| /generate returns `invalid_input` | Toast: "Try rephrasing — keep it under a paragraph." Input preserved. |
-| /generate returns `invalid_spec` | Toast: "Hmm, I couldn't turn that into an app. Try a different idea or be more specific." Input preserved. |
-| /generate returns `prompt_too_large` | Toast: "Too much detail at once. Start with the basics — we can refine later." Input preserved. |
-| /generate returns `rate_limited` | Toast: "We're a bit busy right now. Try again in a minute." Input preserved. Send disabled for 60s with countdown. |
-| /generate returns `internal` | Toast: "Something went wrong on our end. Try again." Input preserved. |
-| Network drops during generation | Toast: "You went offline mid-generation. Your idea is saved here — try again when you're back." Spec attempt is not lost from the input. |
-| Magic link tapped with expired token | Sign-In screen with banner: "That link expired. Send a new one?" |
-| Magic link tapped with already-used token | Same as expired. |
-| User signs out from Settings (Phase 2) | Returns to Sign-In screen. Library cleared from device cache. |
+| Trigger                                         | Behavior                                                                                                                                 |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Send tapped with empty / whitespace-only prompt | Send button is disabled; no error needed.                                                                                                |
+| Send tapped with prompt > 2000 chars            | Inline counter under input turns red at 1900 chars; Send disabled at 2001+.                                                              |
+| /generate returns `invalid_input`               | Toast: "Try rephrasing — keep it under a paragraph." Input preserved.                                                                    |
+| /generate returns `invalid_spec`                | Toast: "Hmm, I couldn't turn that into an app. Try a different idea or be more specific." Input preserved.                               |
+| /generate returns `prompt_too_large`            | Toast: "Too much detail at once. Start with the basics — we can refine later." Input preserved.                                          |
+| /generate returns `rate_limited`                | Toast: "We're a bit busy right now. Try again in a minute." Input preserved. Send disabled for 60s with countdown.                       |
+| /generate returns `internal`                    | Toast: "Something went wrong on our end. Try again." Input preserved.                                                                    |
+| Network drops during generation                 | Toast: "You went offline mid-generation. Your idea is saved here — try again when you're back." Spec attempt is not lost from the input. |
+| Magic link tapped with expired token            | Sign-In screen with banner: "That link expired. Send a new one?"                                                                         |
+| Magic link tapped with already-used token       | Same as expired.                                                                                                                         |
+| User signs out from Settings (Phase 2)          | Returns to Sign-In screen. Library cleared from device cache.                                                                            |
 
 ---
 
@@ -152,6 +152,7 @@ AppRunner (identical render, instant — no LLM call)
 **Purpose:** Get the user authenticated with the lowest friction possible.
 
 **Layout (top → bottom):**
+
 - Top safe area
 - Logo / wordmark (small, centered, 64pt below safe area)
 - Headline (`text_xl`, `font_semibold`): "Make the apps in your head."
@@ -174,17 +175,20 @@ AppRunner (identical render, instant — no LLM call)
 | **Token expired/used** | Sign-In screen with banner above the form: "That link expired. Send a new one?" — banner has dismiss X. |
 
 **Interactions:**
+
 - Tap email field → keyboard rises, no autofocus on cold start (intentional — let the user breathe).
 - Tap Send → button enters sending state, request fires.
 - Tap "Resend" → restarts the flow.
 
 **Accessibility:**
+
 - Heading marked as `accessibilityRole="header"`.
 - Email input has `accessibilityLabel="Email address"`.
 - Send button label is dynamic: "Send magic link" / "Sending sign-in link" / "Resend sign-in link".
 - Error message announced via `accessibilityLiveRegion="polite"`.
 
 **Responsive (iPhone SE → iPhone Pro Max):**
+
 - Single column always. Logo + headline stay above the fold even on SE (vertical rhythm: 16pt between logo and headline, 8pt headline→subhead, 32pt subhead→input, 16pt input→button).
 
 ---
@@ -194,6 +198,7 @@ AppRunner (identical render, instant — no LLM call)
 **Purpose:** Show what the user has made. Get them into Chat fast.
 
 **Layout (top → bottom):**
+
 - Top safe area
 - Top bar: "Your apps" (text_lg, font_semibold, left-aligned) + Settings gear icon (right, hit target 44×44)
 - Hero CTA: full-width Card-shaped button, primary variant, content "✨ Create new app" (icon + text, 64pt tall). Sticky at top — does not scroll away.
@@ -216,18 +221,21 @@ AppRunner (identical render, instant — no LLM call)
 | **Error** | Hero CTA visible. Library list replaced with error state: small icon, "Couldn't load your library", "Pull to retry." |
 
 **Interactions:**
+
 - Tap "Create new app" → push Chat screen.
 - Tap library card → push AppRunner with that project.
 - Pull to refresh → re-fetches /projects.
 - Long-press card (Phase 2) — out of scope here, but reserve the gesture for Phase 2 Edit/Delete menu.
 
 **Accessibility:**
+
 - `accessibilityLabel` on each card: "Open <title>, created <time ago>".
 - Hero CTA: "Create a new app from a description".
 - Settings: "Settings".
 - Pull-to-refresh announces "Refreshed" / "No new apps".
 
 **Responsive:**
+
 - Single column, full-width cards. No grid layout at MVP.
 
 ---
@@ -237,6 +245,7 @@ AppRunner (identical render, instant — no LLM call)
 **Purpose:** Capture an idea. Show progress honestly. Get out of the way.
 
 **Layout (top → bottom):**
+
 - Top safe area
 - Top bar: ← back arrow + "New app" title + (no trailing element)
 - Empty area / message thread:
@@ -264,24 +273,28 @@ AppRunner (identical render, instant — no LLM call)
 | **Success** | Loading bubble dismissed; navigate to AppRunner with a brief modal-presentation animation (slide up from bottom). |
 | **Error** | Loading bubble replaced with assistant error bubble: bg=destructive-tint, content=error message per error map. Send button re-enabled. Input preserves the prompt for editing. |
 | **Offline at submit time** | Toast: "You're offline." Send button greyed. |
-| **Offline mid-generation** | Loading bubble updates: "Waiting for connection…" — when reconnected, the request is *not* automatically retried. We show a Retry button next to the user's bubble. (Anthropic calls aren't safely idempotent without a key.) |
+| **Offline mid-generation** | Loading bubble updates: "Waiting for connection…" — when reconnected, the request is _not_ automatically retried. We show a Retry button next to the user's bubble. (Anthropic calls aren't safely idempotent without a key.) |
 
 **Interactions:**
+
 - Input grows up to 5 lines, then scrolls internally.
 - Send button on filled-keyboard return key. (iOS hardware keyboard / iPad: Enter sends; Shift+Enter newline.)
 - Tap example prompt chip → pre-fills input → user can edit → tap Send.
 - Back arrow during loading → confirmation alert: "Cancel this generation?" → if confirmed, return to previous screen (Home), the generation completes server-side (no abort) and the project still gets created — visible in library on next refresh.
 
 **Accessibility:**
+
 - Input has `accessibilityLabel="App idea"`.
 - Send: "Send" / "Cancel" / dynamic per state.
 - Loading bubble updates announced via `accessibilityLiveRegion="polite"`.
 - Example chips: `accessibilityRole="button"`, label "Example: <chip text>".
 
 **Responsive:**
+
 - Welcome card stacks chips vertically on small screens.
 
 **Reduced Motion:**
+
 - The bubble entrance animation collapses to instant opacity change.
 - The loading bubble's progress-text transitions are crossfade-only (no slide).
 
@@ -289,9 +302,10 @@ AppRunner (identical render, instant — no LLM call)
 
 ### Screen 4: AppRunner
 
-**Purpose:** Render the user's generated app. Stay out of the way of *their* app.
+**Purpose:** Render the user's generated app. Stay out of the way of _their_ app.
 
 **Layout:**
+
 - Top safe area
 - Top bar: ← back arrow + auto-derived title (`text_md`, `font_semibold`, ellipsize) + (no trailing element this slice — Phase 2 adds Edit and Share)
 - Body: scroll view containing the rendered A2UI tree, padded with `lg` on left/right and `md` on top/bottom
@@ -307,12 +321,14 @@ AppRunner (identical render, instant — no LLM call)
 | **Render error** (spec invalid / unknown component / runtime exception) | Body replaced with apologetic error: icon + "This app didn't render correctly. Try recreating it." + button "Back to library". This is a P0 bug if it happens — we instrument it. |
 
 **Interactions:**
+
 - Pull to refresh — disabled. The spec is immutable per version; refresh would do nothing.
 - Back arrow — pop to Home.
 
 **A2UI component visual treatment** — see next section.
 
 **Accessibility:**
+
 - Top bar back arrow: "Back to library".
 - A2UI Heading: `accessibilityRole="header"`.
 - A2UI Button: `accessibilityRole="button"` + label = the button's text.
@@ -322,13 +338,14 @@ AppRunner (identical render, instant — no LLM call)
 - Toast: announced via live region.
 
 **Responsive:**
+
 - Container with `direction: row` wraps to `column` on narrow screens (<375pt) — to be confirmed in implementation.
 
 ---
 
 ## A2UI Catalog Visual Treatment
 
-This is the part that ships in *every app the user makes.* I'm picking a treatment that:
+This is the part that ships in _every app the user makes._ I'm picking a treatment that:
 
 1. **Looks intentional** — not Material, not Cupertino, not Tailwind defaults. Custom enough to be ours, not so custom it's distracting.
 2. **Scales gracefully** — heading hierarchy that works for a 1-screen tip calculator and a 4-screen routine tracker.
@@ -355,6 +372,7 @@ elevation:      shadow_sm  shadow_md  (used sparingly — flat-ish design)
 ### Color palette
 
 **Light:**
+
 ```
 bg.surface:        #ffffff
 bg.subtle:         #f6f7f9   (cards, sheets)
@@ -373,6 +391,7 @@ focus.ring:        #4f46e5  + alpha 0.4 outer glow
 ```
 
 **Dark:**
+
 ```
 bg.surface:        #0a0a0b
 bg.subtle:         #16181d
@@ -393,27 +412,27 @@ WCAG AA contrast verified for all text/bg pairs. `text.muted` on `bg.surface` = 
 
 ### Components
 
-| Component | Visual treatment |
-|---|---|
-| **Heading** | `level: 1` → display style, padding-top: lg. `level: 2` → heading-1 + padding-top: md. `level: 3` → heading-2 + padding-top: sm. Always full-width left-aligned. |
-| **Text** | body. `weight: bold` → body-strong. `color: muted` → text.muted. `color: destructive` → text.destructive. |
-| **Image** | radius: md. If `aspectRatio` provided, locked. Otherwise, max-height: 240pt with letterbox bg.subtle. |
-| **Button** | Padding 12pt vertical / 20pt horizontal. radius: md. `variant: primary` → bg.primary + primary.fg. `variant: secondary` → bg.subtle + text.primary + border.subtle. `variant: destructive` → bg.destructive + destructive.fg. Pressed state: 8% darken via overlay. Haptic: `Haptics.impactAsync(Light)` on press success. |
-| **TextInput** | radius: md, border.subtle, padding 12pt vertical / 14pt horizontal. Label sits above input, caption-style. Focus state: border becomes primary, focus.ring outer glow. Multi-line: 5-line max, then internal scroll. |
-| **Toggle** | iOS-native switch via React Native `Switch` with `trackColor` set to primary when on, border.strong when off. Label sits to the left, full-width row, 56pt min height for hit target. |
-| **Counter** | Three-element row: `−` button (secondary variant, square 44pt), value (heading-2 style, center, min-width 60pt), `+` button (secondary variant, square 44pt). Label above. Disabled state for buttons at min/max. Haptic: light impact on inc/dec. |
-| **List** | Vertical stack with `md` gap by default. `separator: true` → bg.subtle 1px lines between items, no gap. |
-| **Form** | Vertical stack with `md` gap between fields. `submitLabel` button at the bottom, full-width, primary variant. `submitAction` fires on press. |
-| **Container** | Flexbox with the requested direction. Padding from token. Gap from token. align/justify map to flexbox. |
+| Component     | Visual treatment                                                                                                                                                                                                                                                                                                           |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Heading**   | `level: 1` → display style, padding-top: lg. `level: 2` → heading-1 + padding-top: md. `level: 3` → heading-2 + padding-top: sm. Always full-width left-aligned.                                                                                                                                                           |
+| **Text**      | body. `weight: bold` → body-strong. `color: muted` → text.muted. `color: destructive` → text.destructive.                                                                                                                                                                                                                  |
+| **Image**     | radius: md. If `aspectRatio` provided, locked. Otherwise, max-height: 240pt with letterbox bg.subtle.                                                                                                                                                                                                                      |
+| **Button**    | Padding 12pt vertical / 20pt horizontal. radius: md. `variant: primary` → bg.primary + primary.fg. `variant: secondary` → bg.subtle + text.primary + border.subtle. `variant: destructive` → bg.destructive + destructive.fg. Pressed state: 8% darken via overlay. Haptic: `Haptics.impactAsync(Light)` on press success. |
+| **TextInput** | radius: md, border.subtle, padding 12pt vertical / 14pt horizontal. Label sits above input, caption-style. Focus state: border becomes primary, focus.ring outer glow. Multi-line: 5-line max, then internal scroll.                                                                                                       |
+| **Toggle**    | iOS-native switch via React Native `Switch` with `trackColor` set to primary when on, border.strong when off. Label sits to the left, full-width row, 56pt min height for hit target.                                                                                                                                      |
+| **Counter**   | Three-element row: `−` button (secondary variant, square 44pt), value (heading-2 style, center, min-width 60pt), `+` button (secondary variant, square 44pt). Label above. Disabled state for buttons at min/max. Haptic: light impact on inc/dec.                                                                         |
+| **List**      | Vertical stack with `md` gap by default. `separator: true` → bg.subtle 1px lines between items, no gap.                                                                                                                                                                                                                    |
+| **Form**      | Vertical stack with `md` gap between fields. `submitLabel` button at the bottom, full-width, primary variant. `submitAction` fires on press.                                                                                                                                                                               |
+| **Container** | Flexbox with the requested direction. Padding from token. Gap from token. align/justify map to flexbox.                                                                                                                                                                                                                    |
 
 ### Action feedback
 
-| Action | Feedback |
-|---|---|
-| `set` | If the target is a TextInput → field updates visually. If Counter → number updates with a brief scale animation (1.0 → 1.1 → 1.0, 200ms). If Toggle → switch animates. |
-| `increment` / `decrement` | Counter value updates; button momentarily shows a darker pressed state. Light haptic. |
-| `toast` | Top toast slides down from below safe area — surface color, body-strong text, `md` padding, auto-dismiss 3s. Dark variant in dark theme. |
-| `navigate` | Crossfade between views inside the AppRunner body, 250ms. |
+| Action                    | Feedback                                                                                                                                                               |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `set`                     | If the target is a TextInput → field updates visually. If Counter → number updates with a brief scale animation (1.0 → 1.1 → 1.0, 200ms). If Toggle → switch animates. |
+| `increment` / `decrement` | Counter value updates; button momentarily shows a darker pressed state. Light haptic.                                                                                  |
+| `toast`                   | Top toast slides down from below safe area — surface color, body-strong text, `md` padding, auto-dismiss 3s. Dark variant in dark theme.                               |
+| `navigate`                | Crossfade between views inside the AppRunner body, 250ms.                                                                                                              |
 
 ---
 
@@ -421,20 +440,20 @@ WCAG AA contrast verified for all text/bg pairs. `text.muted` on `bg.surface` = 
 
 ### App-shell components (in `apps/mobile/src/components/`)
 
-| Component | Status | Notes |
-|---|---|---|
-| `Logo` | New | Small wordmark "App Creator" — type-only at MVP, no graphic mark yet |
-| `Button` (shell version) | New | Primary, secondary, destructive variants. Mirrors the A2UI Button visual but lives in the shell layer |
-| `TextInput` (shell version) | New | Email, multi-line variants. Distinct from A2UI TextInput (different label placement, different states) |
-| `Card` | New | Library card variant. Tappable. |
-| `EmptyState` | New | Icon + headline + subhead + optional CTA |
-| `Skeleton` | New | Shimmer animation for loading states |
-| `Toast` | New | Top-of-screen, auto-dismiss, queue-aware |
-| `LoadingBubble` | New | Chat-specific. Animated dots + dynamic progress text |
-| `ChatBubble` | New | User vs assistant variants |
-| `ExamplePromptChip` | New | Tappable rounded-full pills with chevron |
-| `BackButton` | New | Standard ← chevron, hit target 44pt |
-| `SafeContainer` | New | Wraps every screen, applies safe area insets + bg.surface |
+| Component                   | Status | Notes                                                                                                  |
+| --------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
+| `Logo`                      | New    | Small wordmark "App Creator" — type-only at MVP, no graphic mark yet                                   |
+| `Button` (shell version)    | New    | Primary, secondary, destructive variants. Mirrors the A2UI Button visual but lives in the shell layer  |
+| `TextInput` (shell version) | New    | Email, multi-line variants. Distinct from A2UI TextInput (different label placement, different states) |
+| `Card`                      | New    | Library card variant. Tappable.                                                                        |
+| `EmptyState`                | New    | Icon + headline + subhead + optional CTA                                                               |
+| `Skeleton`                  | New    | Shimmer animation for loading states                                                                   |
+| `Toast`                     | New    | Top-of-screen, auto-dismiss, queue-aware                                                               |
+| `LoadingBubble`             | New    | Chat-specific. Animated dots + dynamic progress text                                                   |
+| `ChatBubble`                | New    | User vs assistant variants                                                                             |
+| `ExamplePromptChip`         | New    | Tappable rounded-full pills with chevron                                                               |
+| `BackButton`                | New    | Standard ← chevron, hit target 44pt                                                                    |
+| `SafeContainer`             | New    | Wraps every screen, applies safe area insets + bg.surface                                              |
 
 ### A2UI catalog components (in `packages/a2ui-renderer/`)
 
@@ -444,68 +463,68 @@ All 10. Listed above. **All new.** All snapshot-tested per ARCHITECTURE.md §6 +
 
 ## Content & Copy
 
-| Element | Copy | Notes |
-|---|---|---|
-| App name (header) | "App Creator" | Working title; brand pass is Phase 2 |
-| Sign-In headline | "Make the apps in your head." | Aspirational, short |
-| Sign-In subhead | "Describe an idea. Get a real app." | The promise, in 7 words |
-| Sign-In email label | "Email" | — |
-| Sign-In primary button | "Send magic link" | Plain, action-first |
-| Sign-In sending button | "Sending…" | Past-tense feel for the wait |
-| Sign-In sent headline | "Check your inbox" | Imperative, friendly |
-| Sign-In sent subhead | "We sent a sign-in link to **{email}**." | Bold the email so they verify it |
-| Sign-In resend button | "Resend" | After 30s cooldown |
-| Sign-In expired-link banner | "That link expired. Send a new one?" | Non-judgmental, action embedded |
-| Sign-In footer | "We'll email you a one-tap sign-in link. No password." | Reassures the no-password path |
-| Home title | "Your apps" | Possessive, ownership-forward |
-| Home empty headline | "Your library is empty." | Factual |
-| Home empty subhead | "Tap **Create new app** to make your first one. It takes about a minute." | Sets expectation |
-| Home CTA | "✨ Create new app" | Sparkle for delight, "Create" not "New" |
-| Home time-ago | "Created {time}" | Where {time} is "just now", "5 minutes ago", "yesterday", "3 days ago", "a week ago" |
-| Home library error | "Couldn't load your library." | Honest |
-| Home library error CTA | "Pull to retry." | Mechanism instruction |
-| Chat title | "New app" | Anonymous; no opinion yet |
-| Chat welcome headline | "What do you want to build?" | Open question |
-| Chat example chip 1 | "A tip splitter for my favorite coffee shop" | Concrete + personal |
-| Chat example chip 2 | "A morning routine tracker with three habits" | Concrete + personal |
-| Chat example chip 3 | "A simple expense logger" | Different domain |
-| Chat input placeholder | "Describe your app idea…" | One sentence, ellipsis hint at chat-style brevity |
-| Chat send button (a11y) | "Send" | — |
-| Loading message 0–5s | "Reading your idea…" | First-person assistant voice |
-| Loading message 5–20s | "Picking components…" | Hints at *how* |
-| Loading message 20–90s | "Putting it together…" | Verb in progress |
-| Loading message >90s | "Almost there…" | Rare; soothing |
-| Error: invalid_input | "Try rephrasing — keep it under a paragraph." | Specific guidance |
-| Error: invalid_spec | "Hmm, I couldn't turn that into an app. Try a different idea or be more specific." | Apologetic + actionable |
-| Error: prompt_too_large | "Too much detail at once. Start with the basics — we can refine later." | Hints at edit-by-chat (Phase 2) |
-| Error: rate_limited | "We're a bit busy right now. Try again in a minute." | Honest about backend pressure |
-| Error: internal | "Something went wrong on our end. Try again." | Standard 500 copy |
-| Error: offline (at send) | "You're offline." | Bare |
-| Error: offline (mid-gen) | "Waiting for connection…" | Then becomes a Retry button when restored |
-| Cancel-during-generation alert title | "Cancel this generation?" | — |
-| Cancel-during-generation alert body | "It's almost done — leaving will lose progress." | Friction toward staying |
-| Cancel-during-generation primary | "Keep waiting" | Default |
-| Cancel-during-generation secondary | "Cancel" | Destructive-styled |
-| AppRunner top-bar Done button (a11y) | "Done — return to library" | — |
-| AppRunner render-error headline | "This app didn't render correctly." | Honest |
-| AppRunner render-error CTA | "Back to library" | — |
-| AppRunner saved-toast | "Saved to your library" | Auto-dismisses 2s |
+| Element                              | Copy                                                                               | Notes                                                                                |
+| ------------------------------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| App name (header)                    | "App Creator"                                                                      | Working title; brand pass is Phase 2                                                 |
+| Sign-In headline                     | "Make the apps in your head."                                                      | Aspirational, short                                                                  |
+| Sign-In subhead                      | "Describe an idea. Get a real app."                                                | The promise, in 7 words                                                              |
+| Sign-In email label                  | "Email"                                                                            | —                                                                                    |
+| Sign-In primary button               | "Send magic link"                                                                  | Plain, action-first                                                                  |
+| Sign-In sending button               | "Sending…"                                                                         | Past-tense feel for the wait                                                         |
+| Sign-In sent headline                | "Check your inbox"                                                                 | Imperative, friendly                                                                 |
+| Sign-In sent subhead                 | "We sent a sign-in link to **{email}**."                                           | Bold the email so they verify it                                                     |
+| Sign-In resend button                | "Resend"                                                                           | After 30s cooldown                                                                   |
+| Sign-In expired-link banner          | "That link expired. Send a new one?"                                               | Non-judgmental, action embedded                                                      |
+| Sign-In footer                       | "We'll email you a one-tap sign-in link. No password."                             | Reassures the no-password path                                                       |
+| Home title                           | "Your apps"                                                                        | Possessive, ownership-forward                                                        |
+| Home empty headline                  | "Your library is empty."                                                           | Factual                                                                              |
+| Home empty subhead                   | "Tap **Create new app** to make your first one. It takes about a minute."          | Sets expectation                                                                     |
+| Home CTA                             | "✨ Create new app"                                                                | Sparkle for delight, "Create" not "New"                                              |
+| Home time-ago                        | "Created {time}"                                                                   | Where {time} is "just now", "5 minutes ago", "yesterday", "3 days ago", "a week ago" |
+| Home library error                   | "Couldn't load your library."                                                      | Honest                                                                               |
+| Home library error CTA               | "Pull to retry."                                                                   | Mechanism instruction                                                                |
+| Chat title                           | "New app"                                                                          | Anonymous; no opinion yet                                                            |
+| Chat welcome headline                | "What do you want to build?"                                                       | Open question                                                                        |
+| Chat example chip 1                  | "A tip splitter for my favorite coffee shop"                                       | Concrete + personal                                                                  |
+| Chat example chip 2                  | "A morning routine tracker with three habits"                                      | Concrete + personal                                                                  |
+| Chat example chip 3                  | "A simple expense logger"                                                          | Different domain                                                                     |
+| Chat input placeholder               | "Describe your app idea…"                                                          | One sentence, ellipsis hint at chat-style brevity                                    |
+| Chat send button (a11y)              | "Send"                                                                             | —                                                                                    |
+| Loading message 0–5s                 | "Reading your idea…"                                                               | First-person assistant voice                                                         |
+| Loading message 5–20s                | "Picking components…"                                                              | Hints at _how_                                                                       |
+| Loading message 20–90s               | "Putting it together…"                                                             | Verb in progress                                                                     |
+| Loading message >90s                 | "Almost there…"                                                                    | Rare; soothing                                                                       |
+| Error: invalid_input                 | "Try rephrasing — keep it under a paragraph."                                      | Specific guidance                                                                    |
+| Error: invalid_spec                  | "Hmm, I couldn't turn that into an app. Try a different idea or be more specific." | Apologetic + actionable                                                              |
+| Error: prompt_too_large              | "Too much detail at once. Start with the basics — we can refine later."            | Hints at edit-by-chat (Phase 2)                                                      |
+| Error: rate_limited                  | "We're a bit busy right now. Try again in a minute."                               | Honest about backend pressure                                                        |
+| Error: internal                      | "Something went wrong on our end. Try again."                                      | Standard 500 copy                                                                    |
+| Error: offline (at send)             | "You're offline."                                                                  | Bare                                                                                 |
+| Error: offline (mid-gen)             | "Waiting for connection…"                                                          | Then becomes a Retry button when restored                                            |
+| Cancel-during-generation alert title | "Cancel this generation?"                                                          | —                                                                                    |
+| Cancel-during-generation alert body  | "It's almost done — leaving will lose progress."                                   | Friction toward staying                                                              |
+| Cancel-during-generation primary     | "Keep waiting"                                                                     | Default                                                                              |
+| Cancel-during-generation secondary   | "Cancel"                                                                           | Destructive-styled                                                                   |
+| AppRunner top-bar Done button (a11y) | "Done — return to library"                                                         | —                                                                                    |
+| AppRunner render-error headline      | "This app didn't render correctly."                                                | Honest                                                                               |
+| AppRunner render-error CTA           | "Back to library"                                                                  | —                                                                                    |
+| AppRunner saved-toast                | "Saved to your library"                                                            | Auto-dismisses 2s                                                                    |
 
 ---
 
 ## Iconography
 
-| Icon | Source | Use |
-|---|---|---|
-| `arrow-left` | lucide-react-native (sanctioned, ARCHITECTURE.md §14 — confirm with Cal) | Back navigation |
-| `send` (paper-plane) | lucide | Chat send button |
-| `sparkles` | lucide | Hero CTA, brand moments |
-| `settings` (gear) | lucide | Home top bar |
-| `chevron-right` | lucide | Library card affordance |
-| `check-circle` | lucide | Sign-in success |
-| `alert-triangle` | lucide | Error states |
-| `wifi-off` | lucide | Offline indicator |
-| `plus` / `minus` | lucide | A2UI Counter buttons |
+| Icon                 | Source                                                                   | Use                     |
+| -------------------- | ------------------------------------------------------------------------ | ----------------------- |
+| `arrow-left`         | lucide-react-native (sanctioned, ARCHITECTURE.md §14 — confirm with Cal) | Back navigation         |
+| `send` (paper-plane) | lucide                                                                   | Chat send button        |
+| `sparkles`           | lucide                                                                   | Hero CTA, brand moments |
+| `settings` (gear)    | lucide                                                                   | Home top bar            |
+| `chevron-right`      | lucide                                                                   | Library card affordance |
+| `check-circle`       | lucide                                                                   | Sign-in success         |
+| `alert-triangle`     | lucide                                                                   | Error states            |
+| `wifi-off`           | lucide                                                                   | Offline indicator       |
+| `plus` / `minus`     | lucide                                                                   | A2UI Counter buttons    |
 
 If `lucide-react-native` isn't already sanctioned in §14, Cal needs to add it. It's the lightest mainstream RN icon set; using `expo/vector-icons` is also acceptable (already comes with Expo).
 
@@ -515,19 +534,19 @@ If `lucide-react-native` isn't already sanctioned in §14, Cal needs to add it. 
 
 All animations respect `accessibilityReduceMotion`. Static fallbacks as noted.
 
-| Element | Motion | Reduced |
-|---|---|---|
-| Screen transitions | iOS push/pop default (slide horizontal) | Crossfade |
-| Modal screen (AppRunner from Chat) | Slide up from bottom, 300ms ease-out | Crossfade |
-| Chat bubble entrance | Fade + 8pt translate-up, 200ms | Fade only |
-| Loading bubble dots | Three dots ping in sequence, 1.2s loop | Static dots, no animation |
-| Loading message text change | Crossfade, 200ms | Crossfade (already minimal) |
-| Toast appearance | Slide down + fade, 250ms | Fade only |
-| Counter increment | Scale 1.0→1.1→1.0 on the value, 200ms | No scale; instant value swap |
-| Toggle | Native iOS switch animation | Native iOS handles reduced-motion |
-| Skeleton shimmer | Linear gradient sweep, 1.5s loop | Static grey blocks |
-| Pull-to-refresh | iOS-native | iOS-native |
-| Button press | 8% darken overlay, 100ms | Same (subtle enough) |
+| Element                            | Motion                                  | Reduced                           |
+| ---------------------------------- | --------------------------------------- | --------------------------------- |
+| Screen transitions                 | iOS push/pop default (slide horizontal) | Crossfade                         |
+| Modal screen (AppRunner from Chat) | Slide up from bottom, 300ms ease-out    | Crossfade                         |
+| Chat bubble entrance               | Fade + 8pt translate-up, 200ms          | Fade only                         |
+| Loading bubble dots                | Three dots ping in sequence, 1.2s loop  | Static dots, no animation         |
+| Loading message text change        | Crossfade, 200ms                        | Crossfade (already minimal)       |
+| Toast appearance                   | Slide down + fade, 250ms                | Fade only                         |
+| Counter increment                  | Scale 1.0→1.1→1.0 on the value, 200ms   | No scale; instant value swap      |
+| Toggle                             | Native iOS switch animation             | Native iOS handles reduced-motion |
+| Skeleton shimmer                   | Linear gradient sweep, 1.5s loop        | Static grey blocks                |
+| Pull-to-refresh                    | iOS-native                              | iOS-native                        |
+| Button press                       | 8% darken overlay, 100ms                | Same (subtle enough)              |
 
 ---
 
@@ -535,26 +554,26 @@ All animations respect `accessibilityReduceMotion`. Static fallbacks as noted.
 
 - Light + dark themes both ship at MVP. Toggle (Phase 2) defaults to system preference.
 - All color decisions go through theme tokens. No hardcoded hex values in component code.
-- Dark theme is *true dark* (#0a0a0b background), not "almost-dark grey" — looks better at night, saves OLED battery.
+- Dark theme is _true dark_ (#0a0a0b background), not "almost-dark grey" — looks better at night, saves OLED battery.
 - Accent (primary) shifts hue between light and dark for contrast — light uses indigo-600, dark uses indigo-400. Both feel "the same color" subjectively despite different hex values.
 
 ---
 
 ## Design Decisions & Rationale
 
-| Decision | Why | Alternative considered |
-|---|---|---|
-| Magic-link auth, not Apple/Google sign-in | One persona = personal individual. Magic link is universally available, requires no SDK setup, no Apple/Google account on the test device. | Apple/Google: deferred to Phase 2 when we cross the App Store review threshold. |
-| Empty Chat with example prompts (not blank) | Idea-makers face blank-page paralysis. Concrete starters lower activation energy. | Blank input: rejected — too cold. Question wizard: rejected — kills conversational tone. |
-| 3-stage progress messaging during generation | 90s is long. A static spinner reads "stuck" after 15s. Honest staged messaging keeps user engaged without faking real progress. | Real progress bar: rejected — we don't have streaming events to drive it accurately. Static spinner only: rejected — feels broken. |
-| Cancel-during-generation triggers confirmation, but server-side request continues | We can't safely abort an Anthropic call mid-flight (no idempotency). Better to let it finish, save the project, surface it next refresh — never lose user work. | Hard cancel: rejected — wastes the LLM cost AND fails to deliver the user's idea. |
-| AppRunner uses modal-style slide-up (not standard push) | The transition Chat → AppRunner is "your idea became real" — that's a moment. Slide-up gives it weight. The library push transition stays standard. | Standard push: rejected — flattens the magic moment. |
-| Custom indigo primary, not iOS system blue | The catalog's button style ships in *every generated app.* iOS blue would make every generated app look like a Settings menu. Custom-but-restrained indigo signals "this is a thing I made." | iOS system blue: rejected — too system-y. Bright/playful color: rejected — looks unserious for the small-business persona we may add later. |
-| Light + dark both at MVP | Most of the work (token-based theming) is paid up front; not adding dark later costs more than building it now. | Light only: rejected — looks unfinished on modern iOS. |
-| Lucide icons over SF Symbols | SF Symbols ties us to iOS forever; lucide is portable to Android in M2 with no design rework. | SF Symbols: rejected for portability. |
-| No bottom tab bar at MVP | Three screens don't need it. Top-bar back nav is sufficient and keeps the AppRunner full-bleed. | Tabs: premature for 3 screens. |
-| Library cards are list rows, not grid tiles | Cards need title + time-ago without a thumbnail (we don't render previews yet). Rows handle text-heavy content better. | Grid: rejected — would need preview images to look good, deferred to Phase 2. |
-| Streaming generation deferred (per spec) | Robert scoped it out. The 3-stage progress UX is *only acceptable* because we know streaming lands soon. If streaming slips past Phase 2, revisit. | Stream now: out of spec. |
+| Decision                                                                          | Why                                                                                                                                                                                          | Alternative considered                                                                                                                      |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Magic-link auth, not Apple/Google sign-in                                         | One persona = personal individual. Magic link is universally available, requires no SDK setup, no Apple/Google account on the test device.                                                   | Apple/Google: deferred to Phase 2 when we cross the App Store review threshold.                                                             |
+| Empty Chat with example prompts (not blank)                                       | Idea-makers face blank-page paralysis. Concrete starters lower activation energy.                                                                                                            | Blank input: rejected — too cold. Question wizard: rejected — kills conversational tone.                                                    |
+| 3-stage progress messaging during generation                                      | 90s is long. A static spinner reads "stuck" after 15s. Honest staged messaging keeps user engaged without faking real progress.                                                              | Real progress bar: rejected — we don't have streaming events to drive it accurately. Static spinner only: rejected — feels broken.          |
+| Cancel-during-generation triggers confirmation, but server-side request continues | We can't safely abort an Anthropic call mid-flight (no idempotency). Better to let it finish, save the project, surface it next refresh — never lose user work.                              | Hard cancel: rejected — wastes the LLM cost AND fails to deliver the user's idea.                                                           |
+| AppRunner uses modal-style slide-up (not standard push)                           | The transition Chat → AppRunner is "your idea became real" — that's a moment. Slide-up gives it weight. The library push transition stays standard.                                          | Standard push: rejected — flattens the magic moment.                                                                                        |
+| Custom indigo primary, not iOS system blue                                        | The catalog's button style ships in _every generated app._ iOS blue would make every generated app look like a Settings menu. Custom-but-restrained indigo signals "this is a thing I made." | iOS system blue: rejected — too system-y. Bright/playful color: rejected — looks unserious for the small-business persona we may add later. |
+| Light + dark both at MVP                                                          | Most of the work (token-based theming) is paid up front; not adding dark later costs more than building it now.                                                                              | Light only: rejected — looks unfinished on modern iOS.                                                                                      |
+| Lucide icons over SF Symbols                                                      | SF Symbols ties us to iOS forever; lucide is portable to Android in M2 with no design rework.                                                                                                | SF Symbols: rejected for portability.                                                                                                       |
+| No bottom tab bar at MVP                                                          | Three screens don't need it. Top-bar back nav is sufficient and keeps the AppRunner full-bleed.                                                                                              | Tabs: premature for 3 screens.                                                                                                              |
+| Library cards are list rows, not grid tiles                                       | Cards need title + time-ago without a thumbnail (we don't render previews yet). Rows handle text-heavy content better.                                                                       | Grid: rejected — would need preview images to look good, deferred to Phase 2.                                                               |
+| Streaming generation deferred (per spec)                                          | Robert scoped it out. The 3-stage progress UX is _only acceptable_ because we know streaming lands soon. If streaming slips past Phase 2, revisit.                                           | Stream now: out of spec.                                                                                                                    |
 
 ---
 

@@ -76,14 +76,8 @@ export function Button({
       ]}
     >
       <View style={styles.content}>
-        {loading ? (
-          <ActivityIndicator color={colors.fg} style={styles.spinner} />
-        ) : null}
-        <Text
-          style={[styles.label, theme.typography.bodyStrong, {color: colors.fg}]}
-        >
-          {label}
-        </Text>
+        {loading ? <ActivityIndicator color={colors.fg} style={styles.spinner} /> : null}
+        <Text style={[styles.label, theme.typography.bodyStrong, {color: colors.fg}]}>{label}</Text>
       </View>
     </Pressable>
   )

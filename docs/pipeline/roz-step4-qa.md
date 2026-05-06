@@ -1,54 +1,55 @@
 ## QA Report — Step 4 of ADR-0001
-*Reviewed by Roz, 2026-05-01*
+
+_Reviewed by Roz, 2026-05-01_
 
 ### Verdict: PASS
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | `pnpm typecheck` — all 4 workspaces clean (api, a2ui-schema, a2ui-renderer, mobile). |
-| Lint | PASS | `pnpm lint` — eslint clean, no output. |
-| Tests | PASS | 42/42 Step 4 (15 service + 11 routes + 16 specValidation across 3 suites) / 97/97 full server (matches Step 3 count of 55 + Step 4 of 42). |
-| Coverage (proxy) | PASS | Every Step 4 T-ID maps to a non-tautological assertion; 071/072 correctly N/A. |
-| Complexity | PASS | `projects.service.ts` 243 LOC, longest function `create` 47 LOC, nesting ≤3; `specValidation.ts` 171 LOC, longest 18 LOC; `projects.ts` (route) 163 LOC, longest handler 58 LOC, nesting ≤3; `canonical.ts` 18 LOC. All within thresholds. |
-| Security | PASS | No hardcoded secrets. Zero `console.*` introduced in Step 4 source (env.ts:91 boot fail-fast remains the only allowed call site; migrate.ts:113/117 are Step 1 CLI carry-over). All response bodies key-strict via Ajv `additionalProperties: false`. Email never written to any logger field — verified by Pino-spy substring scan in T-0001-063 and T-0001-120. specJson never present in list responses (3-layer defense, see below) and never in audit logs. Drizzle parameterization upheld in projectsService (`.values({...})` + `.where(eq(...))`); zero string concatenation. 404 not 403 confirmed for cross-user reads. Token never echoed in error bodies (key-strict 400/401/404/500). |
-| Steps 1-3 regression | PASS | schema 16/16, lib auth 15/15, routes auth 20/20, users.service 3/3, health 1/1 — all green. a2ui-schema package 5/5 still pass after `canonicalize`/`renderHash` re-export added to `src/index.ts`. |
+| Check                | Status | Details                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| -------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type Check           | PASS   | `pnpm typecheck` — all 4 workspaces clean (api, a2ui-schema, a2ui-renderer, mobile).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| Lint                 | PASS   | `pnpm lint` — eslint clean, no output.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Tests                | PASS   | 42/42 Step 4 (15 service + 11 routes + 16 specValidation across 3 suites) / 97/97 full server (matches Step 3 count of 55 + Step 4 of 42).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Coverage (proxy)     | PASS   | Every Step 4 T-ID maps to a non-tautological assertion; 071/072 correctly N/A.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| Complexity           | PASS   | `projects.service.ts` 243 LOC, longest function `create` 47 LOC, nesting ≤3; `specValidation.ts` 171 LOC, longest 18 LOC; `projects.ts` (route) 163 LOC, longest handler 58 LOC, nesting ≤3; `canonical.ts` 18 LOC. All within thresholds.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Security             | PASS   | No hardcoded secrets. Zero `console.*` introduced in Step 4 source (env.ts:91 boot fail-fast remains the only allowed call site; migrate.ts:113/117 are Step 1 CLI carry-over). All response bodies key-strict via Ajv `additionalProperties: false`. Email never written to any logger field — verified by Pino-spy substring scan in T-0001-063 and T-0001-120. specJson never present in list responses (3-layer defense, see below) and never in audit logs. Drizzle parameterization upheld in projectsService (`.values({...})` + `.where(eq(...))`); zero string concatenation. 404 not 403 confirmed for cross-user reads. Token never echoed in error bodies (key-strict 400/401/404/500). |
+| Steps 1-3 regression | PASS   | schema 16/16, lib auth 15/15, routes auth 20/20, users.service 3/3, health 1/1 — all green. a2ui-schema package 5/5 still pass after `canonicalize`/`renderHash` re-export added to `src/index.ts`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ### AC Coverage trace
 
-| AC (ADR §Step 4) | Test ID | Status |
-|---|---|---|
-| `create` writes 1 project + 1 version in single tx | T-0001-049 | PASS — service.test.ts:69 asserts both row counts post-call + currentVersionId points at the version id |
-| Title auto-derives from first Heading | T-0001-050, 051 | PASS — service.test.ts:95, 104 |
-| Title whitespace-only fallback to "Untitled" | T-0001-121 | PASS — service.test.ts:216, asserts trim before fallback decision |
-| Title >60 chars truncated to 60 + ellipsis (length 61) | T-0001-059 | PASS — service.test.ts:205, asserts both `length === 61` and exact prefix |
-| `list` sorted by updatedAt DESC, owner-scoped | T-0001-052 | PASS — service.test.ts:113, three projects, asserts both id and title order |
-| `get` returns null for non-owner | T-0001-056 (service-side sanity at :347) | PASS — also covered by route layer T-0001-056/065 |
-| `GET /projects` 200 strict shape | T-0001-053 | PASS — routes.test.ts:202, Ajv `strict: true` + `additionalProperties: false` |
-| `GET /projects/:id` 200 strict shape | T-0001-054 | PASS — routes.test.ts:229, same Ajv discipline |
-| `GET /projects/:id` 404 not 403 for non-owner | T-0001-065 (combined with 056) | PASS — routes.test.ts:296, asserts statusCode 404 + body deep-equals `{error: 'not_found'}` + `Object.keys === ['error']` |
-| List excludes specJson | T-0001-064 | PASS — routes.test.ts:436, three-layer defense (see below) |
-| Concurrent create → 2 distinct projects, no FK violation | T-0001-067 | PASS — service.test.ts:276, `Promise.all` + assert distinct ids + distinct version ids + list count = 2 |
-| `parentProjectId` roundtrip create→list→get | T-0001-122 | PASS — routes.test.ts:255, fork projects asserted on both detail.project AND list-item shapes |
+| AC (ADR §Step 4)                                         | Test ID                                  | Status                                                                                                                    |
+| -------------------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `create` writes 1 project + 1 version in single tx       | T-0001-049                               | PASS — service.test.ts:69 asserts both row counts post-call + currentVersionId points at the version id                   |
+| Title auto-derives from first Heading                    | T-0001-050, 051                          | PASS — service.test.ts:95, 104                                                                                            |
+| Title whitespace-only fallback to "Untitled"             | T-0001-121                               | PASS — service.test.ts:216, asserts trim before fallback decision                                                         |
+| Title >60 chars truncated to 60 + ellipsis (length 61)   | T-0001-059                               | PASS — service.test.ts:205, asserts both `length === 61` and exact prefix                                                 |
+| `list` sorted by updatedAt DESC, owner-scoped            | T-0001-052                               | PASS — service.test.ts:113, three projects, asserts both id and title order                                               |
+| `get` returns null for non-owner                         | T-0001-056 (service-side sanity at :347) | PASS — also covered by route layer T-0001-056/065                                                                         |
+| `GET /projects` 200 strict shape                         | T-0001-053                               | PASS — routes.test.ts:202, Ajv `strict: true` + `additionalProperties: false`                                             |
+| `GET /projects/:id` 200 strict shape                     | T-0001-054                               | PASS — routes.test.ts:229, same Ajv discipline                                                                            |
+| `GET /projects/:id` 404 not 403 for non-owner            | T-0001-065 (combined with 056)           | PASS — routes.test.ts:296, asserts statusCode 404 + body deep-equals `{error: 'not_found'}` + `Object.keys === ['error']` |
+| List excludes specJson                                   | T-0001-064                               | PASS — routes.test.ts:436, three-layer defense (see below)                                                                |
+| Concurrent create → 2 distinct projects, no FK violation | T-0001-067                               | PASS — service.test.ts:276, `Promise.all` + assert distinct ids + distinct version ids + list count = 2                   |
+| `parentProjectId` roundtrip create→list→get              | T-0001-122                               | PASS — routes.test.ts:255, fork projects asserted on both detail.project AND list-item shapes                             |
 
 All 8 explicit AC bullets covered; no uncovered AC. Total Step 4 T-IDs verified: 28 ADR T-IDs + 14 sanity/internal cases = 42 tests, matches `--testPathPattern` count.
 
 ### normalizeRow defense (3 layers)
 
-| Layer | File:line | Verdict |
-|---|---|---|
-| Service (SELECT-explicit + type-level exclusion) | projects.service.ts:188–199 (explicit column list, no `select()` star), :55 (`Pick<Project, 'id'\|'title'\|'currentVersionId'\|'parentProjectId'>` — `specJson` cannot be in the type) | PASS |
-| Route (Ajv response-shape gate) | projects.ts:75–82 (route maps service items into a fixed key set), enforced at the test boundary by routes.test.ts:75–87 (projectListItemSchema with `additionalProperties: false`) | PASS |
-| Test (key-set assertion + Ajv) | routes.test.ts:454–472 (Ajv compile + `Object.keys(item).sort() === expectedKeys` allowlist + explicit `not.toHaveProperty('specJson')` and `not.toHaveProperty('ownerId')`) | PASS |
+| Layer                                            | File:line                                                                                                                                                                              | Verdict |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Service (SELECT-explicit + type-level exclusion) | projects.service.ts:188–199 (explicit column list, no `select()` star), :55 (`Pick<Project, 'id'\|'title'\|'currentVersionId'\|'parentProjectId'>` — `specJson` cannot be in the type) | PASS    |
+| Route (Ajv response-shape gate)                  | projects.ts:75–82 (route maps service items into a fixed key set), enforced at the test boundary by routes.test.ts:75–87 (projectListItemSchema with `additionalProperties: false`)    | PASS    |
+| Test (key-set assertion + Ajv)                   | routes.test.ts:454–472 (Ajv compile + `Object.keys(item).sort() === expectedKeys` allowlist + explicit `not.toHaveProperty('specJson')` and `not.toHaveProperty('ownerId')`)           | PASS    |
 
 Three layers, three independent signals. A future contributor adding `specJson` to the list-item shape would have to defeat: (1) the TS Pick type, (2) the route-layer key projection, (3) the test allowlist + explicit `not.toHaveProperty` + Ajv strict-mode. Cleanest defense in the codebase to date.
 
 ### userCount / response-shape strictness
 
-| Endpoint | T-ID | Strict-mode? | additionalProperties:false? |
-|---|---|---|---|
-| `GET /projects` (list) | T-0001-053, T-0001-064 | YES — `new Ajv({strict: true, allErrors: true})` at routes.test.ts:73 | YES on response root AND on list-item schema (lines 76, 91) |
-| `GET /projects/:id` (detail) | T-0001-054 | YES — same Ajv instance | YES on response root, on `project` sub-schema, AND on `currentVersion` sub-schema (lines 100, 122, 136) |
-| 4xx error bodies | T-0001-056, 057, 058, 065 | n/a (deep-equal) | YES — every error test asserts `Object.keys(body).sort() === ['error']` |
+| Endpoint                     | T-ID                      | Strict-mode?                                                          | additionalProperties:false?                                                                             |
+| ---------------------------- | ------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `GET /projects` (list)       | T-0001-053, T-0001-064    | YES — `new Ajv({strict: true, allErrors: true})` at routes.test.ts:73 | YES on response root AND on list-item schema (lines 76, 91)                                             |
+| `GET /projects/:id` (detail) | T-0001-054                | YES — same Ajv instance                                               | YES on response root, on `project` sub-schema, AND on `currentVersion` sub-schema (lines 100, 122, 136) |
+| 4xx error bodies             | T-0001-056, 057, 058, 065 | n/a (deep-equal)                                                      | YES — every error test asserts `Object.keys(body).sort() === ['error']`                                 |
 
 Adding any new field to either response without updating BOTH the schema AND the explicit key-set assertion will fail the test. Verified.
 

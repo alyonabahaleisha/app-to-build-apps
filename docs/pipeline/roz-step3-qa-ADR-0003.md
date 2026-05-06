@@ -1,17 +1,18 @@
 # QA Report — ADR-0003 Step 3: Image + Heading + Text + render.tsx coverage closure
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
 ---
 
-| Check | Status | Details |
-|-------|--------|---------|
-| Type Check | PASS | All 4 workspaces clean. |
-| Lint | PASS WITH NOTES | 0 errors. 54 `no-explicit-any` warnings — all intentional `toJSON()` casts. T-0003-006b 11/11. |
-| Tests | PASS | 120/120 in renderer package. 11 suites, 0 failures, 17 snapshots match. |
-| Coverage | PASS WITH NOTES | 100% stmts / 98.94% branches / 96.77% functions. render.tsx 100/100/100/100. Image.tsx 100/100/66.66/100. See Issue 1. |
-| Complexity | PASS | Image 88 LOC, Heading 69 LOC, Text 55 LOC. |
+| Check      | Status          | Details                                                                                                                |
+| ---------- | --------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Type Check | PASS            | All 4 workspaces clean.                                                                                                |
+| Lint       | PASS WITH NOTES | 0 errors. 54 `no-explicit-any` warnings — all intentional `toJSON()` casts. T-0003-006b 11/11.                         |
+| Tests      | PASS            | 120/120 in renderer package. 11 suites, 0 failures, 17 snapshots match.                                                |
+| Coverage   | PASS WITH NOTES | 100% stmts / 98.94% branches / 96.77% functions. render.tsx 100/100/100/100. Image.tsx 100/100/66.66/100. See Issue 1. |
+| Complexity | PASS            | Image 88 LOC, Heading 69 LOC, Text 55 LOC.                                                                             |
 
 ## T-ID Verification
 

@@ -99,10 +99,6 @@ export const secureStore = {
    * (T-0001-081).
    */
   async clear(): Promise<void> {
-    await Promise.all([
-      deleteOne('accessToken'),
-      deleteOne('refreshToken'),
-      deleteOne('userId'),
-    ])
+    await Promise.all([deleteOne('accessToken'), deleteOne('refreshToken'), deleteOne('userId')])
   },
 }

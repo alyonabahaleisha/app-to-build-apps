@@ -16,11 +16,7 @@ describe('HandleField', () => {
   describe('validation state indicators', () => {
     it('shows "✓ Available" helper text when validationState is available', () => {
       const {getByTestId} = render(
-        <HandleField
-          value="alice"
-          onChange={jest.fn()}
-          validationState="available"
-        />,
+        <HandleField value="alice" onChange={jest.fn()} validationState="available" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('✓ Available')
@@ -28,11 +24,7 @@ describe('HandleField', () => {
 
     it('shows "✗ Handle taken" helper text when validationState is taken', () => {
       const {getByTestId} = render(
-        <HandleField
-          value="alice"
-          onChange={jest.fn()}
-          validationState="taken"
-        />,
+        <HandleField value="alice" onChange={jest.fn()} validationState="taken" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('✗ Handle taken — try another')
@@ -40,11 +32,7 @@ describe('HandleField', () => {
 
     it('shows "✗ Handle reserved" helper text when validationState is reserved', () => {
       const {getByTestId} = render(
-        <HandleField
-          value="admin"
-          onChange={jest.fn()}
-          validationState="reserved"
-        />,
+        <HandleField value="admin" onChange={jest.fn()} validationState="reserved" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('✗ Handle reserved — try another')
@@ -52,11 +40,7 @@ describe('HandleField', () => {
 
     it('shows regex-fail copy when validationState is invalid', () => {
       const {getByTestId} = render(
-        <HandleField
-          value="x"
-          onChange={jest.fn()}
-          validationState="invalid"
-        />,
+        <HandleField value="x" onChange={jest.fn()} validationState="invalid" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('Use 3–20 lowercase letters, numbers, or dashes.')
@@ -64,11 +48,7 @@ describe('HandleField', () => {
 
     it('shows "Checking…" when validationState is checking', () => {
       const {getByTestId} = render(
-        <HandleField
-          value="alice"
-          onChange={jest.fn()}
-          validationState="checking"
-        />,
+        <HandleField value="alice" onChange={jest.fn()} validationState="checking" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('Checking…')
@@ -76,11 +56,7 @@ describe('HandleField', () => {
 
     it('shows default helper text when validationState is idle', () => {
       const {getByTestId} = render(
-        <HandleField
-          value=""
-          onChange={jest.fn()}
-          validationState="idle"
-        />,
+        <HandleField value="" onChange={jest.fn()} validationState="idle" />,
       )
       const helper = getByTestId('handle-field-helper')
       expect(helper.props.children).toBe('3–20 chars · letters, numbers, dashes')
@@ -98,19 +74,13 @@ describe('HandleField', () => {
       />,
     )
     const helper = getByTestId('handle-field-helper')
-    expect(helper.props.children).toBe(
-      'Handle taken — that one was just claimed. Try another.',
-    )
+    expect(helper.props.children).toBe('Handle taken — that one was just claimed. Try another.')
   })
 
   // T-0002-162: a11y hint describes immutability
   it('has accessibilityHint describing immutability on the text input', () => {
     const {getByTestId} = render(
-      <HandleField
-        value="alice"
-        onChange={jest.fn()}
-        validationState="idle"
-      />,
+      <HandleField value="alice" onChange={jest.fn()} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
     expect(input.props.accessibilityHint).toContain("can't change")
@@ -119,11 +89,7 @@ describe('HandleField', () => {
   // T-0002-162: a11y label present
   it('has accessibilityLabel "Your handle" on the text input', () => {
     const {getByTestId} = render(
-      <HandleField
-        value=""
-        onChange={jest.fn()}
-        validationState="idle"
-      />,
+      <HandleField value="" onChange={jest.fn()} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
     expect(input.props.accessibilityLabel).toBe('Your handle')
@@ -132,11 +98,7 @@ describe('HandleField', () => {
   // T-0002-159: accessibilityLiveRegion on helper
   it('has accessibilityLiveRegion="polite" on the helper text', () => {
     const {getByTestId} = render(
-      <HandleField
-        value="alice"
-        onChange={jest.fn()}
-        validationState="available"
-      />,
+      <HandleField value="alice" onChange={jest.fn()} validationState="available" />,
     )
     const helper = getByTestId('handle-field-helper')
     expect(helper.props.accessibilityLiveRegion).toBe('polite')
@@ -146,11 +108,7 @@ describe('HandleField', () => {
   it('calls onChange with the new value', () => {
     const onChange = jest.fn()
     const {getByTestId} = render(
-      <HandleField
-        value=""
-        onChange={onChange}
-        validationState="idle"
-      />,
+      <HandleField value="" onChange={onChange} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
     fireEvent.changeText(input, 'alice')

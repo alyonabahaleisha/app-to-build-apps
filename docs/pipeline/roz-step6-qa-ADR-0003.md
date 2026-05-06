@@ -1,22 +1,24 @@
 # QA Report — ADR-0003 Step 6: TextInput + Toggle
-*Reviewed by Roz — 2026-05-02*
+
+_Reviewed by Roz — 2026-05-02_
 
 ## Verdict: PASS WITH NOTES
 
-| Check | Status | Details |
-|---|---|---|
-| Type Check | PASS | All 4 workspaces clean. |
-| Lint | PASS WITH NOTES | 0 errors. 62 `no-explicit-any` warnings (pre-existing). Zero new warnings in Step 6 code. |
-| Tests | PASS | 193/193, 16 suites, 29 snapshots. |
-| Coverage | PASS WITH NOTES | 97.32% stmts / 94.25% branches. Both above thresholds. |
-| Complexity | PASS | TextInput.tsx 128 LOC, Toggle.tsx 131 LOC. CCN ≤ 5, nesting ≤ 3. |
-| Security | PASS | §G-4 PII rule enforced in both component warn-logs. |
+| Check      | Status          | Details                                                                                   |
+| ---------- | --------------- | ----------------------------------------------------------------------------------------- |
+| Type Check | PASS            | All 4 workspaces clean.                                                                   |
+| Lint       | PASS WITH NOTES | 0 errors. 62 `no-explicit-any` warnings (pre-existing). Zero new warnings in Step 6 code. |
+| Tests      | PASS            | 193/193, 16 suites, 29 snapshots.                                                         |
+| Coverage   | PASS WITH NOTES | 97.32% stmts / 94.25% branches. Both above thresholds.                                    |
+| Complexity | PASS            | TextInput.tsx 128 LOC, Toggle.tsx 131 LOC. CCN ≤ 5, nesting ≤ 3.                          |
+| Security   | PASS            | §G-4 PII rule enforced in both component warn-logs.                                       |
 
 ## All 21 Mandatory T-IDs Verified
 
 T-0003-082..097 (incl. 088b/c/d, 090b, 095b) all present.
 
 **Critical assertions verified:**
+
 - T-0003-088c (TextInput boolean state): payload contains `{id, expectedType:'string', actualType:'boolean'}`, `payloadStr.not.toContain('true')`, `not.toContain('"value"')`. PII clean.
 - T-0003-088d (focus border): `fireEvent(input, 'focus')` → border = `palette.primary`; blur → `palette.border.subtle`. Specific.
 - T-0003-095 (Toggle non-boolean): both string and number variants, `actualType` differs, actual value absent from payload.

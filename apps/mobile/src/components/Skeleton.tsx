@@ -34,7 +34,7 @@ export function Skeleton({width, height, radius, style, testID}: Props) {
   useEffect(() => {
     let mounted = true
     void AccessibilityInfo.isReduceMotionEnabled()
-      .then((v) => {
+      .then(v => {
         if (mounted) setReducedMotion(v)
       })
       .catch(() => {

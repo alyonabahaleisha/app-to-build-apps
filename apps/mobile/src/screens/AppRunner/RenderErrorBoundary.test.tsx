@@ -49,12 +49,7 @@ function renderBoundary(opts: {
   const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   const utils = render(
-    <RenderErrorBoundary
-      projectId={projectId}
-      renderHash={renderHash}
-      mode="owner"
-      onBack={onBack}
-    >
+    <RenderErrorBoundary projectId={projectId} renderHash={renderHash} mode="owner" onBack={onBack}>
       <Bomb shouldThrow={shouldThrow} />
     </RenderErrorBoundary>,
   )
@@ -110,12 +105,7 @@ describe('RenderErrorBoundary', () => {
   // T-0003-117: no error boundary on navigate-to-unknown-viewId
   it('T-0003-117: children render normally when no throw occurs', () => {
     const {getByTestId} = render(
-      <RenderErrorBoundary
-        projectId="proj"
-        renderHash="hash"
-        mode="owner"
-        onBack={jest.fn()}
-      >
+      <RenderErrorBoundary projectId="proj" renderHash="hash" mode="owner" onBack={jest.fn()}>
         {/* No throw — boundary should be transparent */}
         <></>
       </RenderErrorBoundary>,
@@ -141,9 +131,7 @@ describe('RenderErrorBoundary', () => {
     renderBoundary({shouldThrow: true, projectId: 'p1', renderHash: 'h1'})
 
     // Find the render_failed call
-    const renderFailedCall = mockLoggerError.mock.calls.find(
-      (call) => call[0] === 'render_failed',
-    )
+    const renderFailedCall = mockLoggerError.mock.calls.find(call => call[0] === 'render_failed')
     expect(renderFailedCall).toBeDefined()
     const payload = renderFailedCall![1] as Record<string, unknown>
 
@@ -159,12 +147,7 @@ describe('RenderErrorBoundary', () => {
   // Renders children normally when no error
   it('renders children when no error is thrown', () => {
     const {queryByTestId} = render(
-      <RenderErrorBoundary
-        projectId="p"
-        renderHash="h"
-        mode="owner"
-        onBack={jest.fn()}
-      >
+      <RenderErrorBoundary projectId="p" renderHash="h" mode="owner" onBack={jest.fn()}>
         <Bomb shouldThrow={false} />
       </RenderErrorBoundary>,
     )

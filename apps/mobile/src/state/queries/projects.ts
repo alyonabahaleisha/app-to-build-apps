@@ -95,21 +95,14 @@ export function parseProjectListResponse(raw: unknown): Project[] {
     if (!isStringField(p, 'createdAt')) {
       throw new ProjectListShapeError(`projects[${i}].createdAt missing`)
     }
-    if (
-      !isStringField(p, 'currentVersionId') ||
-      !UUID_RE.test(p.currentVersionId as string)
-    ) {
-      throw new ProjectListShapeError(
-        `projects[${i}].currentVersionId missing or not uuid`,
-      )
+    if (!isStringField(p, 'currentVersionId') || !UUID_RE.test(p.currentVersionId as string)) {
+      throw new ProjectListShapeError(`projects[${i}].currentVersionId missing or not uuid`)
     }
     // parentProjectId is nullable; accept null or a uuid string.
     const parent = p.parentProjectId
     if (parent !== null && parent !== undefined) {
       if (typeof parent !== 'string' || !UUID_RE.test(parent)) {
-        throw new ProjectListShapeError(
-          `projects[${i}].parentProjectId not uuid or null`,
-        )
+        throw new ProjectListShapeError(`projects[${i}].parentProjectId not uuid or null`)
       }
     }
     out.push({
@@ -118,7 +111,7 @@ export function parseProjectListResponse(raw: unknown): Project[] {
       updatedAt: p.updatedAt as string,
       createdAt: p.createdAt as string,
       currentVersionId: p.currentVersionId as string,
-      parentProjectId: (typeof parent === 'string' ? parent : null),
+      parentProjectId: typeof parent === 'string' ? parent : null,
     })
   }
   return out
@@ -238,8 +231,7 @@ export function parseProjectDetailResponse(raw: unknown): ProjectDetail {
   // visibility is optional in the current server response — default to 'private'
   // if absent. Present once the marketplace endpoints land (ADR-0002 Step 9).
   const rawVisibility = p.visibility
-  const visibility: 'public' | 'private' =
-    rawVisibility === 'public' ? 'public' : 'private'
+  const visibility: 'public' | 'private' = rawVisibility === 'public' ? 'public' : 'private'
 
   return {
     project: {

@@ -88,8 +88,7 @@ function makeMockFetch(status = 200): {
 
   return {
     fetch: mockFetch,
-    enqueue: (chunk: string) =>
-      ctrl.enqueue(new TextEncoder().encode(chunk)),
+    enqueue: (chunk: string) => ctrl.enqueue(new TextEncoder().encode(chunk)),
     close: () => ctrl.close(),
     closeWithError: (err: Error) => ctrl.error(err),
   }

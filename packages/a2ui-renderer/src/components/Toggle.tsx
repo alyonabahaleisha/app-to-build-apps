@@ -49,11 +49,7 @@ export interface ToggleNodeProps {
 
 // -- Component ----------------------------------------------------------------
 
-export function ToggleRenderer({
-  node,
-  state,
-  dispatch,
-}: ToggleNodeProps): React.ReactElement {
+export function ToggleRenderer({node, state, dispatch}: ToggleNodeProps): React.ReactElement {
   const theme = useRendererTheme()
   const logger = useRendererLogger()
 

@@ -16,14 +16,14 @@
 ## The Problem
 
 ADR-0001 shipped auth and an empty library. The maker can sign in, see "no
-apps yet," and that's it. The riskiest piece of the POC — *can the LLM
-reliably produce a usable mini-app from one sentence?* — is still untested
+apps yet," and that's it. The riskiest piece of the POC — _can the LLM
+reliably produce a usable mini-app from one sentence?_ — is still untested
 in production.
 
 But the umbrella spec frames the Library as a private collection. That model
 under-uses the most powerful asset of a chat-driven app builder: **other
 makers' work**. A maker staring at a blank chat input and a "describe an app
-idea…" placeholder has no scaffolding for *what good looks like*. They type
+idea…" placeholder has no scaffolding for _what good looks like_. They type
 "a calculator" and get something boring. They never come back.
 
 A Library that is also a Marketplace solves this — first-time makers see
@@ -41,12 +41,12 @@ rewrite if any of these assumptions break.
 
 ## Who Is This For
 
-| Persona | Need | Current Workflow | Pain Point |
-|---|---|---|---|
-| **The Maker** *(primary)* | Turn an idea into a usable app, see what others built, get noticed | Idea sits in Notes; never built | Cold prompt is paralyzing; no proof "this thing works"; no audience |
-| **The Browser-Maker** *(consumer side, but still a maker)* | Open the app, see what's possible, find a starting point for their own idea | First-run library is empty (under ADR-0001) | "What is this app even *for*?" — abandons before first prompt |
+| Persona                                                    | Need                                                                        | Current Workflow                            | Pain Point                                                          |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------- |
+| **The Maker** _(primary)_                                  | Turn an idea into a usable app, see what others built, get noticed          | Idea sits in Notes; never built             | Cold prompt is paralyzing; no proof "this thing works"; no audience |
+| **The Browser-Maker** _(consumer side, but still a maker)_ | Open the app, see what's possible, find a starting point for their own idea | First-run library is empty (under ADR-0001) | "What is this app even _for_?" — abandons before first prompt       |
 
-**Out of persona for v1:** Pure consumers (people who only want to *use*
+**Out of persona for v1:** Pure consumers (people who only want to _use_
 others' apps without making any). Q1 of discovery cut this — at 20 testers,
 "both" means "neither, well." Re-evaluate post-launch if Library
 engagement >>> publish rate (signal that consumers are showing up uninvited).
@@ -54,8 +54,8 @@ engagement >>> publish rate (signal that consumers are showing up uninvited).
 ## Business Value
 
 - **Business driver:** Validate the willingness-to-engage hypothesis. The
-  POC's deepest unknown is *not* "does the LLM work" (it does, in eval) but
-  *will makers publish their work and remix others'*. If yes, the
+  POC's deepest unknown is _not_ "does the LLM work" (it does, in eval) but
+  _will makers publish their work and remix others'_. If yes, the
   marketplace is the engine of M2 (memory, edit-by-chat) — every published
   app becomes a memory anchor and an edit candidate. If no, we know to
   invest in private-first onboarding before community.
@@ -67,14 +67,14 @@ engagement >>> publish rate (signal that consumers are showing up uninvited).
 
 ### KPIs
 
-| Metric | Definition | Target | Measurement |
-|---|---|---|---|
-| **Generation success rate** | % of `/generate` calls that return a Zod-valid spec | ≥80% on 30-prompt eval; ≥85% in tester sample | Server event `generation_succeeded`/`generation_failed`; PostHog funnel |
-| **p95 generation latency** | Server-time from request received to final SSE event sent | ≤120s (umbrella: 90s; tightened budget +30s for thinking phase) | OTel span on `/generate` |
-| **Crash-free sessions** | % of mobile sessions ending without a fatal | ≥99% | Sentry over 7-day rolling window |
-| **Publish-through rate** | % of successfully generated projects published within 60 min of generation | ≥30% on tester sample | Server event `app_published` joined to `generation_succeeded` |
-| **Library engagement** | % of testers tapping into ≥1 Library item per week | ≥70% | `library_item_viewed` event by user |
-| **Remix conversion** | % of Library detail views that result in a Remix tap (per session) | ≥15% | `remix_started` / `library_item_viewed` |
+| Metric                      | Definition                                                                 | Target                                                          | Measurement                                                             |
+| --------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| **Generation success rate** | % of `/generate` calls that return a Zod-valid spec                        | ≥80% on 30-prompt eval; ≥85% in tester sample                   | Server event `generation_succeeded`/`generation_failed`; PostHog funnel |
+| **p95 generation latency**  | Server-time from request received to final SSE event sent                  | ≤120s (umbrella: 90s; tightened budget +30s for thinking phase) | OTel span on `/generate`                                                |
+| **Crash-free sessions**     | % of mobile sessions ending without a fatal                                | ≥99%                                                            | Sentry over 7-day rolling window                                        |
+| **Publish-through rate**    | % of successfully generated projects published within 60 min of generation | ≥30% on tester sample                                           | Server event `app_published` joined to `generation_succeeded`           |
+| **Library engagement**      | % of testers tapping into ≥1 Library item per week                         | ≥70%                                                            | `library_item_viewed` event by user                                     |
+| **Remix conversion**        | % of Library detail views that result in a Remix tap (per session)         | ≥15%                                                            | `remix_started` / `library_item_viewed`                                 |
 
 If publish-through-rate is <15%, publish friction is too high — re-evaluate
 the publish sheet. If remix conversion is <5%, the inspiration loop is
@@ -111,12 +111,12 @@ broken — re-evaluate Library tile design (probably attribution/title legibilit
    tabs: **Library** (default) and **My drafts**. Library is empty (cold
    start) or shows seeded examples (see §Risks: cold-start seeding).
 2. **First prompt.** Maker A taps "✨ Create new app" → Chat screen.
-3. **Type → Send.** Maker A types *"a tip splitter for my coffee shop"*
+3. **Type → Send.** Maker A types _"a tip splitter for my coffee shop"_
    and taps Send.
 4. **Two-stage thinking UX.** Loading bubble cycles:
-   - 0–first-thinking-event: *"Thinking about your idea…"* (Anthropic
+   - 0–first-thinking-event: _"Thinking about your idea…"_ (Anthropic
      extended-thinking phase).
-   - first-tool-event–done: *"Building your app…"* (tool-use phase).
+   - first-tool-event–done: _"Building your app…"_ (tool-use phase).
    - State changes are driven by **real server events** via SSE on
      `/generate`, not a client timer.
 5. **Render.** Within ~60–120s, navigate to AppRunner. The app is rendered.
@@ -124,18 +124,18 @@ broken — re-evaluate Library tile design (probably attribution/title legibilit
 6. **Save state.** Project is already saved as `visibility: 'private'`. Top
    bar shows: ← back arrow, title (auto-derived), trailing **Publish**
    button.
-7. **Publish.** Maker A taps Publish → bottom sheet: *"Publish as `alyona`?
-   You can change your handle here."* with one editable text field
+7. **Publish.** Maker A taps Publish → bottom sheet: _"Publish as `alyona`?
+   You can change your handle here."_ with one editable text field
    pre-filled. Maker A accepts → sheet dismisses with success toast → tile
    on the Library tab now shows the app, attributed.
 8. **Browse → remix.** Maker B opens the app, lands on Library tab, scrolls,
    sees Maker A's tip splitter, taps it. AppRunner loads in **try-mode**
    (see §"AppRunner modes" below). Maker B taps the buttons; works.
 9. **Remix tap.** Maker B taps **Remix**. Chat opens with prompt pre-filled
-   *"a tip splitter for my coffee shop"* and an attribution chip ("remixed
+   _"a tip splitter for my coffee shop"_ and an attribution chip ("remixed
    from @alyona") above the input.
-10. **Maker B edits & sends.** *"a tip splitter that supports multiple
-    currencies."* The new project lists `parent_project_id = <A's project>`.
+10. **Maker B edits & sends.** _"a tip splitter that supports multiple
+    currencies."_ The new project lists `parent_project_id = <A's project>`.
     On publish, its tile shows "remixed from @alyona."
 
 ### Unhappy paths
@@ -143,22 +143,22 @@ broken — re-evaluate Library tile design (probably attribution/title legibilit
 - **Empty / overlong prompt** (1–2000 chars validated server-side): Send
   disabled below 1 char, inline error at 1900+, hard-rejected at 2000+.
 - **LLM emits malformed spec** (Zod parse fails): server returns 400
-  `{error: 'invalid_spec', detail}`; mobile shows toast *"I couldn't turn
-  that into an app. Try a different idea."* Project is **not** saved. Chat
+  `{error: 'invalid_spec', detail}`; mobile shows toast _"I couldn't turn
+  that into an app. Try a different idea."_ Project is **not** saved. Chat
   preserves the prompt for editing.
 - **Anthropic 429:** server retries 2× with exponential backoff (1s, 2s);
-  if still 429 → 503 `{error: 'rate_limited'}`; toast *"We're a bit busy
-  right now. Try again in a minute."*
+  if still 429 → 503 `{error: 'rate_limited'}`; toast _"We're a bit busy
+  right now. Try again in a minute."_
 - **Anthropic transport error:** server returns 500 `{error: 'internal'}`;
   same toast as malformed spec but without retry suggestion. Sentry alert
   fires.
 - **SSE connection drops mid-generation:** client treats as a transport
   error after 30s of silence (no events). Project state on server: if the
   Anthropic call completed and validated, the project is saved as private —
-  user finds it in My drafts on next refresh. Toast: *"Connection lost. We
-  saved your draft — check My drafts."*
+  user finds it in My drafts on next refresh. Toast: _"Connection lost. We
+  saved your draft — check My drafts."_
 - **Publish: handle taken:** server returns 400 `{error: 'handle_taken'}`;
-  sheet shows inline error *"Handle taken. Try another."*.
+  sheet shows inline error _"Handle taken. Try another."_.
 - **Publish: invalid handle** (regex `^[a-z0-9-]{3,20}$` — lowercase
   alphanumeric + dashes only, 3–20 chars): server returns 400
   `{error: 'invalid_handle'}`; sheet shows inline error.
@@ -171,8 +171,8 @@ broken — re-evaluate Library tile design (probably attribution/title legibilit
   render correctly. [Back to Library]"). P0 instrumentation event:
   `render_failed` with project_id and render_hash.
 - **Browse offline:** Library tab shows last-cached items from TanStack
-  Query (read-only); top banner *"You're offline. Some content may be
-  stale."*; tap-into-detail disabled. Generation disabled offline.
+  Query (read-only); top banner _"You're offline. Some content may be
+  stale."_; tap-into-detail disabled. Generation disabled offline.
 - **Closed-app-mid-generation:** Anthropic call completes server-side; on
   next foreground, mobile syncs `/me/projects` and the result is in My
   drafts (or visible if the user explicitly published — but auto-publish is
@@ -182,11 +182,11 @@ broken — re-evaluate Library tile design (probably attribution/title legibilit
 
 AppRunner is invoked in three contexts. Each has different state and CTAs:
 
-| Mode | Entry | State | Top-bar CTAs | Persistence |
-|---|---|---|---|---|
-| **Owner-edit** | Maker opens own draft from My drafts | `state = renderer's hydrated state for this user`, persisted across visits in client tier-3 user storage (MMKV scoped by user ID, see ARCHITECTURE.md §5) | ← back, **Publish** (if private) or **Unpublish** (if public) | Per user, persistent |
-| **Try** | Browser taps a Library item | `state = {}`, ephemeral, dropped on screen exit | ← back, **Remix** | None — no writes |
-| **Owner-public-view** | Maker reopens own already-published app | Same as Owner-edit | ← back, **Unpublish** | Per user, persistent |
+| Mode                  | Entry                                   | State                                                                                                                                                     | Top-bar CTAs                                                  | Persistence          |
+| --------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------- |
+| **Owner-edit**        | Maker opens own draft from My drafts    | `state = renderer's hydrated state for this user`, persisted across visits in client tier-3 user storage (MMKV scoped by user ID, see ARCHITECTURE.md §5) | ← back, **Publish** (if private) or **Unpublish** (if public) | Per user, persistent |
+| **Try**               | Browser taps a Library item             | `state = {}`, ephemeral, dropped on screen exit                                                                                                           | ← back, **Remix**                                             | None — no writes     |
+| **Owner-public-view** | Maker reopens own already-published app | Same as Owner-edit                                                                                                                                        | ← back, **Unpublish**                                         | Per user, persistent |
 
 Try-mode and Owner-modes share a renderer; they differ only in initial
 state and which CTAs are visible. Cal's renderer doesn't need to know the
@@ -194,19 +194,19 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
 
 ## Edge Cases & Error Handling
 
-| Scenario | Behavior |
-|---|---|
-| Browser tries to publish someone else's project | 403 `{error: 'forbidden'}`. Should be unreachable from UI — Publish CTA only shows for owners. Logged as a security event if it ever fires. |
-| Browser tries to GET `/library/:id` for a private project they don't own | 404 `{error: 'not_found'}` (not 403 — don't leak existence). |
-| Maker publishes, then deletes account (Phase 2 GDPR flow) | Out of scope at v1. Documented in §Risks. |
-| Library has 0 public projects (week-1 cold start) | Empty state: *"No public apps yet — be the first to publish."* Big "Create new app" CTA. |
-| Library has 100+ public projects (unlikely at 20 testers, but…) | Cursor-paginated, 20 per page. Scrolling triggers next-page fetch. |
-| Two simultaneous Publish taps on the same project | Server idempotent — second call is a no-op (already public). |
-| Publish on a project that was never successfully generated (zombie row) | Should be unreachable; server returns 400 `{error: 'invalid_state'}` if it occurs. |
-| User has `users.handle = null` and tries `/library` queries | Read paths don't require a handle. Handle is required only on Publish. |
-| Handle uniqueness race (two users pick same handle simultaneously) | First commit wins. Loser gets `{error: 'handle_taken'}` and re-prompts. |
-| Remix-of-a-remix-of-a-remix (chain depth) | Allowed at v1. `parent_project_id` is single-pointer; the chain is implicit. UI shows only the immediate parent attribution, not the full chain. |
-| Maker prompts contain PII (emails, real names) | Maker's responsibility. Publish sheet warns: *"Publishing exposes the words you typed to other makers."* Phase 2: optional one-line summary instead of raw prompt. |
+| Scenario                                                                 | Behavior                                                                                                                                                           |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Browser tries to publish someone else's project                          | 403 `{error: 'forbidden'}`. Should be unreachable from UI — Publish CTA only shows for owners. Logged as a security event if it ever fires.                        |
+| Browser tries to GET `/library/:id` for a private project they don't own | 404 `{error: 'not_found'}` (not 403 — don't leak existence).                                                                                                       |
+| Maker publishes, then deletes account (Phase 2 GDPR flow)                | Out of scope at v1. Documented in §Risks.                                                                                                                          |
+| Library has 0 public projects (week-1 cold start)                        | Empty state: _"No public apps yet — be the first to publish."_ Big "Create new app" CTA.                                                                           |
+| Library has 100+ public projects (unlikely at 20 testers, but…)          | Cursor-paginated, 20 per page. Scrolling triggers next-page fetch.                                                                                                 |
+| Two simultaneous Publish taps on the same project                        | Server idempotent — second call is a no-op (already public).                                                                                                       |
+| Publish on a project that was never successfully generated (zombie row)  | Should be unreachable; server returns 400 `{error: 'invalid_state'}` if it occurs.                                                                                 |
+| User has `users.handle = null` and tries `/library` queries              | Read paths don't require a handle. Handle is required only on Publish.                                                                                             |
+| Handle uniqueness race (two users pick same handle simultaneously)       | First commit wins. Loser gets `{error: 'handle_taken'}` and re-prompts.                                                                                            |
+| Remix-of-a-remix-of-a-remix (chain depth)                                | Allowed at v1. `parent_project_id` is single-pointer; the chain is implicit. UI shows only the immediate parent attribution, not the full chain.                   |
+| Maker prompts contain PII (emails, real names)                           | Maker's responsibility. Publish sheet warns: _"Publishing exposes the words you typed to other makers."_ Phase 2: optional one-line summary instead of raw prompt. |
 
 ## Acceptance Criteria
 
@@ -226,7 +226,7 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
       `done` (with the spec + project metadata) **or** `error` (with code).
 - [ ] **AC-CG-G5**: Server validates LLM tool input against
       `A2UISpecSchema`. On success, persists project as `visibility:
-      'private'` and returns 200 via SSE `done` event. On failure, emits
+    'private'` and returns 200 via SSE `done` event. On failure, emits
       `error` with `{code: 'invalid_spec', detail: <flattened zod issues>}`
       and does **not** persist.
 - [ ] **AC-CG-G6**: Server enforces `max_tokens: 8000` output, refuses
@@ -256,7 +256,7 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
 - [ ] **AC-CG-P3**: Handle validation: regex `^[a-z0-9-]{3,20}$`; unique
       across `users.handle`. Conflict → 400 `{error: 'handle_taken'}`.
 - [ ] **AC-CG-P4**: `POST /projects/:id/unpublish` sets `visibility =
-      'private'` and `published_at = null`. Project's spec, history, and
+    'private'` and `published_at = null`. Project's spec, history, and
       remix children are unaffected.
 - [ ] **AC-CG-P5**: `GET /library` returns public projects, cursor-paginated
       (default 20, max 50), ordered by `published_at DESC`. Includes
@@ -295,7 +295,7 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
       @lucy".
 - [ ] **AC-CG-R3**: If the parent has been unpublished or deleted by the
       time of remix, the Chat screen still loads with the prompt and shows
-      a one-line banner: *"The original was removed."* The new project
+      a one-line banner: _"The original was removed."_ The new project
       still saves with `parent_project_id` pointing at the (now-private or
       missing) original — for provenance.
 
@@ -321,7 +321,7 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
       seed apps sit at the bottom of the feed and real maker apps surface
       above them as soon as anyone publishes. Spec_json for each is
       hand-authored against the A2UI schema (validated in CI by the same
-      `A2UISpecSchema` the runtime uses) — *not* generated by the LLM, so
+      `A2UISpecSchema` the runtime uses) — _not_ generated by the LLM, so
       seeds are deterministic and reproducible.
 - [ ] **AC-CG-S3**: Library tiles owned by `@example` show a small
       "featured" badge to disambiguate seed content from real maker work
@@ -401,12 +401,12 @@ difference — the host (AppRunner) hands it the right `state` and `dispatch`.
 
 Umbrella spec ACs that are **deprecated by this document**:
 
-| Umbrella AC | Status | Replacement |
-|---|---|---|
-| AC-P4 (`GET /projects` returns the current user's projects) | Deprecated | `GET /me/projects` (AC-CG-P7) + `GET /library` (AC-CG-P5) |
-| AC-P5 (404 to non-owners on `GET /projects/:id`) | Deprecated | `GET /library/:id` returns public detail; `/me/projects/:id` returns owner detail; cross-paths 404 |
-| Umbrella scope: "Marketplace (publish, browse, fork) — out of scope Phase 3+" | Superseded | This document, v1 |
-| Umbrella scope: "Streaming generation (SSE) — Phase 2" | Partial supersede | SSE is in scope for **phase events** (`thinking_started`, `building_started`, `done`). Spec-content streaming remains Phase 2. |
+| Umbrella AC                                                                   | Status            | Replacement                                                                                                                    |
+| ----------------------------------------------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| AC-P4 (`GET /projects` returns the current user's projects)                   | Deprecated        | `GET /me/projects` (AC-CG-P7) + `GET /library` (AC-CG-P5)                                                                      |
+| AC-P5 (404 to non-owners on `GET /projects/:id`)                              | Deprecated        | `GET /library/:id` returns public detail; `/me/projects/:id` returns owner detail; cross-paths 404                             |
+| Umbrella scope: "Marketplace (publish, browse, fork) — out of scope Phase 3+" | Superseded        | This document, v1                                                                                                              |
+| Umbrella scope: "Streaming generation (SSE) — Phase 2"                        | Partial supersede | SSE is in scope for **phase events** (`thinking_started`, `building_started`, `done`). Spec-content streaming remains Phase 2. |
 
 A one-line note will be added at the top of `app-creation-poc.md`
 referencing this document.
@@ -420,15 +420,15 @@ Error envelope: `{error: string, detail?: unknown}`. Codes: `invalid_input`
 `handle_required` (400), `handle_taken` (400), `invalid_state` (400),
 `rate_limited` (429 client / 503 upstream), `internal` (500).
 
-| Endpoint | Auth | Returns | Excludes |
-|---|---|---|---|
-| `POST /generate` | JWT | **SSE stream** of events: `{type: 'thinking_started'}` → `{type: 'building_started'}` → `{type: 'done', project: {id, title, current_version_id, parent_project_id\|null, visibility: 'private', original_prompt, created_at}, spec: A2UISpec, render_hash, thinking_duration_ms, generation_duration_ms}`. On error: `{type: 'error', code, detail?}` then close. | thinking trace text, server prompt content, error stack, other users' data |
-| `POST /projects/:id/publish` | JWT, owner | `{project: {id, title, visibility: 'public', published_at, author_handle, parent_project_id\|null, render_hash}}` | other users' project data, server prompts |
-| `POST /projects/:id/unpublish` | JWT, owner | `{project: {id, visibility: 'private', published_at: null, ...}}` | (same) |
-| `GET /library?cursor=&limit=` | JWT | `{items: [{id, title, author_handle, published_at, render_hash, parent: {id, author_handle, title}\|null}], next_cursor: string\|null}` | `spec_json`, private projects, `original_prompt` (in detail endpoint), other users' private projects |
-| `GET /library/:id` | JWT | `{project: {id, title, author_handle, published_at, original_prompt, parent: {id, author_handle, title}\|null}, current_version: {id, spec_json, render_hash, created_at}}` | thinking trace, server prompts, other users' private projects |
-| `GET /me/projects` | JWT | `{items: [{id, title, visibility, published_at\|null, updated_at, current_version_id, parent_project_id\|null, render_hash}]}` | `spec_json`, other users' projects |
-| `GET /me/projects/:id` | JWT, owner | `{project: {…full owner-visible fields including original_prompt, visibility, parent_project_id}, current_version: {id, spec_json, render_hash, created_at}}` | thinking trace, server prompts, other users' projects |
+| Endpoint                       | Auth       | Returns                                                                                                                                                                                                                                                                                                                                                            | Excludes                                                                                             |
+| ------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `POST /generate`               | JWT        | **SSE stream** of events: `{type: 'thinking_started'}` → `{type: 'building_started'}` → `{type: 'done', project: {id, title, current_version_id, parent_project_id\|null, visibility: 'private', original_prompt, created_at}, spec: A2UISpec, render_hash, thinking_duration_ms, generation_duration_ms}`. On error: `{type: 'error', code, detail?}` then close. | thinking trace text, server prompt content, error stack, other users' data                           |
+| `POST /projects/:id/publish`   | JWT, owner | `{project: {id, title, visibility: 'public', published_at, author_handle, parent_project_id\|null, render_hash}}`                                                                                                                                                                                                                                                  | other users' project data, server prompts                                                            |
+| `POST /projects/:id/unpublish` | JWT, owner | `{project: {id, visibility: 'private', published_at: null, ...}}`                                                                                                                                                                                                                                                                                                  | (same)                                                                                               |
+| `GET /library?cursor=&limit=`  | JWT        | `{items: [{id, title, author_handle, published_at, render_hash, parent: {id, author_handle, title}\|null}], next_cursor: string\|null}`                                                                                                                                                                                                                            | `spec_json`, private projects, `original_prompt` (in detail endpoint), other users' private projects |
+| `GET /library/:id`             | JWT        | `{project: {id, title, author_handle, published_at, original_prompt, parent: {id, author_handle, title}\|null}, current_version: {id, spec_json, render_hash, created_at}}`                                                                                                                                                                                        | thinking trace, server prompts, other users' private projects                                        |
+| `GET /me/projects`             | JWT        | `{items: [{id, title, visibility, published_at\|null, updated_at, current_version_id, parent_project_id\|null, render_hash}]}`                                                                                                                                                                                                                                     | `spec_json`, other users' projects                                                                   |
+| `GET /me/projects/:id`         | JWT, owner | `{project: {…full owner-visible fields including original_prompt, visibility, parent_project_id}, current_version: {id, spec_json, render_hash, created_at}}`                                                                                                                                                                                                      | thinking trace, server prompts, other users' projects                                                |
 
 **Excluded from every response (across all endpoints):**
 `service_role_key`, `jwt_secret`, `anthropic_api_key`, raw email addresses
@@ -457,36 +457,36 @@ names, internal Langfuse trace IDs.
   - `original_prompt` stored as product data; never logged at INFO.
   - Email never appears in application logs or API responses (only in JWT
     claims observable to the user themselves).
-  - Publish sheet warns: *"Publishing exposes the words you typed."*
+  - Publish sheet warns: _"Publishing exposes the words you typed."_
   - GDPR account-deletion deferred to Phase 2 (umbrella carryover).
 
 ## Dependencies
 
-| Dependency | Status | Owner |
-|---|---|---|
-| ADR-0001 shipped (auth, schema, Home shell) | Done | n/a |
-| Renderer (full A2UI catalog, all 4 actions) | Pending — ADR-0003 in umbrella's slicing; this spec presumes it lands **before or with** the marketplace UX, since browse/try/remix all require rendering. **See §Risks: cross-ADR sequencing.** | Cal to re-slice |
-| Anthropic API key with extended thinking enabled | Done (key present); confirm extended thinking access | Engineering — verify in spike |
-| Supabase project + JWT secret | Done (umbrella) | n/a |
-| 30 eval prompts written | Not yet | Robert — drafts during build, refines with user |
-| EAS dev-client build with current native deps | Done as of 2026-05-02 (the user just ran one) | n/a |
-| Apple Developer enrollment | Pending | User — required for ADR-0003 / TestFlight, not for this slice (sim is sufficient) |
+| Dependency                                       | Status                                                                                                                                                                                           | Owner                                                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| ADR-0001 shipped (auth, schema, Home shell)      | Done                                                                                                                                                                                             | n/a                                                                               |
+| Renderer (full A2UI catalog, all 4 actions)      | Pending — ADR-0003 in umbrella's slicing; this spec presumes it lands **before or with** the marketplace UX, since browse/try/remix all require rendering. **See §Risks: cross-ADR sequencing.** | Cal to re-slice                                                                   |
+| Anthropic API key with extended thinking enabled | Done (key present); confirm extended thinking access                                                                                                                                             | Engineering — verify in spike                                                     |
+| Supabase project + JWT secret                    | Done (umbrella)                                                                                                                                                                                  | n/a                                                                               |
+| 30 eval prompts written                          | Not yet                                                                                                                                                                                          | Robert — drafts during build, refines with user                                   |
+| EAS dev-client build with current native deps    | Done as of 2026-05-02 (the user just ran one)                                                                                                                                                    | n/a                                                                               |
+| Apple Developer enrollment                       | Pending                                                                                                                                                                                          | User — required for ADR-0003 / TestFlight, not for this slice (sim is sufficient) |
 
 ## Risks & Open Questions
 
-| Risk | Likelihood | Mitigation |
-|---|---|---|
-| **Cross-ADR sequencing.** This spec presumes the renderer exists. Cal's umbrella slicing has Generation in 0002 and Renderer in 0003. The Marketplace UX described here (Browse, Try, Remix) is non-functional without the renderer. | High | **Cal must re-slice**: either pull renderer forward into the same slice as Generation, or split this spec across two ADRs (0002 = Generate + Publish endpoints + My-drafts list; 0003 = Renderer + Library tab + Try + Remix). My recommendation as PM: split. ADR-0002 ships the loop with private-only drafts; ADR-0003 ships the public Library on top once the renderer is in. |
-| LLM emits invalid specs faster than we can iterate the system prompt. | Medium | Tighten system prompt against eval set; extended thinking should *help* coverage (the model deliberates before emitting); per-component example shots in catalog. Cap catalog at 10. |
-| Library is empty at week 1 (cold start). | High | **Confirmed 2026-05-02:** seed with 5–10 hand-picked example apps from the eval set, attributed to handle `@example` (system-owned user, no auth). Published on db init via a seed script. See AC-CG-S1–S3. |
-| Extended thinking cost overrun. | Medium | Per-engineer per-day spend cap at $30 (was $20 in umbrella; +50% for thinking). Track per-tester per-day in PostHog. |
-| Handle squatting (a tester picks `@admin`). | Low | Reserve a small list (`admin`, `system`, `official`, `support`, `app`, `creator`) as DB-seeded forbidden handles. Document. |
-| Maker publishes app whose prompt contains PII. | Medium | Publish sheet warning copy. Phase 2: optional summary instead of raw prompt. |
-| SSE on `/generate` adds infrastructure complexity vs. one-shot HTTP. | Low | The umbrella architecture already mandates SSE for streaming (CLAUDE.md §7). We're using SSE for a *narrower* case (phase events only, ~3 events per generation). Cal owns the implementation; my product call is "no fake-progressing client timer." |
-| Immutable handles annoy users. | Low | Documented limitation; revisit if ≥20% of testers ask. Phase 2 work item. |
-| Remix-chain depth (A→B→C→D) gets visually confusing. | Low | At v1, only direct parent attribution shown. Full chain UI is Phase 2. |
-| Two testers pick the same handle simultaneously. | Very low | DB unique constraint catches it; UX retries. |
-| Browser sees an app that was unpublished mid-tap. | Low | Library list is cached client-side for 60s; tap → 404 from `/library/:id` → toast *"That app was just removed."* Back to Library. |
+| Risk                                                                                                                                                                                                                                 | Likelihood | Mitigation                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Cross-ADR sequencing.** This spec presumes the renderer exists. Cal's umbrella slicing has Generation in 0002 and Renderer in 0003. The Marketplace UX described here (Browse, Try, Remix) is non-functional without the renderer. | High       | **Cal must re-slice**: either pull renderer forward into the same slice as Generation, or split this spec across two ADRs (0002 = Generate + Publish endpoints + My-drafts list; 0003 = Renderer + Library tab + Try + Remix). My recommendation as PM: split. ADR-0002 ships the loop with private-only drafts; ADR-0003 ships the public Library on top once the renderer is in. |
+| LLM emits invalid specs faster than we can iterate the system prompt.                                                                                                                                                                | Medium     | Tighten system prompt against eval set; extended thinking should _help_ coverage (the model deliberates before emitting); per-component example shots in catalog. Cap catalog at 10.                                                                                                                                                                                               |
+| Library is empty at week 1 (cold start).                                                                                                                                                                                             | High       | **Confirmed 2026-05-02:** seed with 5–10 hand-picked example apps from the eval set, attributed to handle `@example` (system-owned user, no auth). Published on db init via a seed script. See AC-CG-S1–S3.                                                                                                                                                                        |
+| Extended thinking cost overrun.                                                                                                                                                                                                      | Medium     | Per-engineer per-day spend cap at $30 (was $20 in umbrella; +50% for thinking). Track per-tester per-day in PostHog.                                                                                                                                                                                                                                                               |
+| Handle squatting (a tester picks `@admin`).                                                                                                                                                                                          | Low        | Reserve a small list (`admin`, `system`, `official`, `support`, `app`, `creator`) as DB-seeded forbidden handles. Document.                                                                                                                                                                                                                                                        |
+| Maker publishes app whose prompt contains PII.                                                                                                                                                                                       | Medium     | Publish sheet warning copy. Phase 2: optional summary instead of raw prompt.                                                                                                                                                                                                                                                                                                       |
+| SSE on `/generate` adds infrastructure complexity vs. one-shot HTTP.                                                                                                                                                                 | Low        | The umbrella architecture already mandates SSE for streaming (CLAUDE.md §7). We're using SSE for a _narrower_ case (phase events only, ~3 events per generation). Cal owns the implementation; my product call is "no fake-progressing client timer."                                                                                                                              |
+| Immutable handles annoy users.                                                                                                                                                                                                       | Low        | Documented limitation; revisit if ≥20% of testers ask. Phase 2 work item.                                                                                                                                                                                                                                                                                                          |
+| Remix-chain depth (A→B→C→D) gets visually confusing.                                                                                                                                                                                 | Low        | At v1, only direct parent attribution shown. Full chain UI is Phase 2.                                                                                                                                                                                                                                                                                                             |
+| Two testers pick the same handle simultaneously.                                                                                                                                                                                     | Very low   | DB unique constraint catches it; UX retries.                                                                                                                                                                                                                                                                                                                                       |
+| Browser sees an app that was unpublished mid-tap.                                                                                                                                                                                    | Low        | Library list is cached client-side for 60s; tap → 404 from `/library/:id` → toast _"That app was just removed."_ Back to Library.                                                                                                                                                                                                                                                  |
 
 **Open questions (need answers before Cal can re-slice cleanly):**
 
@@ -497,16 +497,16 @@ names, internal Langfuse trace IDs.
 
 Assuming ADR-0001 is done (it is), and Cal splits this spec across two ADRs:
 
-| Phase | Effort | Dependencies |
-|---|---|---|
-| Cal re-slice + ADR-0002 (Generate + private drafts + Publish endpoint, no UI for browse) | 1 day | This spec approved |
-| ADR-0002 implementation (Colby): SSE `/generate`, extended thinking, save private, publish endpoint, handle column, Chat screen UI, two-stage loading state, eval harness | 4 days | ADR-0002 |
-| Eval harness 30-prompt run + tuning | 1.5 days | All endpoints done |
-| ADR-0003 (Renderer + Library/Browse/Try/Remix + AppRunner modes) | 1 day | ADR-0002 merged |
-| ADR-0003 implementation: 10-component renderer, AppRunner three modes, Library tab + tile + cursor pagination, Try-mode ephemeral state, Remix prompt pre-fill, attribution chip | 4 days | ADR-0003 |
-| TestFlight build + submit | 0.5 day | Apple Dev ready |
-| Internal-tester soak (parallel to other M1 work) | 7 days wall-clock | Build available to ≥3 testers |
-| **Total dev** | **~12 days** | |
+| Phase                                                                                                                                                                            | Effort            | Dependencies                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------- |
+| Cal re-slice + ADR-0002 (Generate + private drafts + Publish endpoint, no UI for browse)                                                                                         | 1 day             | This spec approved            |
+| ADR-0002 implementation (Colby): SSE `/generate`, extended thinking, save private, publish endpoint, handle column, Chat screen UI, two-stage loading state, eval harness        | 4 days            | ADR-0002                      |
+| Eval harness 30-prompt run + tuning                                                                                                                                              | 1.5 days          | All endpoints done            |
+| ADR-0003 (Renderer + Library/Browse/Try/Remix + AppRunner modes)                                                                                                                 | 1 day             | ADR-0002 merged               |
+| ADR-0003 implementation: 10-component renderer, AppRunner three modes, Library tab + tile + cursor pagination, Try-mode ephemeral state, Remix prompt pre-fill, attribution chip | 4 days            | ADR-0003                      |
+| TestFlight build + submit                                                                                                                                                        | 0.5 day           | Apple Dev ready               |
+| Internal-tester soak (parallel to other M1 work)                                                                                                                                 | 7 days wall-clock | Build available to ≥3 testers |
+| **Total dev**                                                                                                                                                                    | **~12 days**      |                               |
 
 Wall-clock with Apple Dev enrollment slip + buffer: ~3 weeks. If Cal opts
 to bundle everything in one ADR instead of splitting, dev time is
@@ -526,7 +526,7 @@ unchanged but the merge gate is later (riskier).
   config and adjust the user-perceived UX to single-stage. (Robert
   signs off on the UX fallback if the data justifies it.)
 - **Two-tab Home** changes the navigator. Sable's UX doc (`Screen 2:
-  Home (Library)`) was written for the umbrella's single-list model. Flag
+Home (Library)`) was written for the umbrella's single-list model. Flag
   back to Sable for a tab-bar update before implementation.
 - **`parent_project_id` already exists** on the umbrella's projects schema.
   No migration needed for the column; new columns: `visibility`,
@@ -536,7 +536,7 @@ unchanged but the merge gate is later (riskier).
   must surface as `handle_taken`, not as silent corruption.
 - **`/library*` reads must filter on `visibility = 'public'`** at the SQL
   level, not at the application level. Index on `(visibility,
-  published_at DESC)` for the feed query.
+published_at DESC)` for the feed query.
 - **Try-mode renderer must NOT call any state-persistence side effect.**
   Pass an in-memory dispatch and discard on unmount. AC-CG-A2 verifies.
 

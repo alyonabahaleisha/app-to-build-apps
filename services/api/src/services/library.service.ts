@@ -198,13 +198,7 @@ export function createLibraryService(db: Db) {
      *   - LEFT JOIN users pau ON parent.owner_id = pau.id AND pau.handle IS NOT NULL
      *       → parent attribution; null handle → parent treated as null
      */
-    async list({
-      cursor,
-      limit,
-    }: {
-      cursor?: string
-      limit: number
-    }): Promise<LibraryListResult> {
+    async list({cursor, limit}: {cursor?: string; limit: number}): Promise<LibraryListResult> {
       const decoded = cursor ? decodeCursor(cursor) : null
 
       let rows: ListRow[]
@@ -278,7 +272,7 @@ export function createLibraryService(db: Db) {
           : null
 
       return {
-        items: items.map((row) => ({
+        items: items.map(row => ({
           id: row.id,
           title: row.title,
           author_handle: row.author_handle as string,

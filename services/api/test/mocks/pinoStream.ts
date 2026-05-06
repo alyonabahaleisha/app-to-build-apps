@@ -62,10 +62,10 @@ export function createLogSink(): LogSink {
     raw,
     containsSubstring(needle: string): boolean {
       if (needle === '') return false
-      return raw.some((line) => line.includes(needle))
+      return raw.some(line => line.includes(needle))
     },
     byLevel(level: number): LogRecord[] {
-      return records.filter((r) => r.level === level)
+      return records.filter(r => r.level === level)
     },
   }
 }

@@ -58,17 +58,12 @@ export interface CounterNodeProps {
 
 // -- Component ----------------------------------------------------------------
 
-export function CounterRenderer({
-  node,
-  state,
-  dispatch,
-}: CounterNodeProps): React.ReactElement {
+export function CounterRenderer({node, state, dispatch}: CounterNodeProps): React.ReactElement {
   const theme = useRendererTheme()
 
   const rawValue = state[node.id]
   // Numeric state read; default to node.min ?? 0 when undefined (T-0003-070).
-  const value: number =
-    typeof rawValue === 'number' ? rawValue : (node.min ?? 0)
+  const value: number = typeof rawValue === 'number' ? rawValue : (node.min ?? 0)
 
   const by = node.step ?? 1
   const atMin = node.min !== undefined && value <= node.min
@@ -110,7 +105,8 @@ export function CounterRenderer({
       onAccessibilityAction={event => {
         if (event.nativeEvent.actionName === 'increment') handleIncrement()
         if (event.nativeEvent.actionName === 'decrement') handleDecrement()
-      }}>
+      }}
+    >
       {/* Label row above the counter */}
       <Text style={[theme.typography.caption, {color: theme.palette.text.muted}]}>
         {node.label}
@@ -130,12 +126,14 @@ export function CounterRenderer({
             {borderRadius: theme.radius.md},
             pressed && !atMin && styles.pressed,
             atMin && styles.disabledButton,
-          ]}>
+          ]}
+        >
           <Text
             style={[
               theme.typography.bodyStrong,
               {color: atMin ? theme.palette.text.muted : theme.palette.text.primary},
-            ]}>
+            ]}
+          >
             −
           </Text>
         </Pressable>
@@ -146,7 +144,8 @@ export function CounterRenderer({
             style={[
               theme.typography.heading2,
               {color: theme.palette.text.primary, textAlign: 'center'},
-            ]}>
+            ]}
+          >
             {value}
           </Text>
         </View>
@@ -163,12 +162,14 @@ export function CounterRenderer({
             {borderRadius: theme.radius.md},
             pressed && !atMax && styles.pressed,
             atMax && styles.disabledButton,
-          ]}>
+          ]}
+        >
           <Text
             style={[
               theme.typography.bodyStrong,
               {color: atMax ? theme.palette.text.muted : theme.palette.text.primary},
-            ]}>
+            ]}
+          >
             +
           </Text>
         </Pressable>

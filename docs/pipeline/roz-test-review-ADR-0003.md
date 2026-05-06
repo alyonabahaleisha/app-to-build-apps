@@ -18,16 +18,16 @@ These are not cosmetic. Colby needs to know what to write before picking up a ke
 
 Legend: ✅ covered | ⚠️ thin / vague | ❌ missing | N/A justified
 
-| Step | Happy | Failure | Boundary | Negative | Error | Security | Concurrency | Regression | Breaking |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| 1 — State engine / theme / logger | ✅ | ✅ | ✅ | ✅ | N/A | ✅ | ✅ | ⚠️ thin | ❌ dispatch-sig change |
-| 2 — Container + List | ✅ | ❌ no failures | ✅ | ✅ | N/A | N/A | N/A | N/A new | N/A new |
-| 3 — Image + Heading + Text | ✅ | ❌ no failures | ✅ | N/A | N/A | N/A | N/A | ✅ | N/A new |
-| 4 — Button + dispatcher | ✅ | ✅ | ✅ | ✅ | N/A | ✅ | N/A | N/A new | N/A new |
-| 5 — Counter | ✅ | ✅ | ✅ | ❌ missing | N/A | N/A | N/A | N/A new | N/A new |
-| 6 — TextInput + Toggle | ✅ | ❌ no failures | ✅ | ⚠️ thin | N/A | N/A | N/A | N/A new | N/A new |
-| 7 — Form | ✅ | ❌ no failures | ✅ | ✅ | N/A | N/A | N/A | N/A new | N/A new |
-| 8 — AppRunner integration + determinism | ✅ | ⚠️ thin | ✅ | ✅ | N/A | ✅ | N/A | ✅ | N/A |
+| Step                                    | Happy |    Failure     | Boundary |  Negative  | Error | Security | Concurrency | Regression |        Breaking        |
+| --------------------------------------- | :---: | :------------: | :------: | :--------: | :---: | :------: | :---------: | :--------: | :--------------------: |
+| 1 — State engine / theme / logger       |  ✅   |       ✅       |    ✅    |     ✅     |  N/A  |    ✅    |     ✅      |  ⚠️ thin   | ❌ dispatch-sig change |
+| 2 — Container + List                    |  ✅   | ❌ no failures |    ✅    |     ✅     |  N/A  |   N/A    |     N/A     |  N/A new   |        N/A new         |
+| 3 — Image + Heading + Text              |  ✅   | ❌ no failures |    ✅    |    N/A     |  N/A  |   N/A    |     N/A     |     ✅     |        N/A new         |
+| 4 — Button + dispatcher                 |  ✅   |       ✅       |    ✅    |     ✅     |  N/A  |    ✅    |     N/A     |  N/A new   |        N/A new         |
+| 5 — Counter                             |  ✅   |       ✅       |    ✅    | ❌ missing |  N/A  |   N/A    |     N/A     |  N/A new   |        N/A new         |
+| 6 — TextInput + Toggle                  |  ✅   | ❌ no failures |    ✅    |  ⚠️ thin   |  N/A  |   N/A    |     N/A     |  N/A new   |        N/A new         |
+| 7 — Form                                |  ✅   | ❌ no failures |    ✅    |     ✅     |  N/A  |   N/A    |     N/A     |  N/A new   |        N/A new         |
+| 8 — AppRunner integration + determinism |  ✅   |    ⚠️ thin     |    ✅    |     ✅     |  N/A  |    ✅    |     N/A     |     ✅     |          N/A           |
 
 ---
 
@@ -45,13 +45,13 @@ Global Failure:Happy = 4:68. This is catastrophic for a renderer ADR where "MUST
 
 ## AC-R1..R5 Coverage Map
 
-| AC | Description | Covering Tests | Verdict |
-|---|---|---|---|
-| AC-R1 | All 10 catalog components render | T-0003-023 (Container), T-0003-033 (List), T-0003-039 (Heading), T-0003-043 (Text), T-0003-047 (Image), T-0003-055 (Button), T-0003-069 (Counter), T-0003-082 (TextInput), T-0003-091 (Toggle), T-0003-098 (Form) | ✅ All 10 have at least one Happy-path render test |
-| AC-R2 | Each component honors required + optional props | Container 4 prop combos (T-023..028), Heading levels (T-039..042), Text weight/color (T-043..046), Image aspectRatio/alt (T-047..050), Button variants (T-056..058), Counter step/min/max (T-073..076), TextInput multiline/placeholder (T-083,084), Toggle defaultValue (T-092) | ⚠️ No test covers optional `id` field on nodes (used as state key). What happens when a Button has no id but its action targets a Counter that does? No test covers missing `id` on an interactive node. |
-| AC-R3 | Snapshot test per props matrix per component | Steps 2–7 include snapshot tests; Step 8 is the determinism lock | ⚠️ Snapshot coverage is thin: Container has 1 snapshot (T-032), not a full matrix. §Step 2 acceptance says "Snapshot tests cover: Container with `direction: row`, `direction: column`, each padding/gap level, each align/justify" but the test table has only T-0003-032 as a single Snapshot entry. Tests don't match the AC. |
-| AC-R4 | Reopen produces byte-equal render | T-0003-113, T-0003-114 | ⚠️ See G-6 — structurally weak |
-| AC-R5 | All 4 action types execute correctly | T-0003-003 (set), T-0003-004..006 (inc/dec), T-0003-007 (toast), T-0003-008 (navigate), dispatcher integration in T-0003-059..062 | ✅ All covered. Note: product spec says "4 action types" but schema has 5 (`increment` and `decrement` are separate). Not a spec gap in the ADR; just a miscount in Robert's AC-R5. |
+| AC    | Description                                     | Covering Tests                                                                                                                                                                                                                                                                   | Verdict                                                                                                                                                                                                                                                                                                                          |
+| ----- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AC-R1 | All 10 catalog components render                | T-0003-023 (Container), T-0003-033 (List), T-0003-039 (Heading), T-0003-043 (Text), T-0003-047 (Image), T-0003-055 (Button), T-0003-069 (Counter), T-0003-082 (TextInput), T-0003-091 (Toggle), T-0003-098 (Form)                                                                | ✅ All 10 have at least one Happy-path render test                                                                                                                                                                                                                                                                               |
+| AC-R2 | Each component honors required + optional props | Container 4 prop combos (T-023..028), Heading levels (T-039..042), Text weight/color (T-043..046), Image aspectRatio/alt (T-047..050), Button variants (T-056..058), Counter step/min/max (T-073..076), TextInput multiline/placeholder (T-083,084), Toggle defaultValue (T-092) | ⚠️ No test covers optional `id` field on nodes (used as state key). What happens when a Button has no id but its action targets a Counter that does? No test covers missing `id` on an interactive node.                                                                                                                         |
+| AC-R3 | Snapshot test per props matrix per component    | Steps 2–7 include snapshot tests; Step 8 is the determinism lock                                                                                                                                                                                                                 | ⚠️ Snapshot coverage is thin: Container has 1 snapshot (T-032), not a full matrix. §Step 2 acceptance says "Snapshot tests cover: Container with `direction: row`, `direction: column`, each padding/gap level, each align/justify" but the test table has only T-0003-032 as a single Snapshot entry. Tests don't match the AC. |
+| AC-R4 | Reopen produces byte-equal render               | T-0003-113, T-0003-114                                                                                                                                                                                                                                                           | ⚠️ See G-6 — structurally weak                                                                                                                                                                                                                                                                                                   |
+| AC-R5 | All 4 action types execute correctly            | T-0003-003 (set), T-0003-004..006 (inc/dec), T-0003-007 (toast), T-0003-008 (navigate), dispatcher integration in T-0003-059..062                                                                                                                                                | ✅ All covered. Note: product spec says "4 action types" but schema has 5 (`increment` and `decrement` are separate). Not a spec gap in the ADR; just a miscount in Robert's AC-R5.                                                                                                                                              |
 
 ---
 
@@ -106,19 +106,19 @@ T-0003-110 says "renders the fallback copy" — vague. Pin the exact strings: "T
 
 ## Independently Identified Missing Tests
 
-| # | Step | Missing test |
-|---|---|---|
-| M-1 | 1 | `useA2UIState` re-called with a different `spec`: does state reset? Stale-key behavior is undefined. |
-| M-2 | 1 | `dispatch` called after component unmount (haptic promise resolving after navigate-back). Should not throw. |
-| M-3 | 2 | Container key-as-index reconciliation when children array length changes. |
-| M-4 | 3 | Heading with `level` outside 1/2/3 (defensive against discriminator drift). What's the default? |
-| M-5 | 4 | Button with `variant` not in the enum — `variantStyles[unknown]` → `.color` would crash. |
-| M-6 | 5 | Counter with no `min` and no `max` (unconstrained). Should increment indefinitely. |
-| M-7 | 5 | Counter at-min snapshot (- disabled). T-079/080 cover zero/max only. |
-| M-8 | 6 | TextInput focus border styling change (Sable line 402: "border becomes primary on focus"). No T-ID. |
-| M-9 | 7 | Form with `submitAction` defined but `submitLabel` undefined — what does it render? |
-| M-10 | 8 | AppRunner loading and error states (isLoading / error path) survive the reducer refactor. |
-| M-11 | All | `renderWithProviders` test helper itself validated (provider-missing fallback). |
+| #    | Step | Missing test                                                                                                |
+| ---- | ---- | ----------------------------------------------------------------------------------------------------------- |
+| M-1  | 1    | `useA2UIState` re-called with a different `spec`: does state reset? Stale-key behavior is undefined.        |
+| M-2  | 1    | `dispatch` called after component unmount (haptic promise resolving after navigate-back). Should not throw. |
+| M-3  | 2    | Container key-as-index reconciliation when children array length changes.                                   |
+| M-4  | 3    | Heading with `level` outside 1/2/3 (defensive against discriminator drift). What's the default?             |
+| M-5  | 4    | Button with `variant` not in the enum — `variantStyles[unknown]` → `.color` would crash.                    |
+| M-6  | 5    | Counter with no `min` and no `max` (unconstrained). Should increment indefinitely.                          |
+| M-7  | 5    | Counter at-min snapshot (- disabled). T-079/080 cover zero/max only.                                        |
+| M-8  | 6    | TextInput focus border styling change (Sable line 402: "border becomes primary on focus"). No T-ID.         |
+| M-9  | 7    | Form with `submitAction` defined but `submitLabel` undefined — what does it render?                         |
+| M-10 | 8    | AppRunner loading and error states (isLoading / error path) survive the reducer refactor.                   |
+| M-11 | All  | `renderWithProviders` test helper itself validated (provider-missing fallback).                             |
 
 ---
 

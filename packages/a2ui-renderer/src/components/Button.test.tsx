@@ -91,7 +91,8 @@ function IntegrationWrapper({
         logger={{
           warn: loggerWarn ?? jest.fn(),
           error: jest.fn(),
-        }}>
+        }}
+      >
         <InnerIntegration spec={spec} node={node} onToast={onToast} />
       </RendererLoggerProvider>
     </RendererThemeProvider>
@@ -143,7 +144,11 @@ describe('ButtonRenderer — T-0003-056: primary variant', () => {
   it('variant:primary renders with bg.primary background and primaryFg text color', () => {
     const tree = create(
       <RendererThemeProvider value={DEFAULT_LIGHT_THEME}>
-        <ButtonRenderer node={makeNode({variant: 'primary'})} state={{}} dispatch={makeDispatch()} />
+        <ButtonRenderer
+          node={makeNode({variant: 'primary'})}
+          state={{}}
+          dispatch={makeDispatch()}
+        />
       </RendererThemeProvider>,
     )
     const json = tree.toJSON() as any
@@ -167,7 +172,11 @@ describe('ButtonRenderer — T-0003-057: secondary variant', () => {
   it('variant:secondary renders with bg.subtle background, text.primary, and border.subtle', () => {
     const tree = create(
       <RendererThemeProvider value={DEFAULT_LIGHT_THEME}>
-        <ButtonRenderer node={makeNode({variant: 'secondary'})} state={{}} dispatch={makeDispatch()} />
+        <ButtonRenderer
+          node={makeNode({variant: 'secondary'})}
+          state={{}}
+          dispatch={makeDispatch()}
+        />
       </RendererThemeProvider>,
     )
     const json = tree.toJSON() as any
@@ -190,7 +199,11 @@ describe('ButtonRenderer — T-0003-058: destructive variant', () => {
   it('variant:destructive renders with bg.destructive background and destructiveFg text', () => {
     const tree = create(
       <RendererThemeProvider value={DEFAULT_LIGHT_THEME}>
-        <ButtonRenderer node={makeNode({variant: 'destructive'})} state={{}} dispatch={makeDispatch()} />
+        <ButtonRenderer
+          node={makeNode({variant: 'destructive'})}
+          state={{}}
+          dispatch={makeDispatch()}
+        />
       </RendererThemeProvider>,
     )
     const json = tree.toJSON() as any
@@ -295,11 +308,7 @@ describe('ButtonRenderer — T-0003-064: pressed state opacity', () => {
     const dispatch = makeDispatch()
     const tree = create(
       <RendererThemeProvider value={DEFAULT_LIGHT_THEME}>
-        <ButtonRenderer
-          node={makeNode({label: 'Snap press'})}
-          state={{}}
-          dispatch={dispatch}
-        />
+        <ButtonRenderer node={makeNode({label: 'Snap press'})} state={{}} dispatch={dispatch} />
       </RendererThemeProvider>,
     )
     // Access the Pressable instance via the test renderer root
@@ -308,7 +317,9 @@ describe('ButtonRenderer — T-0003-064: pressed state opacity', () => {
     // Find the Pressable node by drilling into the rendered tree.
     // n.type is React.ElementType which may be a string or component; cast to
     // check string equality without TS "no overlap" error.
-    const pressableInstance = root.findAll(n => (n.type as unknown as string) === 'View' || n.props.onPress)[0]
+    const pressableInstance = root.findAll(
+      n => (n.type as unknown as string) === 'View' || n.props.onPress,
+    )[0]
     const styleFn = pressableInstance?.props?.style
     // If the style prop is a function, invoke it. If it's already resolved
     // (e.g. in certain jest environments), inspect it directly.

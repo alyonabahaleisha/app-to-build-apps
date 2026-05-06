@@ -87,9 +87,7 @@ describe('RendererThemeProvider', () => {
 
   it('RendererThemeProvider with no value prop uses default-light fallback', () => {
     const {result} = renderHook(() => useRendererTheme(), {
-      wrapper: ({children}) => (
-        <RendererThemeProvider>{children}</RendererThemeProvider>
-      ),
+      wrapper: ({children}) => <RendererThemeProvider>{children}</RendererThemeProvider>,
     })
     expect(result.current).toBe(DEFAULT_LIGHT_THEME)
   })

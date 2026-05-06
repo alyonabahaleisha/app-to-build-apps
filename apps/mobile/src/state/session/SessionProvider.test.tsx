@@ -21,16 +21,8 @@ import React, {useEffect, useState} from 'react'
 import {Text, View} from 'react-native'
 import {act, render, waitFor} from '@testing-library/react-native'
 
-import {
-  apiFetch,
-  NotAuthenticatedError,
-  resetApiForTests,
-} from '#/lib/api'
-import {
-  RedeemFailedError,
-  SessionProvider,
-  setRefreshClientForTests,
-} from './SessionProvider'
+import {apiFetch, NotAuthenticatedError, resetApiForTests} from '#/lib/api'
+import {RedeemFailedError, SessionProvider, setRefreshClientForTests} from './SessionProvider'
 import {useSession} from './useSession'
 
 // ---- expo-secure-store mock ------------------------------------------
@@ -64,9 +56,7 @@ import {secureStore} from '#/state/persisted/secure'
 // ---- JWT helpers -----------------------------------------------------
 
 function makeJwt(payload: Record<string, unknown>): string {
-  const header = Buffer.from(JSON.stringify({alg: 'HS256', typ: 'JWT'})).toString(
-    'base64url',
-  )
+  const header = Buffer.from(JSON.stringify({alg: 'HS256', typ: 'JWT'})).toString('base64url')
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
   // Signature segment is unused — server validates, client only decodes.
   return `${header}.${body}.signature-not-validated-on-client`
@@ -105,9 +95,7 @@ function SessionProbe({onValue}: ProbeProps) {
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error', 'debug'] as const
 
 function spyOnAllConsole() {
-  return CONSOLE_METHODS.map((m) =>
-    jest.spyOn(console, m).mockImplementation(() => {}),
-  )
+  return CONSOLE_METHODS.map(m => jest.spyOn(console, m).mockImplementation(() => {}))
 }
 
 function serializeArg(arg: unknown): string {
@@ -161,7 +149,7 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.useRealTimers()
-  consoleSpies.forEach((s) => s.mockRestore())
+  consoleSpies.forEach(s => s.mockRestore())
 })
 
 function mockSyncOk(user = {id: 'user-uuid-aaa', email: 'a@b.c'}) {
@@ -252,7 +240,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     const screen = render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
 
@@ -294,7 +282,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     const screen = render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
 
@@ -308,9 +296,9 @@ describe('SessionProvider', () => {
 
     expect(screen.getByTestId('status').props.children).toBe('unauthenticated')
 
-    await expect(
-      apiFetch('/projects', {baseUrl: 'http://localhost:3000'}),
-    ).rejects.toBeInstanceOf(NotAuthenticatedError)
+    await expect(apiFetch('/projects', {baseUrl: 'http://localhost:3000'})).rejects.toBeInstanceOf(
+      NotAuthenticatedError,
+    )
 
     // T-0001-082: signOut must not log the access token.
     assertNoTokenLeak(consoleSpies, accessToken)
@@ -325,7 +313,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
     await waitFor(() => expect(session?.status).toBe('authenticated'))
@@ -344,7 +332,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
     await waitFor(() => expect(session?.status).toBe('unauthenticated'))
@@ -371,7 +359,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
     await waitFor(() => expect(session?.status).toBe('unauthenticated'))
@@ -399,7 +387,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
     await waitFor(() => expect(session?.status).toBe('authenticated'))
@@ -408,7 +396,7 @@ describe('SessionProvider', () => {
     let resolveInFlight: (v: unknown) => void = () => {}
     mockFetch.mockImplementationOnce(
       () =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           resolveInFlight = resolve
         }),
     )
@@ -420,9 +408,9 @@ describe('SessionProvider', () => {
     })
 
     // Subsequent calls must reject — token is gone.
-    await expect(
-      apiFetch('/projects', {baseUrl: 'http://localhost:3000'}),
-    ).rejects.toBeInstanceOf(NotAuthenticatedError)
+    await expect(apiFetch('/projects', {baseUrl: 'http://localhost:3000'})).rejects.toBeInstanceOf(
+      NotAuthenticatedError,
+    )
 
     // The in-flight call resolves on its own timeline (here we resolve it
     // OK to demonstrate that it doesn't get retroactively poisoned).
@@ -448,7 +436,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
 
@@ -459,9 +447,9 @@ describe('SessionProvider', () => {
     expect(snap.accessToken).toBeNull()
 
     // Next apiFetch rejects.
-    await expect(
-      apiFetch('/projects', {baseUrl: 'http://localhost:3000'}),
-    ).rejects.toBeInstanceOf(NotAuthenticatedError)
+    await expect(apiFetch('/projects', {baseUrl: 'http://localhost:3000'})).rejects.toBeInstanceOf(
+      NotAuthenticatedError,
+    )
 
     // T-0001-082: refresh-failure path doesn't log the token.
     assertNoTokenLeak(consoleSpies, accessToken)
@@ -485,7 +473,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
 
@@ -518,7 +506,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     const screen = render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
 
@@ -535,7 +523,7 @@ describe('SessionProvider', () => {
     let session: ReturnType<typeof useSession> | undefined
     render(
       <SessionProvider>
-        <SessionProbe onValue={(v) => (session = v)} />
+        <SessionProbe onValue={v => (session = v)} />
       </SessionProvider>,
     )
     await waitFor(() => expect(session?.status).toBe('unauthenticated'))
@@ -558,7 +546,7 @@ describe('SessionProvider', () => {
       observed.push(s)
       const [, setN] = useState(0)
       return (
-        <Text testID="probe-status" onPress={() => setN((n) => n + 1)}>
+        <Text testID="probe-status" onPress={() => setN(n => n + 1)}>
           {s.status}
         </Text>
       )
@@ -569,7 +557,9 @@ describe('SessionProvider', () => {
         <Probe />
       </SessionProvider>,
     )
-    await waitFor(() => expect(screen.getByTestId('probe-status').props.children).toBe('unauthenticated'))
+    await waitFor(() =>
+      expect(screen.getByTestId('probe-status').props.children).toBe('unauthenticated'),
+    )
 
     // Force a re-render of the probe without changing session state.
     const beforeCount = observed.length

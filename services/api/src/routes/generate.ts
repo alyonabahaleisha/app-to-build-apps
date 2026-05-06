@@ -124,7 +124,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
   const projectsService = await resolveService(opts)
   // Keep a reference to the db for the parent-ACL lookup. Production falls
   // through to the singleton; tests inject their own pool.
-  const resolvedDb: Db = opts.db ?? (await import('../db/index.js').then((m) => m.getDb()))
+  const resolvedDb: Db = opts.db ?? (await import('../db/index.js').then(m => m.getDb()))
 
   fastify.post('/generate', {preHandler: [requireAuth]}, async (req, reply) => {
     const userId = (req as unknown as AuthenticatedRequest).user.id

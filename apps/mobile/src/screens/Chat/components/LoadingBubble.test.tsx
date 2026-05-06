@@ -67,23 +67,17 @@ describe('copyForPhase', () => {
 describe('LoadingBubble', () => {
   it('renders thinking copy', () => {
     const screen = renderBubble('thinking')
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingThinking,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingThinking)
   })
 
   it('renders building copy', () => {
     const screen = renderBubble('building')
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingBuilding,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingBuilding)
   })
 
   it('renders stalled copy', () => {
     const screen = renderBubble('stalled')
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingStalled,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingStalled)
   })
 
   it('renders animated dots', () => {
@@ -101,9 +95,7 @@ describe('LoadingBubble', () => {
       await Promise.resolve()
     })
 
-    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(
-      chatCopy.loadingBuilding,
-    )
+    expect(screen.getByTestId('loading-bubble-text').props.children).toBe(chatCopy.loadingBuilding)
     // Dots still rendered in reduced-motion (static, not animated).
     expect(screen.getByTestId('loading-dots')).toBeTruthy()
   })

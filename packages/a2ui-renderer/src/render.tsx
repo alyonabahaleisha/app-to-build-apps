@@ -62,9 +62,7 @@ export function NodeRenderer({
     case 'Image':
       return <ImageRenderer node={node} state={state} dispatch={dispatch} />
     case 'Container':
-      return (
-        <ContainerRenderer node={node} state={state} dispatch={dispatch} />
-      )
+      return <ContainerRenderer node={node} state={state} dispatch={dispatch} />
     case 'Button':
       return <ButtonRenderer node={node} state={state} dispatch={dispatch} />
     case 'Counter':

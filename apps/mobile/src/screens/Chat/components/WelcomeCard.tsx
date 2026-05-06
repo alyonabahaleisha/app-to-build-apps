@@ -40,7 +40,7 @@ export function WelcomeCard({onSelectExample}: Props) {
         {chatCopy.welcomeSubhead}
       </Text>
       <View style={styles.chips}>
-        {chatCopy.examplePrompts.map((prompt) => (
+        {chatCopy.examplePrompts.map(prompt => (
           <ExamplePromptChip key={prompt} label={prompt} onPress={onSelectExample} />
         ))}
       </View>

@@ -40,7 +40,9 @@ function makeState(overrides?: Partial<ReducerState>): ReducerState {
   }
 }
 
-function makeStateWith(entries: Record<string, import('@app-creator/a2ui-schema').A2UIValue>): ReducerState {
+function makeStateWith(
+  entries: Record<string, import('@app-creator/a2ui-schema').A2UIValue>,
+): ReducerState {
   return {
     spec: SIMPLE_SPEC,
     values: new Map(Object.entries(entries)),
@@ -132,9 +134,7 @@ describe('reducer', () => {
 
   // T-0003-014 — reducer does not mutate input state
   it('reducer does not mutate input state object', () => {
-    const values = new Map<string, import('@app-creator/a2ui-schema').A2UIValue>([
-      ['x', 1],
-    ])
+    const values = new Map<string, import('@app-creator/a2ui-schema').A2UIValue>([['x', 1]])
     const frozen = Object.freeze({
       spec: SIMPLE_SPEC,
       values,

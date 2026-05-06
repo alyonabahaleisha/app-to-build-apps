@@ -324,7 +324,7 @@ describe('ADR-0002 Step 6 — libraryService', () => {
 
     // Page 2 should skip the now-private project and return only 1 item
     const page2 = await svc.list({limit: 2, cursor: page1.next_cursor!})
-    const page2Ids = page2.items.map((i) => i.id)
+    const page2Ids = page2.items.map(i => i.id)
     expect(page2Ids).not.toContain(ids[2])
   })
 
@@ -346,7 +346,7 @@ describe('ADR-0002 Step 6 — libraryService', () => {
     // Fetch page 1 (limit=2) — captures top 2
     const page1 = await svc.list({limit: 2})
     expect(page1.items.length).toBe(2)
-    const page1Ids = new Set(page1.items.map((i) => i.id))
+    const page1Ids = new Set(page1.items.map(i => i.id))
 
     // Publish a new project with a future timestamp AFTER page 1 cursor was established
     const newId = await makePublicProject(db, userId, {
@@ -356,7 +356,7 @@ describe('ADR-0002 Step 6 — libraryService', () => {
     // Page 2 using the cursor from page 1 — new item has published_at AFTER
     // the cursor anchor so it does NOT appear (cursor goes backward in time)
     const page2 = await svc.list({limit: 2, cursor: page1.next_cursor!})
-    const page2Ids = page2.items.map((i) => i.id)
+    const page2Ids = page2.items.map(i => i.id)
 
     // The new item should not be in page 2
     expect(page2Ids).not.toContain(newId)

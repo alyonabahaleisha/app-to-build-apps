@@ -90,10 +90,10 @@ type SSEPayload = Record<string, unknown> | string
 function parseSSE(raw: string): SSEPayload[] {
   return raw
     .split('\n\n')
-    .map((chunk) => chunk.trim())
+    .map(chunk => chunk.trim())
     .filter(Boolean)
-    .map((chunk) => {
-      const dataLine = chunk.split('\n').find((l) => l.startsWith('data: '))
+    .map(chunk => {
+      const dataLine = chunk.split('\n').find(l => l.startsWith('data: '))
       if (!dataLine) return null
       const payload = dataLine.slice('data: '.length)
       if (payload === '[DONE]') return '[DONE]' as string
@@ -459,7 +459,7 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
 
       // Extract typed events
       const typed = events.filter((e): e is Record<string, unknown> => typeof e === 'object')
-      const types = typed.map((e) => e['type'])
+      const types = typed.map(e => e['type'])
       expect(types).toContain('thinking_started')
       expect(types).toContain('building_started')
       expect(types).toContain('done')
@@ -850,9 +850,7 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
 
       // Only permitted event types should appear
       const events = parseSSE(res.body)
-      const typedEvents = events.filter(
-        (e): e is Record<string, unknown> => typeof e === 'object',
-      )
+      const typedEvents = events.filter((e): e is Record<string, unknown> => typeof e === 'object')
       const permittedTypes = new Set(['thinking_started', 'building_started', 'done', 'error'])
       for (const event of typedEvents) {
         expect(permittedTypes.has(event['type'] as string)).toBe(true)

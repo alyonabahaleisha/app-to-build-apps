@@ -43,7 +43,10 @@ describe('TextRenderer — default', () => {
     const root = tree.toJSON() as any
     expect(root.props.style).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({fontSize: T.typography.body.fontSize, fontWeight: T.typography.body.fontWeight}),
+        expect.objectContaining({
+          fontSize: T.typography.body.fontSize,
+          fontWeight: T.typography.body.fontWeight,
+        }),
         expect.objectContaining({color: T.palette.text.primary}),
       ]),
     )
@@ -73,9 +76,7 @@ describe('TextRenderer — color:muted', () => {
     const tree = renderText({type: 'Text', text: 'Muted', color: 'muted'})
     const root = tree.toJSON() as any
     expect(root.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({color: T.palette.text.muted}),
-      ]),
+      expect.arrayContaining([expect.objectContaining({color: T.palette.text.muted})]),
     )
   })
 })
@@ -88,9 +89,7 @@ describe('TextRenderer — color:destructive', () => {
     const tree = renderText({type: 'Text', text: 'Error', color: 'destructive'})
     const root = tree.toJSON() as any
     expect(root.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({color: T.palette.text.destructive}),
-      ]),
+      expect.arrayContaining([expect.objectContaining({color: T.palette.text.destructive})]),
     )
   })
 })

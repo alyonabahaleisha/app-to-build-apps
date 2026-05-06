@@ -177,7 +177,9 @@ export function deriveHandleFromEmail(email: string): string {
   if (candidate.length < 3 || isReservedHandle(candidate) || !HANDLE_REGEX.test(candidate)) {
     // Fallback: produce a guaranteed-valid handle. Length 9 ('user-' + 4 hex)
     // satisfies regex (3..20) and is unlikely to collide with reserved words.
-    const suffix = Math.floor(Math.random() * 0xffff).toString(16).padStart(4, '0')
+    const suffix = Math.floor(Math.random() * 0xffff)
+      .toString(16)
+      .padStart(4, '0')
     candidate = `user-${suffix}`
   }
   return candidate
@@ -261,14 +263,15 @@ export function createMarketplaceService(db: Db) {
       }
 
       // 6. Transaction: update handle (if needed) + flip project visibility.
-      const authorHandle = await db.transaction(async (tx) => {
+      const authorHandle = await db.transaction(async tx => {
         // Set handle if the user doesn't have one yet and a new one is provided.
         let finalHandle: string
         if (user.handle === null && input.handle !== undefined) {
           try {
-            await tx.update(users).set({handle: input.handle}).where(
-              and(eq(users.id, input.userId), isNull(users.handle)),
-            )
+            await tx
+              .update(users)
+              .set({handle: input.handle})
+              .where(and(eq(users.id, input.userId), isNull(users.handle)))
           } catch (err: unknown) {
             const pgErr = err as {code?: string}
             if (pgErr.code === PG_UNIQUE_VIOLATION) {
@@ -305,10 +308,7 @@ export function createMarketplaceService(db: Db) {
       if (!version) throw new InvalidStateError()
 
       // Re-fetch project to get the fresh published_at value.
-      const updatedRows = await db
-        .select()
-        .from(projects)
-        .where(eq(projects.id, input.projectId))
+      const updatedRows = await db.select().from(projects).where(eq(projects.id, input.projectId))
       const updatedProject = updatedRows[0]
       if (!updatedProject) throw new NotFoundError()
 
@@ -436,10 +436,7 @@ export function createMarketplaceService(db: Db) {
       }
 
       // Check DB for taken.
-      const rows = await db
-        .select({id: users.id})
-        .from(users)
-        .where(eq(users.handle, handle))
+      const rows = await db.select({id: users.id}).from(users).where(eq(users.handle, handle))
 
       if (rows.length > 0) {
         return {available: false, reason: 'taken'}

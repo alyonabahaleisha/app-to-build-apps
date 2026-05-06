@@ -63,13 +63,7 @@ interface RendererHostProps {
   onBack: () => void
 }
 
-function RendererHost({
-  spec,
-  projectId,
-  renderHash,
-  rendererTheme,
-  onBack,
-}: RendererHostProps) {
+function RendererHost({spec, projectId, renderHash, rendererTheme, onBack}: RendererHostProps) {
   const toast = useToast()
   const {state, dispatch, currentViewId} = useA2UIState(spec, {
     onToast: toast.show,
@@ -87,16 +81,9 @@ function RendererHost({
           mode="owner"
           onBack={onBack}
         >
-          <ScrollView
-            style={styles.body}
-            contentContainerStyle={styles.bodyContent}
-          >
+          <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
             {currentView ? (
-              <NodeRenderer
-                node={currentView.root}
-                state={state}
-                dispatch={dispatch}
-              />
+              <NodeRenderer node={currentView.root} state={state} dispatch={dispatch} />
             ) : (
               <Text style={styles.noContent}>No content to display.</Text>
             )}
@@ -137,7 +124,7 @@ export function AppRunnerScreen({route, navigation}: Props) {
         destructiveButtonIndex: 0,
         cancelButtonIndex: 1,
       },
-      async (idx) => {
+      async idx => {
         if (idx !== 0) return
         try {
           await unpublishMutation.mutateAsync({projectId})
@@ -167,15 +154,10 @@ export function AppRunnerScreen({route, navigation}: Props) {
     return (
       <SafeContainer>
         <View style={styles.topBar}>
-          <BackButton
-            onPress={handleBack}
-            accessibilityLabel="Back to library"
-          />
+          <BackButton onPress={handleBack} accessibilityLabel="Back to library" />
         </View>
         <View style={styles.centered}>
-          <Text
-            style={[theme.typography.body, {color: theme.palette.text.muted}]}
-          >
+          <Text style={[theme.typography.body, {color: theme.palette.text.muted}]}>
             {error?.message ?? 'Project not found.'}
           </Text>
         </View>
@@ -210,11 +192,7 @@ export function AppRunnerScreen({route, navigation}: Props) {
           />
 
           <Text
-            style={[
-              styles.title,
-              theme.typography.heading3,
-              {color: theme.palette.text.primary},
-            ]}
+            style={[styles.title, theme.typography.heading3, {color: theme.palette.text.primary}]}
             numberOfLines={1}
             accessibilityRole="header"
           >
@@ -283,9 +261,7 @@ export function AppRunnerScreen({route, navigation}: Props) {
           />
         ) : (
           <View style={styles.body}>
-            <Text
-              style={[theme.typography.body, {color: theme.palette.text.muted}]}
-            >
+            <Text style={[theme.typography.body, {color: theme.palette.text.muted}]}>
               No content to display.
             </Text>
           </View>

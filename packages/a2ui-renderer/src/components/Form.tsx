@@ -66,17 +66,12 @@ export interface FormNodeProps {
 
 // -- Component ----------------------------------------------------------------
 
-export function FormRenderer({
-  node,
-  state,
-  dispatch,
-}: FormNodeProps): React.ReactElement {
+export function FormRenderer({node, state, dispatch}: FormNodeProps): React.ReactElement {
   const theme = useRendererTheme()
 
   // Submit button is shown only when BOTH submitLabel and submitAction are
   // defined. submitLabel controls visibility (§H, T-0003-103b).
-  const showSubmit =
-    node.submitLabel !== undefined && node.submitAction !== undefined
+  const showSubmit = node.submitLabel !== undefined && node.submitAction !== undefined
 
   return (
     <View style={{gap: theme.spacing.md}}>

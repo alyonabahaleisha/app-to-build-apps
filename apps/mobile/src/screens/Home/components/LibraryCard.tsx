@@ -46,20 +46,13 @@ export function LibraryCard({projectId, title, createdAt, onPress, now}: Props) 
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
-            style={[
-              theme.typography.heading3,
-              {color: theme.palette.text.primary},
-            ]}
+            style={[theme.typography.heading3, {color: theme.palette.text.primary}]}
           >
             {safeTitle}
           </Text>
           <Text
             numberOfLines={1}
-            style={[
-              styles.subtitle,
-              theme.typography.caption,
-              {color: theme.palette.text.muted},
-            ]}
+            style={[styles.subtitle, theme.typography.caption, {color: theme.palette.text.muted}]}
           >
             {subtitle}
           </Text>

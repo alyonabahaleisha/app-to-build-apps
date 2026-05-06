@@ -38,11 +38,7 @@ const mockApiFetch = apiFetch as jest.MockedFunction<typeof apiFetch>
 
 function makeWrapper(qc: QueryClient) {
   return function Wrapper({children}: {children: React.ReactNode}) {
-    return React.createElement(
-      QueryClientProvider,
-      {client: qc},
-      children,
-    )
+    return React.createElement(QueryClientProvider, {client: qc}, children)
   }
 }
 
@@ -139,9 +135,7 @@ describe('usePublishMutation', () => {
 
   it('throws PublishError with handle_taken code on 409 with handle_taken body', async () => {
     const qc = makeQc()
-    mockApiFetch.mockRejectedValueOnce(
-      new ApiError(409, JSON.stringify({error: 'handle_taken'})),
-    )
+    mockApiFetch.mockRejectedValueOnce(new ApiError(409, JSON.stringify({error: 'handle_taken'})))
 
     const {result} = renderHook(() => usePublishMutation(), {
       wrapper: makeWrapper(qc),
@@ -232,10 +226,9 @@ describe('useCheckHandleQuery', () => {
     const qc = makeQc()
     mockApiFetch.mockResolvedValueOnce({available: true})
 
-    const {result} = renderHook(
-      () => useCheckHandleQuery('alice', true),
-      {wrapper: makeWrapper(qc)},
-    )
+    const {result} = renderHook(() => useCheckHandleQuery('alice', true), {
+      wrapper: makeWrapper(qc),
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -246,10 +239,9 @@ describe('useCheckHandleQuery', () => {
   it('does not fire when enabled=false', () => {
     const qc = makeQc()
     mockApiFetch.mockClear()
-    const {result} = renderHook(
-      () => useCheckHandleQuery('alice', false),
-      {wrapper: makeWrapper(qc)},
-    )
+    const {result} = renderHook(() => useCheckHandleQuery('alice', false), {
+      wrapper: makeWrapper(qc),
+    })
 
     expect(result.current.fetchStatus).toBe('idle')
     expect(mockApiFetch).not.toHaveBeenCalled()
@@ -259,10 +251,7 @@ describe('useCheckHandleQuery', () => {
     const qc = makeQc()
     mockApiFetch.mockResolvedValueOnce({available: false, reason: 'taken'})
 
-    const {result} = renderHook(
-      () => useCheckHandleQuery('a b', true),
-      {wrapper: makeWrapper(qc)},
-    )
+    const {result} = renderHook(() => useCheckHandleQuery('a b', true), {wrapper: makeWrapper(qc)})
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -275,10 +264,7 @@ describe('useHandleSuggestQuery', () => {
     const qc = makeQc()
     mockApiFetch.mockResolvedValueOnce({handle: 'alyona-bahaleisha'})
 
-    const {result} = renderHook(
-      () => useHandleSuggestQuery(true),
-      {wrapper: makeWrapper(qc)},
-    )
+    const {result} = renderHook(() => useHandleSuggestQuery(true), {wrapper: makeWrapper(qc)})
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
@@ -289,10 +275,7 @@ describe('useHandleSuggestQuery', () => {
   it('does not fire when enabled=false', () => {
     const qc = makeQc()
     mockApiFetch.mockClear()
-    const {result} = renderHook(
-      () => useHandleSuggestQuery(false),
-      {wrapper: makeWrapper(qc)},
-    )
+    const {result} = renderHook(() => useHandleSuggestQuery(false), {wrapper: makeWrapper(qc)})
 
     expect(result.current.fetchStatus).toBe('idle')
     expect(mockApiFetch).not.toHaveBeenCalled()

@@ -60,13 +60,7 @@ export function TextInput({
 
   return (
     <View style={styles.root}>
-      <Text
-        style={[
-          styles.label,
-          theme.typography.caption,
-          {color: theme.palette.text.muted},
-        ]}
-      >
+      <Text style={[styles.label, theme.typography.caption, {color: theme.palette.text.muted}]}>
         {label}
       </Text>
       <View
@@ -105,11 +99,7 @@ export function TextInput({
       </View>
       {showError ? (
         <Text
-          style={[
-            styles.error,
-            theme.typography.caption,
-            {color: theme.palette.text.destructive},
-          ]}
+          style={[styles.error, theme.typography.caption, {color: theme.palette.text.destructive}]}
           accessibilityLiveRegion="polite"
         >
           {error}

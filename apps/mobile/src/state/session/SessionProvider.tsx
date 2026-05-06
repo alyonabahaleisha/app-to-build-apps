@@ -172,9 +172,8 @@ export function decodeJwtPayload(token: string): DecodedJwt {
   let json: string
   try {
     // `atob` is available in jest-expo and React Native via Hermes.
-    json = typeof atob === 'function'
-      ? atob(base64)
-      : Buffer.from(base64, 'base64').toString('utf8')
+    json =
+      typeof atob === 'function' ? atob(base64) : Buffer.from(base64, 'base64').toString('utf8')
   } catch {
     throw new Error('jwt: payload not base64')
   }
@@ -277,12 +276,7 @@ export function SessionProvider({children, storage}: SessionProviderProps) {
       const decoded = decodeJwtPayload(accessToken)
       const user: AuthUser = {id: decoded.sub, email: decoded.email ?? ''}
       await store.write({accessToken, refreshToken: newRt, userId: user.id})
-      applySession(
-        {accessToken, userId: user.id},
-        user,
-        newRt,
-        decoded.exp * 1000,
-      )
+      applySession({accessToken, userId: user.id}, user, newRt, decoded.exp * 1000)
     } catch {
       // Refresh failed (network, 401, malformed). Drop the session
       // (T-0001-133). The next `apiFetch` will reject with
@@ -395,10 +389,10 @@ export function SessionProvider({children, storage}: SessionProviderProps) {
 
         let synced: {user: {id: string; email: string}}
         try {
-          synced = await apiFetch<{user: {id: string; email: string}}>(
-            '/auth/sync',
-            {method: 'POST', body: JSON.stringify({})},
-          )
+          synced = await apiFetch<{user: {id: string; email: string}}>('/auth/sync', {
+            method: 'POST',
+            body: JSON.stringify({}),
+          })
         } catch (err) {
           // Sync failed — DO NOT persist tokens (T-0001-077, T-0001-078).
           setCurrentSession(null)

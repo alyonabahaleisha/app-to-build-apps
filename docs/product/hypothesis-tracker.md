@@ -22,11 +22,11 @@
 
 ## Index
 
-| ID | Statement | Status | Milestone | Owner |
-|---|---|---|---|---|
-| H1 | Idea-makers (personal individuals) will convert at ≥8% to a paid plan once they have a working chat → render loop | Deferred | M1 (referenced) → M3 willingness-to-pay test | Robert |
-| H3 | Generation reliability (success rate, latency, crash-free) is a necessary condition for the product to be usable | Validated | M1 | AI Eng |
-| H5 | **Quality threshold drives retention.** There is a visual and structural quality bar above which generated apps are kept and used, and below which they are abandoned regardless of functional correctness. H3 is necessary but not sufficient | **Active** | **M2** | Robert |
+| ID  | Statement                                                                                                                                                                                                                                      | Status     | Milestone                                    | Owner  |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------- | ------ |
+| H1  | Idea-makers (personal individuals) will convert at ≥8% to a paid plan once they have a working chat → render loop                                                                                                                              | Deferred   | M1 (referenced) → M3 willingness-to-pay test | Robert |
+| H3  | Generation reliability (success rate, latency, crash-free) is a necessary condition for the product to be usable                                                                                                                               | Validated  | M1                                           | AI Eng |
+| H5  | **Quality threshold drives retention.** There is a visual and structural quality bar above which generated apps are kept and used, and below which they are abandoned regardless of functional correctness. H3 is necessary but not sufficient | **Active** | **M2**                                       | Robert |
 
 > H2 and H4 reserved — not yet entered. Add when claimed by a named
 > milestone with a disconfirmation rule.
@@ -55,12 +55,12 @@
 - **Status:** **Validated** in M1.
 - **Measurement:** Eval-set generation success rate ≥80% on 30 prompts,
   p95 latency ≤90s, crash-free ≥99% on TestFlight cohort. Met during M1.
-- **Why it's not enough:** Reliability gets the app *to* the user.
+- **Why it's not enough:** Reliability gets the app _to_ the user.
   Whether the user comes back is the H5 question, not the H3 one.
 
 ---
 
-## H5 — Quality threshold drives retention *(active)*
+## H5 — Quality threshold drives retention _(active)_
 
 - **Statement:** There is a visual and structural quality bar above which
   generated apps are kept and used, and below which they are abandoned
@@ -73,12 +73,12 @@
 
 ### Measurement
 
-| Signal | Definition | Target |
-|---|---|---|
-| Second-session return rate | % of generated apps reopened ≥1 time within 7 days of creation, by the creator | ≥40% on alpha cohort |
-| Share / publish rate | % of users who, having generated ≥1 app, take a share OR publish-intent action within 7 days | ≥25% on alpha cohort |
-| Designer rubric score | 6-dimension rubric (spacing, hierarchy, typography, color, alignment, density), 1–5 ordinal, two independent designers, κ ≥ 0.7 | ≥3.5 / 5 average on eval set |
-| Correlation | Spearman ρ between rubric score and second-session return on alpha cohort | \|ρ\| ≥ 0.2 |
+| Signal                     | Definition                                                                                                                      | Target                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| Second-session return rate | % of generated apps reopened ≥1 time within 7 days of creation, by the creator                                                  | ≥40% on alpha cohort         |
+| Share / publish rate       | % of users who, having generated ≥1 app, take a share OR publish-intent action within 7 days                                    | ≥25% on alpha cohort         |
+| Designer rubric score      | 6-dimension rubric (spacing, hierarchy, typography, color, alignment, density), 1–5 ordinal, two independent designers, κ ≥ 0.7 | ≥3.5 / 5 average on eval set |
+| Correlation                | Spearman ρ between rubric score and second-session return on alpha cohort                                                       | \|ρ\| ≥ 0.2                  |
 
 ### Validation rule
 
@@ -116,4 +116,4 @@ H5 is **disconfirmed** if any of:
   utility-anchored generation, social loop) rather than spending more on
   visual polish.
 - This is the highest-information outcome M2 can produce. Optimize for
-  *learning the truth*, not for proving the hypothesis.
+  _learning the truth_, not for proving the hypothesis.

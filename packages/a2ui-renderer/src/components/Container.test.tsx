@@ -324,9 +324,7 @@ describe('ContainerRenderer — key stability (T-0003-038c)', () => {
           root: {
             type: 'Container',
             direction: 'column',
-            children: [
-              {type: 'Heading', id: 'h1', text: 'First'},
-            ],
+            children: [{type: 'Heading', id: 'h1', text: 'First'}],
           },
         },
       ],

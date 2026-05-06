@@ -1,30 +1,33 @@
 # Feature Spec: Edit-by-Chat
+
 **Author:** Robert (CPO) | **Date:** 2026-05-03
 **Status:** Draft — Pending Architecture Review
 **Parent specs:** `docs/product/app-creation-poc.md` (line 148, Phase 2 list); `docs/product/chat-creation.md` (line 372, Phase 2 list).
-**Triggering signal:** User question post-ADR-0003 ship: *"are we able to enhance the app in the chat?"*
+**Triggering signal:** User question post-ADR-0003 ship: _"are we able to enhance the app in the chat?"_
 
 ## Decision
 
 **Yes — ship edit-by-chat as ADR-0004, before the Library/marketplace slice.**
 
-The maker's iteration loop (idea → app → tweak → ship) is the core value prop. The renderer just landed; without edit, "tweak" means "regenerate from scratch and lose what you liked." That's not a product. Library/marketplace is a social-discovery layer that's only valuable *after* makers can iterate to something worth shipping.
+The maker's iteration loop (idea → app → tweak → ship) is the core value prop. The renderer just landed; without edit, "tweak" means "regenerate from scratch and lose what you liked." That's not a product. Library/marketplace is a social-discovery layer that's only valuable _after_ makers can iterate to something worth shipping.
 
 Cal's `pipeline-state.md` placeholder for ADR-0004 (Library & Ship) gets re-sliced into:
+
 - **ADR-0004 (Edit-by-Chat)** — this spec.
 - **ADR-0005 (TestFlight & Ship)** — pull "Ship" out of the Library slice, ship it standalone. Getting any app onto a real device is the next maker need after iteration.
 - **ADR-0006 (Library & Marketplace)** — browse, Try, Remix. The social layer, last.
 
 ## Rationale
 
-| Lens | Read |
-|---|---|
-| GM | Maker iteration is the core JTBD. "Make the buttons green" is the test of whether this is a real product. Without edit, every regen is a coin flip on whether the model produces something better than before. |
-| CDO | Edit unlocks ship-worthy outputs. The Library is empty without ship-worthy outputs. Library-first inverts the demand pyramid. |
-| CIO | Architecture for edit-by-chat is already designed (ARCHITECTURE.md path, CLAUDE.md §3 names the Anthropic tool `produce_app_spec_patch`). No discovery on the technical pattern; just the product slice. |
-| CEO | User asked. That's revealed-preference signal worth more than internal sequencing instinct. |
+| Lens | Read                                                                                                                                                                                                           |
+| ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GM   | Maker iteration is the core JTBD. "Make the buttons green" is the test of whether this is a real product. Without edit, every regen is a coin flip on whether the model produces something better than before. |
+| CDO  | Edit unlocks ship-worthy outputs. The Library is empty without ship-worthy outputs. Library-first inverts the demand pyramid.                                                                                  |
+| CIO  | Architecture for edit-by-chat is already designed (ARCHITECTURE.md path, CLAUDE.md §3 names the Anthropic tool `produce_app_spec_patch`). No discovery on the technical pattern; just the product slice.       |
+| CEO  | User asked. That's revealed-preference signal worth more than internal sequencing instinct.                                                                                                                    |
 
 **Impact × Confidence ÷ Effort:**
+
 - Edit-by-chat: I=5, C=4, E=3 → score 6.7
 - Library & marketplace: I=4, C=3, E=4 → score 3.0
 - TestFlight ship: I=4, C=5, E=2 → score 10.0
@@ -32,6 +35,7 @@ Cal's `pipeline-state.md` placeholder for ADR-0004 (Library & Ship) gets re-slic
 (TestFlight scores higher than edit on this rubric, but the user's question revealed a sequencing preference that overrides the rubric. TestFlight ships next as ADR-0005.)
 
 **Top 3 drivers for edit-first:**
+
 1. User explicitly asked. Highest-quality signal in this product cycle.
 2. Edit completes the maker loop; without it, "describe an app, get a real app" is one-shot — closer to a parlor trick than a product.
 3. Architecture already designed. Effort is implementation, not discovery.
@@ -41,6 +45,7 @@ Cal's `pipeline-state.md` placeholder for ADR-0004 (Library & Ship) gets re-slic
 A maker generates a Pomodoro Timer. The buttons should be a different color. The completed-sessions counter should default to 5, not 0. They want a "Long Break" duration alongside the existing two.
 
 Current options:
+
 1. Regenerate from scratch with a new prompt that tries to specify all the details. Loses the parts they liked.
 2. Stop. Ship the imperfect app or abandon it.
 
@@ -50,11 +55,11 @@ Both options are wrong. Real apps are iterated. The product needs a third option
 
 ## Who Is This For
 
-| Persona | Need | Current Workflow | Pain Point |
-|---|---|---|---|
-| Maker who just generated an app | Tweak one thing without losing the rest | Regenerate from scratch with a longer prompt | Loses parts they liked; gambles every regen |
-| Maker iterating toward "ship-worthy" | Multiple rounds of small fixes converging on done | None — abandon or accept | Iteration is the work of making something real |
-| Beta tester giving feedback | Try modifications quickly to see if something works | None — no edit primitive | Can't test ideas without committing to a full regen |
+| Persona                              | Need                                                | Current Workflow                             | Pain Point                                          |
+| ------------------------------------ | --------------------------------------------------- | -------------------------------------------- | --------------------------------------------------- |
+| Maker who just generated an app      | Tweak one thing without losing the rest             | Regenerate from scratch with a longer prompt | Loses parts they liked; gambles every regen         |
+| Maker iterating toward "ship-worthy" | Multiple rounds of small fixes converging on done   | None — abandon or accept                     | Iteration is the work of making something real      |
+| Beta tester giving feedback          | Try modifications quickly to see if something works | None — no edit primitive                     | Can't test ideas without committing to a full regen |
 
 ## Business Value
 
@@ -74,26 +79,26 @@ Both options are wrong. Real apps are iterated. The product needs a third option
 
 1. Maker has an open AppRunner showing their Pomodoro Timer.
 2. They tap **Edit** in the AppRunner top bar (NEW affordance — Sable's call on placement).
-3. Chat re-opens scoped to this project. The chat history shows their original prompt + a system message: *"Editing 🍅 Pomodoro Timer — describe what to change."*
-4. They type *"make the buttons green and add a long break duration setting"* and tap Send.
-5. SSE-driven loading state (matches the existing /generate pattern): *"Reading the change…" → "Updating your app…"*. Latency target: p95 ≤45s.
+3. Chat re-opens scoped to this project. The chat history shows their original prompt + a system message: _"Editing 🍅 Pomodoro Timer — describe what to change."_
+4. They type _"make the buttons green and add a long break duration setting"_ and tap Send.
+5. SSE-driven loading state (matches the existing /generate pattern): _"Reading the change…" → "Updating your app…"_. Latency target: p95 ≤45s.
 6. AppRunner remounts with the new spec. Buttons are green. New "Long Break Duration" Counter appears in the Settings view.
-7. Toast: *"Updated. Tap Edit again to keep iterating."*
+7. Toast: _"Updated. Tap Edit again to keep iterating."_
 8. The chat scoped to this project preserves the back-and-forth: original prompt, AI ack, edit prompt, AI ack. Maker can chain edits.
 
 ## Edge Cases & Error Handling
 
-| Case | Behavior |
-|---|---|
-| Edit produces invalid spec (Zod validation fails server-side) | SSE emits `error` event with `code='invalid_spec'`. Toast: *"Couldn't apply that change. Try rephrasing."* The previous spec stays mounted; no data loss. |
-| Edit changes catalog component types in ways the renderer can't handle (shouldn't happen — catalog is locked at 10) | Same as invalid_spec. The renderer's error boundary (ADR-0003 §F) catches at render time as a P0 fallback. |
-| User submits a second edit while the first is in flight | UI prevents (Send button disabled while `phase === 'building'`). Same in-flight guard as `/generate` (T-0002-146). |
-| User navigates away mid-edit | Server completes the edit and persists the new version regardless (matches `/generate` behavior — ADR-0002 §O). On next AppRunner open, they see the new spec. |
-| Edit prompt is empty or whitespace | Send button stays disabled. |
-| Edit prompt > 2000 chars | Same constraint as `/generate`. 400 `invalid_input`. |
-| baseVersionId is stale (someone — somehow — edited from another device) | 409 `version_conflict`. Toast: *"This app was updated elsewhere. Reopen to see the latest."* (Defensive — we don't expect concurrent multi-device editing at 20-tester scale, but the constraint is cheap.) |
-| Model interprets the prompt destructively (deletes content the user didn't mean to remove) | No automatic protection at v1. User can manually recreate. Phase 2: undo affordance + version-history UI. |
-| Long-press on AppRunner body for a tap-to-edit on a specific element | Out of scope. |
+| Case                                                                                                                | Behavior                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Edit produces invalid spec (Zod validation fails server-side)                                                       | SSE emits `error` event with `code='invalid_spec'`. Toast: _"Couldn't apply that change. Try rephrasing."_ The previous spec stays mounted; no data loss.                                                   |
+| Edit changes catalog component types in ways the renderer can't handle (shouldn't happen — catalog is locked at 10) | Same as invalid_spec. The renderer's error boundary (ADR-0003 §F) catches at render time as a P0 fallback.                                                                                                  |
+| User submits a second edit while the first is in flight                                                             | UI prevents (Send button disabled while `phase === 'building'`). Same in-flight guard as `/generate` (T-0002-146).                                                                                          |
+| User navigates away mid-edit                                                                                        | Server completes the edit and persists the new version regardless (matches `/generate` behavior — ADR-0002 §O). On next AppRunner open, they see the new spec.                                              |
+| Edit prompt is empty or whitespace                                                                                  | Send button stays disabled.                                                                                                                                                                                 |
+| Edit prompt > 2000 chars                                                                                            | Same constraint as `/generate`. 400 `invalid_input`.                                                                                                                                                        |
+| baseVersionId is stale (someone — somehow — edited from another device)                                             | 409 `version_conflict`. Toast: _"This app was updated elsewhere. Reopen to see the latest."_ (Defensive — we don't expect concurrent multi-device editing at 20-tester scale, but the constraint is cheap.) |
+| Model interprets the prompt destructively (deletes content the user didn't mean to remove)                          | No automatic protection at v1. User can manually recreate. Phase 2: undo affordance + version-history UI.                                                                                                   |
+| Long-press on AppRunner body for a tap-to-edit on a specific element                                                | Out of scope.                                                                                                                                                                                               |
 
 ## Acceptance Criteria
 
@@ -143,13 +148,14 @@ Both options are wrong. Real apps are iterated. The product needs a third option
 
 ## API Contracts
 
-| Endpoint | Auth | Returns | Excludes |
-|---|---|---|---|
+| Endpoint                     | Auth                     | Returns                                                                                                                                                                                                                                                                                             | Excludes                                                                                                  |
+| ---------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `POST /me/projects/:id/edit` | required JWT, owner only | **SSE stream** of events: `{type:'reading_started'}` → `{type:'building_started'}` → `{type:'done', project: {id, title, current_version_id, updated_at}, currentVersion: {id, spec_json, render_hash, created_at}, generation_duration_ms}`. On error: `{type:'error', code, detail?}` then close. | thinking trace, server prompt content, error stacks, other users' data, original_prompt of OTHER projects |
 
 **Request body schema:** `{prompt: string (1..2000 chars), baseVersionId: uuid}`.
 
 **Error codes:**
+
 - `invalid_input` (400) — body validation failure.
 - `prompt_too_large` (400) — total tokens (system + catalog + spec + prompt) exceeds 14K (higher than /generate's 12K because the existing spec is included).
 - `invalid_spec` (400) — patch applied but result fails Zod.
@@ -178,46 +184,48 @@ Both options are wrong. Real apps are iterated. The product needs a third option
 
 ## Risks & Open Questions
 
-| Risk | Likelihood | Mitigation |
-|---|---|---|
-| Patch tool emits invalid RFC 6902 (paths that don't exist in the spec) | Medium | Validate-and-revert: applyPatch returns errors → emit `invalid_spec` SSE → don't persist. Eval harness includes 3 prompts that test patch validity. |
-| Resulting spec passes RFC 6902 but fails Zod (introduces invalid component types or actions) | Medium | Server re-validates via `A2UISchema.parse` after patch application. Same handling — `invalid_spec`, don't persist. |
-| Model reverts unrelated parts of the app while making the requested change | Medium | Force `tool_choice: produce_app_spec_patch`. The patch format inherently produces minimal diffs. If model insists on full-spec replacement after 3 turns, fall back to "regenerate" UX with a system message. |
-| Edit history grows unbounded (every save = new `project_versions` row) | Low | At 20 testers + ~10 edits per project = ~2000 rows over a month. Negligible. Vacuum logic deferred to Phase 3. |
-| Cost overrun on eval iteration | Medium | Cap edit-eval-harness Anthropic spend at $5/engineer/day. Cap base prompt with cache_control: ephemeral on the spec content. |
-| Cal designs a multi-turn LLM conversation that consumes too much context | Low (Cal is risk-averse) | Constraint to Cal: each `/edit` call sends ONLY current spec + new edit prompt. No prior edit prompts. Cal can argue against this in the ADR if he disagrees. |
+| Risk                                                                                         | Likelihood               | Mitigation                                                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Patch tool emits invalid RFC 6902 (paths that don't exist in the spec)                       | Medium                   | Validate-and-revert: applyPatch returns errors → emit `invalid_spec` SSE → don't persist. Eval harness includes 3 prompts that test patch validity.                                                           |
+| Resulting spec passes RFC 6902 but fails Zod (introduces invalid component types or actions) | Medium                   | Server re-validates via `A2UISchema.parse` after patch application. Same handling — `invalid_spec`, don't persist.                                                                                            |
+| Model reverts unrelated parts of the app while making the requested change                   | Medium                   | Force `tool_choice: produce_app_spec_patch`. The patch format inherently produces minimal diffs. If model insists on full-spec replacement after 3 turns, fall back to "regenerate" UX with a system message. |
+| Edit history grows unbounded (every save = new `project_versions` row)                       | Low                      | At 20 testers + ~10 edits per project = ~2000 rows over a month. Negligible. Vacuum logic deferred to Phase 3.                                                                                                |
+| Cost overrun on eval iteration                                                               | Medium                   | Cap edit-eval-harness Anthropic spend at $5/engineer/day. Cap base prompt with cache_control: ephemeral on the spec content.                                                                                  |
+| Cal designs a multi-turn LLM conversation that consumes too much context                     | Low (Cal is risk-averse) | Constraint to Cal: each `/edit` call sends ONLY current spec + new edit prompt. No prior edit prompts. Cal can argue against this in the ADR if he disagrees.                                                 |
 
 **Open questions for Cal:**
+
 1. Should `/edit` use a separate Anthropic system prompt from `/generate`, or share? Sharing saves prompt-cache hits; separating gives edit-specific guidance ("make minimal patches").
 2. The `messages` table from ADR-0002 already stores user prompts. Should `/edit` write to it, and if so, with what `role` value? (Probably `role='user'` with no special edit flag — a prompt is a prompt.)
 3. What's the SSE event sequence exactly? `/generate` had `thinking_started`, `building_started`. For `/edit` I propose `reading_started` (model is reading the existing spec) → `building_started` (emitting the patch). Cal's call.
 
 **Open questions for Sable:**
+
 1. Where does the Edit affordance live in AppRunner top bar? Next to Publish? Replacing it in non-published mode?
 2. Chat screen scoped-to-project mode — visual delta from "create new app" mode? Pre-filled placeholder text? Different background tint?
 3. What does the loading state copy say? "Reading your idea" reused from /generate, or distinct?
 
 ## Timeline Estimate
 
-| Phase | Effort | Dependencies |
-|---|---|---|
-| ADR-0004 design (Cal) | 1 day | This spec, Sable UX delta |
-| Sable UX delta for Edit affordance + chat scoped mode | 0.5 day | This spec |
-| Backend `/edit` endpoint + edit tool | 1.5 days | ADR-0002 patterns |
-| Mobile chat scoped-to-project mode | 1 day | ADR-0002 chat patterns |
-| Mobile AppRunner Edit affordance + remount on done | 0.5 day | ADR-0003 hook patterns |
-| Edit eval harness (10 prompts) | 0.5 day | ADR-0002 eval patterns |
-| QA scoped passes (Roz × 4 steps) | 1 day | — |
-| **Total** | **~6 days** | — |
+| Phase                                                 | Effort      | Dependencies              |
+| ----------------------------------------------------- | ----------- | ------------------------- |
+| ADR-0004 design (Cal)                                 | 1 day       | This spec, Sable UX delta |
+| Sable UX delta for Edit affordance + chat scoped mode | 0.5 day     | This spec                 |
+| Backend `/edit` endpoint + edit tool                  | 1.5 days    | ADR-0002 patterns         |
+| Mobile chat scoped-to-project mode                    | 1 day       | ADR-0002 chat patterns    |
+| Mobile AppRunner Edit affordance + remount on done    | 0.5 day     | ADR-0003 hook patterns    |
+| Edit eval harness (10 prompts)                        | 0.5 day     | ADR-0002 eval patterns    |
+| QA scoped passes (Roz × 4 steps)                      | 1 day       | —                         |
+| **Total**                                             | **~6 days** | —                         |
 
 ## Sequence Decision (for Cal's revision of `pipeline-state.md`)
 
 Replace Cal's current ADR-0004 placeholder ("Library & Ship") with three slices:
 
-| ADR | Title | Owner | Why this order |
-|---|---|---|---|
-| 0004 | Edit-by-Chat | Cal next | User asked. Closes the maker loop. |
-| 0005 | TestFlight & Ship | Cal after 0004 | First real-device delivery. Required for any user-visible test. |
+| ADR  | Title                 | Owner          | Why this order                                                                 |
+| ---- | --------------------- | -------------- | ------------------------------------------------------------------------------ |
+| 0004 | Edit-by-Chat          | Cal next       | User asked. Closes the maker loop.                                             |
+| 0005 | TestFlight & Ship     | Cal after 0004 | First real-device delivery. Required for any user-visible test.                |
 | 0006 | Library & Marketplace | Cal after 0005 | Social-discovery layer. Only valuable once apps are ship-worthy and shippable. |
 
 Cal: please update `pipeline-state.md` row 28+ when you start ADR-0004.
@@ -240,13 +248,13 @@ Cal: please update `pipeline-state.md` row 28+ when you start ADR-0004.
 
 ## Ask / Next Steps
 
-| Owner | Action | Due |
-|---|---|---|
-| Sable | UX delta for AppRunner Edit affordance + Chat scoped-to-project mode | 2026-05-04 |
-| Cal | Draft ADR-0004 (Edit-by-Chat) per this spec + Sable's UX | 2026-05-05 |
-| Cal | Revise `docs/pipeline/pipeline-state.md` to insert ADR-0005 (TestFlight) and ADR-0006 (Library) rows; delete the "Library & Ship" placeholder | as part of ADR-0004 |
-| Roz | Test-spec review of ADR-0004 before Colby starts | 2026-05-05 |
-| Colby | Implement ADR-0004 step-by-step | 2026-05-06+ |
+| Owner | Action                                                                                                                                        | Due                 |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| Sable | UX delta for AppRunner Edit affordance + Chat scoped-to-project mode                                                                          | 2026-05-04          |
+| Cal   | Draft ADR-0004 (Edit-by-Chat) per this spec + Sable's UX                                                                                      | 2026-05-05          |
+| Cal   | Revise `docs/pipeline/pipeline-state.md` to insert ADR-0005 (TestFlight) and ADR-0006 (Library) rows; delete the "Library & Ship" placeholder | as part of ADR-0004 |
+| Roz   | Test-spec review of ADR-0004 before Colby starts                                                                                              | 2026-05-05          |
+| Colby | Implement ADR-0004 step-by-step                                                                                                               | 2026-05-06+         |
 
 ---
 

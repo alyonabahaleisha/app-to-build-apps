@@ -49,12 +49,9 @@ module.exports = {
     // `$NonMaybeType<typeof ...>['key']` which @babel/preset-flow cannot parse.
     // RTL's detectHostComponentNames() triggers this import when render() is
     // called; the renderer's tests don't exercise native animation, so a stub suffices.
-    '.*private/animated/NativeAnimatedHelper.*': '<rootDir>/src/__mocks__/NativeAnimatedHelperMock.js',
+    '.*private/animated/NativeAnimatedHelper.*':
+      '<rootDir>/src/__mocks__/NativeAnimatedHelperMock.js',
   },
   // Coverage configuration.
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.test.{ts,tsx}',
-    '!src/test/**',
-  ],
+  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}', '!src/test/**'],
 }

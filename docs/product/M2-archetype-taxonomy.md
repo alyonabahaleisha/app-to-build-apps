@@ -34,16 +34,16 @@ build.
 
 ## The 8 Archetypes
 
-| # | Archetype | One-line definition | Min screens | Default navigation | Required catalog components | Generation success target |
-|---|---|---|---|---|---|---|
-| 1 | **List / CRUD** | User maintains a collection of items with create/read/update/delete | 2 | Stack (list → detail). Tabs only if collection has clear top-level filters | List, Card, Form fields, Button, Heading | ≥85% |
-| 2 | **Tracker** | User logs an entry repeatedly over time and sees trend / streak | 2 | Tabs (Today / History) | Counter, Toggle, List, Card, Heading, simple Chart/Sparkline (proposed new primitive) | ≥85% |
-| 3 | **Calculator** | User enters inputs, sees a derived result. No persistence required | 1 | None (single-screen). **This is the H5-protected single-screen fallback case** — multi-screen routing must NOT force this archetype to multi-screen | Form fields, Button, Heading, Result block (Text) | ≥90% |
-| 4 | **Journal** | User writes longer-form entries dated to a day; revisits past entries | 2 | Stack (list → entry view/edit) | List, Card, Form (long-form text), Heading, Button | ≥80% |
-| 5 | **Dashboard** | User sees a summary of metrics at a glance, drills into one | 2 | Tabs (top-level) + Stack (drill-down). Tabs are primary | Card, List, Heading, summary metric blocks (Counter), simple Chart/Sparkline | ≥75% |
-| 6 | **Social / Feed** | Vertical list of cards (posts/items) with detail view; sample data only — no real backend | 2 | Tabs (Feed / Profile) + Stack (post detail) | List/Feed, Card, Heading, Button, Form (compose) | ≥75% |
-| 7 | **Info Display** | Reference / cheat-sheet / recipe content; index → topic detail | 2 | Stack (index → topic) | List, Card, Heading, text content blocks, Image | ≥85% |
-| 8 | **Simple Game** | Self-contained interaction: quiz, flashcards, dice roller, tic-tac-toe | 1 | Stack if home → play → result; otherwise single-screen | Button, Counter, Toggle, conditional rendering, Heading | ≥75% |
+| #   | Archetype         | One-line definition                                                                       | Min screens | Default navigation                                                                                                                                  | Required catalog components                                                           | Generation success target |
+| --- | ----------------- | ----------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------- |
+| 1   | **List / CRUD**   | User maintains a collection of items with create/read/update/delete                       | 2           | Stack (list → detail). Tabs only if collection has clear top-level filters                                                                          | List, Card, Form fields, Button, Heading                                              | ≥85%                      |
+| 2   | **Tracker**       | User logs an entry repeatedly over time and sees trend / streak                           | 2           | Tabs (Today / History)                                                                                                                              | Counter, Toggle, List, Card, Heading, simple Chart/Sparkline (proposed new primitive) | ≥85%                      |
+| 3   | **Calculator**    | User enters inputs, sees a derived result. No persistence required                        | 1           | None (single-screen). **This is the H5-protected single-screen fallback case** — multi-screen routing must NOT force this archetype to multi-screen | Form fields, Button, Heading, Result block (Text)                                     | ≥90%                      |
+| 4   | **Journal**       | User writes longer-form entries dated to a day; revisits past entries                     | 2           | Stack (list → entry view/edit)                                                                                                                      | List, Card, Form (long-form text), Heading, Button                                    | ≥80%                      |
+| 5   | **Dashboard**     | User sees a summary of metrics at a glance, drills into one                               | 2           | Tabs (top-level) + Stack (drill-down). Tabs are primary                                                                                             | Card, List, Heading, summary metric blocks (Counter), simple Chart/Sparkline          | ≥75%                      |
+| 6   | **Social / Feed** | Vertical list of cards (posts/items) with detail view; sample data only — no real backend | 2           | Tabs (Feed / Profile) + Stack (post detail)                                                                                                         | List/Feed, Card, Heading, Button, Form (compose)                                      | ≥75%                      |
+| 7   | **Info Display**  | Reference / cheat-sheet / recipe content; index → topic detail                            | 2           | Stack (index → topic)                                                                                                                               | List, Card, Heading, text content blocks, Image                                       | ≥85%                      |
+| 8   | **Simple Game**   | Self-contained interaction: quiz, flashcards, dice roller, tic-tac-toe                    | 1           | Stack if home → play → result; otherwise single-screen                                                                                              | Button, Counter, Toggle, conditional rendering, Heading                               | ≥75%                      |
 
 **Overall SO-3 target:** ≥85% generation success across the 150-prompt set,
 **no archetype below 75%**. The two 75%-target archetypes (Dashboard, Social,
@@ -122,14 +122,14 @@ and edit calls can read the prior plan to scope intent.
 
 ### Proposed additions (within +6 budget)
 
-| # | Component | Why | Used by archetypes |
-|---|---|---|---|
-| +1 | **TabBar** (navigation primitive) | Tabs are the default nav for Tracker, Dashboard, Social/Feed | 2, 5, 6 |
-| +2 | **StackHeader** (navigation primitive — back button + title) | Stack nav default for List/CRUD, Journal, Info Display, Game | 1, 4, 7, 8 |
-| +3 | **Modal** (navigation primitive) | Compose / quick-add flows without leaving the current screen | 1, 4, 6 |
-| +4 | **DetailHeader** (visual primitive — large title + subtitle + optional image) | Detail screens look like forms today; this is the single biggest rubric-score win on Hierarchy + Typography | 1, 4, 5, 6, 7 |
-| +5 | **Sparkline / SimpleChart** (visual primitive — line or bar, no axes) | Trackers and Dashboards both need an at-a-glance trend; without this they read as "lists of numbers" | 2, 5 |
-| +6 | **EmptyState** (visual primitive — icon + heading + body + optional CTA) | Every list-driven archetype has a first-run empty state today that reads as broken | 1, 2, 4, 5, 6, 7 |
+| #   | Component                                                                     | Why                                                                                                         | Used by archetypes |
+| --- | ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------ |
+| +1  | **TabBar** (navigation primitive)                                             | Tabs are the default nav for Tracker, Dashboard, Social/Feed                                                | 2, 5, 6            |
+| +2  | **StackHeader** (navigation primitive — back button + title)                  | Stack nav default for List/CRUD, Journal, Info Display, Game                                                | 1, 4, 7, 8         |
+| +3  | **Modal** (navigation primitive)                                              | Compose / quick-add flows without leaving the current screen                                                | 1, 4, 6            |
+| +4  | **DetailHeader** (visual primitive — large title + subtitle + optional image) | Detail screens look like forms today; this is the single biggest rubric-score win on Hierarchy + Typography | 1, 4, 5, 6, 7      |
+| +5  | **Sparkline / SimpleChart** (visual primitive — line or bar, no axes)         | Trackers and Dashboards both need an at-a-glance trend; without this they read as "lists of numbers"        | 2, 5               |
+| +6  | **EmptyState** (visual primitive — icon + heading + body + optional CTA)      | Every list-driven archetype has a first-run empty state today that reads as broken                          | 1, 2, 4, 5, 6, 7   |
 
 ### What this budget is NOT for
 
@@ -139,7 +139,7 @@ and edit calls can read the prior plan to scope intent.
   is a real primitive but each widens the bad-generation surface; deferred
   to M3 unless an archetype's success rate is blocked on it.
 - Anything that requires native modules beyond what `apps/mobile` already
-  has bundled. The catalog ceiling is also a *native dependency ceiling*.
+  has bundled. The catalog ceiling is also a _native dependency ceiling_.
 
 ### Trade-off rule
 
@@ -156,12 +156,12 @@ Any proposal beyond the +6 budget must:
 
 ## Ask / Next Steps
 
-| Owner | Action | Due |
-|---|---|---|
-| **Eng Lead** | Confirm or push back on the +6 catalog budget. Identify any of the 6 proposed primitives that are unsafe within M2 timeline (especially Sparkline) | End of Week 1 |
-| **Alyona (Sponsor)** | Sign off on the 8-archetype taxonomy and the 75% / 85% / 90% per-archetype floors | End of Week 1 |
-| **AI Eng + PM** | Begin authoring the 150-prompt eval set against this taxonomy on Week 2 — do not block on Eng Lead budget confirmation if archetype list is signed off (eval prompts don't depend on the catalog being implemented yet) | Start Week 2 |
-| **Mobile Eng** | Once budget is confirmed, prepare technical-design notes for each of the 6 new primitives ahead of `/architect` | Week 2 |
+| Owner                | Action                                                                                                                                                                                                                  | Due           |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| **Eng Lead**         | Confirm or push back on the +6 catalog budget. Identify any of the 6 proposed primitives that are unsafe within M2 timeline (especially Sparkline)                                                                      | End of Week 1 |
+| **Alyona (Sponsor)** | Sign off on the 8-archetype taxonomy and the 75% / 85% / 90% per-archetype floors                                                                                                                                       | End of Week 1 |
+| **AI Eng + PM**      | Begin authoring the 150-prompt eval set against this taxonomy on Week 2 — do not block on Eng Lead budget confirmation if archetype list is signed off (eval prompts don't depend on the catalog being implemented yet) | Start Week 2  |
+| **Mobile Eng**       | Once budget is confirmed, prepare technical-design notes for each of the 6 new primitives ahead of `/architect`                                                                                                         | Week 2        |
 
 ## Handoff
 

@@ -279,18 +279,19 @@ describe('ADR-0001 Step 4 / ADR-0002 Step 7 — projects routes', () => {
         headers,
       })
       expect(detailRes.statusCode).toBe(200)
-      expect((detailRes.json() as {project: {parentProjectId: string}}).project.parentProjectId).toBe(
-        parent.project.id,
-      )
+      expect(
+        (detailRes.json() as {project: {parentProjectId: string}}).project.parentProjectId,
+      ).toBe(parent.project.id)
 
       const listRes = await server.inject({method: 'GET', url: '/me/projects', headers})
       expect(listRes.statusCode).toBe(200)
-      const list = (listRes.json() as {projects: Array<{id: string; parentProjectId: string | null}>})
-        .projects
-      const childItem = list.find((p) => p.id === child.project.id)
+      const list = (
+        listRes.json() as {projects: Array<{id: string; parentProjectId: string | null}>}
+      ).projects
+      const childItem = list.find(p => p.id === child.project.id)
       expect(childItem?.parentProjectId).toBe(parent.project.id)
 
-      const parentItem = list.find((p) => p.id === parent.project.id)
+      const parentItem = list.find(p => p.id === parent.project.id)
       expect(parentItem?.parentProjectId).toBeNull()
     } finally {
       await server.close()
@@ -426,7 +427,7 @@ describe('ADR-0001 Step 4 / ADR-0002 Step 7 — projects routes', () => {
 
       // Pino spy: error record carries safeMessage(err); never the user email.
       const errorRecords = sink.byLevel(PINO_LEVEL.ERROR)
-      const failure = errorRecords.find((r) => r.msg === 'projects_list_failed')
+      const failure = errorRecords.find(r => r.msg === 'projects_list_failed')
       expect(failure).toBeDefined()
       expect(failure?.err).toBe(failureMessage)
 
@@ -480,7 +481,7 @@ describe('ADR-0001 Step 4 / ADR-0002 Step 7 — projects routes', () => {
 
       // Belt-and-braces deep-equal on the projection — by id, the items are
       // exactly the two we inserted.
-      const byId = new Map(body.projects.map((p) => [p.id as string, p]))
+      const byId = new Map(body.projects.map(p => [p.id as string, p]))
       expect(byId.get(a.project.id)?.title).toBe('Sensitive A')
       expect(byId.get(b.project.id)?.title).toBe('Sensitive B')
     } finally {
@@ -570,9 +571,7 @@ describe('ADR-0001 Step 4 / ADR-0002 Step 7 — projects routes', () => {
       expect(res.statusCode).toBe(200)
 
       const infoRecords = sink.byLevel(PINO_LEVEL.INFO)
-      const audit = infoRecords.find(
-        (r) => (r as Record<string, unknown>).action === 'project.read',
-      )
+      const audit = infoRecords.find(r => (r as Record<string, unknown>).action === 'project.read')
       expect(audit).toBeDefined()
       expect(audit?.userId).toBe(ownerId)
       expect(audit?.projectId).toBe(detail.project.id)

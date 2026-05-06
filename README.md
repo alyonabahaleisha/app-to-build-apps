@@ -30,12 +30,12 @@ Chat-driven app builder for iOS. Describe an app idea in plain English, an LLM (
 
 A monorepo with three runtime workspaces and two shared packages:
 
-| Workspace | Role |
-|---|---|
-| `apps/mobile/` | Expo / React Native iOS app — the App Creator itself (chat, library, AppRunner) |
-| `services/api/` | Fastify backend — owns auth, DB, Anthropic orchestration, marketplace endpoints |
-| `packages/a2ui-schema/` | Zod schema for generated apps (the contract — locked at 10 components) |
-| `packages/a2ui-renderer/` | Pure React Native renderer for A2UI specs (consumed by `apps/mobile`) |
+| Workspace                 | Role                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------- |
+| `apps/mobile/`            | Expo / React Native iOS app — the App Creator itself (chat, library, AppRunner) |
+| `services/api/`           | Fastify backend — owns auth, DB, Anthropic orchestration, marketplace endpoints |
+| `packages/a2ui-schema/`   | Zod schema for generated apps (the contract — locked at 10 components)          |
+| `packages/a2ui-renderer/` | Pure React Native renderer for A2UI specs (consumed by `apps/mobile`)           |
 
 Three things hold the system together:
 
@@ -49,18 +49,18 @@ Read [`ARCHITECTURE.md`](ARCHITECTURE.md) for the binding spec and [`CLAUDE.md`]
 
 ## Prerequisites
 
-| Tool | Version | Why | How |
-|---|---|---|---|
-| **Node.js** | 20+ (`.nvmrc` pins) | Runtime | `brew install nvm && nvm install` from repo root |
-| **pnpm** | 9.x | Workspace package manager | `corepack enable && corepack prepare pnpm@9.12.0 --activate` |
-| **Xcode** | 15+ | iOS Simulator + native deps | Mac App Store |
-| **Xcode Command Line Tools** | Latest | `xcrun simctl`, `idb` | `xcode-select --install` |
-| **Watchman** | Latest | Metro file watcher | `brew install watchman` |
-| **Apple Developer account** | Active ($99/yr) | TestFlight + signing dev-client | [developer.apple.com](https://developer.apple.com/) |
-| **Expo account** | Free tier | EAS dev-client builds | [expo.dev](https://expo.dev/) |
-| **EAS CLI** | Latest | Build + submit | `npm install -g eas-cli` |
-| **idb-companion** | 1.1.8+ | Required by some MCP integrations + simulator automation | `brew tap facebook/fb && brew install idb-companion && pip install fb-idb` |
-| **Postgres client** *(optional)* | 14+ | Inspect DB locally | `brew install libpq && brew link --force libpq` |
+| Tool                             | Version             | Why                                                      | How                                                                        |
+| -------------------------------- | ------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------- |
+| **Node.js**                      | 20+ (`.nvmrc` pins) | Runtime                                                  | `brew install nvm && nvm install` from repo root                           |
+| **pnpm**                         | 9.x                 | Workspace package manager                                | `corepack enable && corepack prepare pnpm@9.12.0 --activate`               |
+| **Xcode**                        | 15+                 | iOS Simulator + native deps                              | Mac App Store                                                              |
+| **Xcode Command Line Tools**     | Latest              | `xcrun simctl`, `idb`                                    | `xcode-select --install`                                                   |
+| **Watchman**                     | Latest              | Metro file watcher                                       | `brew install watchman`                                                    |
+| **Apple Developer account**      | Active ($99/yr)     | TestFlight + signing dev-client                          | [developer.apple.com](https://developer.apple.com/)                        |
+| **Expo account**                 | Free tier           | EAS dev-client builds                                    | [expo.dev](https://expo.dev/)                                              |
+| **EAS CLI**                      | Latest              | Build + submit                                           | `npm install -g eas-cli`                                                   |
+| **idb-companion**                | 1.1.8+              | Required by some MCP integrations + simulator automation | `brew tap facebook/fb && brew install idb-companion && pip install fb-idb` |
+| **Postgres client** _(optional)_ | 14+                 | Inspect DB locally                                       | `brew install libpq && brew link --force libpq`                            |
 
 Optional but recommended:
 
@@ -103,12 +103,12 @@ Before cloning the repo, set up these external services. You'll plug their keys 
 2. From the repo (after cloning + installing), run `eas init` inside `apps/mobile/` to create a project and capture the `EAS_PROJECT_ID` for your `.env`.
 3. Configure your Apple credentials: `eas credentials` and follow the iOS-distribution prompts.
 
-### 4. Langfuse *(optional, for LLM tracing)*
+### 4. Langfuse _(optional, for LLM tracing)_
 
 1. Sign up at [cloud.langfuse.com](https://cloud.langfuse.com).
 2. Create a project and copy the public + secret keys.
 
-### 5. Sentry *(optional, for mobile error tracking)*
+### 5. Sentry _(optional, for mobile error tracking)_
 
 1. Create a React Native project at [sentry.io](https://sentry.io).
 2. Copy the DSN.
@@ -210,12 +210,12 @@ pnpm --filter @app-creator/api db:migrate
 
 Migrations are versioned in `services/api/migrations/` and applied in order:
 
-| File | What it does |
-|---|---|
-| `0001_init.sql` | Initial schema — `users`, `projects`, `project_versions`, `messages`, `events`, `facts`, `embeddings` |
-| `0002_fk_constraints.sql` | Adds foreign-key relationships |
+| File                           | What it does                                                                                                           |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| `0001_init.sql`                | Initial schema — `users`, `projects`, `project_versions`, `messages`, `events`, `facts`, `embeddings`                  |
+| `0002_fk_constraints.sql`      | Adds foreign-key relationships                                                                                         |
 | `0003_marketplace_columns.sql` | Adds `users.handle`, `projects.visibility`, `projects.published_at`, `projects.original_prompt`, partial library index |
-| `0004_seed_example_user.sql` | Seeds the `@example` system user (handle reserved for hand-authored seed apps) |
+| `0004_seed_example_user.sql`   | Seeds the `@example` system user (handle reserved for hand-authored seed apps)                                         |
 
 Verify the schema:
 
@@ -224,6 +224,7 @@ pnpm --filter @app-creator/api db:studio   # Drizzle Studio — visual schema br
 ```
 
 Or via psql:
+
 ```bash
 psql "$DATABASE_URL" -c "\dt"   # List tables
 ```
@@ -255,6 +256,7 @@ curl http://127.0.0.1:3000/health
 ```
 
 You should see structured Pino logs in the terminal:
+
 ```
 [INFO] dev_bypass_user_ready (devUserId: deadbeef-0000-0000-0000-000000000000)
 [INFO] Server listening at http://127.0.0.1:3000
@@ -277,6 +279,7 @@ eas build --profile development --platform ios
 Wait for the build to complete on EAS (link printed in terminal). Once done:
 
 **On the simulator:**
+
 ```bash
 # Download the .tar.gz from the EAS link, extract, drag the .app into the Simulator window
 # OR use the `eas build:run` shortcut:
@@ -284,6 +287,7 @@ eas build:run --platform ios --latest
 ```
 
 **On a physical iPhone:**
+
 - Tap the install link from the EAS email on the device.
 - Trust the developer profile in Settings → General → VPN & Device Management.
 
@@ -342,7 +346,7 @@ Once signed in:
 1. **Home** screen shows your apps (empty for a fresh dev user).
 2. Tap **✨ Create new app**.
 3. **Chat** screen opens with prompt suggestions ("A daily water intake tracker" etc.) — type your own or tap a suggestion.
-4. Tap **Send**. Watch the loading bubble: *"Building your app…"* with a spinner. The server is calling Anthropic with `tool_choice: produce_app_spec`.
+4. Tap **Send**. Watch the loading bubble: _"Building your app…"_ with a spinner. The server is calling Anthropic with `tool_choice: produce_app_spec`.
 5. After ~10–15s, **AppRunner** opens. The generated app renders — Container, Heading, Text, Buttons, Counters, etc. Title is auto-derived (with emoji if the model included one).
 6. Tap buttons → see toast actions fire. Tap `+`/`−` on Counters → state increments. Tap **⚙️ Settings** (if the spec has multi-view) → navigate between views.
 7. Top bar **Publish** → bottom sheet with handle picker (pre-filled from your email's local-part) → confirm → "Published to Library" toast.
@@ -466,14 +470,14 @@ pnpm --filter @app-creator/a2ui-renderer test -- -u Counter
 
 ## Architecture & docs
 
-| Doc | What's in it |
-|---|---|
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | The binding spec. Stack, layering, navigation, auth, storage tiers, observability, accessibility. Read this before non-trivial changes. |
-| [`CLAUDE.md`](CLAUDE.md) | Tactical patterns. Code-style snippets, RN conventions, query patterns, LLM call shape. Companion to ARCHITECTURE.md. |
-| [`docs/adrs/`](docs/adrs/) | Architecture Decision Records. Each ADR is a sliced piece of work with steps, tests, and acceptance criteria. ADR-0001..0003 are shipped, ADR-0004 (Edit-by-Chat) is the current frontier. |
-| [`docs/product/`](docs/product/) | Robert's product specs. The umbrella `app-creation-poc.md` is canonical; child specs add detail per slice. |
-| [`docs/ux/`](docs/ux/) | Sable's UX specs. Per-component visual treatment, motion, copy, accessibility. |
-| [`docs/pipeline/`](docs/pipeline/) | The agent-pipeline state file + per-step QA reports from Roz. |
+| Doc                                  | What's in it                                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | The binding spec. Stack, layering, navigation, auth, storage tiers, observability, accessibility. Read this before non-trivial changes.                                                    |
+| [`CLAUDE.md`](CLAUDE.md)             | Tactical patterns. Code-style snippets, RN conventions, query patterns, LLM call shape. Companion to ARCHITECTURE.md.                                                                      |
+| [`docs/adrs/`](docs/adrs/)           | Architecture Decision Records. Each ADR is a sliced piece of work with steps, tests, and acceptance criteria. ADR-0001..0003 are shipped, ADR-0004 (Edit-by-Chat) is the current frontier. |
+| [`docs/product/`](docs/product/)     | Robert's product specs. The umbrella `app-creation-poc.md` is canonical; child specs add detail per slice.                                                                                 |
+| [`docs/ux/`](docs/ux/)               | Sable's UX specs. Per-component visual treatment, motion, copy, accessibility.                                                                                                             |
+| [`docs/pipeline/`](docs/pipeline/)   | The agent-pipeline state file + per-step QA reports from Roz.                                                                                                                              |
 
 ### Reading order for a new contributor
 

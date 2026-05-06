@@ -52,9 +52,7 @@ function makeLoggerSpy(): jest.Mocked<RendererLogger> {
 function makeWrapper(logger?: RendererLogger) {
   return function Wrapper({children}: {children: React.ReactNode}) {
     if (logger) {
-      return (
-        <RendererLoggerProvider logger={logger}>{children}</RendererLoggerProvider>
-      )
+      return <RendererLoggerProvider logger={logger}>{children}</RendererLoggerProvider>
     }
     return <>{children}</>
   }
@@ -214,10 +212,7 @@ describe('useA2UIState', () => {
     expect(result.current.state).toBe(stateBefore)
 
     // Verify the actual mismatched value is NOT in the log payload (PII risk).
-    const payload = (logger.warn as jest.Mock).mock.calls[0]?.[1] as Record<
-      string,
-      unknown
-    >
+    const payload = (logger.warn as jest.Mock).mock.calls[0]?.[1] as Record<string, unknown>
     expect(payload).not.toHaveProperty('value')
     expect(JSON.stringify(payload)).not.toContain('hello')
   })
@@ -241,10 +236,7 @@ describe('useA2UIState', () => {
     expect(result.current.currentViewId).toBe(viewBefore)
 
     // Verify full spec and node content are NOT in the log payload.
-    const payload = (logger.warn as jest.Mock).mock.calls[0]?.[1] as Record<
-      string,
-      unknown
-    >
+    const payload = (logger.warn as jest.Mock).mock.calls[0]?.[1] as Record<string, unknown>
     expect(payload).not.toHaveProperty('spec')
     expect(payload).not.toHaveProperty('views')
     expect(JSON.stringify(payload)).not.toContain('"type":"Heading"')
@@ -253,10 +245,9 @@ describe('useA2UIState', () => {
   // T-0003-013b — spec reference change resets state
   it('spec reference change resets state; stale keys do not carry over', () => {
     let currentSpec = SIMPLE_SPEC
-    const {result, rerender} = renderHook(
-      ({spec}: {spec: A2UISpec}) => useA2UIState(spec),
-      {initialProps: {spec: currentSpec}},
-    )
+    const {result, rerender} = renderHook(({spec}: {spec: A2UISpec}) => useA2UIState(spec), {
+      initialProps: {spec: currentSpec},
+    })
 
     // Set some state under the first spec.
     act(() => {
@@ -306,7 +297,7 @@ describe('useA2UIState', () => {
     type RenderState = import('../types').RenderState
 
     // A one-arg function is a valid Dispatch.
-    const oneArg: Dispatch = (_action) => {}
+    const oneArg: Dispatch = _action => {}
     expect(typeof oneArg).toBe('function')
 
     // A two-arg function (ignoring second) is also assignable to Dispatch

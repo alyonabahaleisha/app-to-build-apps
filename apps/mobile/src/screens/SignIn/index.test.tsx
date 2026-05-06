@@ -39,8 +39,7 @@ jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Icon = (props: any) =>
-    ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
+  const Icon = (props: any) => ReactInner.createElement(RN.View, {testID: `icon-${props.name}`})
   return {
     __esModule: true,
     Feather: Icon,
@@ -151,9 +150,7 @@ function mockMagicLink429() {
 
 function mockMagicLinkOffline() {
   // RN's fetch throws TypeError when offline. We mirror that.
-  mockFetch.mockImplementationOnce(() =>
-    Promise.reject(new TypeError('Network request failed')),
-  )
+  mockFetch.mockImplementationOnce(() => Promise.reject(new TypeError('Network request failed')))
 }
 
 // ---- Tests ----------------------------------------------------------------
@@ -162,9 +159,7 @@ describe('SignIn screen', () => {
   it('T-0001-086: default state — email empty, Send disabled', () => {
     const screen = renderSignIn()
     const send = screen.getByTestId('sign-in-send')
-    expect(send.props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: true}),
-    )
+    expect(send.props.accessibilityState).toEqual(expect.objectContaining({disabled: true}))
   })
 
   it('T-0001-087: valid email entered → button enabled', () => {
@@ -172,9 +167,7 @@ describe('SignIn screen', () => {
     const input = screen.getByTestId('sign-in-email')
     fireEvent.changeText(input, 'a@b.co')
     const send = screen.getByTestId('sign-in-send')
-    expect(send.props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: false}),
-    )
+    expect(send.props.accessibilityState).toEqual(expect.objectContaining({disabled: false}))
   })
 
   it('T-0001-088: tapping Send fires the mutation; UI transitions to "sent" with bold email', async () => {
@@ -226,25 +219,19 @@ describe('SignIn screen', () => {
     })
 
     const resend = () => screen.getByTestId('sign-in-resend')
-    expect(resend().props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: true}),
-    )
+    expect(resend().props.accessibilityState).toEqual(expect.objectContaining({disabled: true}))
 
     // t = 29s — still disabled.
     await act(async () => {
       jest.advanceTimersByTime(29_000)
     })
-    expect(resend().props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: true}),
-    )
+    expect(resend().props.accessibilityState).toEqual(expect.objectContaining({disabled: true}))
 
     // t = 30s — enabled.
     await act(async () => {
       jest.advanceTimersByTime(1_000)
     })
-    expect(resend().props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: false}),
-    )
+    expect(resend().props.accessibilityState).toEqual(expect.objectContaining({disabled: false}))
 
     // Tapping Resend re-fires the mutation and resets the cooldown.
     mockMagicLinkOk()
@@ -252,9 +239,7 @@ describe('SignIn screen', () => {
       fireEvent.press(resend())
     })
     expect(mockFetch).toHaveBeenCalledTimes(2)
-    expect(resend().props.accessibilityState).toEqual(
-      expect.objectContaining({disabled: true}),
-    )
+    expect(resend().props.accessibilityState).toEqual(expect.objectContaining({disabled: true}))
   })
 
   it('T-0001-090: invalid email format → inline error + Send disabled', () => {
@@ -384,7 +369,7 @@ describe('SignIn screen', () => {
     let resolveFirst: (v: unknown) => void = () => {}
     mockFetch.mockImplementation(
       () =>
-        new Promise((res) => {
+        new Promise(res => {
           resolveFirst = res
         }),
     )

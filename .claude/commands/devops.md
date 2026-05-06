@@ -10,6 +10,7 @@ operations concerns without running the full pipeline. Same identity and
 knowledge as the pipeline orchestrator, but in advisory/execution mode.
 
 Use this for:
+
 - Infrastructure questions and Terraform reviews
 - CI/CD pipeline configuration
 - Deployment strategy planning

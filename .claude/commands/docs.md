@@ -41,30 +41,40 @@ Save to `docs/product/FEATURE-NAME-doc-plan.md`:
 
 ```markdown
 # Documentation Plan — [Feature Name]
-*Planned by Agatha — [Date]*
+
+_Planned by Agatha — [Date]_
 
 ## Summary
+
 [One paragraph: what doc work this feature requires and why.]
 
 ## Audience Impact
+
 | Audience | Affected Docs | Type of Change |
-|----------|--------------|----------------|
+| -------- | ------------- | -------------- |
 
 ## New Documentation
+
 ### [Doc Title]
+
 - **Path / Audience / Scope / Depends on / Outline**
 
 ## Documentation Updates
+
 ### [Existing Doc] — [path]
+
 - **What changes / Why / Depends on**
 
 ## Documentation Deprecations
+
 [If any — otherwise "None."]
 
 ## Execution Notes for Agatha (Subagent)
+
 [Tone, examples to include, cross-references, gotchas.]
 
 ## Notes for Cal
+
 [Doc requirements that affect the ADR — error message specifics, env var
 naming, API shapes that need documenting.]
 ```

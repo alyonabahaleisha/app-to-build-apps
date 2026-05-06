@@ -262,9 +262,7 @@ describe('FormRenderer — T-0003-104b: snapshot with no submit', () => {
             node={{
               type: 'Form',
               formId: 'no-submit-form',
-              fields: [
-                {type: 'TextInput', id: 'note', label: 'Note'},
-              ],
+              fields: [{type: 'TextInput', id: 'note', label: 'Note'}],
               // submitLabel intentionally omitted
             }}
             state={{note: ''}}
