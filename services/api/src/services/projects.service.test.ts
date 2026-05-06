@@ -5,12 +5,16 @@
  * codes, response shape) live in `routes/projects.test.ts`.
  *
  * T-IDs covered here:
- *   Happy:      T-0001-049, 050, 051, 052
- *   Failure:    T-0001-055, 130, 131, 138
- *   Boundary:   T-0001-059, 121
- *   Error:      T-0001-062 (mid-tx rollback)
+ *   Happy:       T-0001-049, 050, 051, 052
+ *   Failure:     T-0001-055, 130, 131, 138
+ *   Boundary:    T-0001-059, 121
+ *   Error:       T-0001-062 (mid-tx rollback)
  *   Concurrency: T-0001-067, 068
- *   Regression: T-0001-069, 070
+ *   Regression:  T-0001-069, 070
+ *
+ * ADR-0004 Step 4 additions:
+ *   Happy:    T-0004-057, T-0004-058
+ *   Negative: T-0004-059, T-0004-125
  *
  * The route file covers list-shape / get-shape / 404-not-403 / cross-user
  * isolation / audit log / fork roundtrip (T-0001-053, 054, 056, 057, 058,
@@ -18,8 +22,11 @@
  */
 import {randomUUID} from 'node:crypto'
 
+import {ZodError} from 'zod'
 import {eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
+
+import type {Plan} from '@app-creator/a2ui-schema'
 
 import * as schema from '../db/schema.js'
 import {projects, projectVersions, messages, users} from '../db/schema.js'
@@ -37,6 +44,44 @@ import {
   validSpec,
 } from '../../test/factories.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
+
+// ---------------------------------------------------------------------------
+// ADR-0004 Step 4 fixtures — plan shapes for T-0004-057/058/059.
+// ---------------------------------------------------------------------------
+
+/** A valid Plan matching PlanSchema. Used for T-0004-057. */
+const VALID_PLAN: Plan = {
+  version: 1,
+  archetype: 'Calculator',
+  screens: [
+    {
+      id: 'main',
+      role: 'home',
+      purpose: 'Enter inputs and see the result',
+      key_components: ['Form', 'Button', 'Text'],
+    },
+  ],
+  navigation: 'none',
+}
+
+/**
+ * An invalid plan shape that fails PlanSchema (archetype not in the closed
+ * enum). Used for T-0004-059 to verify the runtime Zod check fires before
+ * any DB write.
+ */
+const INVALID_PLAN = {
+  version: 1,
+  archetype: 'NotAnArchetype', // not in PlanArchetypeSchema
+  screens: [
+    {
+      id: 'main',
+      role: 'home',
+      purpose: 'test',
+      key_components: ['Button'],
+    },
+  ],
+  navigation: 'none',
+} as unknown as Plan
 
 type Db = NodePgDatabase<typeof schema>
 
@@ -429,6 +474,86 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
       .from(messages)
       .where(eq(messages.projectId, detail.project.id))
     expect(msgRows).toHaveLength(0)
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0004-057 — Happy: create with plan writes plan_json populated in DB
+  // -------------------------------------------------------------------------
+  it('T-0004-057: create with a valid plan writes plan_json to project_versions; SELECT confirms the stored object', async () => {
+    const ownerId = await makeUser(db)
+    const detail = await service.create({
+      ownerId,
+      spec: specWithHeading('Tip Calculator'),
+      plan: VALID_PLAN,
+    })
+
+    const pool = await getTestPool()
+    const {rows} = await pool.query<{plan_json: unknown}>(
+      `SELECT plan_json FROM project_versions WHERE id = $1`,
+      [detail.currentVersion.id],
+    )
+    expect(rows).toHaveLength(1)
+    // plan_json must NOT be null — it was supplied.
+    expect(rows[0]?.plan_json).not.toBeNull()
+    // The stored object must match the input plan shape.
+    expect(rows[0]?.plan_json).toMatchObject({
+      version: 1,
+      archetype: 'Calculator',
+      navigation: 'none',
+    })
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0004-058 — Happy: create without plan writes plan_json as NULL
+  // -------------------------------------------------------------------------
+  it('T-0004-058: create without plan argument writes plan_json: NULL (M1 fallback signal)', async () => {
+    const ownerId = await makeUser(db)
+    const detail = await service.create({
+      ownerId,
+      spec: specWithHeading('No Plan App'),
+      // plan is deliberately absent — M1 fallback path
+    })
+
+    const pool = await getTestPool()
+    const {rows} = await pool.query<{plan_json: unknown}>(
+      `SELECT plan_json FROM project_versions WHERE id = $1`,
+      [detail.currentVersion.id],
+    )
+    expect(rows).toHaveLength(1)
+    expect(rows[0]?.plan_json).toBeNull()
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0004-059 — Negative: create with an invalid plan throws Zod before DB write
+  // -------------------------------------------------------------------------
+  it('T-0004-059: create with a Zod-invalid plan throws ZodError before any DB write; no project_versions row created', async () => {
+    const ownerId = await makeUser(db)
+
+    await expect(
+      service.create({
+        ownerId,
+        spec: specWithHeading('Bad Plan App'),
+        plan: INVALID_PLAN,
+      }),
+    ).rejects.toThrow(ZodError)
+
+    // Defense: no rows should have been written.
+    const projectRows = await db.select().from(projects).where(eq(projects.ownerId, ownerId))
+    const versionRows = await db.select().from(projectVersions)
+    expect(projectRows).toHaveLength(0)
+    expect(versionRows).toHaveLength(0)
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0004-125 — Negative: getVersion with a valid-format UUID that has no
+  // matching row returns null, not throws (rev-1: closes Step 4 ratio gap).
+  // -------------------------------------------------------------------------
+  it('T-0004-125: getVersion with a valid UUID that has no matching row returns null (not throws, not undefined)', async () => {
+    const phantomVersionId = randomUUID()
+    const result = await service.getVersion(phantomVersionId)
+    // Explicit null — not undefined, not an empty row. The caller must be able
+    // to `if (version === null)` to detect the missing-row case.
+    expect(result).toBeNull()
   })
 
   it('ADR-0002: messages insert is part of the transaction — rolls back on failure', async () => {

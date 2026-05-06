@@ -410,6 +410,9 @@ describe('ADR-0001 Step 4 / ADR-0002 Step 7 — projects routes', () => {
       async get() {
         throw new Error('not used')
       },
+      async getVersion() {
+        throw new Error('not used')
+      },
     }
 
     const sink = createLogSink()

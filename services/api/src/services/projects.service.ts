@@ -26,7 +26,7 @@
 import {desc, eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import {A2UISpecSchema, type A2UINode, type A2UISpec} from '@app-creator/a2ui-schema'
+import {A2UISpecSchema, PlanSchema, type A2UINode, type A2UISpec, type Plan} from '@app-creator/a2ui-schema'
 
 import {renderHash} from '../lib/canonical.js'
 import * as schema from '../db/schema.js'
@@ -56,6 +56,17 @@ export interface CreateProjectInput {
    * features. Defaults to '' for backward compat with ADR-0001 callers.
    */
   originalPrompt?: string
+  /**
+   * ADR-0004 Step 4: optional plan artifact from the Plan→Build pipeline.
+   * When provided: runtime-validated via PlanSchema.parse() before any DB write.
+   * When absent (undefined): plan_json is written as NULL, which is the
+   * explicit signal that this version came from the M1 single-call fallback
+   * path (ADR-0004 §F-3, §G).
+   *
+   * Data sensitivity: owner-only. Must NOT be exposed via the public
+   * /library/:id response (ADR-0004 §Data Sensitivity, Step 7 enforces this).
+   */
+  plan?: Plan
 }
 
 /**
@@ -138,6 +149,17 @@ export interface ProjectsService {
   create: (input: CreateProjectInput) => Promise<ProjectDetail>
   list: (ownerId: string) => Promise<ProjectListItem[]>
   get: (ownerId: string, projectId: string) => Promise<ProjectDetail | null>
+  /**
+   * Look up a single project_versions row by its primary key.
+   *
+   * Returns null when no row with that versionId exists — does NOT throw.
+   * This contract is tested by T-0004-125 (rev-1: closes Step 4 ratio gap).
+   *
+   * Caller context: owner-gated routes and the pipeline orchestrator (Step 5)
+   * use this to load the current plan before re-prompting the planner.
+   * planJson is included here (owner-only path; ADR-0004 §G).
+   */
+  getVersion: (versionId: string) => Promise<ProjectVersion | null>
 }
 
 export function createProjectsService(db: Db): ProjectsService {
@@ -147,6 +169,7 @@ export function createProjectsService(db: Db): ProjectsService {
       spec,
       parentProjectId,
       originalPrompt = '',
+      plan,
     }: CreateProjectInput): Promise<ProjectDetail> {
       // 1. Zod validation — throws ZodError on shape failure (T-0001-055).
       const parsed = A2UISpecSchema.parse(spec)
@@ -155,11 +178,16 @@ export function createProjectsService(db: Db): ProjectsService {
       //    target / unresolved view (T-0001-130/131/138). BEFORE any DB write.
       deepValidateSpec(parsed)
 
-      // 3. Cheap derivations.
+      // 3. ADR-0004 Step 4: runtime-validate the plan before any DB write.
+      //    Fail fast on a structurally invalid plan so we never persist garbage
+      //    in plan_json (T-0004-059). When plan is undefined, planJson is NULL.
+      const validatedPlan = plan !== undefined ? PlanSchema.parse(plan) : null
+
+      // 4. Cheap derivations.
       const title = deriveTitle(parsed)
       const hash = renderHash(parsed)
 
-      // 4. Transactional write. Insert project with NULL current_version_id,
+      // 5. Transactional write. Insert project with NULL current_version_id,
       //    insert version, update project, insert messages row. Any failure
       //    rolls back all inserts (T-0001-062, T-0002-043).
       return await db.transaction(async tx => {
@@ -181,6 +209,9 @@ export function createProjectsService(db: Db): ProjectsService {
             projectId: projectRow.id,
             specJson: parsed,
             renderHash: hash,
+            // NULL signals M1 fallback path; populated when planner ran
+            // successfully (ADR-0004 §G).
+            planJson: validatedPlan,
           })
           .returning()
         if (!versionRow) throw new Error('project_versions insert returned no row')
@@ -248,6 +279,10 @@ export function createProjectsService(db: Db): ProjectsService {
      * Owner-scoped get. Returns null when the project doesn't exist OR when
      * it exists but isn't owned by the requested user. The route translates
      * null into 404 (T-0001-056, T-0001-065 — 404, NOT 403).
+     *
+     * Data sensitivity: `currentVersion` includes `planJson` (owner-only).
+     * The public /library/:id route (Step 7) must NOT pass this ProjectDetail
+     * shape directly to the response — it must exclude planJson explicitly.
      */
     async get(ownerId: string, projectId: string): Promise<ProjectDetail | null> {
       const projectRows = await db.select().from(projects).where(eq(projects.id, projectId))
@@ -270,6 +305,24 @@ export function createProjectsService(db: Db): ProjectsService {
         project: {...project, currentVersionId: project.currentVersionId},
         currentVersion: version,
       }
+    },
+
+    /**
+     * Look up a single project_versions row by its primary key.
+     *
+     * Returns null when no row with that versionId exists — does NOT throw.
+     * Contract tested by T-0004-125 (rev-1).
+     *
+     * Used by the pipeline orchestrator (Step 5) to load the current plan
+     * before re-prompting the planner. planJson is owner-only and must not
+     * be forwarded to public consumers (ADR-0004 §Data Sensitivity).
+     */
+    async getVersion(versionId: string): Promise<ProjectVersion | null> {
+      const rows = await db
+        .select()
+        .from(projectVersions)
+        .where(eq(projectVersions.id, versionId))
+      return rows[0] ?? null
     },
   }
 }

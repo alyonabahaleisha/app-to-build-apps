@@ -112,6 +112,11 @@ export const projectVersions = pgTable(
     // sha256(canonicalize(spec_json)) — see packages/a2ui-schema/src/canonical.ts
     renderHash: text('render_hash').notNull(),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
+    // ADR-0004 Step 4: nullable plan artifact. NULL = M1 fallback path.
+    // Populated by Plan→Build pipeline when PLAN_BUILD_PIPELINE_PERCENT > 0
+    // and the planner runs successfully. See migration 0005_plan_json.sql.
+    // owner-only field: excluded from public /library/:id response (Step 7).
+    planJson: jsonb('plan_json'),
   },
   t => ({
     projectIdx: index('project_versions_project_idx').on(t.projectId),
