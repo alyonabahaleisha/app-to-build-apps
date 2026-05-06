@@ -22,6 +22,7 @@ export type BuildingStartedEvent = {type: 'building_started'}
 export type DoneEvent = {
   type: 'done'
   spec: A2UISpec
+  plan: Plan | null
   thinking_duration_ms: number
   generation_duration_ms: number
 }
@@ -195,6 +196,7 @@ export async function* generateAppSpec(opts: {
       yield {
         type: 'done',
         spec: parsed,
+        plan: opts.plan ?? null,
         thinking_duration_ms: phase2Start - requestStart,
         generation_duration_ms: Date.now() - phase2Start,
       }

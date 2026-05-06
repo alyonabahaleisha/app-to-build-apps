@@ -23,14 +23,14 @@ import type {FastifyInstance, FastifyPluginAsync} from 'fastify'
 import {z} from 'zod'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import type {A2UISpec} from '@app-creator/a2ui-schema'
+import type {A2UISpec, Plan} from '@app-creator/a2ui-schema'
 import * as schema from '../db/schema.js'
 import {projects} from '../db/schema.js'
 import {eq} from 'drizzle-orm'
 import {requireAuth, type AuthenticatedRequest} from '../lib/auth.js'
 import {safeMessage} from '../lib/logger.js'
 import {rateLimit} from '../lib/rateLimit.js'
-import {generateAppSpec} from '../llm/generate.js'
+import {runPipeline} from '../llm/pipeline.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from '../llm/errors.js'
 import {createProjectsService, type ProjectsService} from '../services/projects.service.js'
 
@@ -194,8 +194,9 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
       let thinkingDurationMs = 0
       let generationDurationMs = 0
       let doneSpec: A2UISpec | null = null
+      let donePlan: Plan | null = null
 
-      for await (const event of generateAppSpec({
+      for await (const event of runPipeline({
         userId,
         prompt: body.prompt,
         parentPromptContext,
@@ -204,6 +205,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
           // Don't emit 'done' yet — need to persist first, then build the
           // enriched done payload that includes project metadata.
           doneSpec = event.spec
+          donePlan = event.plan
           thinkingDurationMs = event.thinking_duration_ms
           generationDurationMs = event.generation_duration_ms
         } else {
@@ -227,6 +229,9 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
         spec: doneSpec,
         originalPrompt: body.prompt,
         parentProjectId: body.parent_project_id,
+        // Translate null back to undefined for the service boundary:
+        // plan?: Plan (optional), so null is not accepted.
+        plan: donePlan ?? undefined,
       })
 
       const doneEvent = {
@@ -240,6 +245,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
           created_at: detail.project.createdAt.toISOString(),
         },
         spec: doneSpec,
+        plan: donePlan,
         render_hash: detail.currentVersion.renderHash,
         thinking_duration_ms: thinkingDurationMs,
         generation_duration_ms: generationDurationMs,

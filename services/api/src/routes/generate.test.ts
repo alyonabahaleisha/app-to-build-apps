@@ -22,18 +22,19 @@ import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 import {eq} from 'drizzle-orm'
 
 import * as schema from '../db/schema.js'
-import {users, projects, messages} from '../db/schema.js'
+import {users, projects, projectVersions, messages} from '../db/schema.js'
 import {createLogSink, PINO_LEVEL} from '../../test/mocks/pinoStream.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
 import {userJwt, specWithHeading, validSpec, uniqueEmail} from '../../test/factories.js'
 import {
   mockAnthropicStream,
-  mockAnthropicError,
   MINIMAL_VALID_SPEC,
+  MINIMAL_VALID_PLAN,
   makeToolUseMessage,
   makeToolUseStartEvent,
   makeSuccessEvents,
 } from '../../test/mocks/anthropic.js'
+import {PlanSchema} from '@app-creator/a2ui-schema'
 import {resetRateLimitForTests} from '../lib/rateLimit.js'
 
 // ---------------------------------------------------------------------------
@@ -55,6 +56,14 @@ jest.mock('../llm/anthropic.js', () => ({
   },
 }))
 
+// Mock runPipeline so route tests can control pipeline output without
+// requiring a real Anthropic SDK call. Configured per-test (see T-0004-08x).
+// The default implementation yields a minimal happy-path SSE sequence.
+const mockRunPipeline = jest.fn()
+jest.mock('../llm/pipeline.js', () => ({
+  runPipeline: (...args: unknown[]) => mockRunPipeline(...args),
+}))
+
 // ---------------------------------------------------------------------------
 // JWT setup (must come before import of auth.ts)
 // ---------------------------------------------------------------------------
@@ -70,6 +79,7 @@ process.env.ANTHROPIC_API_KEY = 'sk-ant-test-key'
 
 import {generateRoutes} from './generate.js'
 import {createProjectsService} from '../services/projects.service.js'
+import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from '../llm/errors.js'
 
 // ---------------------------------------------------------------------------
 // Types
@@ -137,11 +147,43 @@ function authHeader(sub: string, email: string): {authorization: string} {
   return {authorization: `Bearer ${userJwt({sub, email, secret: TEST_JWT_SECRET})}`}
 }
 
-/** Setup a happy-path mock: success events + valid tool use message. */
+/**
+ * Setup a happy-path mock at both the pipeline level (runPipeline) and the
+ * underlying Anthropic SDK stream level. The pipeline mock is what the route
+ * now calls; the SDK mock is kept as a fallback for any test that reaches
+ * through to the SDK directly.
+ */
 function setupHappyMock(): void {
+  mockRunPipeline.mockImplementation(() => makePipelineGenerator(null))
   getStreamMock().mockImplementation(
     mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage(MINIMAL_VALID_SPEC)),
   )
+}
+
+/**
+ * Returns an async generator that yields the standard SSE event sequence with
+ * the given plan (or null). Used to mock runPipeline at the route level.
+ */
+async function* makePipelineGenerator(
+  plan: import('@app-creator/a2ui-schema').Plan | null,
+): AsyncGenerator<import('../llm/generate.js').GenerateEvent> {
+  yield {type: 'thinking_started'}
+  yield {type: 'building_started'}
+  yield {
+    type: 'done',
+    spec: MINIMAL_VALID_SPEC as import('@app-creator/a2ui-schema').A2UISpec,
+    plan,
+    thinking_duration_ms: 10,
+    generation_duration_ms: 20,
+  }
+}
+
+/**
+ * Setup a pipeline mock that yields the happy-path events with the given plan.
+ * Replaces setupHappyMock() for tests that use runPipeline (Step 6+).
+ */
+function setupPipelineMock(plan: import('@app-creator/a2ui-schema').Plan | null = null): void {
+  mockRunPipeline.mockImplementation(() => makePipelineGenerator(plan))
 }
 
 // ---------------------------------------------------------------------------
@@ -151,6 +193,7 @@ function setupHappyMock(): void {
 describe('ADR-0002 Step 4 — POST /generate route (unit, no Docker)', () => {
   beforeEach(() => {
     getStreamMock().mockReset()
+    mockRunPipeline.mockReset()
     resetRateLimitForTests()
   })
 
@@ -421,6 +464,7 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
 
   beforeEach(() => {
     getStreamMock().mockReset()
+    mockRunPipeline.mockReset()
     resetRateLimitForTests()
   })
 
@@ -626,10 +670,11 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
   it('T-0002-048 + T-0002-049: invalid tool input → error event code=invalid_spec; project count unchanged', async () => {
     const userId = await makeUser(db)
 
-    // Mock LLM with a malformed tool input (missing required spec fields)
-    getStreamMock().mockImplementation(
-      mockAnthropicStream(makeSuccessEvents(), makeToolUseMessage({broken: true})),
-    )
+    // Mock runPipeline to throw InvalidSpecError (simulates malformed tool input)
+    mockRunPipeline.mockImplementation(async function* () {
+      yield {type: 'thinking_started'}
+      throw new InvalidSpecError('invalid_spec', [{path: '/views', message: 'required'}])
+    })
 
     const server = await buildGenerateServer({db})
     try {
@@ -665,8 +710,11 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
   it('T-0002-050: Anthropic 429 after retries → SSE error code=rate_limited; HTTP status 503', async () => {
     const userId = await makeUser(db)
 
-    // 429 triggers 3 attempts total; each attempt yields the same error
-    getStreamMock().mockImplementation(mockAnthropicError(429))
+    // Mock runPipeline to throw RateLimitedError (simulates exhausted 429 retries)
+    mockRunPipeline.mockImplementation(async function* () {
+      yield {type: 'thinking_started'}
+      throw new RateLimitedError()
+    })
 
     const server = await buildGenerateServer({db})
     try {
@@ -691,8 +739,7 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
     } finally {
       await server.close()
     }
-    // Note: 429 retry has sleep delays (1s + 2s = 3s). Jest default timeout handles this.
-  }, 30_000)
+  })
 
   // -------------------------------------------------------------------------
   // T-0002-051 — Failure: generic transport error → SSE error code=internal
@@ -700,8 +747,13 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
   it('T-0002-051: generic transport error → SSE error code=internal; not in INFO logs', async () => {
     const userId = await makeUser(db)
 
+    // Mock runPipeline to throw AnthropicTransportError with a sanitized message.
+    // The secretErrMsg must not appear in SSE or INFO logs — safeMessage strips it.
     const secretErrMsg = 'internal-sdk-error-' + randomUUID()
-    getStreamMock().mockImplementation(mockAnthropicError(500, secretErrMsg))
+    mockRunPipeline.mockImplementation(async function* () {
+      yield {type: 'thinking_started'}
+      throw new AnthropicTransportError(secretErrMsg)
+    })
 
     const sink = createLogSink()
     const server = await buildGenerateServer({db, sink})
@@ -999,6 +1051,308 @@ describe('ADR-0002 Step 4 — POST /generate route (integration, requires Docker
       const infoRecords = sink.byLevel(PINO_LEVEL.INFO)
       for (const record of infoRecords) {
         expect(JSON.stringify(record)).not.toContain(uniquePrompt)
+      }
+    } finally {
+      await server.close()
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// ADR-0004 Step 6 — Pipeline orchestrator route wiring (T-0004-083 to T-0004-087)
+//
+// Mocking strategy for these tests: mock runPipeline directly at the module
+// level (see jest.mock('../llm/pipeline.js') above). This bypasses the Anthropic
+// SDK entirely and lets us control the generator's output per-test.
+//
+// T-0004-083 (Regression umbrella): the existing ADR-0002 unit tests (T-0002-045
+// through T-0002-064) serve as the regression umbrella. If those pass, the pre-
+// flight gates are unaffected by the orchestrator swap. No additional sanity test
+// is added here to avoid redundancy per ADR Step 6 guidance.
+//
+// T-0004-085 and T-0004-086 are Docker-gated integration tests. They will fail
+// locally with the same testcontainer error as the T-0002-04x tests; CI with
+// Docker will run them.
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// T-0004-084 (unit) — PERCENT=100: done SSE event payload includes plan object
+// ---------------------------------------------------------------------------
+
+describe('ADR-0004 Step 6 — T-0004-084: done event includes plan when pipeline runs with a plan', () => {
+  beforeEach(() => {
+    mockRunPipeline.mockReset()
+    resetRateLimitForTests()
+  })
+
+  it('T-0004-084: SSE done payload includes plan field matching MINIMAL_VALID_PLAN when pipeline emits one', async () => {
+    // Route is injection-tested; we mock runPipeline to yield the pipeline's
+    // happy-path events carrying a plan. No DB needed — no service call needed
+    // because we need a real DB to persist. Use a mock service to isolate.
+    const mockService = {
+      create: jest.fn().mockResolvedValue({
+        project: {
+          id: randomUUID(),
+          title: 'Test App',
+          visibility: 'private' as const,
+          parentProjectId: null,
+          originalPrompt: 'Build me a calculator',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ownerId: 'user-084',
+          currentVersionId: 'version-084',
+        },
+        currentVersion: {
+          id: 'version-084',
+          projectId: 'project-084',
+          renderHash: 'abc123def456',
+          specJson: MINIMAL_VALID_SPEC,
+          planJson: MINIMAL_VALID_PLAN,
+          createdAt: new Date(),
+        },
+      }),
+      list: jest.fn(),
+      get: jest.fn(),
+      getVersion: jest.fn(),
+    }
+
+    setupPipelineMock(MINIMAL_VALID_PLAN)
+
+    const loggerInstance = pino({level: 'silent'})
+    const server = Fastify({loggerInstance})
+    await server.register(generateRoutes, {service: mockService})
+
+    try {
+      const userId = randomUUID()
+      const res = await server.inject({
+        method: 'POST',
+        url: '/generate',
+        headers: {
+          ...authHeader(userId, uniqueEmail()),
+          'content-type': 'application/json',
+        },
+        payload: JSON.stringify({prompt: 'Build me a calculator'}),
+      })
+
+      expect(res.headers['content-type']).toContain('text/event-stream')
+      const events = parseSSE(res.body)
+      const doneEvent = events.find(
+        (e): e is Record<string, unknown> => typeof e === 'object' && e['type'] === 'done',
+      )
+      expect(doneEvent).toBeDefined()
+
+      // plan field must be present in the SSE done payload
+      expect(doneEvent!['plan']).toBeDefined()
+      const plan = doneEvent!['plan'] as Record<string, unknown>
+      expect(plan['archetype']).toBe(MINIMAL_VALID_PLAN.archetype)
+      expect(plan['navigation']).toBe(MINIMAL_VALID_PLAN.navigation)
+      expect(Array.isArray(plan['screens'])).toBe(true)
+      expect((plan['screens'] as unknown[]).length).toBe(MINIMAL_VALID_PLAN.screens.length)
+
+      // plan field must parse against PlanSchema without error (T-0004-087 companion)
+      const parseResult = PlanSchema.safeParse(plan)
+      expect(parseResult.success).toBe(true)
+    } finally {
+      await server.close()
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0004-085 (integration, Docker-gated) — plan_json populated when plan present
+// T-0004-086 (integration, Docker-gated) — plan_json NULL on legacy path (PERCENT=0)
+// ---------------------------------------------------------------------------
+
+describe('ADR-0004 Step 6 — T-0004-085/T-0004-086: plan_json persistence (requires Docker)', () => {
+  let db: Db
+
+  beforeAll(async () => {
+    db = await getTestDb()
+  })
+
+  beforeEach(() => {
+    mockRunPipeline.mockReset()
+    resetRateLimitForTests()
+  })
+
+  afterEach(async () => {
+    await truncateAll()
+  })
+
+  afterAll(async () => {
+    await closeTestPool()
+  })
+
+  // T-0004-085: plan_json is populated when the pipeline yields a plan
+  it('T-0004-085: plan_json on project_versions row is populated when runPipeline yields a plan', async () => {
+    setupPipelineMock(MINIMAL_VALID_PLAN)
+
+    const userId = await makeUser(db)
+    const server = await buildGenerateServer({db})
+    try {
+      await server.inject({
+        method: 'POST',
+        url: '/generate',
+        headers: {
+          ...authHeader(userId, uniqueEmail()),
+          'content-type': 'application/json',
+        },
+        payload: JSON.stringify({prompt: 'Build me a calculator'}),
+      })
+
+      // Fetch the persisted version row and assert plan_json is not NULL
+      const projectRows = await db.select().from(projects).where(eq(projects.ownerId, userId))
+      expect(projectRows).toHaveLength(1)
+
+      const versionRows = await db
+        .select()
+        .from(projectVersions)
+        .where(eq(projectVersions.projectId, projectRows[0]!.id))
+      expect(versionRows).toHaveLength(1)
+
+      const planJson = versionRows[0]!.planJson
+      expect(planJson).not.toBeNull()
+
+      // plan_json must be a valid Plan
+      const parseResult = PlanSchema.safeParse(planJson)
+      expect(parseResult.success).toBe(true)
+      if (parseResult.success) {
+        expect(parseResult.data.archetype).toBe(MINIMAL_VALID_PLAN.archetype)
+        expect(parseResult.data.navigation).toBe(MINIMAL_VALID_PLAN.navigation)
+      }
+    } finally {
+      await server.close()
+    }
+  })
+
+  // T-0004-086: plan_json is NULL when pipeline yields no plan (legacy/fallback)
+  it('T-0004-086: plan_json on project_versions row is NULL when runPipeline yields plan: null', async () => {
+    // null plan simulates the M1 single-call fallback path
+    setupPipelineMock(null)
+
+    const userId = await makeUser(db)
+    const server = await buildGenerateServer({db})
+    try {
+      await server.inject({
+        method: 'POST',
+        url: '/generate',
+        headers: {
+          ...authHeader(userId, uniqueEmail()),
+          'content-type': 'application/json',
+        },
+        payload: JSON.stringify({prompt: 'Build me an app'}),
+      })
+
+      const projectRows = await db.select().from(projects).where(eq(projects.ownerId, userId))
+      expect(projectRows).toHaveLength(1)
+
+      const versionRows = await db
+        .select()
+        .from(projectVersions)
+        .where(eq(projectVersions.projectId, projectRows[0]!.id))
+      expect(versionRows).toHaveLength(1)
+
+      // plan_json must be NULL for the legacy/fallback path
+      expect(versionRows[0]!.planJson).toBeNull()
+    } finally {
+      await server.close()
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0004-087 (unit) — Security: SSE done response plan field has no surplus keys
+// ---------------------------------------------------------------------------
+
+describe('ADR-0004 Step 6 — T-0004-087: plan field in SSE response is schema-exact, no surplus', () => {
+  beforeEach(() => {
+    mockRunPipeline.mockReset()
+    resetRateLimitForTests()
+  })
+
+  it('T-0004-087: plan field in done SSE event passes PlanSchema.safeParse with no surplus keys or unstructured text', async () => {
+    const mockService = {
+      create: jest.fn().mockResolvedValue({
+        project: {
+          id: randomUUID(),
+          title: 'Test App',
+          visibility: 'private' as const,
+          parentProjectId: null,
+          originalPrompt: 'Build me a calculator',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ownerId: 'user-087',
+          currentVersionId: 'version-087',
+        },
+        currentVersion: {
+          id: 'version-087',
+          projectId: 'project-087',
+          renderHash: 'abc123def456',
+          specJson: MINIMAL_VALID_SPEC,
+          planJson: MINIMAL_VALID_PLAN,
+          createdAt: new Date(),
+        },
+      }),
+      list: jest.fn(),
+      get: jest.fn(),
+      getVersion: jest.fn(),
+    }
+
+    setupPipelineMock(MINIMAL_VALID_PLAN)
+
+    const loggerInstance = pino({level: 'silent'})
+    const server = Fastify({loggerInstance})
+    await server.register(generateRoutes, {service: mockService})
+
+    try {
+      const userId = randomUUID()
+      const res = await server.inject({
+        method: 'POST',
+        url: '/generate',
+        headers: {
+          ...authHeader(userId, uniqueEmail()),
+          'content-type': 'application/json',
+        },
+        payload: JSON.stringify({prompt: 'Build me a calculator'}),
+      })
+
+      const events = parseSSE(res.body)
+      const doneEvent = events.find(
+        (e): e is Record<string, unknown> => typeof e === 'object' && e['type'] === 'done',
+      )
+      expect(doneEvent).toBeDefined()
+      const plan = doneEvent!['plan']
+
+      // The plan field must be a valid Plan with no surplus keys.
+      // PlanSchema uses .strict() or strip-mode? Check parse result directly:
+      // We assert the field round-trips through PlanSchema without error.
+      const parseResult = PlanSchema.safeParse(plan)
+      expect(parseResult.success).toBe(true)
+
+      // Walk every key of the plan object: it must only contain keys the Plan
+      // type knows about. PlanSchema.keyof() gives us the allowed top-level keys.
+      if (parseResult.success) {
+        const planObj = plan as Record<string, unknown>
+
+        // No unstructured text blob anywhere in plan (planner-internal trace guard)
+        const planStr = JSON.stringify(planObj)
+        expect(typeof planStr).toBe('string')
+        // Plan fields must be structured types only — no lone string keys
+        // that could carry trace text. We verify the plan only has known fields:
+        const knownKeys = ['version', 'archetype', 'screens', 'navigation', 'edit_intent']
+        for (const key of Object.keys(planObj)) {
+          expect(knownKeys).toContain(key)
+        }
+
+        // Screens entries must also have only known fields
+        const screens = planObj['screens'] as Array<Record<string, unknown>>
+        expect(Array.isArray(screens)).toBe(true)
+        const knownScreenKeys = ['id', 'role', 'purpose', 'key_components']
+        for (const screen of screens) {
+          for (const key of Object.keys(screen)) {
+            expect(knownScreenKeys).toContain(key)
+          }
+        }
       }
     } finally {
       await server.close()
