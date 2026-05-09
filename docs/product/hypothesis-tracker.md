@@ -1,7 +1,7 @@
 # Hypothesis Tracker
 
 **Owner:** Robert (CPO)
-**Last updated:** 2026-05-05
+**Last updated:** 2026-05-07
 
 > Single source of truth for the hypotheses we are betting milestones on.
 > One row per hypothesis. Each one has a status, a measurement, and a
@@ -26,7 +26,7 @@
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------- | ------ |
 | H1  | Idea-makers (personal individuals) will convert at ≥8% to a paid plan once they have a working chat → render loop                                                                                                                              | Deferred   | M1 (referenced) → M3 willingness-to-pay test | Robert |
 | H3  | Generation reliability (success rate, latency, crash-free) is a necessary condition for the product to be usable                                                                                                                               | Validated  | M1                                           | AI Eng |
-| H5  | **Quality threshold drives retention.** There is a visual and structural quality bar above which generated apps are kept and used, and below which they are abandoned regardless of functional correctness. H3 is necessary but not sufficient | **Active** | **M2**                                       | Robert |
+| H5  | **Quality threshold drives retention.** There is a visual and structural quality bar above which generated apps are kept and used, and below which they are abandoned regardless of functional correctness. H3 is necessary but not sufficient | **Active** | **M2 → Canvas V0** (cohort widens from alpha to public-launch install) | Robert |
 
 > H2 and H4 reserved — not yet entered. Add when claimed by a named
 > milestone with a disconfirmation rule.
@@ -66,8 +66,15 @@
   generated apps are kept and used, and below which they are abandoned
   regardless of functional correctness. Generation reliability alone (H3)
   is necessary but not sufficient.
-- **Milestone:** M2 (`docs/product/M2-milestone.md`).
-- **Status:** **Active** as of 2026-05-05.
+- **Milestone:** M2 (`docs/product/M2-milestone.md`) → **Canvas V0**
+  (`docs/product/canvas-v0.md`). Carryover proposed 2026-05-07 as part of
+  Canvas V0 redirect. **Cohort definition widens from "alpha invitees
+  (n ≥ 50, ≥ 2 weeks via TestFlight)" to "public App Store install
+  cohort (n ≥ 500, statistical significance via Wilson score interval,
+  95% CI)."** The hypothesis statement and disconfirmation rules below
+  are unchanged; only the cohort and scale change.
+- **Status:** **Active** as of 2026-05-05. Carryover to V0 pending
+  Sponsor sign-off on Canvas V0 §0 reconciliation (due 2026-05-12).
 - **Owner:** Robert (CPO). Co-signers required at sign-off: Sponsor
   (Alyona Yanuchek) + Eng Lead + Design Lead.
 
