@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScreenRenderer snapshot (T-0006-049) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FAFAF7",
+      "flex": 1,
+      "paddingBottom": 0,
+      "paddingHorizontal": 20,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+      }
+    }
+  />
+</View>
+`;
+
+exports[`ScreenRenderer snapshot (T-0006-054) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FBF8F3",
+      "flex": 1,
+      "paddingBottom": 0,
+      "paddingHorizontal": 32,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+      }
+    }
+  />
+</View>
+`;

@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RowRenderer snapshot (T-0006-052) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexWrap": "wrap",
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginRight": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 12,
+          "elevation": 2,
+          "padding": 12,
+          "shadowColor": "rgb(15, 18, 22)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.06,
+          "shadowRadius": 2,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "marginRight": 0,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 12,
+          "elevation": 2,
+          "padding": 12,
+          "shadowColor": "rgb(15, 18, 22)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.06,
+          "shadowRadius": 2,
+        }
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`RowRenderer snapshot (T-0006-057) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexWrap": "wrap",
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginRight": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 20,
+          "elevation": 2,
+          "padding": 20,
+          "shadowColor": "rgb(15, 18, 22)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.06,
+          "shadowRadius": 2,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "marginRight": 0,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 20,
+          "elevation": 2,
+          "padding": 20,
+          "shadowColor": "rgb(15, 18, 22)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.06,
+          "shadowRadius": 2,
+        }
+      }
+    />
+  </View>
+</View>
+`;
