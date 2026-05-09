@@ -96,6 +96,11 @@ jest.mock('@app-creator/a2ui-renderer', () => {
       React2.createElement(React2.Fragment, null, children),
 
     // V0 demo surface (__V0_* prefix signals Milestone A shim)
+    // __V0_Renderer is the full Renderer component used by V0DemoRunner (Step 10).
+    // The sentinel testID matches the V0DemoRunner test assertions at lines 437-443.
+    __V0_Renderer: ({}: {spec: unknown; host: unknown}) =>
+      React2.createElement(RN.View, {testID: 'v0-node-renderer-sentinel'}),
+    // Legacy shim exports retained for completeness (not used after Step 10).
     __V0_NodeRenderer: (_props: unknown) =>
       React2.createElement(RN.View, {testID: 'v0-node-renderer-sentinel'}),
     __V0_ThemeProvider: ({children}: {children: React.ReactNode}) =>
@@ -433,7 +438,7 @@ describe('AppRunnerScreen Owner mode', () => {
     // V0DemoRunner is the component mounted when V0_DEMO_ENABLED=true.
     // Test it directly — this covers the rendering branch that would be active
     // in a build with EXPO_PUBLIC_CANVAS_V0_DEMO=true.
-    it('V0DemoRunner renders the __V0_NodeRenderer sentinel', () => {
+    it('V0DemoRunner renders the __V0_Renderer sentinel', () => {
       const {getByTestId} = render(<V0DemoRunner />)
       expect(getByTestId('v0-node-renderer-sentinel')).toBeTruthy()
     })
