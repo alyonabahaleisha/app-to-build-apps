@@ -58,6 +58,9 @@ export default [
     ignores: [
       'packages/a2ui-renderer/src/v0/ai/**',
       'packages/a2ui-renderer/src/v0/a11y/**',
+      // nav/ — navigator components are infrastructure, not pure node renderers.
+      // useEffect is needed for NavigationPrimitive cleanup on unmount (Step 10).
+      'packages/a2ui-renderer/src/v0/nav/**',
       'packages/a2ui-renderer/src/v0/state/useRendererState.ts',
       'packages/a2ui-renderer/src/v0/__demo__/**',
       'packages/a2ui-renderer/src/v0/__test-utils__/**',

@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StackNav (T-0006-163) snapshot — StackNav productive×focus 1`] = `
+<View
+  testID="navigation-container"
+>
+  <View
+    testID="stack-navigator"
+  >
+    <View
+      testID="stack-screen-list"
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+      >
+        <Text
+          accessibilityLabel="Task List"
+          accessibilityRole="header"
+          aria-level={1}
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 32,
+              "fontWeight": "600",
+              "letterSpacing": -0.4,
+              "lineHeight": 40,
+              "textAlign": "left",
+            }
+          }
+        >
+          Task List
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

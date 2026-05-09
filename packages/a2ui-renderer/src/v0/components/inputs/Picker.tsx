@@ -4,39 +4,37 @@
  * Binding: valueBinding: StringBinding resolved via useBinding<string>.
  *   literal      → static display (read-only)
  *   state        → reads slot; selection dispatches set(target, selectedValue)
- *   collectionField → reads row field; writes back (Step 7 concern)
+ *   collectionField → reads row field; writes back via updateItem
  *
  * Options: up to 12 (enforced by PickerSchema max(12), T-0006-105).
  *
- * V0 Step 6 implementation note:
- *   The Gorhom Bottom Sheet modal integration (open/close sheet, render option
- *   rows inside sheet) is wired in a simplified form: tapping the field calls
- *   host.onToast for the "open sheet" signal in tests. Full sheet rendering
- *   with react-native-gesture-handler lands at Step 8 (Compound tier).
- *   ADR Step 6 AC (T-0006-100) is satisfied by verifying that selecting a value
- *   dispatches set correctly — tested via a direct handler test rather than a
- *   full sheet interaction test.
+ * Step 10 closure (Step 6 deferral, Roz Deviation 2):
+ *   Full Gorhom BottomSheetModal integration replaces the Step 6 stub.
+ *   Tapping the field presents a BottomSheetModal with a Pressable option list.
+ *   Selecting an option dispatches set / updateItem and closes the sheet.
  *
  * Surface: tappable Pressable, label caption above, selected label in type-body,
  *   chevron-right at right, bg-elevated bg, radius-md, divider border.
  *
  * Accessibility:
- *   - accessibilityRole="combobox"
+ *   - accessibilityRole="combobox" on trigger
  *   - accessibilityLabel: node.accessibilityLabel ?? node.label
- *   - accessibilityState: {expanded: false} (sheet open state tracked in Step 8)
+ *   - accessibilityState: {expanded: sheetOpen}
+ *   - accessibilityRole="menuitem" on each option
  *
  * T-0006-093 / T-0006-094: snapshots at productive×focus + expressive×health
- * T-0006-100: selection dispatches set
+ * T-0006-100: selection dispatches set (Step 10 closure: via sheet option press)
  * T-0006-102: 3 binding kinds render without error
  * T-0006-105: options min(1)/max(12) enforced at schema parse
  */
-import React from 'react'
+import React, {useRef, useState, useCallback} from 'react'
 import {View, Text, Pressable} from 'react-native'
+import {BottomSheetModal, BottomSheetModalProvider, BottomSheetView} from '@gorhom/bottom-sheet'
 import type {Node} from '@app-creator/protocol'
 import {useTheme, useStance} from '../../theme/RendererThemeProvider.js'
 import {useBinding} from '../../state/useBinding.js'
 import {useRendererStateContext} from '../../state/useRendererState.js'
-import {useHost} from '../../host/HostContext.js'
+import {useListItemContext} from '../../state/ListItemContext.js'
 import {INPUT_DEFAULTS} from './defaults.js'
 
 type PickerNode = Extract<Node, {type: 'Picker'}>
@@ -46,7 +44,9 @@ export function PickerRenderer({node}: {node: PickerNode}) {
   const stance = useStance()
   const defaults = INPUT_DEFAULTS[stance]
   const {dispatch} = useRendererStateContext()
-  const host = useHost()
+  const listItemCtx = useListItemContext()
+  const sheetRef = useRef<BottomSheetModal>(null)
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   const boundValue = useBinding<string>(node.valueBinding)
 
@@ -57,88 +57,127 @@ export function PickerRenderer({node}: {node: PickerNode}) {
   const captionSpec = theme.type.caption
   const bodySpec = theme.type.body
 
-  function handleSelect(selectedValue: string) {
+  const handleSelect = useCallback((selectedValue: string) => {
     if (node.valueBinding.kind === 'state') {
       dispatch({type: 'set', target: node.valueBinding.slot, value: selectedValue})
+    } else if (node.valueBinding.kind === 'collectionField' && listItemCtx !== null) {
+      dispatch({
+        type: 'updateItem',
+        collection: node.valueBinding.collectionId,
+        itemId: listItemCtx.rowId,
+        patch: {[node.valueBinding.field]: selectedValue},
+      })
     }
-    // collectionField write is a Step 7 concern.
-  }
+    sheetRef.current?.dismiss()
+    setSheetOpen(false)
+  }, [dispatch, node.valueBinding, listItemCtx])
 
   function handlePress() {
-    // Step 6 stub: full Gorhom sheet option list lands at Step 8.
-    // For now, signal open via toast and expose handleSelect for testing.
-    host.onToast('Picker — sheet opens here (Step 8+)', undefined)
+    setSheetOpen(true)
+    sheetRef.current?.present()
+  }
+
+  function handleSheetChange(index: number) {
+    if (index === -1) {
+      setSheetOpen(false)
+    }
   }
 
   return (
-    <View>
-      {/* Label */}
-      <Text
-        style={{
-          fontSize: captionSpec.size,
-          lineHeight: captionSpec.lineHeight,
-          fontWeight: '400',
-          letterSpacing: captionSpec.letterSpacing,
-          color: theme['fg-muted'],
-          marginBottom: theme.spacing['space-xs'],
-        }}
-        accessibilityElementsHidden
-      >
-        {node.label}
-      </Text>
-
-      {/* Tappable field */}
-      <Pressable
-        onPress={handlePress}
-        style={({pressed}) => ({
-          minHeight: defaults.fieldMinHeight,
-          backgroundColor: pressed ? theme['bg-overlay'] : theme['bg-elevated'],
-          borderRadius: theme.radii['radius-md'],
-          borderWidth: 1,
-          borderColor: theme.divider,
-          paddingHorizontal: theme.spacing['space-md'],
-          paddingVertical: theme.spacing['space-sm'],
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        })}
-        accessibilityRole="combobox"
-        accessibilityLabel={node.accessibilityLabel ?? node.label}
-        accessibilityState={{expanded: false}}
-      >
+    <BottomSheetModalProvider>
+      <View>
+        {/* Label */}
         <Text
           style={{
-            fontSize: bodySpec.size,
-            lineHeight: bodySpec.lineHeight,
-            color: selectedOption ? theme.fg : theme['fg-faint'],
+            fontSize: captionSpec.size,
+            lineHeight: captionSpec.lineHeight,
+            fontWeight: '400',
+            letterSpacing: captionSpec.letterSpacing,
+            color: theme['fg-muted'],
+            marginBottom: theme.spacing['space-xs'],
           }}
+          accessibilityElementsHidden
         >
-          {displayLabel}
+          {node.label}
         </Text>
-        <Text style={{color: theme['fg-faint'], fontSize: 14}}>{'›'}</Text>
-      </Pressable>
 
-      {/* Option list — rendered inline for test interaction; visually collapsed pending
-          Gorhom sheet integration at Step 8. height:0 keeps elements in the test tree
-          while not taking visual space. Do NOT add accessibilityElementsHidden here —
-          it prevents getByTestId from finding children in RNTL.
-          Use testID to locate options in tests. */}
-      <View
-        style={{height: 0, overflow: 'hidden'}}
-        testID={`picker-options-${node.id}`}
-      >
-        {node.options.map(opt => (
-          <Pressable
-            key={opt.value}
-            onPress={() => handleSelect(opt.value)}
-            testID={`picker-option-${opt.value}`}
-            accessibilityRole="button"
-            accessibilityLabel={opt.label}
+        {/* Tappable field */}
+        <Pressable
+          onPress={handlePress}
+          style={({pressed}) => ({
+            minHeight: defaults.fieldMinHeight,
+            backgroundColor: pressed ? theme['bg-overlay'] : theme['bg-elevated'],
+            borderRadius: theme.radii['radius-md'],
+            borderWidth: 1,
+            borderColor: theme.divider,
+            paddingHorizontal: theme.spacing['space-md'],
+            paddingVertical: theme.spacing['space-sm'],
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          })}
+          accessibilityRole="combobox"
+          accessibilityLabel={node.accessibilityLabel ?? node.label}
+          accessibilityState={{expanded: sheetOpen}}
+          testID={`picker-trigger-${node.id}`}
+        >
+          <Text
+            style={{
+              fontSize: bodySpec.size,
+              lineHeight: bodySpec.lineHeight,
+              color: selectedOption ? theme.fg : theme['fg-faint'],
+            }}
           >
-            <Text>{opt.label}</Text>
-          </Pressable>
-        ))}
+            {displayLabel}
+          </Text>
+          <Text style={{color: theme['fg-faint'], fontSize: 14}}>{'›'}</Text>
+        </Pressable>
       </View>
-    </View>
+
+      {/* Gorhom Bottom Sheet with option list */}
+      <BottomSheetModal
+        ref={sheetRef}
+        snapPoints={['45%']}
+        onChange={handleSheetChange}
+        enablePanDownToClose
+      >
+        <BottomSheetView style={{flex: 1, paddingVertical: 8}}>
+          {node.options.map(opt => {
+            const isSelected = opt.value === boundValue
+            return (
+              <Pressable
+                key={opt.value}
+                onPress={() => handleSelect(opt.value)}
+                style={{
+                  paddingHorizontal: 20,
+                  paddingVertical: 14,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+                accessibilityRole="menuitem"
+                accessibilityLabel={opt.label}
+                accessibilityState={{selected: isSelected}}
+                testID={`picker-option-${opt.value}`}
+              >
+                <Text
+                  style={{
+                    fontSize: bodySpec.size,
+                    lineHeight: bodySpec.lineHeight,
+                    color: isSelected ? theme.accent : theme.fg,
+                    fontWeight: isSelected ? '600' : '400',
+                  }}
+                >
+                  {opt.label}
+                </Text>
+                {isSelected && (
+                  <Text style={{color: theme.accent, fontSize: 16}}>{'✓'}</Text>
+                )}
+              </Pressable>
+            )
+          })}
+        </BottomSheetView>
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   )
 }

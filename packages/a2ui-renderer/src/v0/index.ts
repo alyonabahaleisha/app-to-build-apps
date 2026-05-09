@@ -106,3 +106,11 @@ export {makeAIDispatcher, sanitizeRowsForPrompt, AI_TIMEOUT_MS} from './ai/aiDis
 export {ButtonRenderer} from './components/actions/Button.js'
 export {FABRenderer} from './components/actions/FAB.js'
 export {feedback} from './state/middleware/feedback.js'
+
+// Step 10: Internal navigation patterns + Renderer wrapper
+export {NoNav} from './nav/NoNav.js'
+export {StackNav} from './nav/StackNav.js'
+export {TabsNav} from './nav/TabsNav.js'
+export {ModalOverlayNav} from './nav/ModalOverlayNav.js'
+export {Renderer} from './Renderer.js'
+export type {RendererProps} from './Renderer.js'

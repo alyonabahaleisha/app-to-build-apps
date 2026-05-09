@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoNav (T-0006-162) snapshot — NoNav productive×focus 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <Text
+    accessibilityLabel="Hello"
+    accessibilityRole="header"
+    aria-level={1}
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 32,
+        "fontWeight": "600",
+        "letterSpacing": -0.4,
+        "lineHeight": 40,
+        "textAlign": "left",
+      }
+    }
+  >
+    Hello
+  </Text>
+</View>
+`;

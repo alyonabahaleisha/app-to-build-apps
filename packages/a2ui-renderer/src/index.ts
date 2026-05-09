@@ -29,7 +29,7 @@ export type {
 } from './legacy/index.js'
 
 // ---------------------------------------------------------------------------
-// V0 demo entry-point — Milestone A shim, NOT stable API.
+// V0 demo entry-point — Milestone B shim, NOT stable API.
 // The __V0_* prefix signals these are temporary demo exports.
 // They are consumed only by the AppRunner V0 demo branch when
 // EXPO_PUBLIC_CANVAS_V0_DEMO=true. Step 11 will replace this block with
@@ -42,3 +42,6 @@ export {
 } from './v0/host/HostContext.js'
 export type {HostCallbacks as __V0_HostCallbacks} from './v0/state/hostCallbacks.js'
 export {SAMPLE_SPEC as __V0_SAMPLE_SPEC} from './v0/__demo__/sampleSpec.js'
+// Milestone B: full Renderer wrapper (theme + host + state + nav)
+export {Renderer as __V0_Renderer} from './v0/Renderer.js'
+export type {RendererProps as __V0_RendererProps} from './v0/Renderer.js'

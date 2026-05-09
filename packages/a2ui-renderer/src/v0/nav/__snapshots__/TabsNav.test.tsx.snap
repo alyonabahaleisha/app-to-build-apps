@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TabsNav (T-0006-166) snapshot — TabsNav productive×focus 1`] = `
+<View
+  style={
+    {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    accessibilityRole="tablist"
+    style={
+      {
+        "backgroundColor": "#FAFAF7",
+        "borderBottomColor": "#ECEEF1",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "height": 36,
+        "marginTop": 12,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Today"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomColor": "#4F46E5",
+          "borderBottomWidth": 2,
+          "flex": 1,
+          "justifyContent": "flex-end",
+          "paddingBottom": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#4F46E5",
+            "fontSize": 14,
+            "fontWeight": "600",
+          }
+        }
+      >
+        Today
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="History"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomColor": "transparent",
+          "borderBottomWidth": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+          "paddingBottom": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 14,
+            "fontWeight": "400",
+          }
+        }
+      >
+        History
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Insights"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomColor": "transparent",
+          "borderBottomWidth": 0,
+          "flex": 1,
+          "justifyContent": "flex-end",
+          "paddingBottom": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 14,
+            "fontWeight": "400",
+          }
+        }
+      >
+        Insights
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      accessibilityLabel="Today View"
+      accessibilityRole="header"
+      aria-level={1}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 32,
+          "fontWeight": "600",
+          "letterSpacing": -0.4,
+          "lineHeight": 40,
+          "textAlign": "left",
+        }
+      }
+    >
+      Today View
+    </Text>
+  </View>
+</View>
+`;

@@ -17,7 +17,7 @@ import React from 'react'
 import {SpecSchema} from '@app-creator/protocol'
 import {renderWithTheme} from '../__test-utils__/renderWithTheme'
 import {NodeRenderer} from '../components/NodeRenderer'
-import {SAMPLE_SPEC} from './sampleSpec'
+import {SAMPLE_SPEC_MILESTONE_A as SAMPLE_SPEC} from './sampleSpec'
 
 // ---------------------------------------------------------------------------
 // T-0006-086: Milestone A integration test

@@ -30,9 +30,7 @@ import {
   RendererLoggerProvider,
   RendererThemeProvider,
   useA2UIState,
-  __V0_NodeRenderer,
-  __V0_ThemeProvider,
-  __V0_HostProvider,
+  __V0_Renderer,
   __V0_SAMPLE_SPEC,
 } from '@app-creator/a2ui-renderer'
 import type {RendererTheme, __V0_HostCallbacks} from '@app-creator/a2ui-renderer'
@@ -112,34 +110,38 @@ function RendererHost({spec, projectId, renderHash, rendererTheme, onBack}: Rend
 // Exported for test introspection only — not stable API.
 export const V0_DEMO_ENABLED = process.env.EXPO_PUBLIC_CANVAS_V0_DEMO === 'true'
 
-// Minimal HostCallbacks for the static demo. onToast and onAIError are no-ops
-// because sampleSpec has no interactive nodes — this is a render demo only.
+// HostCallbacks for the Milestone B interactive demo.
+// onToast is wired to the app's toast system; navigation errors are logged.
 const V0_DEMO_HOST: __V0_HostCallbacks = {
-  onToast: () => {},
+  onToast: (message) => {
+    // In the demo context, toasts surface as console.info (dev build only).
+    // Step 11 wires this to the real ToastProvider.
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.info('[V0Demo toast]', message)
+    }
+  },
   onAIError: () => {},
+  onNavigationError: (signal) => {
+    if (__DEV__) {
+      // eslint-disable-next-line no-console
+      console.warn('[V0Demo nav error]', signal)
+    }
+  },
 }
 
 /**
- * V0DemoRunner — mounts SAMPLE_SPEC (productive×focus) via the V0 renderer
- * surface. No navigation, no AI, no data fetching. Pure render demo.
+ * V0DemoRunner — mounts SAMPLE_SPEC via the full V0 <Renderer> component.
  *
- * The V0 Screen node handles its own safe-area so this component is bare —
- * no SafeContainer wrapper needed.
+ * Milestone B: SAMPLE_SPEC is a stack-nav task tracker with addItem FAB,
+ * swipe-to-delete, and navigate-to-detail. All interactions are live on device.
+ *
+ * The Renderer handles theme + host + state + nav internally.
+ * No SafeContainer wrapper needed — Screen node manages safe area.
  */
 // Exported for direct unit testing. Not part of the stable public API.
 export function V0DemoRunner() {
-  // SAMPLE_SPEC always has exactly one screen — the null check satisfies TS
-  // and acts as defense-in-depth against hypothetical spec mutations.
-  const screen = __V0_SAMPLE_SPEC.screens[0]
-  if (!screen) return null
-
-  return (
-    <__V0_ThemeProvider stance={__V0_SAMPLE_SPEC.stance} palette={__V0_SAMPLE_SPEC.palette}>
-      <__V0_HostProvider value={V0_DEMO_HOST}>
-        <__V0_NodeRenderer node={screen.root} />
-      </__V0_HostProvider>
-    </__V0_ThemeProvider>
-  )
+  return <__V0_Renderer spec={__V0_SAMPLE_SPEC} host={V0_DEMO_HOST} />
 }
 
 // -- Screen ------------------------------------------------------------------

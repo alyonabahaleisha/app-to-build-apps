@@ -3,16 +3,17 @@
  *
  * T-0006-093: snapshot at productive×focus
  * T-0006-094: snapshot at expressive×health
- * T-0006-100: selection dispatches set
+ * T-0006-100: selection dispatches set (Step 10: via Gorhom sheet option press)
  * T-0006-102 (Picker): 3 binding kinds render without error
  * T-0006-105: options min(1)/max(12) enforced at schema parse
  *
- * Step 6 deviation note:
- *   Full Gorhom sheet option list lands at Step 8. The hidden option list
- *   (testID="picker-options-<id>") allows dispatch testing in Step 6 tests.
+ * Step 10 closure (Roz Deviation 2):
+ *   Full Gorhom BottomSheetModal integration replaces the Step 6 hidden-list stub.
+ *   T-0006-100 updated: open the sheet first (press trigger), then press an option.
+ *   Snapshots regenerated to include BottomSheetModalProvider wrapper.
  */
 import React from 'react'
-import {fireEvent} from '@testing-library/react-native'
+import {fireEvent, act} from '@testing-library/react-native'
 import type {Node, Spec} from '@app-creator/protocol'
 import {PickerSchema} from '@app-creator/protocol'
 import {renderWithTheme} from '../../__test-utils__/renderWithTheme'
@@ -111,11 +112,15 @@ describe('PickerRenderer snapshot (T-0006-094) — expressive×health', () => {
 })
 
 // ---------------------------------------------------------------------------
-// T-0006-100: selection dispatches set
+// T-0006-100: selection dispatches set (Step 10: via Gorhom sheet)
+//
+// Workflow:
+//   1. Press the picker trigger → sheet presents (Gorhom mock renders inline).
+//   2. Press the option in the sheet → dispatch called.
 // ---------------------------------------------------------------------------
 
 describe('PickerRenderer selection dispatch (T-0006-100)', () => {
-  it('selecting an option dispatches set with the selected value', () => {
+  it('opening the sheet then selecting an option dispatches set (T-0006-100)', () => {
     const mockDispatch = jest.fn()
     const state = buildInitialRendererState(SPEC_WITH_SLOT)
     const {getByTestId} = renderWithTheme(
@@ -123,7 +128,11 @@ describe('PickerRenderer selection dispatch (T-0006-100)', () => {
       {stance: 'productive', palette: 'focus', rendererState: state, dispatch: mockDispatch},
     )
 
-    // Press the hidden option for "high"
+    // Step 1: Press the trigger to open the sheet.
+    const trigger = getByTestId('picker-trigger-pk1')
+    act(() => { fireEvent.press(trigger) })
+
+    // Step 2: Press the 'high' option in the sheet.
     const highOption = getByTestId('picker-option-high')
     fireEvent.press(highOption)
 
@@ -141,6 +150,11 @@ describe('PickerRenderer selection dispatch (T-0006-100)', () => {
       {stance: 'productive', palette: 'focus', dispatch: mockDispatch},
     )
 
+    // Open the sheet.
+    const trigger = getByTestId('picker-trigger-pk2')
+    act(() => { fireEvent.press(trigger) })
+
+    // Press an option — literal binding does not dispatch.
     fireEvent.press(getByTestId('picker-option-personal'))
 
     expect(mockDispatch).not.toHaveBeenCalled()
@@ -152,8 +166,7 @@ describe('PickerRenderer selection dispatch (T-0006-100)', () => {
       <PickerRenderer node={PICKER_STATE} />,
       {stance: 'productive', palette: 'focus', rendererState: state},
     )
-    // 'priority' slot = 'medium'; 'Medium' appears in the main field AND hidden options list.
-    // At least one instance should be present.
+    // 'priority' slot = 'medium'; 'Medium' appears in the trigger field.
     const mediumEls = getAllByText('Medium')
     expect(mediumEls.length).toBeGreaterThanOrEqual(1)
   })

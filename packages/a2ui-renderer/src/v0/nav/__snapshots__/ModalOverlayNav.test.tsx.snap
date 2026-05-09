@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModalOverlayNav (T-0006-169) snapshot — ModalOverlayNav productive×focus (base screen only) 1`] = `
+<View>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      accessibilityLabel="Main Screen"
+      accessibilityRole="header"
+      aria-level={1}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 32,
+          "fontWeight": "600",
+          "letterSpacing": -0.4,
+          "lineHeight": 40,
+          "textAlign": "left",
+        }
+      }
+    >
+      Main Screen
+    </Text>
+  </View>
+</View>
+`;

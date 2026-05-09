@@ -2,108 +2,31 @@
 
 exports[`PickerRenderer snapshot (T-0006-093) — productive×focus matches snapshot at productive×focus 1`] = `
 <View>
-  <Text
-    accessibilityElementsHidden={true}
-    style={
-      {
-        "color": "#5C6470",
-        "fontSize": 13,
-        "fontWeight": "400",
-        "letterSpacing": 0.1,
-        "lineHeight": 18,
-        "marginBottom": 4,
-      }
-    }
-  >
-    Priority
-  </Text>
-  <View
-    accessibilityLabel="Priority"
-    accessibilityRole="combobox"
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": false,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      {
-        "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
-        "borderColor": "#ECEEF1",
-        "borderRadius": 12,
-        "borderWidth": 1,
-        "flexDirection": "row",
-        "justifyContent": "space-between",
-        "minHeight": 44,
-        "paddingHorizontal": 12,
-        "paddingVertical": 8,
-      }
-    }
-  >
+  <View>
     <Text
+      accessibilityElementsHidden={true}
       style={
         {
-          "color": "#14171A",
-          "fontSize": 16,
-          "lineHeight": 24,
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "letterSpacing": 0.1,
+          "lineHeight": 18,
+          "marginBottom": 4,
         }
       }
     >
-      Medium
+      Priority
     </Text>
-    <Text
-      style={
-        {
-          "color": "#A2A8B2",
-          "fontSize": 14,
-        }
-      }
-    >
-      ›
-    </Text>
-  </View>
-  <View
-    style={
-      {
-        "height": 0,
-        "overflow": "hidden",
-      }
-    }
-    testID="picker-options-pk1"
-  >
     <View
-      accessibilityLabel="Low"
-      accessibilityRole="button"
+      accessibilityLabel="Priority"
+      accessibilityRole="combobox"
       accessibilityState={
         {
           "busy": undefined,
           "checked": undefined,
           "disabled": undefined,
-          "expanded": undefined,
+          "expanded": false,
           "selected": undefined,
         }
       }
@@ -127,86 +50,42 @@ exports[`PickerRenderer snapshot (T-0006-093) — productive×focus matches snap
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      testID="picker-option-low"
-    >
-      <Text>
-        Low
-      </Text>
-    </View>
-    <View
-      accessibilityLabel="Medium"
-      accessibilityRole="button"
-      accessibilityState={
+      style={
         {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#ECEEF1",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
         }
       }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      testID="picker-option-medium"
+      testID="picker-trigger-pk1"
     >
-      <Text>
+      <Text
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
         Medium
       </Text>
-    </View>
-    <View
-      accessibilityLabel="High"
-      accessibilityRole="button"
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
+      <Text
+        style={
+          {
+            "color": "#A2A8B2",
+            "fontSize": 14,
+          }
         }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      testID="picker-option-high"
-    >
-      <Text>
-        High
+      >
+        ›
       </Text>
     </View>
   </View>
@@ -215,108 +94,31 @@ exports[`PickerRenderer snapshot (T-0006-093) — productive×focus matches snap
 
 exports[`PickerRenderer snapshot (T-0006-094) — expressive×health matches snapshot at expressive×health 1`] = `
 <View>
-  <Text
-    accessibilityElementsHidden={true}
-    style={
-      {
-        "color": "#6B5F56",
-        "fontSize": 14,
-        "fontWeight": "400",
-        "letterSpacing": 0,
-        "lineHeight": 20,
-        "marginBottom": 4,
-      }
-    }
-  >
-    Priority
-  </Text>
-  <View
-    accessibilityLabel="Priority"
-    accessibilityRole="combobox"
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": false,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
-    focusable={true}
-    onBlur={[Function]}
-    onClick={[Function]}
-    onFocus={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
-    style={
-      {
-        "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
-        "borderColor": "#EFE9DF",
-        "borderRadius": 12,
-        "borderWidth": 1,
-        "flexDirection": "row",
-        "justifyContent": "space-between",
-        "minHeight": 44,
-        "paddingHorizontal": 12,
-        "paddingVertical": 8,
-      }
-    }
-  >
+  <View>
     <Text
+      accessibilityElementsHidden={true}
       style={
         {
-          "color": "#1A1715",
-          "fontSize": 16,
-          "lineHeight": 26,
-        }
-      }
-    >
-      Medium
-    </Text>
-    <Text
-      style={
-        {
-          "color": "#B0A89E",
+          "color": "#6B5F56",
           "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 20,
+          "marginBottom": 4,
         }
       }
     >
-      ›
+      Priority
     </Text>
-  </View>
-  <View
-    style={
-      {
-        "height": 0,
-        "overflow": "hidden",
-      }
-    }
-    testID="picker-options-pk1"
-  >
     <View
-      accessibilityLabel="Low"
-      accessibilityRole="button"
+      accessibilityLabel="Priority"
+      accessibilityRole="combobox"
       accessibilityState={
         {
           "busy": undefined,
           "checked": undefined,
           "disabled": undefined,
-          "expanded": undefined,
+          "expanded": false,
           "selected": undefined,
         }
       }
@@ -340,86 +142,42 @@ exports[`PickerRenderer snapshot (T-0006-094) — expressive×health matches sna
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      testID="picker-option-low"
-    >
-      <Text>
-        Low
-      </Text>
-    </View>
-    <View
-      accessibilityLabel="Medium"
-      accessibilityRole="button"
-      accessibilityState={
+      style={
         {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
         }
       }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      testID="picker-option-medium"
+      testID="picker-trigger-pk1"
     >
-      <Text>
+      <Text
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
         Medium
       </Text>
-    </View>
-    <View
-      accessibilityLabel="High"
-      accessibilityRole="button"
-      accessibilityState={
-        {
-          "busy": undefined,
-          "checked": undefined,
-          "disabled": undefined,
-          "expanded": undefined,
-          "selected": undefined,
+      <Text
+        style={
+          {
+            "color": "#B0A89E",
+            "fontSize": 14,
+          }
         }
-      }
-      accessibilityValue={
-        {
-          "max": undefined,
-          "min": undefined,
-          "now": undefined,
-          "text": undefined,
-        }
-      }
-      accessible={true}
-      collapsable={false}
-      focusable={true}
-      onBlur={[Function]}
-      onClick={[Function]}
-      onFocus={[Function]}
-      onResponderGrant={[Function]}
-      onResponderMove={[Function]}
-      onResponderRelease={[Function]}
-      onResponderTerminate={[Function]}
-      onResponderTerminationRequest={[Function]}
-      onStartShouldSetResponder={[Function]}
-      testID="picker-option-high"
-    >
-      <Text>
-        High
+      >
+        ›
       </Text>
     </View>
   </View>

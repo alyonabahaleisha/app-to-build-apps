@@ -31,6 +31,6 @@ module.exports = {
       '<rootDir>/src/legacy/__mocks__/ReactNativeReanimatedMock.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list)))',
+    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)))',
   ],
 }

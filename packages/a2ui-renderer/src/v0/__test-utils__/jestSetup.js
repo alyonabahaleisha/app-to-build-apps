@@ -118,3 +118,146 @@ jest.mock('react-native-gesture-handler', () => {
   }
   return {Swipeable, GestureHandlerRootView}
 })
+
+// Mock @gorhom/bottom-sheet — Step 10: nav patterns + DateField + Picker Gorhom integration.
+// BottomSheetModal renders inline (visible) when present() is called; hidden otherwise.
+// This lets tests press option items / verify sheet content without native gesture infra.
+jest.mock('@gorhom/bottom-sheet', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+
+  // BottomSheetModal: imperative ref surface + children render.
+  // Tracks "presented" state in a module-level WeakMap so ref.present() /
+  // ref.dismiss() work across test assertions.
+  const presentedSet = new WeakSet()
+
+  class BottomSheetModal extends React.Component {
+    present() {
+      presentedSet.add(this)
+      this.forceUpdate()
+      if (this.props.onChange) this.props.onChange(0)
+    }
+    dismiss() {
+      presentedSet.delete(this)
+      this.forceUpdate()
+      if (this.props.onChange) this.props.onChange(-1)
+    }
+    render() {
+      const isVisible = presentedSet.has(this)
+      if (!isVisible) return null
+      return React.createElement(View, {testID: 'bottom-sheet-modal'}, this.props.children)
+    }
+  }
+
+  function BottomSheetModalProvider({children}) {
+    return React.createElement(View, null, children)
+  }
+
+  function BottomSheetView({children, style}) {
+    return React.createElement(View, {style}, children)
+  }
+
+  return {BottomSheetModal, BottomSheetModalProvider, BottomSheetView}
+})
+
+// Mock @react-navigation/native — NavigationContainer, createNavigationContainerRef.
+// StackNav uses native-stack which requires @react-navigation/native.
+// In tests we render screens linearly (the active screen based on route state).
+jest.mock('@react-navigation/native', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+
+  // Simple ref factory — navigate/goBack update the current route state on a
+  // module-level store keyed by the ref instance.
+  const routeStore = new WeakMap()
+
+  function createNavigationContainerRef() {
+    const ref = {
+      _ready: false,
+      _currentRoute: null,
+      _listeners: [],
+      isReady() { return this._ready },
+      canGoBack() { return false },
+      navigate(name) {
+        this._currentRoute = name
+        this._listeners.forEach(fn => fn(name))
+      },
+      goBack() {},
+      addListener(fn) {
+        this._listeners.push(fn)
+        return () => { this._listeners = this._listeners.filter(l => l !== fn) }
+      },
+    }
+    return ref
+  }
+
+  function NavigationContainer({children, onReady, innerRef}) {
+    React.useEffect(() => {
+      // Signal ready on mount — matches NavigationContainer onReady behavior.
+      if (onReady) onReady()
+    }, [onReady])
+    return React.createElement(View, {testID: 'navigation-container'}, children)
+  }
+
+  // Allow ref prop via forwardRef
+  const NavigationContainerWithRef = React.forwardRef(function NavigationContainerRef(props, ref) {
+    React.useEffect(() => {
+      if (ref && typeof ref === 'object') {
+        ref.current = {
+          _ready: true,
+          isReady() { return true },
+          canGoBack() { return false },
+          navigate(name) { this._currentRoute = name },
+          goBack() {},
+        }
+      }
+      if (props.onReady) props.onReady()
+    }, [])
+    return React.createElement(View, {testID: 'navigation-container'}, props.children)
+  })
+
+  return {
+    NavigationContainer: NavigationContainerWithRef,
+    createNavigationContainerRef,
+  }
+})
+
+// Mock @react-navigation/native-stack — createNativeStackNavigator.
+// In tests, renders the initialRouteName screen by default.
+// Tests can verify screen content by checking rendered output.
+jest.mock('@react-navigation/native-stack', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+
+  function createNativeStackNavigator() {
+    // Navigator + Screen composition.
+    // Renders the first child whose `name` matches initialRouteName (or the first screen).
+    function Navigator({children, initialRouteName, screenOptions}) {
+      const childArray = React.Children.toArray(children)
+      // Find the initial screen by name prop
+      const initialChild = childArray.find(
+        c => c.props && c.props.name === initialRouteName,
+      ) || childArray[0]
+
+      return React.createElement(
+        View,
+        {testID: 'stack-navigator'},
+        initialChild || null,
+      )
+    }
+
+    function Screen({name, children, component: Component, options}) {
+      // children can be a render prop function or a component
+      const content = typeof children === 'function'
+        ? children()
+        : Component
+          ? React.createElement(Component)
+          : null
+      return React.createElement(View, {testID: `stack-screen-${name}`}, content)
+    }
+
+    return {Navigator, Screen}
+  }
+
+  return {createNativeStackNavigator}
+})

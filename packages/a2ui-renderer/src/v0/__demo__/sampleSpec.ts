@@ -1,26 +1,170 @@
 /**
- * sampleSpec — Milestone A demo spec.
+ * sampleSpec — Milestone B demo spec.
  *
- * A hardcoded Spec literal validated against SpecSchema at test time.
+ * Updated at Step 10 from the Milestone A read-only spec to a full interactive
+ * demo spec with stack navigation and state-driven interactions.
+ *
  * Composition:
- *   - 1 Screen (productive × focus stance)
- *   - 1 Section with title "Today"
- *   - 1 Heading (level 1, "Welcome")
- *   - 1 Body ("Here's what's on deck today.")
- *   - 1 Avatar at top
- *   - 1 Card containing:
- *     - 1 Row of 3 Stat children (tasks, done, pending)
- *     - 1 Row of 2 Badges + 1 Chip
+ *   - navigation: 'stack' (2 screens — list → detail)
+ *   - Screen 1 (list): Task tracker with heading, stats, FAB to add tasks,
+ *     list of tasks with EmptyState.
+ *   - Screen 2 (detail): Task detail with heading, body, and a Back button.
  *
- * This is the "Milestone A receipt" — parse succeeds, renderer mounts it,
- * the integration test snapshots the result. No dispatcher needed (all
- * Typography and Display components are read-only at Step 5).
+ * ID constraints: COMPONENT_ID_REGEX / COLLECTION_ID_REGEX = /^[a-z][a-zA-Z0-9_]{0,63}$/
+ * Slot names: SlotNameSchema = /^[a-z][a-zA-Z0-9_]{0,63}$/
  *
- * T-0006-086: Integration test exercises this spec.
+ * T-0006-173: Integration test exercises DEMO_SPEC via <Renderer>.
  */
 import type {Spec} from '@app-creator/protocol'
 
+// ---------------------------------------------------------------------------
+// Milestone B demo spec — interactive task tracker with stack navigation
+// ---------------------------------------------------------------------------
 export const SAMPLE_SPEC: Spec = {
+  version: 1,
+  archetype: 'ListCRUD',
+  stance: 'productive',
+  palette: 'focus',
+  coverIcon: 'list',
+  navigation: 'stack',
+  initialScreenId: 'list',
+  collections: [
+    {
+      id: 'tasks',
+      name: 'Tasks',
+      fields: [
+        {name: 'title', type: {type: 'string'}, required: true},
+        {name: 'done', type: {type: 'boolean'}, required: false},
+      ],
+      syncMode: 'local',
+      seedData: [
+        {title: 'Review the sprint board', done: false},
+        {title: 'Write release notes', done: true},
+        {title: 'Schedule retrospective', done: false},
+      ],
+    },
+  ],
+  initialState: {},
+  screens: [
+    // -------------------------------------------------------------------------
+    // Screen 1: Task list
+    // -------------------------------------------------------------------------
+    {
+      id: 'list',
+      title: 'My Tasks',
+      root: {
+        id: 'listScreen',
+        type: 'Screen',
+        safeArea: 'both',
+        padding: 'space-lg',
+        children: [
+          {
+            id: 'headerSection',
+            type: 'Section',
+            padding: 'space-md',
+            children: [
+              {id: 'titleHeading', type: 'Heading', text: 'My Tasks', level: 1},
+              {
+                id: 'statsRow',
+                type: 'Row',
+                gap: 'space-md',
+                children: [
+                  {
+                    id: 'statTotal',
+                    type: 'Stat',
+                    label: 'total',
+                    value: '3',
+                  },
+                  {
+                    id: 'statDone',
+                    type: 'Stat',
+                    label: 'done',
+                    value: '1',
+                    delta: '+1',
+                    deltaTone: 'positive',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'taskListSection',
+            type: 'Section',
+            title: 'Tasks',
+            padding: 'space-md',
+            children: [
+              {
+                id: 'taskList',
+                type: 'List',
+                collectionId: 'tasks',
+                itemLayout: 'standard',
+                emptyState: {
+                  id: 'emptyState',
+                  type: 'EmptyState',
+                  icon: 'list',
+                  headline: 'No tasks yet',
+                  body: 'Tap the + button to add your first task.',
+                },
+              },
+            ],
+          },
+          {
+            id: 'addFab',
+            type: 'FAB',
+            icon: 'plus',
+            accessibilityLabel: 'Add task',
+            action: {
+              type: 'addItem',
+              collection: 'tasks',
+              item: {title: 'New task', done: false},
+            },
+          },
+        ],
+      },
+    },
+    // -------------------------------------------------------------------------
+    // Screen 2: Task detail
+    // -------------------------------------------------------------------------
+    {
+      id: 'detail',
+      title: 'Task Detail',
+      root: {
+        id: 'detailScreen',
+        type: 'Screen',
+        safeArea: 'both',
+        padding: 'space-lg',
+        children: [
+          {
+            id: 'detailSection',
+            type: 'Section',
+            padding: 'space-md',
+            children: [
+              {id: 'detailHeading', type: 'Heading', text: 'Task Detail', level: 1},
+              {
+                id: 'detailBody',
+                type: 'Body',
+                text: 'Detailed task information goes here.',
+                color: 'fg-muted',
+              },
+              {
+                id: 'backBtn',
+                type: 'Button',
+                label: 'Back to Tasks',
+                variant: 'secondary',
+                action: {type: 'back'},
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+
+// ---------------------------------------------------------------------------
+// Milestone A spec — preserved for regression use in step5-milestone-A.integration.test.tsx
+// ---------------------------------------------------------------------------
+export const SAMPLE_SPEC_MILESTONE_A: Spec = {
   version: 1,
   archetype: 'ListCRUD',
   stance: 'productive',
@@ -34,54 +178,48 @@ export const SAMPLE_SPEC: Spec = {
       id: 'main',
       title: 'My Tasks',
       root: {
-        id: 'root_screen',
+        id: 'rootScreen',
         type: 'Screen',
         safeArea: 'both',
         padding: 'space-lg',
         children: [
-          // Avatar at top
           {
-            id: 'top_avatar',
+            id: 'topAvatar',
             type: 'Avatar',
             name: 'Alex Johnson',
             size: 'md',
           },
-          // Section: Today
           {
-            id: 'today_section',
+            id: 'todaySection',
             type: 'Section',
             title: 'Today',
             padding: 'space-md',
             children: [
-              // Heading
               {
-                id: 'welcome_heading',
+                id: 'welcomeHeading',
                 type: 'Heading',
                 text: 'Welcome',
                 level: 1,
               },
-              // Body
               {
-                id: 'deck_body',
+                id: 'deckBody',
                 type: 'Body',
                 text: "Here's what's on deck today.",
               },
-              // Card with stats + badges + chip
               {
-                id: 'summary_card',
+                id: 'summaryCard',
                 type: 'Card',
                 elevation: 'raised',
                 padding: 'space-md',
                 children: [
-                  // Row of 3 Stats
                   {
-                    id: 'stats_row',
+                    id: 'statsRow',
                     type: 'Row',
                     gap: 'space-md',
                     justify: 'space-between',
                     children: [
                       {
-                        id: 'stat_tasks',
+                        id: 'statTasks',
                         type: 'Stat',
                         value: '5',
                         label: 'tasks',
@@ -89,13 +227,13 @@ export const SAMPLE_SPEC: Spec = {
                         deltaTone: 'positive',
                       },
                       {
-                        id: 'stat_done',
+                        id: 'statDone',
                         type: 'Stat',
                         value: '12',
                         label: 'done',
                       },
                       {
-                        id: 'stat_pending',
+                        id: 'statPending',
                         type: 'Stat',
                         value: '2',
                         label: 'pending',
@@ -104,26 +242,25 @@ export const SAMPLE_SPEC: Spec = {
                       },
                     ],
                   },
-                  // Row of 2 Badges + 1 Chip
                   {
-                    id: 'badge_row',
+                    id: 'badgeRow',
                     type: 'Row',
                     gap: 'space-sm',
                     children: [
                       {
-                        id: 'badge_active',
+                        id: 'badgeActive',
                         type: 'Badge',
                         text: 'Active',
                         tone: 'accent',
                       },
                       {
-                        id: 'badge_overdue',
+                        id: 'badgeOverdue',
                         type: 'Badge',
                         text: 'Overdue',
                         tone: 'danger',
                       },
                       {
-                        id: 'chip_filter',
+                        id: 'chipFilter',
                         type: 'Chip',
                         text: 'All',
                         selected: true,

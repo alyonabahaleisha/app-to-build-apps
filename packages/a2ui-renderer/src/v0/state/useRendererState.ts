@@ -115,6 +115,7 @@ export function useRendererState(
       makeNavigationMiddleware(
         () => navRef.current,
         {onNavigationError: (sig) => hostRef.current.onNavigationError?.(sig)},
+        () => fullStateRef.current,
       ),
       makeUndoBufferMiddleware(
         () => fullStateRef.current,

@@ -3,17 +3,16 @@
  *
  * T-0006-091: snapshot at productive×focus
  * T-0006-092: snapshot at expressive×health
- * T-0006-099: tap triggers picker open (stub: onPress wired, toast fired)
+ * T-0006-099: tap opens Gorhom Bottom Sheet (Step 10 Gorhom closure)
  * T-0006-102 (DateField): 3 binding kinds render without error
  *
- * Step 6 deviation note (per task brief):
- *   DateField is a stub in Step 6 — tapping calls host.onToast.
- *   Full DateTimePickerIOS in Gorhom sheet integration lands at Step 8.
- *   T-0006-099 tests that the onPress handler is wired (toast called);
- *   the native picker content test is a Step 8 concern.
+ * Step 10 closure (Roz Deviation 1):
+ *   DateField now uses a Gorhom BottomSheetModal instead of the Step 6 toast stub.
+ *   T-0006-099 updated to verify sheet opens on press (testID-based approach).
+ *   Snapshots regenerated to include BottomSheetModalProvider wrapper.
  */
 import React from 'react'
-import {fireEvent} from '@testing-library/react-native'
+import {fireEvent, act} from '@testing-library/react-native'
 import type {Node, Spec} from '@app-creator/protocol'
 import {renderWithTheme} from '../../__test-utils__/renderWithTheme'
 import {buildInitialRendererState} from '../../state/reducer'
@@ -100,14 +99,20 @@ describe('DateFieldRenderer snapshot (T-0006-092) — expressive×health', () =>
 })
 
 // ---------------------------------------------------------------------------
-// T-0006-099: tap triggers picker open (stub: onPress wired, toast called)
+// T-0006-099: tap opens Gorhom Bottom Sheet (Step 10 Gorhom closure)
+//
+// The Step 6 toast stub is replaced with a real BottomSheetModal.
+// In tests, the Gorhom mock presents the sheet inline when present() is called.
+// We verify:
+//   1. Pressing the trigger (accessibilityRole="button") does not call onToast.
+//   2. After press, the sheet content becomes visible (testID="bottom-sheet-modal").
 // ---------------------------------------------------------------------------
 
 describe('DateFieldRenderer tap behavior (T-0006-099)', () => {
-  it('calls host.onToast when field is pressed (Step 6 picker stub)', () => {
+  it('pressing the field presents the Gorhom sheet (Step 10 closure)', () => {
     const mockToast = jest.fn()
     const state = buildInitialRendererState(SPEC_WITH_SLOT)
-    const {getByRole} = renderWithTheme(
+    const {getByTestId, queryByTestId} = renderWithTheme(
       <DateFieldRenderer node={FIELD_STATE} />,
       {
         stance: 'productive',
@@ -117,10 +122,17 @@ describe('DateFieldRenderer tap behavior (T-0006-099)', () => {
       },
     )
 
-    const field = getByRole('button')
-    fireEvent.press(field)
+    // Sheet is not shown before press.
+    expect(queryByTestId('bottom-sheet-modal')).toBeNull()
 
-    expect(mockToast).toHaveBeenCalledTimes(1)
+    const trigger = getByTestId('datefield-trigger-df1')
+    act(() => { fireEvent.press(trigger) })
+
+    // Sheet is now visible (Gorhom mock renders inline on present()).
+    expect(getByTestId('bottom-sheet-modal')).toBeTruthy()
+
+    // No toast called — stub is replaced by Gorhom sheet.
+    expect(mockToast).not.toHaveBeenCalled()
   })
 
   it('renders formatted date value from state slot', () => {
