@@ -1,0 +1,42 @@
+name: Codegen Drift
+
+# Guard: runs on any change to the protocol package. Re-generates the three
+# codegen artifacts (json-schema.json, types.ts, docs.md) and fails if the
+# working tree has a diff against the checked-in versions. A non-zero diff
+# means someone hand-edited a generated file or updated spec.zod.ts without
+# running `pnpm --filter @app-creator/protocol codegen`.
+#
+# ADR-0005 §I / §M — additive CI job; does not change eval.yml.
+on:
+  push:
+    paths:
+      - 'packages/protocol/**'
+  pull_request:
+    paths:
+      - 'packages/protocol/**'
+
+jobs:
+  codegen-drift:
+    name: Protocol Codegen Drift Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Run codegen
+        run: pnpm --filter @app-creator/protocol codegen
+
+      - name: Verify no drift
+        # Cover both the generated/ tree and src/icons/paths.ts (also a
+        # codegen output, written by gen-icon-paths.ts — Roz Step 9 Finding 1).
+        run: git diff --exit-code packages/protocol/generated/ packages/protocol/src/icons/paths.ts
