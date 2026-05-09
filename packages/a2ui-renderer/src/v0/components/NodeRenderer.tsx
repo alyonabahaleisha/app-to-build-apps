@@ -10,6 +10,8 @@
  *         = 22 arms total.
  * Step 8: +4 compound (ConditionalSection, ListSummary, MediaTray, ImagePicker)
  *         = 26 arms total.
+ * Step 9: +2 actions (Button, FAB)
+ *         = 28 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -47,6 +49,8 @@ import {ConditionalSectionRenderer} from './compound/ConditionalSection.js'
 import {ListSummaryRenderer} from './compound/ListSummary.js'
 import {MediaTrayRenderer} from './compound/MediaTray.js'
 import {ImagePickerRenderer} from './compound/ImagePicker.js'
+import {ButtonRenderer} from './actions/Button.js'
+import {FABRenderer} from './actions/FAB.js'
 
 export function NodeRenderer({node}: {node: Node}) {
   const host = useHost()
@@ -110,6 +114,11 @@ export function NodeRenderer({node}: {node: Node}) {
       return <MediaTrayRenderer node={node} />
     case 'ImagePicker':
       return <ImagePickerRenderer node={node} />
+    // Actions tier (Step 9)
+    case 'Button':
+      return <ButtonRenderer node={node} />
+    case 'FAB':
+      return <FABRenderer node={node} />
     default: {
       // Defense-in-depth: schema validation upstream should have caught this.
       // Calling host.onUnknownNodeType makes the violation observable to the host

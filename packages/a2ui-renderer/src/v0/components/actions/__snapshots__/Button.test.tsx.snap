@@ -1,0 +1,137 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonRenderer snapshot (T-0006-148) — productive×focus matches snapshot (primary variant, md size) 1`] = `
+<View
+  accessibilityLabel="Add Item"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#4F46E5",
+      "borderColor": undefined,
+      "borderRadius": 12,
+      "borderWidth": 0,
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 44,
+      "opacity": 1,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontSize": 16,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+      }
+    }
+  >
+    Add Item
+  </Text>
+</View>
+`;
+
+exports[`ButtonRenderer snapshot (T-0006-149) — expressive×health matches snapshot (secondary variant, lg size) 1`] = `
+<View
+  accessibilityLabel="Save Journal"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 12,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 56,
+      "opacity": 1,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 16,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 26,
+      }
+    }
+  >
+    Save Journal
+  </Text>
+</View>
+`;

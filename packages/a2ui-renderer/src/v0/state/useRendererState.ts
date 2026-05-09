@@ -13,8 +13,8 @@
  *   Defends against async haptic promises / AI callbacks resolving after
  *   the component tree has been torn down.
  *
- * Middleware composition order (ADR-0006 §C, Step 8):
- *   [haptics, toast, aiBridge, navigate, undoBuffer, reducer]
+ * Middleware composition order (ADR-0006 §C, Step 9):
+ *   [haptics, toast, aiBridge, navigate, undoBuffer, feedback, reducer]
  */
 import {createContext, useContext, useEffect, useMemo, useReducer, useRef} from 'react'
 import type {Spec} from '@app-creator/protocol'
@@ -29,6 +29,7 @@ import type {AIDispatcher} from './middleware/aiBridge.js'
 import {makeNavigationMiddleware} from './middleware/navigation.js'
 import type {NavigationPrimitive} from './middleware/navigation.js'
 import {makeUndoBufferMiddleware} from './middleware/undoBuffer.js'
+import {feedback} from './middleware/feedback.js'
 import type {HostCallbacks} from './hostCallbacks.js'
 
 export type {DispatchFn, HostCallbacks, AIDispatcher, NavigationPrimitive}
@@ -120,6 +121,7 @@ export function useRendererState(
         () => dispatchRef.current,
         {onToast: (msg, tone) => hostRef.current.onToast(msg, tone)},
       ),
+      feedback,
       makeReducerMiddleware(internalDispatch),
     ])
 

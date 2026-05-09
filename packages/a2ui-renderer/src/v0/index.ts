@@ -101,3 +101,8 @@ export {ListSummaryRenderer} from './components/compound/ListSummary.js'
 export {MediaTrayRenderer} from './components/compound/MediaTray.js'
 export {ImagePickerRenderer} from './components/compound/ImagePicker.js'
 export {makeAIDispatcher, sanitizeRowsForPrompt, AI_TIMEOUT_MS} from './ai/aiDispatcher.js'
+
+// Step 9: Actions tier + feedback middleware
+export {ButtonRenderer} from './components/actions/Button.js'
+export {FABRenderer} from './components/actions/FAB.js'
+export {feedback} from './state/middleware/feedback.js'

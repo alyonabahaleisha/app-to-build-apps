@@ -9,8 +9,8 @@
  *   removeItem   → Medium
  *   set          → (none — slot writes are silent)
  *   update       → (none)
- *   reset        → (none)
- *   updateItem   → (none)
+ *   reset        → Light (UX doc line 1554)
+ *   updateItem   → Light (UX doc line 1554)
  *   clearCollection → Medium (destructive)
  *   navigate     → (none — nav has a native transition animation instead)
  *   back         → (none)
@@ -26,16 +26,14 @@ import type {Middleware} from '../middleware.js'
 export const haptics: Middleware = (action, next) => {
   switch (action.type) {
     case 'addItem':
+    case 'reset':
+    case 'updateItem':
+    case 'capture':
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
       break
     case 'removeItem':
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-      break
     case 'clearCollection':
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
-      break
-    case 'capture':
-      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
       break
     default:
       // No haptic for other verbs — intentional.

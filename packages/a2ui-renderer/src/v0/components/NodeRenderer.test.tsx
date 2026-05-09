@@ -273,10 +273,29 @@ const IMAGE_PICKER: Extract<Node, {type: 'ImagePicker'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended Step 8): NodeRenderer discriminates 26 types correctly
+// Minimal node fixtures — actions tier (Step 9)
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 8 extended to 26 arms)', () => {
+const BUTTON: Extract<Node, {type: 'Button'}> = {
+  id: 'btn1',
+  type: 'Button',
+  label: 'Add Item',
+  action: {type: 'addItem', collection: 'workouts', item: {name: 'New'}},
+}
+
+const FAB: Extract<Node, {type: 'FAB'}> = {
+  id: 'fab1',
+  type: 'FAB',
+  icon: 'plus',
+  action: {type: 'addItem', collection: 'workouts', item: {name: 'New'}},
+  accessibilityLabel: 'Add item',
+}
+
+// ---------------------------------------------------------------------------
+// T-0006-062 (extended Step 9): NodeRenderer discriminates 28 types correctly
+// ---------------------------------------------------------------------------
+
+describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
@@ -313,6 +332,8 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 8 extended to 26 arms
     ['ListSummary', LIST_SUMMARY],
     ['MediaTray', MEDIA_TRAY],
     ['ImagePicker', IMAGE_PICKER],
+    ['Button', BUTTON],
+    ['FAB', FAB],
   ] as [string, Node][])('renders %s without error', (_type, node) => {
     const host = makeHostCallbacks()
     const {toJSON} = renderNode(node, host)
@@ -327,7 +348,7 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 8 extended to 26 arms
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  it('does not call onUnknownNodeType for any of the 26 node types', () => {
+  it('does not call onUnknownNodeType for any of the 28 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
       SCREEN, SECTION, STACK, ROW, CARD,
@@ -336,6 +357,7 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 8 extended to 26 arms
       TEXTFIELD, NUMBERFIELD, DATEFIELD, PICKER, SWITCH,
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
       CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER,
+      BUTTON, FAB,
     ]
     for (const node of allNodes) {
       renderNode(node, host)

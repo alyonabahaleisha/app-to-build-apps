@@ -10,8 +10,6 @@
  *   - react-native-reanimated (via moduleNameMapper → ReactNativeReanimatedMock.js)
  *   - @shopify/flash-list (List tier FlashList tests — Step 7)
  *   - react-native-gesture-handler (SwipeableRow tests — Step 7)
- *   - expo-image-picker (ImagePicker tests — Step 8)
- *   - react-native-ai-apple (AIDispatcher tests — Step 8)
  *
  * Note: react-native-reanimated is mocked via moduleNameMapper in jest.config.rn.cjs
  * (not via require() here) because the official mock.js pulls in real source
@@ -86,6 +84,19 @@ jest.mock('expo-image-picker', () => ({
 jest.mock('react-native-ai-apple', () => {
   throw Object.assign(new Error('Cannot find module'), {code: 'MODULE_NOT_FOUND'})
 }, {virtual: true})
+
+// Mock expo-haptics — peerDep provided by host at runtime; not available in Jest env.
+// Also mapped via moduleNameMapper (ExpoHapticsMock.js), but jest.mock here ensures
+// jest.clearAllMocks() between tests properly resets call counts for haptic assertions
+// (T-0006-155, T-0006-159). Using jest.fn() directly rather than the mapper file so
+// tests in haptics.test.ts can call toHaveBeenCalledWith() without "not a mock function" errors.
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(() => Promise.resolve()),
+  notificationAsync: jest.fn(() => Promise.resolve()),
+  selectionAsync: jest.fn(() => Promise.resolve()),
+  ImpactFeedbackStyle: {Light: 'light', Medium: 'medium', Heavy: 'heavy'},
+  NotificationFeedbackType: {Success: 'success', Warning: 'warning', Error: 'error'},
+}))
 
 // Mock react-native-gesture-handler — SwipeableRow uses Swipeable from RNGH.
 // In tests, render the children and action buttons directly (always visible)
