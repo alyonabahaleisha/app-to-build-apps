@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BodyRenderer snapshot (T-0006-066) — productive×focus matches snapshot at productive×focus 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#14171A",
+      "fontSize": 16,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 24,
+      "textAlign": "left",
+    }
+  }
+>
+  Here's what's on deck today.
+</Text>
+`;
+
+exports[`BodyRenderer snapshot (T-0006-067) — expressive×health matches snapshot at expressive×health 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#1A1715",
+      "fontSize": 16,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 26,
+      "textAlign": "left",
+    }
+  }
+>
+  Here's what's on deck today.
+</Text>
+`;

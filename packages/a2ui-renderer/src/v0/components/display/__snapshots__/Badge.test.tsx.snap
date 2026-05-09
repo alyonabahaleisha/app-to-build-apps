@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BadgeRenderer snapshot (T-0006-072) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Pending"
+  accessibilityRole="text"
+  style={
+    {
+      "alignSelf": "flex-start",
+      "backgroundColor": "#ECEEF1",
+      "borderRadius": 6,
+      "paddingHorizontal": 8,
+      "paddingVertical": 4,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 11,
+        "fontWeight": "500",
+        "letterSpacing": 0.4,
+        "lineHeight": 14,
+      }
+    }
+  >
+    Pending
+  </Text>
+</View>
+`;
+
+exports[`BadgeRenderer snapshot (T-0006-073) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Pending"
+  accessibilityRole="text"
+  style={
+    {
+      "alignSelf": "flex-start",
+      "backgroundColor": "#EFE9DF",
+      "borderRadius": 6,
+      "paddingHorizontal": 8,
+      "paddingVertical": 4,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 11,
+        "fontWeight": "500",
+        "letterSpacing": 0.4,
+        "lineHeight": 14,
+      }
+    }
+  >
+    Pending
+  </Text>
+</View>
+`;

@@ -1,0 +1,413 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Milestone A integration (T-0006-086) renders the sample spec root node at productive×focus — Milestone A golden snapshot 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FAFAF7",
+      "flex": 1,
+      "paddingBottom": 0,
+      "paddingHorizontal": 20,
+      "paddingTop": 0,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Avatar for Alex Johnson"
+    accessibilityRole="image"
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#4F46E526",
+        "borderRadius": 9999,
+        "height": 32,
+        "justifyContent": "center",
+        "width": 32,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#4F46E5",
+          "fontSize": 12,
+          "fontWeight": "600",
+          "includeFontPadding": false,
+          "lineHeight": 32,
+          "textAlignVertical": "center",
+        }
+      }
+    >
+      AJ
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "paddingVertical": 12,
+      }
+    }
+  >
+    <Text
+      accessibilityRole="header"
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 18,
+          "fontWeight": "600",
+          "letterSpacing": 0,
+          "lineHeight": 24,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Today
+    </Text>
+    <Text
+      accessibilityLabel="Welcome"
+      accessibilityRole="header"
+      aria-level={1}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 32,
+          "fontWeight": "600",
+          "letterSpacing": -0.4,
+          "lineHeight": 40,
+          "textAlign": "left",
+        }
+      }
+    >
+      Welcome
+    </Text>
+    <Text
+      accessibilityRole="text"
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 24,
+          "textAlign": "left",
+        }
+      }
+    >
+      Here's what's on deck today.
+    </Text>
+    <View
+      style={
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 12,
+          "elevation": 2,
+          "padding": 12,
+          "shadowColor": "rgb(15, 18, 22)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.06,
+          "shadowRadius": 2,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexWrap": "nowrap",
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "marginRight": 12,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="5, tasks, trending up"
+            accessibilityRole="text"
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#14171A",
+                  "fontSize": 24,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.2,
+                  "lineHeight": 30,
+                  "textAlign": "left",
+                }
+              }
+            >
+              5
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#5C6470",
+                  "fontSize": 13,
+                  "fontWeight": "400",
+                  "letterSpacing": 0.1,
+                  "lineHeight": 18,
+                  "textAlign": "left",
+                }
+              }
+            >
+              tasks
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#0E8345",
+                  "fontSize": 11,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.4,
+                  "lineHeight": 14,
+                  "textAlign": "left",
+                }
+              }
+            >
+              +2
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "marginRight": 12,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="12, done"
+            accessibilityRole="text"
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#14171A",
+                  "fontSize": 24,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.2,
+                  "lineHeight": 30,
+                  "textAlign": "left",
+                }
+              }
+            >
+              12
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#5C6470",
+                  "fontSize": 13,
+                  "fontWeight": "400",
+                  "letterSpacing": 0.1,
+                  "lineHeight": 18,
+                  "textAlign": "left",
+                }
+              }
+            >
+              done
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "marginRight": 0,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="2, pending, trending down"
+            accessibilityRole="text"
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#14171A",
+                  "fontSize": 24,
+                  "fontWeight": "600",
+                  "letterSpacing": -0.2,
+                  "lineHeight": 30,
+                  "textAlign": "left",
+                }
+              }
+            >
+              2
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#5C6470",
+                  "fontSize": 13,
+                  "fontWeight": "400",
+                  "letterSpacing": 0.1,
+                  "lineHeight": 18,
+                  "textAlign": "left",
+                }
+              }
+            >
+              pending
+            </Text>
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#C03A2B",
+                  "fontSize": 11,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.4,
+                  "lineHeight": 14,
+                  "textAlign": "left",
+                }
+              }
+            >
+              -1
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexWrap": "nowrap",
+            "justifyContent": "flex-start",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "marginRight": 8,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Active"
+            accessibilityRole="text"
+            style={
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#4F46E5",
+                "borderRadius": 6,
+                "paddingHorizontal": 8,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 11,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.4,
+                  "lineHeight": 14,
+                }
+              }
+            >
+              Active
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "marginRight": 8,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Overdue"
+            accessibilityRole="text"
+            style={
+              {
+                "alignSelf": "flex-start",
+                "backgroundColor": "#C03A2B26",
+                "borderRadius": 6,
+                "paddingHorizontal": 8,
+                "paddingVertical": 4,
+              }
+            }
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#C03A2B",
+                  "fontSize": 11,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.4,
+                  "lineHeight": 14,
+                }
+              }
+            >
+              Overdue
+            </Text>
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "marginRight": 0,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="All"
+            accessibilityRole="text"
+            style={
+              {
+                "alignItems": "center",
+                "alignSelf": "flex-start",
+                "backgroundColor": "#4F46E5",
+                "borderColor": "transparent",
+                "borderRadius": 9999,
+                "borderWidth": 0,
+                "flexDirection": "row",
+                "gap": 4,
+                "paddingHorizontal": 12,
+                "paddingVertical": 8,
+              }
+            }
+          >
+            <Text
+              accessibilityElementsHidden={true}
+              style={
+                {
+                  "color": "#FFFFFF",
+                  "fontSize": 13,
+                  "fontWeight": "400",
+                  "letterSpacing": 0.1,
+                  "lineHeight": 18,
+                }
+              }
+            >
+              All
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

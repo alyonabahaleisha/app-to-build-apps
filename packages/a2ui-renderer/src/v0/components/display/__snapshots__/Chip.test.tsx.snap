@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChipRenderer snapshot (T-0006-074) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="All"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 9999,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "gap": 4,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+      }
+    }
+  >
+    All
+  </Text>
+</View>
+`;
+
+exports[`ChipRenderer snapshot (T-0006-075) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="All"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 9999,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "gap": 4,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+      }
+    }
+  >
+    All
+  </Text>
+</View>
+`;

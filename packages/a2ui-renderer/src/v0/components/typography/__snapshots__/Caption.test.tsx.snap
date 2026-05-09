@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CaptionRenderer snapshot (T-0006-068) — productive×focus matches snapshot at productive×focus 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#5C6470",
+      "fontSize": 13,
+      "fontWeight": "400",
+      "letterSpacing": 0.1,
+      "lineHeight": 18,
+      "textAlign": "left",
+    }
+  }
+>
+  Created 3 days ago
+</Text>
+`;
+
+exports[`CaptionRenderer snapshot (T-0006-069) — expressive×health matches snapshot at expressive×health 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#6B5F56",
+      "fontSize": 14,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 20,
+      "textAlign": "left",
+    }
+  }
+>
+  Created 3 days ago
+</Text>
+`;

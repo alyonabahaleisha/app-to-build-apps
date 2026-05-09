@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AvatarRenderer snapshot (T-0006-076) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Avatar for Alex Johnson"
+  accessibilityRole="image"
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#4F46E526",
+      "borderRadius": 9999,
+      "height": 32,
+      "justifyContent": "center",
+      "width": 32,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#4F46E5",
+        "fontSize": 12,
+        "fontWeight": "600",
+        "includeFontPadding": false,
+        "lineHeight": 32,
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    AJ
+  </Text>
+</View>
+`;
+
+exports[`AvatarRenderer snapshot (T-0006-077) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Avatar for Alex Johnson"
+  accessibilityRole="image"
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#4A743826",
+      "borderRadius": 9999,
+      "height": 32,
+      "justifyContent": "center",
+      "width": 32,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#4A7438",
+        "fontSize": 12,
+        "fontWeight": "600",
+        "includeFontPadding": false,
+        "lineHeight": 32,
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    AJ
+  </Text>
+</View>
+`;
