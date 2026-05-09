@@ -1,0 +1,55 @@
+name: Cover Art Runtime Parity
+
+# Guard: runs on changes to the cover-art source files or snapshot stores.
+# Fails if the Node and RN SVG outputs diverge for any of the 12 golden fixtures.
+#
+# ADR-0005 §J / F-01 P0 closure. Three-step pipeline:
+#   1. Run Node coverArt.test.ts suite (writes __node-snapshots__/)
+#   2. Run RN coverArt.rn.test.ts suite (writes __rn-snapshots__/)
+#   3. Run cross-runtime parity assertion (T-0005-256a)
+
+on:
+  push:
+    paths:
+      - 'packages/design-system/src/coverArt.ts'
+      - 'packages/design-system/src/hash.ts'
+      - 'packages/design-system/__node-snapshots__/**'
+      - 'packages/design-system/__rn-snapshots__/**'
+      - 'packages/protocol/src/icons/paths.ts'
+  pull_request:
+    paths:
+      - 'packages/design-system/src/coverArt.ts'
+      - 'packages/design-system/src/hash.ts'
+      - 'packages/design-system/__node-snapshots__/**'
+      - 'packages/design-system/__rn-snapshots__/**'
+      - 'packages/protocol/src/icons/paths.ts'
+
+jobs:
+  cover-art-runtime-parity:
+    name: Cover Art Runtime Parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # CI runs read-only: snapshot files are checked in; --updateSnapshot
+      # would silently accept SVG drift from committed goldens (Roz Step 10
+      # Finding 1, P1). Drift is the actual guard this workflow enforces.
+      - name: Run Node coverArt.test.ts suite
+        run: pnpm --filter @app-creator/design-system test:node
+
+      - name: Run RN coverArt.rn.test.ts suite
+        run: pnpm --filter @app-creator/design-system test:rn
+
+      - name: Cross-runtime parity (T-0005-256a)
+        run: pnpm --filter @app-creator/design-system test:node -- --testNamePattern="Cross-runtime SVG-string equality"

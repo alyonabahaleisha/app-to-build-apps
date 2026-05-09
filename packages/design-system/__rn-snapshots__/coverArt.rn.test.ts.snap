@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-focus-target produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<circle cx="81.428" cy="61.563" fill="#5B53D9" fill-opacity="0.24" r="14.648" transform="rotate(21.022,81.428,61.563)"/>
+<rect fill="#5B53D9" fill-opacity="0.24" height="64.517" transform="rotate(35.067,110.021,62.77)" width="64.517" x="77.763" y="30.512"/>
+<path d="M62.673,101.011 L109.383,101.011 L109.383,112.688 L62.673,112.688 Z" fill="#5B53D9" fill-opacity="0.24" transform="rotate(-29.184,86.028,106.85)"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M2,12 a10,10 0 1,0 20,0 a10,10 0 1,0 -20,0 M6,12 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 M10,12 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" fill="none" stroke="#5B53D9" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-health-leaf produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<circle cx="122.751" cy="70.097" fill="#4A7438" fill-opacity="0.24" r="19.296" transform="rotate(-23.073,122.751,70.097)"/>
+<rect fill="#4A7438" fill-opacity="0.24" height="51.872" rx="10.374" ry="10.374" transform="rotate(20.294,23.343,77.407)" width="51.872" x="-2.592" y="51.471"/>
+<path d="M59.94,90.028 L89.4,90.028 L89.4,97.393 L59.94,97.393 Z" fill="#4A7438" fill-opacity="0.24" transform="rotate(-38.124,74.67,93.71)"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" fill="none" stroke="#4A7438" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-learn-brain produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<path d="M112.323,66.978 L86.515,111.68 L138.132,111.68 Z" fill="#8E5DC4" fill-opacity="0.24" transform="rotate(-40.537,112.323,96.78)"/>
+<path d="M0.645,102.61 A34.313,34.313 0 0,1 69.272,102.61" fill="none" stroke="#8E5DC4" stroke-width="10.294" transform="rotate(24.787,34.958,102.61)"/>
+<path d="M123.547,76.352 L182.914,76.352 L182.914,91.193 L123.547,91.193 Z" fill="#8E5DC4" fill-opacity="0.24" transform="rotate(-24.549,153.23,83.773)"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4 M17.599 6.5a3 3 0 0 0 .399-1.375 M6.003 5.125A3 3 0 0 0 6.401 6.5 M3.477 10.896a4 4 0 0 1 .585-.396 M19.938 10.5a4 4 0 0 1 .585.396 M6 18a4 4 0 0 1-1.967-.516 M19.967 17.484A4 4 0 0 1 18 18" fill="none" stroke="#8E5DC4" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-money-dollar produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<path d="M23.444,48.729 L83.573,48.729 L83.573,63.761 L23.444,63.761 Z" fill="#2E5E5E" fill-opacity="0.24" transform="rotate(39.315,53.508,56.245)"/>
+<circle cx="77.286" cy="63.611" fill="#2E5E5E" fill-opacity="0.24" r="37.165" transform="rotate(33.169,77.286,63.611)"/>
+<rect fill="#2E5E5E" fill-opacity="0.24" height="35.867" rx="7.173" ry="7.173" transform="rotate(-0.198,106.524,53.41)" width="35.867" x="88.591" y="35.476"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6 M12 2 L12 22" fill="none" stroke="#2E5E5E" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-play-camera produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<rect fill="#A85A14" fill-opacity="0.24" height="28.022" transform="rotate(-26.446,99.443,78.744)" width="28.022" x="85.432" y="64.733"/>
+<circle cx="80.348" cy="107.461" fill="#A85A14" fill-opacity="0.24" r="19.87" transform="rotate(-43.912,80.348,107.461)"/>
+<path d="M119.846,37.515 L96.084,78.672 L143.607,78.672 Z" fill="#A85A14" fill-opacity="0.24" transform="rotate(-1.886,119.846,64.953)"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z M9,13 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0" fill="none" stroke="#A85A14" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) expressive-social-heart produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<rect fill="#B7456E" fill-opacity="0.24" height="67.795" rx="13.559" ry="13.559" transform="rotate(33.786,117.107,106.562)" width="67.795" x="83.21" y="72.664"/>
+<circle cx="128.148" cy="32.352" fill="#B7456E" fill-opacity="0.24" r="16.154" transform="rotate(33.007,128.148,32.352)"/>
+<path d="M106.096,45.078 L168.006,45.078 L168.006,60.556 L106.096,60.556 Z" fill="#B7456E" fill-opacity="0.24" transform="rotate(22.289,137.051,52.817)"/>
+<circle cx="87" cy="73" fill="#FBF8F3" r="28"/>
+<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" fill="none" stroke="#B7456E" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-focus-list produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<circle cx="38.264" cy="52.035" fill="#4F46E5" fill-opacity="0.12" r="17.128" transform="rotate(-15.734,38.264,52.035)"/>
+<rect fill="#4F46E5" fill-opacity="0.12" height="29.538" transform="rotate(28.347,136.015,86.526)" width="29.538" x="121.246" y="71.756"/>
+<path d="M24.906,74.873 L89.237,74.873 L89.237,90.956 L24.906,90.956 Z" fill="#4F46E5" fill-opacity="0.12" transform="rotate(29.534,57.071,82.914)"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M3 12h.01 M3 18h.01 M3 6h.01 M8 12h13 M8 18h13 M8 6h13" fill="none" stroke="#4F46E5" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-health-dumbbell produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<path d="M74.739,20.961 L48.064,67.164 L101.414,67.164 Z" fill="#0A7048" fill-opacity="0.12" transform="rotate(13.779,74.739,51.763)"/>
+<rect fill="#0A7048" fill-opacity="0.12" height="42.757" transform="rotate(-31.293,65.766,81.734)" width="42.757" x="44.388" y="60.355"/>
+<path d="M110.97,50.749 A18.111,18.111 0 0,1 147.192,50.749" fill="none" stroke="#0A7048" stroke-width="5.433" transform="rotate(22.905,129.081,50.749)"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M14.4 14.4 9.6 9.6 M18.657 21.485a2 2 0 1 1-2.829-2.828l-1.767 1.768a2 2 0 1 1-2.829-2.829l6.364-6.364a2 2 0 1 1 2.829 2.829l-1.768 1.767a2 2 0 1 1 2.828 2.829z m21.5 21.5-1.4-1.4 M3.9 3.9 2.5 2.5 M6.404 12.768a2 2 0 1 1-2.829-2.829l1.768-1.767a2 2 0 1 1-2.828-2.829l2.828-2.828a2 2 0 1 1 2.829 2.828l1.767-1.768a2 2 0 1 1 2.829 2.829z" fill="none" stroke="#0A7048" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-learn-book produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<rect fill="#7C3AED" fill-opacity="0.12" height="30.403" rx="6.081" ry="6.081" transform="rotate(-32.514,146.192,21.593)" width="30.403" x="130.99" y="6.391"/>
+<path d="M43.287,66.038 L14.717,115.523 L71.856,115.523 Z" fill="#7C3AED" fill-opacity="0.12" transform="rotate(-44.864,43.287,99.028)"/>
+<path d="M133.688,47.11 L167.952,47.11 L167.952,55.676 L133.688,55.676 Z" fill="#7C3AED" fill-opacity="0.12" transform="rotate(-24.775,150.82,51.393)"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20" fill="none" stroke="#7C3AED" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-money-receipt produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<path d="M151.273,50.248 L115.155,112.808 L187.392,112.808 Z" fill="#0E7C7B" fill-opacity="0.12" transform="rotate(39.708,151.273,91.955)"/>
+<path d="M12.95,20.411 L92.15,20.411 L92.15,40.211 L12.95,40.211 Z" fill="#0E7C7B" fill-opacity="0.12" transform="rotate(10.121,52.55,30.311)"/>
+<rect fill="#0E7C7B" fill-opacity="0.12" height="43.447" transform="rotate(-18.238,41.108,39.839)" width="43.447" x="19.385" y="18.115"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8 M12 17.5v-11" fill="none" stroke="#0E7C7B" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-play-rocket produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<circle cx="115.544" cy="78.073" fill="#EA8B0E" fill-opacity="0.12" r="19.784" transform="rotate(19.073,115.544,78.073)"/>
+<rect fill="#EA8B0E" fill-opacity="0.12" height="67.522" rx="13.504" ry="13.504" transform="rotate(0.296,116.858,78.908)" width="67.522" x="83.097" y="45.147"/>
+<path d="M24.162,67.783 L3.373,103.79 L44.951,103.79 Z" fill="#EA8B0E" fill-opacity="0.12" transform="rotate(-36.052,24.162,91.788)"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0 M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" fill="none" stroke="#EA8B0E" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
+
+exports[`coverArt — 12 RN-runtime golden snapshots (T-0005-245..256) productive-social-users produces stable SVG snapshot 1`] = `
+"<svg height="130" version="1.1" viewBox="0 0 174 130" width="174" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#FFFFFF" height="130" width="174" x="0" y="0"/>
+<rect fill="#C73456" fill-opacity="0.12" height="64.841" transform="rotate(20.545,80.465,97.11)" width="64.841" x="48.044" y="64.689"/>
+<path d="M57.235,54.408 A28.479,28.479 0 0,1 114.193,54.408" fill="none" stroke="#C73456" stroke-width="8.544" transform="rotate(15.989,85.714,54.408)"/>
+<path d="M134.268,33.905 L119.074,60.22 L149.461,60.22 Z" fill="#C73456" fill-opacity="0.12" transform="rotate(-19.087,134.268,51.448)"/>
+<circle cx="87" cy="73" fill="#FAFAF7" r="28"/>
+<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M22 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75 M5,7 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0" fill="none" stroke="#C73456" stroke-width="1.5" transform="translate(71,57) scale(1.333)"/>
+</svg>"
+`;
