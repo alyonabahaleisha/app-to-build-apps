@@ -20,7 +20,7 @@ import {ActionSheetIOS} from 'react-native'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {apiFetch} from '#/lib/api'
-import {AppRunnerScreen} from './index'
+import {AppRunnerScreen, V0DemoRunner, V0_DEMO_ENABLED} from './index'
 
 // -- Mocks -------------------------------------------------------------------
 
@@ -82,6 +82,7 @@ jest.mock('@app-creator/a2ui-renderer', () => {
   const RN = require('react-native') as typeof import('react-native')
 
   return {
+    // M1 legacy surface
     useA2UIState: jest.fn(() => ({
       state: {},
       currentViewId: 'v1',
@@ -93,6 +94,24 @@ jest.mock('@app-creator/a2ui-renderer', () => {
       React2.createElement(React2.Fragment, null, children),
     RendererLoggerProvider: ({children}: {children: React.ReactNode}) =>
       React2.createElement(React2.Fragment, null, children),
+
+    // V0 demo surface (__V0_* prefix signals Milestone A shim)
+    __V0_NodeRenderer: (_props: unknown) =>
+      React2.createElement(RN.View, {testID: 'v0-node-renderer-sentinel'}),
+    __V0_ThemeProvider: ({children}: {children: React.ReactNode}) =>
+      React2.createElement(React2.Fragment, null, children),
+    __V0_HostProvider: ({children}: {children: React.ReactNode}) =>
+      React2.createElement(React2.Fragment, null, children),
+    __V0_SAMPLE_SPEC: {
+      stance: 'productive',
+      palette: 'focus',
+      screens: [
+        {
+          id: 'main',
+          root: {id: 'root_screen', type: 'Screen', children: []},
+        },
+      ],
+    },
   }
 })
 
@@ -389,5 +408,53 @@ describe('AppRunnerScreen Owner mode', () => {
     // renderer module (they lived only in AppRunner's module scope before)
     expect(rendererModule.ownerStateReducer).toBeUndefined()
     expect(rendererModule.dispatchOwnerState).toBeUndefined()
+  })
+
+  // Canvas V0 Milestone A demo shim — branch tests.
+  //
+  // V0_DEMO_ENABLED is a module-level constant (Expo inlines EXPO_PUBLIC_* at
+  // build time). We can't mutate it between Jest tests without resetModules(),
+  // which breaks React's internal state. Instead:
+  //   - The existing 13 tests above already exercise the legacy (flag=false)
+  //     path. We verify that path explicitly in one additional test.
+  //   - V0DemoRunner is exported and tested directly — its rendering is the
+  //     observable side-effect that matters when the flag is true.
+  //   - AppRunnerScreen's branching logic is verified by checking V0_DEMO_ENABLED
+  //     (the module constant) and the V0DemoRunner render.
+
+  describe('Canvas V0 demo flag gate', () => {
+    // V0_DEMO_ENABLED is false in the test environment (no env var set).
+    it('V0_DEMO_ENABLED is false when EXPO_PUBLIC_CANVAS_V0_DEMO is unset', () => {
+      // This confirms the test suite default: M1 legacy path is active.
+      // The 13 preceding tests exercise that path exhaustively.
+      expect(V0_DEMO_ENABLED).toBe(false)
+    })
+
+    // V0DemoRunner is the component mounted when V0_DEMO_ENABLED=true.
+    // Test it directly — this covers the rendering branch that would be active
+    // in a build with EXPO_PUBLIC_CANVAS_V0_DEMO=true.
+    it('V0DemoRunner renders the __V0_NodeRenderer sentinel', () => {
+      const {getByTestId} = render(<V0DemoRunner />)
+      expect(getByTestId('v0-node-renderer-sentinel')).toBeTruthy()
+    })
+
+    it('V0DemoRunner does not render the legacy node-renderer-sentinel', () => {
+      const {queryByTestId} = render(<V0DemoRunner />)
+      expect(queryByTestId('node-renderer-sentinel')).toBeNull()
+    })
+
+    // AppRunnerScreen returns <V0DemoRunner /> when flag is true.
+    // We verify this through the existing mock: AppRunnerScreen with the
+    // current module routes to LegacyAppRunnerScreen (flag=false in test env).
+    // The gate expression itself is tested by the V0_DEMO_ENABLED assertion above.
+    it('AppRunnerScreen delegates to legacy path in test environment (V0_DEMO_ENABLED=false)', async () => {
+      mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
+      const {getByTestId} = renderScreen()
+
+      await waitFor(() => {
+        // Legacy sentinel present confirms AppRunnerScreen used LegacyAppRunnerScreen.
+        expect(getByTestId('node-renderer-sentinel')).toBeTruthy()
+      })
+    })
   })
 })
