@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImagePickerRenderer snapshot (T-0006-135) — productive×focus matches snapshot (empty state) 1`] = `
+<View
+  accessibilityLabel="Profile photo — tap to choose image"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#FAFAF7",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 12,
+      "borderStyle": "dashed",
+      "borderWidth": 1,
+      "height": 120,
+      "justifyContent": "center",
+      "opacity": 1,
+      "overflow": "hidden",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "gap": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 16,
+          "fontWeight": "500",
+          "lineHeight": 24,
+        }
+      }
+    >
+      Profile photo
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#A2A8B2",
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      Tap to choose
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`ImagePickerRenderer snapshot (T-0006-136) — expressive×health matches snapshot (with selected image) 1`] = `
+<View
+  accessibilityLabel="Cover photo — tap to choose image"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#FBF8F3",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 12,
+      "borderStyle": "solid",
+      "borderWidth": 1,
+      "height": 120,
+      "justifyContent": "center",
+      "opacity": 1,
+      "overflow": "hidden",
+    }
+  }
+>
+  <Image
+    accessibilityLabel="Cover photo"
+    accessibilityRole="image"
+    resizeMode="cover"
+    source={
+      {
+        "uri": "file://existing.jpg",
+      }
+    }
+    style={
+      {
+        "height": "100%",
+        "width": "100%",
+      }
+    }
+  />
+</View>
+`;

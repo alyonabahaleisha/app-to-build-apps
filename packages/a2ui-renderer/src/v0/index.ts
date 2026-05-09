@@ -94,3 +94,10 @@ export {SwipeableRowRenderer} from './components/lists/SwipeableRow.js'
 export {EmptyStateRenderer} from './components/lists/EmptyState.js'
 export {LoadingStateRenderer} from './components/lists/LoadingState.js'
 export {LIST_DEFAULTS, ITEM_LAYOUT_HEIGHT} from './components/lists/defaults.js'
+
+// Step 8: Compound tier + AI dispatcher
+export {ConditionalSectionRenderer} from './components/compound/ConditionalSection.js'
+export {ListSummaryRenderer} from './components/compound/ListSummary.js'
+export {MediaTrayRenderer} from './components/compound/MediaTray.js'
+export {ImagePickerRenderer} from './components/compound/ImagePicker.js'
+export {makeAIDispatcher, sanitizeRowsForPrompt, AI_TIMEOUT_MS} from './ai/aiDispatcher.js'

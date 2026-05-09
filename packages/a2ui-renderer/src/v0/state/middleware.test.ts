@@ -118,11 +118,12 @@ describe('middleware — telemetry insertion-point contract (T-0006-028a)', () =
       onAIError: jest.fn(),
     }
     const toastMiddleware = makeToastMiddleware(host)
-    const aiBridgeMiddleware = makeAIBridgeMiddleware(
-      () => null,
-      () => chain.dispatch,
+    const aiBridgeMiddleware = makeAIBridgeMiddleware({
+      getDispatcher: () => null,
+      getDispatch: () => chain.dispatch,
       host,
-    )
+      getState: () => state,
+    })
     const navigationMiddleware = makeNavigationMiddleware(() => null, {})
     const undoBufferMiddleware = makeUndoBufferMiddleware(
       () => state,

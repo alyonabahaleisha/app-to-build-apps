@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListSummaryRenderer snapshot (T-0006-131) — productive×focus matches snapshot with summary result rendered 1`] = `
+<View
+  testID="list-summary-container"
+>
+  <View
+    accessibilityLabel="Summary: 4 workouts logged this week."
+    style={
+      {
+        "alignItems": "flex-start",
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignSelf": "stretch",
+          "backgroundColor": "#4F46E5",
+          "borderRadius": 6,
+          "marginRight": 8,
+          "width": 3,
+        }
+      }
+    />
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "flex": 1,
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+    >
+      4 workouts logged this week.
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`ListSummaryRenderer snapshot (T-0006-132) — expressive×health matches snapshot with show-raw fallback 1`] = `
+<View
+  accessibilityLabel="Recent items"
+  testID="list-summary-raw"
+>
+  <View>
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      • 
+      Evening yoga
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      • 
+      Strength training
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      • 
+      Cycling
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#B0A89E",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      +1 more
+    </Text>
+  </View>
+</View>
+`;

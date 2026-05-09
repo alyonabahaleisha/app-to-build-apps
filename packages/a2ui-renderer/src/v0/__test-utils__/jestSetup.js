@@ -10,6 +10,8 @@
  *   - react-native-reanimated (via moduleNameMapper → ReactNativeReanimatedMock.js)
  *   - @shopify/flash-list (List tier FlashList tests — Step 7)
  *   - react-native-gesture-handler (SwipeableRow tests — Step 7)
+ *   - expo-image-picker (ImagePicker tests — Step 8)
+ *   - react-native-ai-apple (AIDispatcher tests — Step 8)
  *
  * Note: react-native-reanimated is mocked via moduleNameMapper in jest.config.rn.cjs
  * (not via require() here) because the official mock.js pulls in real source
@@ -64,6 +66,26 @@ jest.mock('@shopify/flash-list', () => {
   }
   return {FlashList}
 })
+
+// Mock expo-image-picker — native image picker; not available in Jest env.
+// Default behavior: library returns a cancelled result. Individual tests that
+// need a successful pick call mockResolvedValueOnce on launchImageLibraryAsync
+// or launchCameraAsync.
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: jest.fn().mockResolvedValue({canceled: true, assets: []}),
+  launchCameraAsync: jest.fn().mockResolvedValue({canceled: true, assets: []}),
+  requestCameraPermissionsAsync: jest.fn().mockResolvedValue({status: 'granted', canAskAgain: true, granted: true, expires: 'never'}),
+  MediaTypeOptions: {Images: 'Images', Videos: 'Videos', All: 'All'},
+  ImagePickerOptions: {},
+}))
+
+// Mock react-native-ai-apple — optional native dep; not available in Jest env.
+// The try/catch in aiCapabilitiesCheck and aiDispatcher handle MODULE_NOT_FOUND,
+// so this mock is defense-in-depth. Tests that need AI behavior mock the
+// AICapabilitiesProvider hook directly.
+jest.mock('react-native-ai-apple', () => {
+  throw Object.assign(new Error('Cannot find module'), {code: 'MODULE_NOT_FOUND'})
+}, {virtual: true})
 
 // Mock react-native-gesture-handler — SwipeableRow uses Swipeable from RNGH.
 // In tests, render the children and action buttons directly (always visible)

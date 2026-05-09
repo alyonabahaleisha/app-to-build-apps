@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MediaTrayRenderer snapshot (T-0006-133) — productive×focus matches snapshot 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "height": 120,
+    }
+  }
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo1.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 120,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo2.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 120,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo3.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 120,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`MediaTrayRenderer snapshot (T-0006-134) — expressive×health matches snapshot 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "height": 120,
+    }
+  }
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo1.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 213,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo2.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 213,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "file://photo3.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 213,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;

@@ -8,7 +8,8 @@
  *   2. Module installed but isAvailable not a function → wrong API shape
  *   3. isAvailable() rejects → OS too old / permission denied
  *
- * This is the ONLY place in the renderer that touches react-native-ai-apple.
+ * This is one of two places in the renderer that touches react-native-ai-apple
+ * (the other is `aiDispatcher.ts`, which wraps the native call for the aiBridge middleware).
  * AICapabilitiesProvider calls this once on mount and caches the result.
  */
 

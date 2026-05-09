@@ -5,18 +5,17 @@
  * completion it synthesizes a `set` action and dispatches it via the
  * provided dispatch function.
  *
- * PLACEHOLDER: This is the Step 2 placeholder implementation. The full
- * `react-native-ai-apple` integration is wired in Step 8 (aiDispatcher.ts).
- * For now, the middleware accepts an `AIDispatcher` interface and calls it —
- * real implementation will swap the concrete dispatcher in.
- *
  * The host error callback (`onAIError`) is injected via HostCallbacks.
+ * On rejection or timeout the middleware calls host.onAIError and the
+ * summary slot is never written — ListSummary continues showing the
+ * loading shimmer; the host owns the error UX (toast, hide, etc.).
  */
 import type {HostCallbacks} from '../hostCallbacks.js'
+import type {RendererState} from '../types.js'
 import type {Middleware, DispatchFn} from '../middleware.js'
 
 // AIDispatcher — the interface the aiBridge middleware calls. The concrete
-// implementation in Step 8 wraps react-native-ai-apple. Tests use a mock.
+// implementation in aiDispatcher.ts wraps react-native-ai-apple. Tests use a mock.
 export interface AIDispatcher {
   summarize(input: {
     prompt: string
@@ -24,31 +23,40 @@ export interface AIDispatcher {
   }): Promise<string>
 }
 
-export function makeAIBridgeMiddleware(
-  getAIDispatcher: () => AIDispatcher | null,
-  getDispatch: () => DispatchFn,
-  host: Pick<HostCallbacks, 'onAIError'>,
-): Middleware {
+export function makeAIBridgeMiddleware(opts: {
+  getDispatcher: () => AIDispatcher | null
+  getDispatch: () => DispatchFn
+  host: Pick<HostCallbacks, 'onAIError'>
+  getState: () => RendererState
+}): Middleware {
   return (action, _next) => {
     if (action.type === 'aiProcess') {
-      const dispatcher = getAIDispatcher()
+      const dispatcher = opts.getDispatcher()
       if (dispatcher === null) {
         // AI not available (not iOS 26+ Pro, or provider not mounted).
         // SHORT-CIRCUIT without error — components guard upstream via useAICapabilities.
         return
       }
 
-      // Collect current items — dispatcher will serialize them.
-      // The AI bridge doesn't have access to state here; the collection data is
-      // passed through the action at dispatch time. For Step 2 placeholder, we
-      // pass an empty array; Step 8 wires the actual collection rows.
+      // Resolve the collection rows from current state so the AI model has
+      // real item context. CollectionState.rows is Map<RowId, Row> where
+      // Row = Record<string, BindingValue> — the data object directly.
+      const state = opts.getState()
+      const collection = state.collections.get(action.collection)
+      if (!collection) {
+        // Collection not found in state — treat as unavailable.
+        opts.host.onAIError(new Error(`AI bridge: collection "${action.collection}" not found`))
+        return
+      }
+      const items = Array.from(collection.rows.values())
+
       dispatcher
-        .summarize({prompt: action.prompt, items: []})
+        .summarize({prompt: action.prompt, items})
         .then(result => {
-          getDispatch()({type: 'set', target: action.target, value: result})
+          opts.getDispatch()({type: 'set', target: action.target, value: result})
         })
         .catch((err: unknown) => {
-          host.onAIError(err instanceof Error ? err : new Error(String(err)))
+          opts.host.onAIError(err instanceof Error ? err : new Error(String(err)))
         })
 
       // SHORT-CIRCUIT: do not call _next

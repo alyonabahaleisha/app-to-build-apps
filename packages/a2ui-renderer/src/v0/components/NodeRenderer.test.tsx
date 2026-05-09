@@ -1,7 +1,7 @@
 /**
  * NodeRenderer tests
  * T-0006-062: NodeRenderer discriminates 5 layout types correctly
- *             (extended to 12 in Step 5, 17 in Step 6)
+ *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
  */
 import React from 'react'
@@ -14,11 +14,21 @@ import {RendererStateContext} from '../state/useRendererState'
 import {buildInitialRendererState} from '../state/reducer'
 import {NodeRenderer} from './NodeRenderer'
 
+// Mock AICapabilitiesProvider to avoid native module checks for compound components.
+jest.mock('../ai/AICapabilitiesProvider', () => {
+  const original = jest.requireActual('../ai/AICapabilitiesProvider')
+  return {
+    ...original,
+    useAICapabilities: jest.fn().mockReturnValue({isSupported: false}),
+  }
+})
+
 // ---------------------------------------------------------------------------
 // Test wrapper
 // ---------------------------------------------------------------------------
 
 // Minimal spec for RendererStateContext used by input components.
+// Includes a 'workouts' collection for compound tier components (Step 8).
 const MINIMAL_SPEC: Spec = {
   version: 1,
   archetype: 'ListCRUD',
@@ -28,8 +38,19 @@ const MINIMAL_SPEC: Spec = {
   navigation: 'none',
   screens: [{id: 's1', root: {id: 'n1', type: 'Heading', text: 'T', level: 1}}],
   initialScreenId: 's1',
-  collections: [],
-  initialState: {textSlot: '', numSlot: 0, boolSlot: false, dateSlot: '2026-01-01', strSlot: ''},
+  collections: [
+    {
+      id: 'workouts',
+      name: 'Workouts',
+      fields: [
+        {name: 'name', type: {type: 'string'} as const, required: true},
+        {name: 'uri', type: {type: 'image'} as const, required: false},
+      ],
+      seedData: [{name: 'Morning run', uri: 'file://run.jpg'}],
+      syncMode: 'local' as const,
+    },
+  ],
+  initialState: {textSlot: '', numSlot: 0, boolSlot: false, dateSlot: '2026-01-01', strSlot: '', photoSlot: ''},
 }
 
 const MINIMAL_STATE = buildInitialRendererState(MINIMAL_SPEC)
@@ -217,11 +238,47 @@ const LOADING_STATE: Extract<Node, {type: 'LoadingState'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended Step 7): NodeRenderer discriminates 22 types correctly
+// Minimal node fixtures — compound tier (Step 8)
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 7 extended to 22 arms)', () => {
-  // Suppress console.warn for List with unknown collectionId (workouts not in MINIMAL_SPEC)
+const CONDITIONAL_SECTION: Extract<Node, {type: 'ConditionalSection'}> = {
+  id: 'cs1',
+  type: 'ConditionalSection',
+  collectionId: 'workouts',
+  showWhen: 'whenNotEmpty',
+  children: [],
+}
+
+const LIST_SUMMARY: Extract<Node, {type: 'ListSummary'}> = {
+  id: 'lsm1',
+  type: 'ListSummary',
+  collectionId: 'workouts',
+  prompt: 'Summarize these workouts.',
+  fallback: 'hide',
+}
+
+const MEDIA_TRAY: Extract<Node, {type: 'MediaTray'}> = {
+  id: 'mtr1',
+  type: 'MediaTray',
+  collectionId: 'workouts',
+  imageField: 'uri',
+  aspectRatio: '1:1',
+}
+
+const IMAGE_PICKER: Extract<Node, {type: 'ImagePicker'}> = {
+  id: 'ip1',
+  type: 'ImagePicker',
+  label: 'Profile photo',
+  valueBinding: {kind: 'state', slot: 'photoSlot'},
+}
+
+// ---------------------------------------------------------------------------
+// T-0006-062 (extended Step 8): NodeRenderer discriminates 26 types correctly
+// ---------------------------------------------------------------------------
+
+describe('NodeRenderer discrimination (T-0006-062 — Step 8 extended to 26 arms)', () => {
+  // Suppress console.warn for List/MediaTray/ConditionalSection with
+  // unknown or empty collectionId variations.
   beforeEach(() => {
     jest.spyOn(console, 'warn').mockImplementation(() => undefined)
   })
@@ -252,20 +309,25 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 7 extended to 22 arms
     ['SwipeableRow', SWIPEABLE_ROW],
     ['EmptyState', EMPTY_STATE],
     ['LoadingState', LOADING_STATE],
+    ['ConditionalSection', CONDITIONAL_SECTION],
+    ['ListSummary', LIST_SUMMARY],
+    ['MediaTray', MEDIA_TRAY],
+    ['ImagePicker', IMAGE_PICKER],
   ] as [string, Node][])('renders %s without error', (_type, node) => {
     const host = makeHostCallbacks()
     const {toJSON} = renderNode(node, host)
 
-    // List with unknown collectionId renders an empty View (not null)
-    // All other nodes render non-null
-    if (_type !== 'List') {
+    // List with unknown collectionId renders an empty View (not null).
+    // ListSummary with fallback=hide renders null when AI unsupported.
+    // All other nodes render non-null.
+    if (_type !== 'List' && _type !== 'ListSummary') {
       expect(toJSON()).not.toBeNull()
     }
-    // onUnknownNodeType must NOT be called for known types
+    // onUnknownNodeType must NOT be called for known types.
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  it('does not call onUnknownNodeType for any of the 22 node types', () => {
+  it('does not call onUnknownNodeType for any of the 26 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
       SCREEN, SECTION, STACK, ROW, CARD,
@@ -273,6 +335,7 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 7 extended to 22 arms
       STAT, BADGE, CHIP, AVATAR,
       TEXTFIELD, NUMBERFIELD, DATEFIELD, PICKER, SWITCH,
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
+      CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER,
     ]
     for (const node of allNodes) {
       renderNode(node, host)
