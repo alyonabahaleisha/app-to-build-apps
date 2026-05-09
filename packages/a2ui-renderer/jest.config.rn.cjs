@@ -25,8 +25,12 @@ module.exports = {
     '.*vendor/emitter/EventEmitter.*': '<rootDir>/src/legacy/__mocks__/EventEmitterMock.js',
     // expo-haptics: peerDep provided by host at runtime; stub for test env.
     '^expo-haptics$': '<rootDir>/src/legacy/__mocks__/ExpoHapticsMock.js',
+    // react-native-reanimated: the official mock.js chains into Flow-typed RN source
+    // files that Babel cannot parse. Use a fully self-contained manual mock instead.
+    '^react-native-reanimated$':
+      '<rootDir>/src/legacy/__mocks__/ReactNativeReanimatedMock.js',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context)))',
+    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list)))',
   ],
 }

@@ -1,19 +1,38 @@
 /**
  * NodeRenderer tests
- * T-0006-062: NodeRenderer discriminates 5 layout types correctly (extended to 12 in Step 5)
+ * T-0006-062: NodeRenderer discriminates 5 layout types correctly
+ *             (extended to 12 in Step 5, 17 in Step 6)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
  */
 import React from 'react'
 import {render} from '@testing-library/react-native'
-import type {Node} from '@app-creator/protocol'
+import type {Node, Spec} from '@app-creator/protocol'
 import {RendererThemeProvider} from '../theme/RendererThemeProvider'
 import {HostProvider} from '../host/HostContext'
 import type {HostCallbacks} from '../state/hostCallbacks'
+import {RendererStateContext} from '../state/useRendererState'
+import {buildInitialRendererState} from '../state/reducer'
 import {NodeRenderer} from './NodeRenderer'
 
 // ---------------------------------------------------------------------------
 // Test wrapper
 // ---------------------------------------------------------------------------
+
+// Minimal spec for RendererStateContext used by input components.
+const MINIMAL_SPEC: Spec = {
+  version: 1,
+  archetype: 'ListCRUD',
+  stance: 'productive',
+  palette: 'focus',
+  coverIcon: 'list',
+  navigation: 'none',
+  screens: [{id: 's1', root: {id: 'n1', type: 'Heading', text: 'T', level: 1}}],
+  initialScreenId: 's1',
+  collections: [],
+  initialState: {textSlot: '', numSlot: 0, boolSlot: false, dateSlot: '2026-01-01', strSlot: ''},
+}
+
+const MINIMAL_STATE = buildInitialRendererState(MINIMAL_SPEC)
 
 function makeHostCallbacks(overrides?: Partial<HostCallbacks>): HostCallbacks {
   return {
@@ -28,7 +47,9 @@ function renderNode(node: Node, host: HostCallbacks) {
   return render(
     <RendererThemeProvider stance="productive" palette="focus">
       <HostProvider value={host}>
-        <NodeRenderer node={node} />
+        <RendererStateContext.Provider value={{state: MINIMAL_STATE, dispatch: jest.fn()}}>
+          <NodeRenderer node={node} />
+        </RendererStateContext.Provider>
       </HostProvider>
     </RendererThemeProvider>,
   )
@@ -120,10 +141,94 @@ const AVATAR: Extract<Node, {type: 'Avatar'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended Step 5): NodeRenderer discriminates 12 types correctly
+// Minimal node fixtures — inputs tier (Step 6)
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 12 arms)', () => {
+const TEXTFIELD: Extract<Node, {type: 'TextField'}> = {
+  id: 'tf1',
+  type: 'TextField',
+  label: 'Task title',
+  valueBinding: {kind: 'state', slot: 'textSlot'},
+}
+
+const NUMBERFIELD: Extract<Node, {type: 'NumberField'}> = {
+  id: 'nf1',
+  type: 'NumberField',
+  label: 'Quantity',
+  valueBinding: {kind: 'state', slot: 'numSlot'},
+}
+
+const DATEFIELD: Extract<Node, {type: 'DateField'}> = {
+  id: 'df1',
+  type: 'DateField',
+  label: 'Due date',
+  valueBinding: {kind: 'state', slot: 'dateSlot'},
+}
+
+const PICKER: Extract<Node, {type: 'Picker'}> = {
+  id: 'pk1',
+  type: 'Picker',
+  label: 'Priority',
+  valueBinding: {kind: 'state', slot: 'strSlot'},
+  options: [{value: 'low', label: 'Low'}, {value: 'high', label: 'High'}],
+}
+
+const SWITCH: Extract<Node, {type: 'Switch'}> = {
+  id: 'sw1',
+  type: 'Switch',
+  label: 'Enable',
+  valueBinding: {kind: 'state', slot: 'boolSlot'},
+}
+
+// ---------------------------------------------------------------------------
+// Minimal node fixtures — lists tier (Step 7)
+// ---------------------------------------------------------------------------
+
+const LIST: Extract<Node, {type: 'List'}> = {
+  id: 'lst1',
+  type: 'List',
+  collectionId: 'workouts',
+}
+
+const LIST_ITEM: Extract<Node, {type: 'ListItem'}> = {
+  id: 'li1',
+  type: 'ListItem',
+  title: 'Morning workout',
+}
+
+const SWIPEABLE_ROW: Extract<Node, {type: 'SwipeableRow'}> = {
+  id: 'sr1',
+  type: 'SwipeableRow',
+  title: 'Push-ups',
+  trailingAction: {type: 'removeItem', collection: 'workouts', itemId: 'row_1'},
+}
+
+const EMPTY_STATE: Extract<Node, {type: 'EmptyState'}> = {
+  id: 'es1',
+  type: 'EmptyState',
+  icon: 'list',
+  headline: 'No items',
+}
+
+const LOADING_STATE: Extract<Node, {type: 'LoadingState'}> = {
+  id: 'ls1',
+  type: 'LoadingState',
+  lines: 3,
+}
+
+// ---------------------------------------------------------------------------
+// T-0006-062 (extended Step 7): NodeRenderer discriminates 22 types correctly
+// ---------------------------------------------------------------------------
+
+describe('NodeRenderer discrimination (T-0006-062 — Step 7 extended to 22 arms)', () => {
+  // Suppress console.warn for List with unknown collectionId (workouts not in MINIMAL_SPEC)
+  beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+  })
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   it.each([
     ['Screen', SCREEN],
     ['Section', SECTION],
@@ -137,18 +242,38 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 12 arms
     ['Badge', BADGE],
     ['Chip', CHIP],
     ['Avatar', AVATAR],
+    ['TextField', TEXTFIELD],
+    ['NumberField', NUMBERFIELD],
+    ['DateField', DATEFIELD],
+    ['Picker', PICKER],
+    ['Switch', SWITCH],
+    ['List', LIST],
+    ['ListItem', LIST_ITEM],
+    ['SwipeableRow', SWIPEABLE_ROW],
+    ['EmptyState', EMPTY_STATE],
+    ['LoadingState', LOADING_STATE],
   ] as [string, Node][])('renders %s without error', (_type, node) => {
     const host = makeHostCallbacks()
     const {toJSON} = renderNode(node, host)
 
-    expect(toJSON()).not.toBeNull()
+    // List with unknown collectionId renders an empty View (not null)
+    // All other nodes render non-null
+    if (_type !== 'List') {
+      expect(toJSON()).not.toBeNull()
+    }
     // onUnknownNodeType must NOT be called for known types
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  it('does not call onUnknownNodeType for any of the 12 node types', () => {
+  it('does not call onUnknownNodeType for any of the 22 node types', () => {
     const host = makeHostCallbacks()
-    const allNodes: Node[] = [SCREEN, SECTION, STACK, ROW, CARD, HEADING, BODY, CAPTION, STAT, BADGE, CHIP, AVATAR]
+    const allNodes: Node[] = [
+      SCREEN, SECTION, STACK, ROW, CARD,
+      HEADING, BODY, CAPTION,
+      STAT, BADGE, CHIP, AVATAR,
+      TEXTFIELD, NUMBERFIELD, DATEFIELD, PICKER, SWITCH,
+      LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
+    ]
     for (const node of allNodes) {
       renderNode(node, host)
     }

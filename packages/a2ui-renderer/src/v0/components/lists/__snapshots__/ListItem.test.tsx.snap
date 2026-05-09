@@ -1,0 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItemRenderer snapshot (T-0006-111) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Morning workout, 45 minutes"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "borderBottomColor": "#ECEEF1",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
+        Morning workout
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "lineHeight": 18,
+          }
+        }
+      >
+        45 minutes
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`ListItemRenderer snapshot (T-0006-112) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Morning workout, 45 minutes"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginBottom": 8,
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
+        Morning workout
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "lineHeight": 20,
+          }
+        }
+      >
+        45 minutes
+      </Text>
+    </View>
+  </View>
+</View>
+`;

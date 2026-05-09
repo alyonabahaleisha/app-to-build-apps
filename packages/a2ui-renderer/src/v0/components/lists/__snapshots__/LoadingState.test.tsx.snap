@@ -1,0 +1,501 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadingStateRenderer snapshot (T-0006-115) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Loading"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`LoadingStateRenderer snapshot (T-0006-116) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Loading"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+</View>
+`;

@@ -4,6 +4,10 @@
  * Step 4: 5 layout types (Screen, Section, Stack, Row, Card) + defensive default.
  * Step 5: +3 typography (Heading, Body, Caption) +4 display (Stat, Badge, Chip, Avatar)
  *         = 12 arms total.
+ * Step 6: +5 inputs (TextField, NumberField, DateField, Picker, Switch)
+ *         = 17 arms total.
+ * Step 7: +5 lists (List, ListItem, SwipeableRow, EmptyState, LoadingState)
+ *         = 22 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -27,6 +31,16 @@ import {StatRenderer} from './display/Stat.js'
 import {BadgeRenderer} from './display/Badge.js'
 import {ChipRenderer} from './display/Chip.js'
 import {AvatarRenderer} from './display/Avatar.js'
+import {TextFieldRenderer} from './inputs/TextField.js'
+import {NumberFieldRenderer} from './inputs/NumberField.js'
+import {DateFieldRenderer} from './inputs/DateField.js'
+import {PickerRenderer} from './inputs/Picker.js'
+import {SwitchRenderer} from './inputs/Switch.js'
+import {ListRenderer} from './lists/List.js'
+import {ListItemRenderer} from './lists/ListItem.js'
+import {SwipeableRowRenderer} from './lists/SwipeableRow.js'
+import {EmptyStateRenderer} from './lists/EmptyState.js'
+import {LoadingStateRenderer} from './lists/LoadingState.js'
 
 export function NodeRenderer({node}: {node: Node}) {
   const host = useHost()
@@ -59,6 +73,28 @@ export function NodeRenderer({node}: {node: Node}) {
       return <ChipRenderer node={node} />
     case 'Avatar':
       return <AvatarRenderer node={node} />
+    // Inputs tier (Step 6)
+    case 'TextField':
+      return <TextFieldRenderer node={node} />
+    case 'NumberField':
+      return <NumberFieldRenderer node={node} />
+    case 'DateField':
+      return <DateFieldRenderer node={node} />
+    case 'Picker':
+      return <PickerRenderer node={node} />
+    case 'Switch':
+      return <SwitchRenderer node={node} />
+    // Lists tier (Step 7)
+    case 'List':
+      return <ListRenderer node={node} />
+    case 'ListItem':
+      return <ListItemRenderer node={node} />
+    case 'SwipeableRow':
+      return <SwipeableRowRenderer node={node} />
+    case 'EmptyState':
+      return <EmptyStateRenderer node={node} />
+    case 'LoadingState':
+      return <LoadingStateRenderer node={node} />
     default: {
       // Defense-in-depth: schema validation upstream should have caught this.
       // Calling host.onUnknownNodeType makes the violation observable to the host

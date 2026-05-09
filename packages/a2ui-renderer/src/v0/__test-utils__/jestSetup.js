@@ -5,8 +5,15 @@
  * from probing native animated modules that use Flow utility types babel
  * cannot parse. Same pattern as src/legacy/test/jestSetup.js.
  *
- * Also provides a mock for react-native-safe-area-context so Screen component
- * tests that call useSafeAreaInsets() get a stable zero-insets response.
+ * Also provides mocks for:
+ *   - react-native-safe-area-context (Screen component tests)
+ *   - react-native-reanimated (via moduleNameMapper → ReactNativeReanimatedMock.js)
+ *   - @shopify/flash-list (List tier FlashList tests — Step 7)
+ *   - react-native-gesture-handler (SwipeableRow tests — Step 7)
+ *
+ * Note: react-native-reanimated is mocked via moduleNameMapper in jest.config.rn.cjs
+ * (not via require() here) because the official mock.js pulls in real source
+ * files that contain Flow type annotations which Babel cannot parse.
  */
 const {configure} = require('@testing-library/react-native')
 
@@ -29,3 +36,52 @@ jest.mock('react-native-safe-area-context', () => ({
   SafeAreaView: ({children}) => children,
   SafeAreaInsetsContext: {Consumer: ({children}) => children({top: 0, bottom: 0, left: 0, right: 0})},
 }))
+
+// Mock @shopify/flash-list — FlashList is a native-backed component; in tests
+// we render as a simple View-based container that iterates over data and
+// renders each item via renderItem. Uses only View (not ScrollView) to avoid
+// pulling in the Flow-typed AnimatedObject.js chain from react-native's ScrollView.
+//
+// testID defaults to "flashlist" so tests can locate the element with getByTestId.
+jest.mock('@shopify/flash-list', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+  function FlashList({data, renderItem, keyExtractor, ListEmptyComponent, testID}) {
+    const rootProps = {testID: testID ?? 'flashlist'}
+    if (!data || data.length === 0) {
+      return ListEmptyComponent
+        ? React.createElement(View, rootProps, React.createElement(ListEmptyComponent))
+        : React.createElement(View, rootProps)
+    }
+    return React.createElement(
+      View,
+      rootProps,
+      data.map((item, index) => {
+        const key = keyExtractor ? keyExtractor(item, index) : String(index)
+        return React.createElement(View, {key}, renderItem({item, index}))
+      }),
+    )
+  }
+  return {FlashList}
+})
+
+// Mock react-native-gesture-handler — SwipeableRow uses Swipeable from RNGH.
+// In tests, render the children and action buttons directly (always visible)
+// so tests can assert on dispatch calls without simulating gesture events.
+jest.mock('react-native-gesture-handler', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+  function Swipeable({children, renderLeftActions, renderRightActions, testID}) {
+    return React.createElement(
+      View,
+      {testID},
+      renderLeftActions ? renderLeftActions() : null,
+      children,
+      renderRightActions ? renderRightActions() : null,
+    )
+  }
+  function GestureHandlerRootView({children, style}) {
+    return React.createElement(View, {style}, children)
+  }
+  return {Swipeable, GestureHandlerRootView}
+})
