@@ -153,4 +153,52 @@ describe('BodyRenderer color and weight variants', () => {
     const tree = toJSON() as {props?: {style?: {fontSize?: number}}} | null
     expect(tree?.props?.style?.fontSize).toBe(16)
   })
+
+  // ---------------------------------------------------------------------------
+  // Roz Finding 1 pickup: uncovered color arms fg-faint / success / warning / danger
+  // ---------------------------------------------------------------------------
+
+  it('fg-faint color resolves correctly (productive)', () => {
+    // productive fg-faint = #A2A8B2
+    const node: BodyNode = {id: 'b-faint', type: 'Body', text: 'Faint text', color: 'fg-faint'}
+    const {toJSON} = renderWithTheme(<BodyRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#A2A8B2')
+  })
+
+  it('success color resolves correctly (productive)', () => {
+    // productive success = #0E8345
+    const node: BodyNode = {id: 'b-success', type: 'Body', text: 'Success text', color: 'success'}
+    const {toJSON} = renderWithTheme(<BodyRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#0E8345')
+  })
+
+  it('warning color resolves correctly (productive)', () => {
+    // productive warning = #B8580C
+    const node: BodyNode = {id: 'b-warning', type: 'Body', text: 'Warning text', color: 'warning'}
+    const {toJSON} = renderWithTheme(<BodyRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#B8580C')
+  })
+
+  it('danger color resolves correctly (productive)', () => {
+    // productive danger = #C03A2B
+    const node: BodyNode = {id: 'b-danger', type: 'Body', text: 'Danger text', color: 'danger'}
+    const {toJSON} = renderWithTheme(<BodyRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#C03A2B')
+  })
 })

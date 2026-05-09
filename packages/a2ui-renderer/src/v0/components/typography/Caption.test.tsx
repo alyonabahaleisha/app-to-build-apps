@@ -162,4 +162,52 @@ describe('CaptionRenderer variants', () => {
     const tree = toJSON() as {props?: {style?: {textAlign?: string}}} | null
     expect(tree?.props?.style?.textAlign).toBe('center')
   })
+
+  // ---------------------------------------------------------------------------
+  // Roz Finding 1 pickup: uncovered color arms fg / success / warning / danger
+  // ---------------------------------------------------------------------------
+
+  it('fg color resolves correctly (productive)', () => {
+    // productive fg = #14171A
+    const node: CaptionNode = {id: 'cap-fg', type: 'Caption', text: 'Fg caption', color: 'fg'}
+    const {toJSON} = renderWithTheme(<CaptionRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#14171A')
+  })
+
+  it('success color resolves correctly (productive)', () => {
+    // productive success = #0E8345
+    const node: CaptionNode = {id: 'cap-success', type: 'Caption', text: 'Success', color: 'success'}
+    const {toJSON} = renderWithTheme(<CaptionRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#0E8345')
+  })
+
+  it('warning color resolves correctly (productive)', () => {
+    // productive warning = #B8580C
+    const node: CaptionNode = {id: 'cap-warning', type: 'Caption', text: 'Warning', color: 'warning'}
+    const {toJSON} = renderWithTheme(<CaptionRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#B8580C')
+  })
+
+  it('danger color resolves correctly (productive)', () => {
+    // productive danger = #C03A2B
+    const node: CaptionNode = {id: 'cap-danger', type: 'Caption', text: 'Danger', color: 'danger'}
+    const {toJSON} = renderWithTheme(<CaptionRenderer node={node} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    const tree = toJSON() as {props?: {style?: {color?: string}}} | null
+    expect(tree?.props?.style?.color).toBe('#C03A2B')
+  })
 })

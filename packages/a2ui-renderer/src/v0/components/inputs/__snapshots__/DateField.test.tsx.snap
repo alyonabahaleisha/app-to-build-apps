@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DateFieldRenderer snapshot (T-0006-091) — productive×focus matches snapshot at productive×focus 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Due date
+  </Text>
+  <View
+    accessibilityHint="Opens date picker"
+    accessibilityLabel="Due date"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#ECEEF1",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+    >
+      May 8, 2026
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#A2A8B2",
+          "fontSize": 14,
+        }
+      }
+    >
+      ›
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`DateFieldRenderer snapshot (T-0006-092) — expressive×health matches snapshot at expressive×health 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Due date
+  </Text>
+  <View
+    accessibilityHint="Opens date picker"
+    accessibilityLabel="Due date"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#EFE9DF",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "lineHeight": 26,
+        }
+      }
+    >
+      May 8, 2026
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#B0A89E",
+          "fontSize": 14,
+        }
+      }
+    >
+      ›
+    </Text>
+  </View>
+</View>
+`;
