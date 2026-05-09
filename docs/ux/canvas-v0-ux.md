@@ -1545,7 +1545,7 @@ States: default, pressed (96% scale + medium haptic), disabled (50% opacity + fl
 
 ## Action Verb Feedback Contract
 
-The 13-verb dispatcher renders feedback uniformly so generated tools feel coherent regardless of which verbs they use.
+The 12-verb dispatcher renders feedback uniformly so generated tools feel coherent regardless of which verbs they use. (Revised 2026-05-08 from "13-verb": F-04 cut `share` from the spec — Share is host-meatball-only, not a renderer verb.)
 
 | Verb | Feedback |
 |---|---|
@@ -1559,7 +1559,6 @@ The 13-verb dispatcher renders feedback uniformly so generated tools feel cohere
 | `navigate` | Pattern-dependent: stack → push (native), tabs → segmented control change (crossfade), modal-overlay → Gorhom open. |
 | `back` | Stack pop (native), tab → previous tab, modal → close. |
 | `capture` | Opens expo-image-picker (camera). On capture: light haptic + thumbnail enters with `motion-springy`. |
-| `share` | Universal Link generated server-side; clipboard write; medium haptic + accent flash on triggering element + toast "Link copied" 3s. |
 | `toast` | Top-of-screen toast, `bg-elevated` bg, `divider` border, `type-body`, 3s auto-dismiss, swipe-up to dismiss early. Tone-tinted icon: `success` / `warning` / `danger` / `accent`. |
 | `aiProcess` | Component renders its own loading state during dispatch (e.g., `ListSummary` shows skeleton). On completion: `motion-smooth` 240ms crossfade. On unsupported device: silently hides per fallback policy. |
 
