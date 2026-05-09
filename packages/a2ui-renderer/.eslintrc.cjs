@@ -16,12 +16,38 @@
  * If you find yourself wanting to import one of these, the answer is:
  * add a Context to the renderer package and inject from the host app.
  * See RendererThemeProvider and RendererLoggerProvider as the pattern.
+ *
+ * useEffect ban (ADR-0006 §K):
+ * useEffect is banned across the renderer. The renderer must be a pure
+ * function of {spec, state, dispatch}. Two exceptions are carved out via
+ * overrides below:
+ *   1. src/v0/ai/ — AICapabilitiesProvider's mount-time OS capability
+ *      check is an async query that cannot be driven by props/dispatch.
+ *   2. src/v0/a11y/ — useReducedMotion queries the OS accessibility
+ *      preference and subscribes to changes — same justification.
+ * useRendererState (src/v0/state/) also uses useEffect for ref-update
+ * infrastructure (updating mutable refs after each render) — this is
+ * allowed per the "infra, not app logic" carve-out noted in Step 2.
  */
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   rules: {
+    /**
+     * useEffect ban — applies to all files not covered by overrides below.
+     * Selector matches any call to useEffect from any import source.
+     */
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: "CallExpression[callee.name='useEffect']",
+        message:
+          'useEffect is banned in the V0 renderer (ADR-0006 §K). Derive state from ' +
+          'props or dispatch. If you need an async OS query or subscription, add it to ' +
+          'src/v0/ai/ or src/v0/a11y/ with a documented justification.',
+      },
+    ],
     'no-restricted-imports': [
       'error',
       {
@@ -64,4 +90,15 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      // §K exception 1: AI capability check — async OS query, mount-time only.
+      // §K exception 2 (widened at Step 3): useReducedMotion — async OS query + subscription.
+      // §K exception 3: useRendererState ref-update pattern — infra, not app logic.
+      files: ['src/v0/ai/**', 'src/v0/a11y/**', 'src/v0/state/useRendererState.ts'],
+      rules: {
+        'no-restricted-syntax': 'off',
+      },
+    },
+  ],
 }

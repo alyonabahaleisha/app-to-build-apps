@@ -129,7 +129,7 @@ describe('T-0003-114b: spec-canonicalization (Tip Splitter)', () => {
 
 describe('T-0003-120: pipeline-state.md row 27 updated for ADR-0003', () => {
   it('pipeline-state.md row points to ADR-0003-renderer.md and has ADR-0004 row', () => {
-    const pipelineStatePath = path.join(__dirname, '../../../docs/pipeline/pipeline-state.md')
+    const pipelineStatePath = path.join(__dirname, '../../../../docs/pipeline/pipeline-state.md')
     const content = fs.readFileSync(pipelineStatePath, 'utf-8')
 
     // Row 27 must reference ADR-0003-renderer.md
@@ -144,7 +144,7 @@ describe('T-0003-120: pipeline-state.md row 27 updated for ADR-0003', () => {
 
 describe('T-0003-121: adr-index.md has ADR-0003 row with correct tags', () => {
   it('adr-index.md includes ADR-0003 row with tags a2ui, mobile-shell', () => {
-    const adrIndexPath = path.join(__dirname, '../../../.claude/references/adr-index.md')
+    const adrIndexPath = path.join(__dirname, '../../../../.claude/references/adr-index.md')
     const content = fs.readFileSync(adrIndexPath, 'utf-8')
 
     // Must have ADR-0003 row

@@ -35,7 +35,7 @@ import {Linter} from 'eslint'
 // test runtime. Importing .cjs from ESM requires dynamic import + default
 // export, which is brittle across CJS/ESM module boundaries.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const eslintrc = require(path.resolve(__dirname, '../../.eslintrc.cjs')) as {
+const eslintrc = require(path.resolve(__dirname, '../../../.eslintrc.cjs')) as {
   rules: {[key: string]: unknown}
 }
 

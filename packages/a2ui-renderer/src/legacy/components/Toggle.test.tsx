@@ -161,7 +161,7 @@ describe('ToggleRenderer — T-0003-095: non-boolean state coercion + warn-log',
     expect(switchEl.props.value).toBe(false)
     // Warn-log fires exactly once
     expect(logger.warn).toHaveBeenCalledTimes(1)
-    const [message, payload] = logger.warn.mock.calls[0]
+    const [message, payload] = logger.warn.mock.calls[0]!
     expect(message).toBe('a2ui_toggle_type_mismatch')
     expect(payload).toMatchObject({
       id: 'darkMode',
@@ -183,7 +183,7 @@ describe('ToggleRenderer — T-0003-095: non-boolean state coercion + warn-log',
       logger,
     )
     expect(logger.warn).toHaveBeenCalledTimes(1)
-    const [, payload] = logger.warn.mock.calls[0]
+    const [, payload] = logger.warn.mock.calls[0]!
     expect(payload).toMatchObject({actualType: 'number'})
     // The number 42 must not appear in the log payload.
     expect(JSON.stringify(payload)).not.toContain('42')

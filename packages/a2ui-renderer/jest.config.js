@@ -11,8 +11,12 @@ module.exports = {
   // which use Flow utility types that @babel/preset-flow cannot parse in RN 0.76.
   // This setup file bypasses that by providing the known string host-component names
   // directly. (See src/test/jestSetup.js for details.)
-  setupFilesAfterEnv: ['<rootDir>/src/test/jestSetup.js'],
+  setupFilesAfterEnv: ['<rootDir>/src/legacy/test/jestSetup.js'],
+  // V0 component tests run under jest.config.rn.cjs (which has the safe-area
+  // mock and RTL setup for V0). Exclude src/v0/ here to avoid duplicate runs
+  // and missing-mock failures in the legacy config's environment.
   testMatch: ['**/?(*.)+(test).ts?(x)'],
+  testPathIgnorePatterns: ['/node_modules/', '/src/v0/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   // Transform everything via babel-jest using the renderer's babel.config.js.
   // This handles:
@@ -36,22 +40,31 @@ module.exports = {
   // the resolved absolute module id). The pattern covers both relative and absolute
   // import paths that resolve to this file.
   moduleNameMapper: {
+    // Strip .js extension from relative imports so Jest can find .ts source files.
+    // Source files use .js extensions for ESM TypeScript compatibility (tsc),
+    // but Jest's babel-jest transform resolves .ts files directly.
+    '^(\\.{1,2}/.*)\\.js$': '$1',
     // Match both: import-as-written '../vendor/emitter/EventEmitter' and
     // the resolved absolute path (jest checks both depending on version).
-    '.*vendor/emitter/EventEmitter.*': '<rootDir>/src/__mocks__/EventEmitterMock.js',
+    '.*vendor/emitter/EventEmitter.*': '<rootDir>/src/legacy/__mocks__/EventEmitterMock.js',
     // expo-haptics is a peerDependency provided by the host app at runtime.
     // In the renderer's Jest environment its transitive deps (expo-modules-core)
     // contain Flow-typed and native code the react-native preset cannot parse.
     // Map to a minimal mock that provides the ImpactFeedbackStyle + impactAsync
     // surface ButtonRenderer needs (T-0003-065 overrides at the test-file level).
-    '^expo-haptics$': '<rootDir>/src/__mocks__/ExpoHapticsMock.js',
+    '^expo-haptics$': '<rootDir>/src/legacy/__mocks__/ExpoHapticsMock.js',
     // NativeAnimatedHelper.js in RN 0.76 uses the Flow utility type
     // `$NonMaybeType<typeof ...>['key']` which @babel/preset-flow cannot parse.
     // RTL's detectHostComponentNames() triggers this import when render() is
     // called; the renderer's tests don't exercise native animation, so a stub suffices.
     '.*private/animated/NativeAnimatedHelper.*':
-      '<rootDir>/src/__mocks__/NativeAnimatedHelperMock.js',
+      '<rootDir>/src/legacy/__mocks__/NativeAnimatedHelperMock.js',
   },
   // Coverage configuration.
-  collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}', '!src/test/**'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/legacy/test/**',
+    '!src/v0/index.ts',
+  ],
 }
