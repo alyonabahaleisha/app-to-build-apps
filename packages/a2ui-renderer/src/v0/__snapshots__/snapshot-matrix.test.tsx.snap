@@ -1,0 +1,4149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-180 — Screen/productive×focus 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FAFAF7",
+      "flex": 1,
+      "paddingBottom": 0,
+      "paddingHorizontal": 20,
+      "paddingTop": 0,
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-181 — Section/productive×focus 1`] = `
+<View
+  style={
+    {
+      "paddingVertical": 12,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 18,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Workouts
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-182 — Stack/productive×focus 1`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-183 — Row/productive×focus 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexWrap": "nowrap",
+      "justifyContent": "flex-start",
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-184 — Card/productive×focus 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "borderRadius": 12,
+      "elevation": 2,
+      "padding": 12,
+      "shadowColor": "rgb(15, 18, 22)",
+      "shadowOffset": {
+        "height": 1,
+        "width": 0,
+      },
+      "shadowOpacity": 0.06,
+      "shadowRadius": 2,
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-185 — Heading/productive×focus 1`] = `
+<Text
+  accessibilityLabel="My Workouts"
+  accessibilityRole="header"
+  aria-level={1}
+  style={
+    {
+      "color": "#14171A",
+      "fontSize": 32,
+      "fontWeight": "600",
+      "letterSpacing": -0.4,
+      "lineHeight": 40,
+      "textAlign": "left",
+    }
+  }
+>
+  My Workouts
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-186 — Body/productive×focus 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#14171A",
+      "fontSize": 16,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 24,
+      "textAlign": "left",
+    }
+  }
+>
+  Track your progress every day.
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-187 — Caption/productive×focus 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#5C6470",
+      "fontSize": 13,
+      "fontWeight": "400",
+      "letterSpacing": 0.1,
+      "lineHeight": 18,
+      "textAlign": "left",
+    }
+  }
+>
+  Last updated: today
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-188 — Stat/productive×focus 1`] = `
+<View
+  accessibilityLabel="12, Workouts this week, trending up"
+  accessibilityRole="text"
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 24,
+        "fontWeight": "600",
+        "letterSpacing": -0.2,
+        "lineHeight": 30,
+        "textAlign": "left",
+      }
+    }
+  >
+    12
+  </Text>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+        "textAlign": "left",
+      }
+    }
+  >
+    Workouts this week
+  </Text>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#0E8345",
+        "fontSize": 11,
+        "fontWeight": "500",
+        "letterSpacing": 0.4,
+        "lineHeight": 14,
+        "textAlign": "left",
+      }
+    }
+  >
+    +2
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-189 — Badge/productive×focus 1`] = `
+<View
+  accessibilityLabel="Active"
+  accessibilityRole="text"
+  style={
+    {
+      "alignSelf": "flex-start",
+      "backgroundColor": "#0E834526",
+      "borderRadius": 6,
+      "paddingHorizontal": 8,
+      "paddingVertical": 4,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#0E8345",
+        "fontSize": 11,
+        "fontWeight": "500",
+        "letterSpacing": 0.4,
+        "lineHeight": 14,
+      }
+    }
+  >
+    Active
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-190 — Chip/productive×focus 1`] = `
+<View
+  accessibilityLabel="Running"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 9999,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "gap": 4,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+      }
+    }
+  >
+    Running
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-191 — Avatar/productive×focus 1`] = `
+<View
+  accessibilityLabel="Avatar for José García"
+  accessibilityRole="image"
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#4F46E526",
+      "borderRadius": 9999,
+      "height": 48,
+      "justifyContent": "center",
+      "width": 48,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#4F46E5",
+        "fontSize": 18,
+        "fontWeight": "600",
+        "includeFontPadding": false,
+        "lineHeight": 48,
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    JG
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-192 — TextField/productive×focus 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Workout name
+  </Text>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#ECEEF1",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <TextInput
+      accessibilityLabel="Workout name"
+      keyboardType="default"
+      multiline={false}
+      numberOfLines={1}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholderTextColor="#A2A8B2"
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "padding": 0,
+        }
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-193 — NumberField/productive×focus 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Duration (min)
+  </Text>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#ECEEF1",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <TextInput
+      accessibilityLabel="Duration (min)"
+      accessibilityRole="adjustable"
+      accessibilityValue={
+        {
+          "text": "0",
+        }
+      }
+      keyboardType="numeric"
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholderTextColor="#A2A8B2"
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "lineHeight": 24,
+          "padding": 0,
+        }
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-194 — DateField/productive×focus 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "letterSpacing": 0.1,
+          "lineHeight": 18,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Workout date
+    </Text>
+    <View
+      accessibilityHint="Opens date picker"
+      accessibilityLabel="Workout date"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#ECEEF1",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="datefield-trigger-mx-datefield"
+    >
+      <Text
+        style={
+          {
+            "color": "#A2A8B2",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
+        —
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#A2A8B2",
+            "fontSize": 14,
+          }
+        }
+      >
+        ›
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-195 — Picker/productive×focus 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "letterSpacing": 0.1,
+          "lineHeight": 18,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Category
+    </Text>
+    <View
+      accessibilityLabel="Category"
+      accessibilityRole="combobox"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": false,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#ECEEF1",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="picker-trigger-mx-picker"
+    >
+      <Text
+        style={
+          {
+            "color": "#A2A8B2",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
+        Strength
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#A2A8B2",
+            "fontSize": 14,
+          }
+        }
+      >
+        ›
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-196 — Switch/productive×focus 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "minHeight": 56,
+      "paddingHorizontal": 12,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#14171A",
+        "flex": 1,
+        "fontSize": 16,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+        "marginRight": 12,
+      }
+    }
+  >
+    Remind me daily
+  </Text>
+  <RCTSwitch
+    accessibilityLabel="Remind me daily"
+    accessibilityRole="switch"
+    accessibilityState={
+      {
+        "checked": false,
+      }
+    }
+    onChange={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    onTintColor="#4F46E5"
+    style={
+      {
+        "height": 31,
+        "width": 51,
+      }
+    }
+    thumbTintColor="#FFFFFF"
+    tintColor="#ECEEF1"
+    value={false}
+  />
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-197 — List/productive×focus 1`] = `
+<View
+  accessibilityLabel="items"
+  style={
+    {
+      "flex": 1,
+      "minHeight": 112,
+    }
+  }
+  testID="list-container"
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View>
+        <View
+          style={
+            {
+              "justifyContent": "center",
+              "minHeight": 56,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            }
+          }
+        >
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+              }
+            }
+          >
+            Morning run
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View>
+        <View
+          style={
+            {
+              "justifyContent": "center",
+              "minHeight": 56,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            }
+          }
+        >
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+              }
+            }
+          >
+            Evening walk
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-198 — ListItem/productive×focus 1`] = `
+<View
+  accessibilityLabel="李明, Trainer"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "borderBottomColor": "#ECEEF1",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "marginRight": 8,
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#14171A"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279506714,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279506714,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
+        李明
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "lineHeight": 18,
+          }
+        }
+      >
+        Trainer
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 8,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4F46E5",
+            "borderRadius": 9999,
+            "justifyContent": "center",
+            "paddingHorizontal": 8,
+            "paddingVertical": 2,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontSize": 11,
+              "fontWeight": "600",
+            }
+          }
+        >
+          Pro
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-199 — SwipeableRow/productive×focus 1`] = `
+<View>
+  <View
+    accessibilityActions={
+      [
+        {
+          "label": "trash",
+          "name": "delete",
+        },
+      ]
+    }
+    accessibilityLabel="O'Brien"
+    onAccessibilityAction={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderBottomColor": "#ECEEF1",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+      >
+        O'Brien
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "lineHeight": 18,
+          }
+        }
+      >
+        45 min
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#C03A2B",
+        "borderBottomLeftRadius": 0,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 0,
+        "borderTopRightRadius": 12,
+        "justifyContent": "center",
+        "minHeight": 56,
+        "opacity": 1,
+        "width": 72,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="white"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={20}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M3 6h18"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-200 — EmptyState/productive×focus 1`] = `
+<View
+  accessibilityLabel="No items yet"
+  style={
+    {
+      "alignItems": "center",
+      "paddingHorizontal": 20,
+      "paddingVertical": 32,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAF7",
+        "borderRadius": 44,
+        "height": 88,
+        "justifyContent": "center",
+        "marginBottom": 20,
+        "width": 88,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={48}
+      bbWidth={48}
+      fill="none"
+      focusable={false}
+      height={48}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#5C6470"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 48,
+            "width": 48,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={48}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4284245104,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M3 12h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M3 18h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M3 6h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 12h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 18h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 6h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4284245104,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 18,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+        "marginBottom": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    No items yet
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "marginBottom": 0,
+        "textAlign": "center",
+      }
+    }
+  >
+    Add your first item to get started.
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-201 — LoadingState/productive×focus 1`] = `
+<View
+  accessibilityLabel="Loading"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#ECEEF1",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#ECEEF1",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-202 — ConditionalSection/productive×focus 1`] = `
+<View>
+  <Text
+    accessibilityLabel="My Workouts"
+    accessibilityRole="header"
+    aria-level={1}
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 32,
+        "fontWeight": "600",
+        "letterSpacing": -0.4,
+        "lineHeight": 40,
+        "textAlign": "left",
+      }
+    }
+  >
+    My Workouts
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-203 — ListSummary/productive×focus 1`] = `
+<View
+  accessibilityLabel="Generating summary…"
+  testID="list-summary-container"
+>
+  <View
+    accessibilityLabel="Summarizing…"
+    style={
+      {
+        "backgroundColor": "#ECEEF1",
+        "borderRadius": 6,
+        "height": 24,
+        "opacity": 0.6,
+        "width": "80%",
+      }
+    }
+    testID="list-summary-loading"
+  />
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-204 — MediaTray/productive×focus 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "height": 120,
+    }
+  }
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "https://example.com/a.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 120,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "https://example.com/b.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 120,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-205 — ImagePicker/productive×focus 1`] = `
+<View
+  accessibilityLabel="Add photo — tap to choose image"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#FAFAF7",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 12,
+      "borderStyle": "dashed",
+      "borderWidth": 1,
+      "height": 120,
+      "justifyContent": "center",
+      "opacity": 1,
+      "overflow": "hidden",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "gap": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 16,
+          "fontWeight": "500",
+          "lineHeight": 24,
+        }
+      }
+    >
+      Add photo
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#A2A8B2",
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      Tap to choose
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-206 — Button/productive×focus 1`] = `
+<View
+  accessibilityLabel="Add Workout"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#4F46E5",
+      "borderColor": undefined,
+      "borderRadius": 12,
+      "borderWidth": 0,
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 44,
+      "opacity": 1,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontSize": 16,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+      }
+    }
+  >
+    Add Workout
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-207 — FAB/productive×focus 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#4F46E5",
+        "borderRadius": 28,
+        "height": 56,
+        "justifyContent": "center",
+        "opacity": 1,
+        "width": 56,
+      },
+      {
+        "elevation": 8,
+        "shadowColor": "#0F1216",
+        "shadowOffset": {
+          "height": 8,
+          "width": 0,
+        },
+        "shadowOpacity": 0.1,
+        "shadowRadius": 24,
+      },
+      {
+        "transform": [
+          {
+            "scale": 0,
+          },
+        ],
+      },
+    ]
+  }
+  testID="fab-container"
+>
+  <View
+    accessibilityLabel="Add workout"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={0}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "borderRadius": 28,
+        "height": 56,
+        "justifyContent": "center",
+        "width": 56,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={24}
+      bbWidth={24}
+      fill="none"
+      focusable={false}
+      height={24}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#FFFFFF"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 24,
+            "width": 24,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M5 12h14"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 5v14"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-208 — Screen/expressive×health 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FBF8F3",
+      "flex": 1,
+      "paddingBottom": 0,
+      "paddingHorizontal": 32,
+      "paddingTop": 0,
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-209 — Section/expressive×health 1`] = `
+<View
+  style={
+    {
+      "paddingVertical": 20,
+    }
+  }
+>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 22,
+        "fontWeight": "500",
+        "letterSpacing": -0.1,
+        "lineHeight": 30,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Wellness Journal
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-210 — Stack/expressive×health 1`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "flexDirection": "column",
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-211 — Row/expressive×health 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexWrap": "nowrap",
+      "justifyContent": "flex-start",
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-212 — Card/expressive×health 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "borderRadius": 20,
+      "elevation": 8,
+      "padding": 20,
+      "shadowColor": "rgb(15, 18, 22)",
+      "shadowOffset": {
+        "height": 8,
+        "width": 0,
+      },
+      "shadowOpacity": 0.1,
+      "shadowRadius": 24,
+    }
+  }
+/>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-213 — Heading/expressive×health 1`] = `
+<Text
+  accessibilityLabel="My Wellness Journal"
+  accessibilityRole="header"
+  aria-level={1}
+  style={
+    {
+      "color": "#1A1715",
+      "fontSize": 36,
+      "fontWeight": "500",
+      "letterSpacing": -0.6,
+      "lineHeight": 44,
+      "textAlign": "left",
+    }
+  }
+>
+  My Wellness Journal
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-214 — Body/expressive×health 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#1A1715",
+      "fontSize": 16,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 26,
+      "textAlign": "left",
+    }
+  }
+>
+  Nurture your mind and body daily.
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-215 — Caption/expressive×health 1`] = `
+<Text
+  accessibilityRole="text"
+  style={
+    {
+      "color": "#6B5F56",
+      "fontSize": 14,
+      "fontWeight": "400",
+      "letterSpacing": 0,
+      "lineHeight": 20,
+      "textAlign": "left",
+    }
+  }
+>
+  Mood logged today
+</Text>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-216 — Stat/expressive×health 1`] = `
+<View
+  accessibilityLabel="7 days, Wellness streak"
+  accessibilityRole="text"
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 28,
+        "fontWeight": "500",
+        "letterSpacing": -0.3,
+        "lineHeight": 36,
+        "textAlign": "left",
+      }
+    }
+  >
+    7 days
+  </Text>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+        "textAlign": "left",
+      }
+    }
+  >
+    Wellness streak
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-217 — Badge/expressive×health 1`] = `
+<View
+  accessibilityLabel="Mindful"
+  accessibilityRole="text"
+  style={
+    {
+      "alignSelf": "flex-start",
+      "backgroundColor": "#4A7438",
+      "borderRadius": 6,
+      "paddingHorizontal": 8,
+      "paddingVertical": 4,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#FFFFFF",
+        "fontSize": 11,
+        "fontWeight": "500",
+        "letterSpacing": 0.4,
+        "lineHeight": 14,
+      }
+    }
+  >
+    Mindful
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-218 — Chip/expressive×health 1`] = `
+<View
+  accessibilityLabel="Meditation"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 9999,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "gap": 4,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+      }
+    }
+  >
+    Meditation
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-219 — Avatar/expressive×health 1`] = `
+<View
+  accessibilityLabel="Avatar for 李明"
+  accessibilityRole="image"
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#4A743826",
+      "borderRadius": 9999,
+      "height": 48,
+      "justifyContent": "center",
+      "width": 48,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#4A7438",
+        "fontSize": 18,
+        "fontWeight": "600",
+        "includeFontPadding": false,
+        "lineHeight": 48,
+        "textAlignVertical": "center",
+      }
+    }
+  >
+    李明
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-220 — TextField/expressive×health 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Mood note
+  </Text>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#EFE9DF",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <TextInput
+      accessibilityLabel="Mood note"
+      keyboardType="default"
+      multiline={false}
+      numberOfLines={1}
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholderTextColor="#B0A89E"
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "lineHeight": 26,
+          "padding": 0,
+        }
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-221 — NumberField/expressive×health 1`] = `
+<View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 14,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 20,
+        "marginBottom": 4,
+      }
+    }
+  >
+    Sleep hours
+  </Text>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#EFE9DF",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <TextInput
+      accessibilityLabel="Sleep hours"
+      accessibilityRole="adjustable"
+      accessibilityValue={
+        {
+          "text": "0",
+        }
+      }
+      keyboardType="numeric"
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      placeholderTextColor="#B0A89E"
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "lineHeight": 26,
+          "padding": 0,
+        }
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-222 — DateField/expressive×health 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 20,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Log date
+    </Text>
+    <View
+      accessibilityHint="Opens date picker"
+      accessibilityLabel="Log date"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="datefield-trigger-mx-datefield-e"
+    >
+      <Text
+        style={
+          {
+            "color": "#B0A89E",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
+        —
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#B0A89E",
+            "fontSize": 14,
+          }
+        }
+      >
+        ›
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-223 — Picker/expressive×health 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 20,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Mood
+    </Text>
+    <View
+      accessibilityLabel="Mood"
+      accessibilityRole="combobox"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": false,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="picker-trigger-mx-picker-e"
+    >
+      <Text
+        style={
+          {
+            "color": "#B0A89E",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
+        Great
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#B0A89E",
+            "fontSize": 14,
+          }
+        }
+      >
+        ›
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-224 — Switch/expressive×health 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "minHeight": 56,
+      "paddingHorizontal": 12,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#1A1715",
+        "flex": 1,
+        "fontSize": 16,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "lineHeight": 26,
+        "marginRight": 12,
+      }
+    }
+  >
+    Morning affirmations
+  </Text>
+  <RCTSwitch
+    accessibilityLabel="Morning affirmations"
+    accessibilityRole="switch"
+    accessibilityState={
+      {
+        "checked": false,
+      }
+    }
+    onChange={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    onTintColor="#4A7438"
+    style={
+      {
+        "height": 31,
+        "width": 51,
+      }
+    }
+    thumbTintColor="#FFFFFF"
+    tintColor="#EFE9DF"
+    value={false}
+  />
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-225 — List/expressive×health 1`] = `
+<View
+  accessibilityLabel="items"
+  style={
+    {
+      "flex": 1,
+      "minHeight": 160,
+    }
+  }
+  testID="list-container"
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View>
+        <View
+          style={
+            {
+              "justifyContent": "center",
+              "minHeight": 80,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            }
+          }
+        >
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+              }
+            }
+          >
+            Morning run
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View>
+        <View
+          style={
+            {
+              "justifyContent": "center",
+              "minHeight": 80,
+              "paddingHorizontal": 12,
+              "paddingVertical": 8,
+            }
+          }
+        >
+          <Text
+            numberOfLines={1}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+              }
+            }
+          >
+            Evening walk
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-226 — ListItem/expressive×health 1`] = `
+<View
+  accessibilityLabel="Sunset meditation, 20 min"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "marginBottom": 8,
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "marginRight": 8,
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#1A1715"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279899925,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279899925,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
+        Sunset meditation
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "lineHeight": 20,
+          }
+        }
+      >
+        20 min
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "marginLeft": 8,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4A7438",
+            "borderRadius": 9999,
+            "justifyContent": "center",
+            "paddingHorizontal": 8,
+            "paddingVertical": 2,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontSize": 11,
+              "fontWeight": "600",
+            }
+          }
+        >
+          Pro
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-227 — SwipeableRow/expressive×health 1`] = `
+<View>
+  <View
+    accessibilityActions={
+      [
+        {
+          "label": "trash",
+          "name": "delete",
+        },
+      ]
+    }
+    accessibilityLabel="Journaling"
+    onAccessibilityAction={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "flexDirection": "row",
+        "marginBottom": 8,
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
+          }
+        }
+      >
+        Journaling
+      </Text>
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "lineHeight": 20,
+          }
+        }
+      >
+        Evening
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#B5392E",
+        "borderBottomLeftRadius": 0,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 0,
+        "borderTopRightRadius": 12,
+        "justifyContent": "center",
+        "minHeight": 56,
+        "opacity": 1,
+        "width": 72,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="white"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={20}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M3 6h18"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-228 — EmptyState/expressive×health 1`] = `
+<View
+  accessibilityLabel="No entries yet"
+  style={
+    {
+      "alignItems": "center",
+      "paddingHorizontal": 20,
+      "paddingVertical": 32,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FBF8F3",
+        "borderRadius": 44,
+        "height": 88,
+        "justifyContent": "center",
+        "marginBottom": 20,
+        "width": 88,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={48}
+      bbWidth={48}
+      fill="none"
+      focusable={false}
+      height={48}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#6B5F56"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 48,
+            "width": 48,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={48}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4285226838,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M3 12h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M3 18h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M3 6h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 12h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 18h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M8 6h13"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4285226838,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 22,
+        "fontWeight": "600",
+        "letterSpacing": -0.1,
+        "lineHeight": 30,
+        "marginBottom": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    No entries yet
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 16,
+        "lineHeight": 26,
+        "marginBottom": 0,
+        "textAlign": "center",
+      }
+    }
+  >
+    Start your wellness journey today.
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-229 — LoadingState/expressive×health 1`] = `
+<View
+  accessibilityLabel="Loading"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "minHeight": 56,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants"
+      style={
+        [
+          {
+            "backgroundColor": "#EFE9DF",
+            "borderRadius": 6,
+            "height": 36,
+            "width": 36,
+          },
+          {
+            "borderRadius": 18,
+            "marginRight": 8,
+          },
+          {
+            "opacity": 0.4,
+          },
+        ]
+      }
+      testID="shimmer-block"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 14,
+              "width": "60%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+        style={
+          [
+            {
+              "backgroundColor": "#EFE9DF",
+              "borderRadius": 6,
+              "height": 12,
+              "width": "40%",
+            },
+            undefined,
+            {
+              "opacity": 0.4,
+            },
+          ]
+        }
+        testID="shimmer-block"
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-230 — ConditionalSection/expressive×health 1`] = `null`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-231 — ListSummary/expressive×health 1`] = `
+<View
+  accessibilityLabel="Generating summary…"
+  testID="list-summary-container"
+>
+  <View
+    accessibilityLabel="Summarizing…"
+    style={
+      {
+        "backgroundColor": "#EFE9DF",
+        "borderRadius": 6,
+        "height": 26,
+        "opacity": 0.6,
+        "width": "80%",
+      }
+    }
+    testID="list-summary-loading"
+  />
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-232 — MediaTray/expressive×health 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "height": 120,
+    }
+  }
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "https://example.com/a.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 213,
+            }
+          }
+        />
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "marginRight": 4,
+          }
+        }
+      >
+        <Image
+          accessibilityRole="image"
+          source={
+            {
+              "uri": "https://example.com/b.jpg",
+            }
+          }
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "height": 120,
+              "width": 213,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-233 — ImagePicker/expressive×health 1`] = `
+<View
+  accessibilityLabel="Mood photo — tap to choose image"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#FBF8F3",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 12,
+      "borderStyle": "dashed",
+      "borderWidth": 1,
+      "height": 120,
+      "justifyContent": "center",
+      "opacity": 1,
+      "overflow": "hidden",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "gap": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 16,
+          "fontWeight": "500",
+          "lineHeight": 26,
+        }
+      }
+    >
+      Mood photo
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#B0A89E",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      Tap to choose
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-234 — Button/expressive×health 1`] = `
+<View
+  accessibilityLabel="Save Journal Entry"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": false,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 12,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "minHeight": 44,
+      "opacity": 1,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 16,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 26,
+      }
+    }
+  >
+    Save Journal Entry
+  </Text>
+</View>
+`;
+
+exports[`Snapshot matrix — 56 register-pair snapshots (T-0006-180..235) T-0006-235 — FAB/expressive×health 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#4A7438",
+        "borderRadius": 28,
+        "height": 56,
+        "justifyContent": "center",
+        "opacity": 1,
+        "width": 56,
+      },
+      {
+        "elevation": 8,
+        "shadowColor": "#0F1216",
+        "shadowOffset": {
+          "height": 8,
+          "width": 0,
+        },
+        "shadowOpacity": 0.1,
+        "shadowRadius": 24,
+      },
+      {
+        "transform": [
+          {
+            "scale": 0,
+          },
+        ],
+      },
+    ]
+  }
+  testID="fab-container"
+>
+  <View
+    accessibilityLabel="Add journal entry"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": false,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    hitSlop={0}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "borderRadius": 28,
+        "height": 56,
+        "justifyContent": "center",
+        "width": 56,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={24}
+      bbWidth={24}
+      fill="none"
+      focusable={false}
+      height={24}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#FFFFFF"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 24,
+            "width": 24,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4294967295,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M5 12h14"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 5v14"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4294967295,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;

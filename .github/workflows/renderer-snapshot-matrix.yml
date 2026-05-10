@@ -1,0 +1,56 @@
+name: Renderer Snapshot Matrix
+
+# Guard: runs on changes to the V0 renderer source or snapshot files.
+# Fails if any of the 56 register-pair snapshots drift from committed goldens.
+#
+# ADR-0006 §CI/CD Impact / Step 12.
+# Snapshot policy: see packages/a2ui-renderer/test/snapshot-policy.md
+#
+# Never run with --updateSnapshot in CI — drift is the guard this workflow enforces.
+# To update snapshots intentionally:
+#   pnpm --filter @app-creator/a2ui-renderer test:rn -- -u
+#   Include a code-review note in the PR explaining why the diff is expected.
+
+on:
+  push:
+    paths:
+      - 'packages/a2ui-renderer/src/**'
+      - 'packages/a2ui-renderer/jest.config.rn.cjs'
+      - 'packages/protocol/src/**'
+      - 'packages/design-system/src/**'
+  pull_request:
+    paths:
+      - 'packages/a2ui-renderer/src/**'
+      - 'packages/a2ui-renderer/jest.config.rn.cjs'
+      - 'packages/protocol/src/**'
+      - 'packages/design-system/src/**'
+
+jobs:
+  renderer-snapshot-matrix:
+    name: Renderer Snapshot Matrix (56 snapshots)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck (renderer)
+        run: pnpm --filter @app-creator/a2ui-renderer typecheck
+
+      - name: Run snapshot matrix (T-0006-180..235, T-0006-236, T-0006-178)
+        # CI runs read-only. Never pass --updateSnapshot here.
+        # Drift means a committed snapshot no longer matches the component output.
+        # The fix is always an intentional update with a code-review note.
+        run: pnpm --filter @app-creator/a2ui-renderer test:rn -- --testPathPattern="snapshot-matrix|viewport"
+
+      - name: Run full V0 RN test suite
+        run: pnpm --filter @app-creator/a2ui-renderer test:rn
