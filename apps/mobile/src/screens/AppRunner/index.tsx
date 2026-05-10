@@ -1,61 +1,41 @@
 /**
- * AppRunner — Owner-mode implementation (ADR-0002 Step 9, ADR-0003 Step 8).
+ * AppRunner — Step 13 update (ADR-0006 §Step 13).
  *
- * Modes implemented:
- *   A. Owner-private:  Publish CTA in top bar
- *   B. Owner-public:   Unpublish CTA (destructive) in top bar
+ * STEP-13 ADDITIONS:
+ *   - Dev-only demo picker: in __DEV__ builds, a small floating button lets
+ *     the developer switch between the 4 demo archetypes (ListCRUD, Tracker,
+ *     Journal, Calculator). The picker is invisible in production builds
+ *     (tree-shaken at Metro's dead-code elimination pass because __DEV__ is
+ *     a compile-time constant in Hermes + Metro release bundles).
+ *   - SAMPLE_SPEC is now the ListCRUD demo (re-exported from protocol).
+ *   - T-0006-177: Renderer now calls SpecSchema.parse() internally; any M1
+ *     spec fed post-Step-13 causes a ZodError that RenderErrorBoundary catches.
  *
- * Deferred to ADR-0004:
- *   C. Try mode (browser viewing another user's app)
+ * STEP-11 NOTE (ADR-0007 deferral):
+ *   The LLM pipeline still emits M1 specs. Until ADR-0007 rewrites the
+ *   generation pipeline to emit V0 specs, this screen mounts the selected
+ *   demo spec instead of the project's stored spec. The route params
+ *   (projectId) are still passed through so the host chrome (title bar,
+ *   share button) can display project metadata. The real spec path is
+ *   wired in ADR-0007.
  *
- * ADR-0003 Step 8 changes:
- *   - In-screen reducer (ownerStateReducer, dispatchOwnerState, Map<string, A2UIValue>)
- *     replaced with useA2UIState(spec, {onToast: toast.show}).
- *   - Renderer tree wrapped in RendererThemeProvider + RendererLoggerProvider
- *     + RenderErrorBoundary.
- *   - currentViewId from the hook drives which view is rendered.
- *   - Multi-view navigation (Button navigate action) works in-place.
- *
- * Canvas V0 Milestone A demo shim:
- *   When EXPO_PUBLIC_CANVAS_V0_DEMO=true, AppRunnerScreen renders V0DemoRunner
- *   instead of the M1 legacy path. The M1 path is unchanged. To enable:
- *     1. Set EXPO_PUBLIC_CANVAS_V0_DEMO=true in your .env or EAS build profile.
- *     2. Rebuild the dev-client: eas build --profile development
- *     3. Launch: pnpm --filter @app-creator/mobile start
- *   See docs/pipeline/canvas-v0-milestone-A-demo.md for full instructions.
+ * Host chrome (per T-0006-176):
+ *   - Back button: navigates back to Library.
+ *   - Share button: calls copyShareLink(projectId) — host-side only,
+ *     the renderer is uninvolved (Concern 1 cleanup, ADR-0006 rev-1).
  */
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet'
-import {
-  NodeRenderer,
-  RendererLoggerProvider,
-  RendererThemeProvider,
-  useA2UIState,
-  __V0_Renderer,
-  __V0_SAMPLE_SPEC,
-} from '@app-creator/a2ui-renderer'
-import type {RendererTheme, __V0_HostCallbacks} from '@app-creator/a2ui-renderer'
-import type {A2UISpec} from '@app-creator/a2ui-schema'
-import {useCallback, useRef} from 'react'
-import {
-  ActionSheetIOS,
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native'
+import {Renderer, DEMO_SPECS, SAMPLE_SPEC} from '@app-creator/a2ui-renderer'
+import type {HostCallbacks} from '@app-creator/a2ui-renderer'
+import {useCallback, useState} from 'react'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
+import type {Spec} from '@app-creator/protocol'
 
 import {BackButton} from '#/components/BackButton'
 import {SafeContainer} from '#/components/SafeContainer'
 import {useToast} from '#/components/ToastProvider'
 import {logger} from '#/logger'
-import {useProjectQuery} from '#/state/queries/projects'
-import {useUnpublishMutation, PublishError} from '#/state/queries/marketplace'
-import {useSession} from '#/state/session/useSession'
 import {useTheme} from '#/theme'
 
-import {PublishSheet} from './components/PublishSheet'
 import {RenderErrorBoundary} from './RenderErrorBoundary'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -63,304 +43,241 @@ import type {RootStackParamList} from '#/lib/routes/types'
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AppRunner'>
 
-// -- Renderer host (inner component so hooks can use the loaded spec) ---------
+// ---------------------------------------------------------------------------
+// Share helper (T-0006-176)
+// Host-side share wiring — the renderer is uninvolved.
+// In V0 the share URL is the project's canonical deep link; this stub uses
+// RN's Share API so we don't need expo-clipboard.
+// ---------------------------------------------------------------------------
 
-interface RendererHostProps {
-  spec: A2UISpec
-  projectId: string
-  renderHash: string
-  rendererTheme: RendererTheme
-  onBack: () => void
+import {Share} from 'react-native'
+
+/**
+ * copyShareLink — copies a sharable project link to the clipboard / share sheet.
+ * Exported so tests can spy on it.
+ *
+ * Step 11: projectId is undefined when a demo spec is mounted (ADR-0007 deferral).
+ * The function is a no-op in that case.
+ */
+export async function copyShareLink(projectId: string | undefined): Promise<void> {
+  if (!projectId) return
+  try {
+    await Share.share({message: `https://app.canvas.so/m/${projectId}`})
+  } catch (err) {
+    logger.warn('copyShareLink: Share.share failed', {err})
+  }
 }
 
-function RendererHost({spec, projectId, renderHash, rendererTheme, onBack}: RendererHostProps) {
-  const toast = useToast()
-  const {state, dispatch, currentViewId} = useA2UIState(spec, {
-    onToast: toast.show,
-  })
+// ---------------------------------------------------------------------------
+// Host callbacks wired to the app's toast system
+// ---------------------------------------------------------------------------
 
-  // Find the view to render by currentViewId
-  const currentView = spec.views.find(v => v.id === currentViewId)
+function makeHostCallbacks(onToast: (msg: string) => void): HostCallbacks {
+  return {
+    onToast: (message) => onToast(message),
+    onAIError: (err) => {
+      logger.error('AppRunner: AI dispatch error', {err})
+    },
+    onNavigationError: (signal) => {
+      if (__DEV__) {
+        logger.warn('AppRunner: navigation error', {signal})
+      }
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Dev-only demo picker (Step 13)
+// Invisible in production builds — __DEV__ is a compile-time constant in
+// Hermes + Metro release mode.
+// ---------------------------------------------------------------------------
+
+const DEMO_ARCHETYPE_KEYS = ['ListCRUD', 'Tracker', 'Journal', 'Calculator'] as const
+type DemoArchetype = (typeof DEMO_ARCHETYPE_KEYS)[number]
+
+interface DevDemoPickerProps {
+  current: DemoArchetype
+  onSelect: (archetype: DemoArchetype) => void
+}
+
+function DevDemoPicker({current, onSelect}: DevDemoPickerProps) {
+  const [open, setOpen] = useState(false)
 
   return (
-    <RendererThemeProvider value={rendererTheme}>
-      <RendererLoggerProvider logger={logger}>
-        <RenderErrorBoundary
-          projectId={projectId}
-          renderHash={renderHash}
-          mode="owner"
-          onBack={onBack}
-        >
-          <ScrollView style={styles.body} contentContainerStyle={styles.bodyContent}>
-            {currentView ? (
-              <NodeRenderer node={currentView.root} state={state} dispatch={dispatch} />
-            ) : (
-              <Text style={styles.noContent}>No content to display.</Text>
-            )}
-          </ScrollView>
-        </RenderErrorBoundary>
-      </RendererLoggerProvider>
-    </RendererThemeProvider>
+    <View style={devStyles.pickerRoot} testID="dev-demo-picker">
+      <Pressable
+        onPress={() => setOpen(o => !o)}
+        style={devStyles.toggleBtn}
+        accessibilityRole="button"
+        accessibilityLabel="Toggle demo spec picker"
+        testID="dev-demo-picker-toggle"
+      >
+        <Text style={devStyles.toggleLabel}>Demo: {current}</Text>
+      </Pressable>
+
+      {open && (
+        <View style={devStyles.menu} testID="dev-demo-picker-menu">
+          {DEMO_ARCHETYPE_KEYS.map(key => (
+            <Pressable
+              key={key}
+              onPress={() => {
+                onSelect(key)
+                setOpen(false)
+              }}
+              style={[devStyles.menuItem, current === key && devStyles.menuItemActive]}
+              accessibilityRole="menuitem"
+              accessibilityLabel={`Switch to ${key} demo`}
+              testID={`dev-demo-option-${key}`}
+            >
+              <Text
+                style={[devStyles.menuItemText, current === key && devStyles.menuItemTextActive]}
+              >
+                {key}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      )}
+    </View>
   )
 }
 
-// -- Canvas V0 demo shim -----------------------------------------------------
-// Evaluated once at module load time. Expo replaces EXPO_PUBLIC_* at build time.
-// No runtime overhead when the flag is unset.
-// Exported for test introspection only — not stable API.
-export const V0_DEMO_ENABLED = process.env.EXPO_PUBLIC_CANVAS_V0_DEMO === 'true'
-
-// HostCallbacks for the Milestone B interactive demo.
-// onToast is wired to the app's toast system; navigation errors are logged.
-const V0_DEMO_HOST: __V0_HostCallbacks = {
-  onToast: (message) => {
-    // In the demo context, toasts surface as console.info (dev build only).
-    // Step 11 wires this to the real ToastProvider.
-    if (__DEV__) {
-      // eslint-disable-next-line no-console
-      console.info('[V0Demo toast]', message)
-    }
+const devStyles = StyleSheet.create({
+  pickerRoot: {
+    position: 'absolute',
+    top: 64,
+    right: 8,
+    zIndex: 999,
+    alignItems: 'flex-end',
   },
-  onAIError: () => {},
-  onNavigationError: (signal) => {
-    if (__DEV__) {
-      // eslint-disable-next-line no-console
-      console.warn('[V0Demo nav error]', signal)
-    }
+  toggleBtn: {
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
   },
-}
+  toggleLabel: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  menu: {
+    marginTop: 4,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    borderRadius: 8,
+    paddingVertical: 4,
+    minWidth: 120,
+  },
+  menuItem: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  menuItemActive: {
+    backgroundColor: 'rgba(255,255,255,0.15)',
+  },
+  menuItemText: {
+    color: '#ccc',
+    fontSize: 13,
+  },
+  menuItemTextActive: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+})
 
-/**
- * V0DemoRunner — mounts SAMPLE_SPEC via the full V0 <Renderer> component.
- *
- * Milestone B: SAMPLE_SPEC is a stack-nav task tracker with addItem FAB,
- * swipe-to-delete, and navigate-to-detail. All interactions are live on device.
- *
- * The Renderer handles theme + host + state + nav internally.
- * No SafeContainer wrapper needed — Screen node manages safe area.
- */
-// Exported for direct unit testing. Not part of the stable public API.
-export function V0DemoRunner() {
-  return <__V0_Renderer spec={__V0_SAMPLE_SPEC} host={V0_DEMO_HOST} />
-}
+// ---------------------------------------------------------------------------
+// AppRunnerScreen — public export
+// ---------------------------------------------------------------------------
 
-// -- Screen ------------------------------------------------------------------
-
-/**
- * LegacyAppRunnerScreen — the M1 owner-mode screen, untouched.
- * Extracted so AppRunnerScreen can branch cleanly without conditional hooks.
- */
-function LegacyAppRunnerScreen({route, navigation}: Props) {
+export function AppRunnerScreen({route, navigation}: Props) {
   const {projectId} = route.params
   const theme = useTheme()
   const toast = useToast()
-  const session = useSession()
 
-  const {data: detail, isLoading, error} = useProjectQuery(projectId)
-  const unpublishMutation = useUnpublishMutation()
-  const publishSheetRef = useRef<BottomSheetModal>(null)
+  // Dev-mode demo spec selection — defaults to ListCRUD (the Milestone B spec).
+  const [demoArchetype, setDemoArchetype] = useState<DemoArchetype>('ListCRUD')
+  const activeSpec: Spec = __DEV__
+    ? (DEMO_SPECS[demoArchetype] ?? SAMPLE_SPEC)
+    : SAMPLE_SPEC
 
   const handleBack = useCallback(() => {
     navigation.goBack()
   }, [navigation])
 
-  const handlePublishTap = useCallback(() => {
-    publishSheetRef.current?.present()
-  }, [])
+  const handleShare = useCallback(async () => {
+    // T-0006-176: host meatball share — renderer is uninvolved.
+    await copyShareLink(projectId)
+  }, [projectId])
 
-  const handleUnpublishTap = useCallback(() => {
-    const title = detail?.project.title ?? 'this app'
-    ActionSheetIOS.showActionSheetWithOptions(
-      {
-        title: `Unpublish '${title}'?`,
-        message: "Other makers won't see it anymore. Your draft stays.",
-        options: ['Unpublish', 'Cancel'],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-      },
-      async idx => {
-        if (idx !== 0) return
-        try {
-          await unpublishMutation.mutateAsync({projectId})
-          toast.show('Unpublished.', {durationMs: 2000})
-        } catch (err) {
-          if (err instanceof PublishError && err.code === 'network') {
-            toast.show("Couldn't unpublish. Try again.", {variant: 'error'})
-          } else {
-            toast.show("Couldn't unpublish. Try again.", {variant: 'error'})
-          }
-        }
-      },
-    )
-  }, [detail, projectId, unpublishMutation, toast])
-
-  if (isLoading) {
-    return (
-      <SafeContainer>
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={theme.palette.primary} />
-        </View>
-      </SafeContainer>
-    )
-  }
-
-  if (error || !detail) {
-    return (
-      <SafeContainer>
-        <View style={styles.topBar}>
-          <BackButton onPress={handleBack} accessibilityLabel="Back to library" />
-        </View>
-        <View style={styles.centered}>
-          <Text style={[theme.typography.body, {color: theme.palette.text.muted}]}>
-            {error?.message ?? 'Project not found.'}
-          </Text>
-        </View>
-      </SafeContainer>
-    )
-  }
-
-  const isOwner = detail.project.ownerId === session.user?.id
-  const visibility = detail.project.visibility
-
-  // Convert mobile theme to RendererTheme (same token shape — one-line cast).
-  const rendererTheme: RendererTheme = {
-    spacing: theme.spacing,
-    radius: theme.radius,
-    palette: theme.palette,
-    typography: theme.typography,
-  }
-
-  const spec = detail.currentVersion.specJson as unknown as A2UISpec
+  const hostCallbacks = makeHostCallbacks(toast.show)
 
   return (
-    // BottomSheetModalProvider scopes the sheet portal to AppRunner.
-    // GestureHandlerRootView is at App.tsx level.
-    <BottomSheetModalProvider>
-      <SafeContainer>
-        {/* Top bar */}
-        <View style={styles.topBar}>
-          <BackButton
-            onPress={handleBack}
-            accessibilityLabel="Back to library"
-            testID="app-runner-back"
-          />
+    <SafeContainer>
+      {/* Host chrome — top bar */}
+      <View style={styles.topBar}>
+        <BackButton
+          onPress={handleBack}
+          accessibilityLabel="Back to library"
+          testID="app-runner-back"
+        />
 
+        {/* Project title — placeholder until ADR-0007 wires real project data */}
+        <Text
+          style={[styles.title, theme.typography.heading3, {color: theme.palette.text.primary}]}
+          numberOfLines={1}
+          accessibilityRole="header"
+          testID="app-runner-title"
+        >
+          My App
+        </Text>
+
+        {/* Share button (T-0006-176) */}
+        <Pressable
+          onPress={handleShare}
+          accessibilityRole="button"
+          accessibilityLabel="Share this app"
+          style={styles.topBarCta}
+          hitSlop={8}
+          testID="app-runner-share"
+        >
           <Text
-            style={[styles.title, theme.typography.heading3, {color: theme.palette.text.primary}]}
-            numberOfLines={1}
-            accessibilityRole="header"
+            style={[
+              theme.typography.bodyStrong,
+              {color: theme.palette.primary, fontSize: 14},
+            ]}
           >
-            {detail.project.title}
+            Share
           </Text>
+        </Pressable>
+      </View>
 
-          {isOwner ? (
-            visibility === 'public' ? (
-              <Pressable
-                onPress={handleUnpublishTap}
-                accessibilityRole="button"
-                accessibilityLabel="Unpublish from Library"
-                accessibilityHint="Removes this app from the public Library. Your draft stays."
-                style={styles.topBarCta}
-                hitSlop={8}
-                testID="app-runner-unpublish-cta"
-              >
-                <Text
-                  style={[
-                    theme.typography.bodyStrong,
-                    {
-                      color: theme.palette.destructive,
-                      fontSize: 14,
-                    },
-                  ]}
-                >
-                  Unpublish
-                </Text>
-              </Pressable>
-            ) : (
-              <Pressable
-                onPress={handlePublishTap}
-                accessibilityRole="button"
-                accessibilityLabel="Publish to Library"
-                style={styles.topBarCta}
-                hitSlop={8}
-                testID="app-runner-publish-cta"
-              >
-                <Text
-                  style={[
-                    theme.typography.bodyStrong,
-                    {
-                      color: theme.palette.primary,
-                      fontSize: 14,
-                    },
-                  ]}
-                >
-                  Publish
-                </Text>
-              </Pressable>
-            )
-          ) : (
-            // Non-owner — no CTA (Try mode placeholder pending ADR-0004)
-            <View style={styles.topBarCta} />
-          )}
+      {/* V0 Renderer */}
+      <RenderErrorBoundary
+        projectId={projectId}
+        renderHash="v0-sample"
+        mode="owner"
+        onBack={handleBack}
+      >
+        {/* Sentinel View lets tests confirm the renderer tree mounted. */}
+        <View testID="v0-renderer-sentinel" style={styles.rendererContainer}>
+          <Renderer spec={activeSpec} host={hostCallbacks} />
         </View>
+      </RenderErrorBoundary>
 
-        {/* Rendered A2UI body */}
-        {spec ? (
-          <RendererHost
-            spec={spec}
-            projectId={projectId}
-            renderHash={detail.currentVersion.renderHash}
-            rendererTheme={rendererTheme}
-            onBack={handleBack}
-          />
-        ) : (
-          <View style={styles.body}>
-            <Text style={[theme.typography.body, {color: theme.palette.text.muted}]}>
-              No content to display.
-            </Text>
-          </View>
-        )}
-
-        {/* Publish bottom-sheet */}
-        {isOwner && (
-          <PublishSheet
-            ref={publishSheetRef}
-            projectId={projectId}
-            // `AuthUser` doesn't carry a handle field in ADR-0002 scope.
-            // The publish sheet always starts in first-time mode; if the user
-            // already has a handle, the server will respond with
-            // `handle_immutable` and the sheet will surface that error.
-            // Phase 2: extend `AuthUser` with `handle` from `/auth/sync`.
-            firstPublish={true}
-            currentHandle={null}
-          />
-        )}
-      </SafeContainer>
-    </BottomSheetModalProvider>
+      {/* Dev-only demo picker — invisible in production */}
+      {__DEV__ && (
+        <DevDemoPicker
+          current={demoArchetype}
+          onSelect={setDemoArchetype}
+        />
+      )}
+    </SafeContainer>
   )
 }
 
-/**
- * AppRunnerScreen — public export.
- *
- * When EXPO_PUBLIC_CANVAS_V0_DEMO=true: renders the Milestone A static demo
- * (V0 renderer surface, SAMPLE_SPEC, no backend calls). The nav shell is
- * intentionally absent — this is a render demo, not a product screen.
- *
- * Otherwise: renders the M1 legacy owner-mode screen (LegacyAppRunnerScreen),
- * unchanged from ADR-0003 Step 8.
- *
- * Step 11 removes this shim and cuts LegacyAppRunnerScreen over to the full
- * V0 <Renderer> component.
- */
-export function AppRunnerScreen(props: Props) {
-  if (V0_DEMO_ENABLED) {
-    return <V0DemoRunner />
-  }
-  return <LegacyAppRunnerScreen {...props} />
-}
-
-// -- Styles ------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Styles
+// ---------------------------------------------------------------------------
 
 const styles = StyleSheet.create({
   topBar: {
@@ -380,21 +297,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
   },
-  body: {
+  rendererContainer: {
     flex: 1,
-  },
-  bodyContent: {
-    padding: 16,
-  },
-  centered: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  noContent: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#5e6470',
   },
 })

@@ -1,47 +1,30 @@
-// packages/a2ui-renderer/src/index.ts (Step 1 form — ADR-0006 §A)
+// packages/a2ui-renderer/src/index.ts (Step 13 form — ADR-0006 §A)
 //
-// Re-exports the M1 public surface from src/legacy/ so apps/mobile keeps
-// building unchanged throughout Steps 1–10. V0 is built in src/v0/ across
-// Steps 2–10 and replaces this file at Step 11.
-export {
-  render,
-  NodeRenderer,
-  useA2UIState,
-  RendererThemeProvider,
-  useRendererTheme,
-  DEFAULT_LIGHT_THEME,
-  RendererLoggerProvider,
-  useRendererLogger,
-} from './legacy/index.js'
-
-export type {
-  UseA2UIStateOpts,
-  UseA2UIStateResult,
-  RenderState,
-  Dispatch,
-  RendererTheme,
-  RendererLogger,
-  RendererSpacing,
-  RendererRadius,
-  RendererPalette,
-  RendererTypography,
-  Showtoast,
-} from './legacy/index.js'
+// Step 13: src/legacy/ has been deleted. V0 is the sole implementation.
+// The "@app-creator/a2ui-renderer/legacy" subpath export has been removed
+// from package.json. No legacy symbols exist anywhere in this package.
 
 // ---------------------------------------------------------------------------
-// V0 demo entry-point — Milestone B shim, NOT stable API.
-// The __V0_* prefix signals these are temporary demo exports.
-// They are consumed only by the AppRunner V0 demo branch when
-// EXPO_PUBLIC_CANVAS_V0_DEMO=true. Step 11 will replace this block with
-// the production V0 surface and remove the __V0_ prefix convention.
+// V0 public surface — the canonical API post-Step-11
 // ---------------------------------------------------------------------------
-export {NodeRenderer as __V0_NodeRenderer} from './v0/components/NodeRenderer.js'
-export {RendererThemeProvider as __V0_ThemeProvider} from './v0/theme/RendererThemeProvider.js'
-export {
-  HostProvider as __V0_HostProvider,
-} from './v0/host/HostContext.js'
-export type {HostCallbacks as __V0_HostCallbacks} from './v0/state/hostCallbacks.js'
-export {SAMPLE_SPEC as __V0_SAMPLE_SPEC} from './v0/__demo__/sampleSpec.js'
-// Milestone B: full Renderer wrapper (theme + host + state + nav)
-export {Renderer as __V0_Renderer} from './v0/Renderer.js'
-export type {RendererProps as __V0_RendererProps} from './v0/Renderer.js'
+
+// Top-level renderer component — the single public entry point.
+export {Renderer} from './v0/Renderer'
+export type {RendererProps} from './v0/Renderer'
+
+// Host callbacks — the seam between renderer and host.
+export type {HostCallbacks, NavigationErrorSignal} from './v0/state/hostCallbacks'
+
+// Theme provider — exposed for host apps that want to read tokens.
+export {RendererThemeProvider} from './v0/theme/RendererThemeProvider'
+
+// Host context provider — for advanced embedding cases.
+export {HostProvider} from './v0/host/HostContext'
+
+// Node renderer — for hosts that want to render individual nodes.
+export {NodeRenderer} from './v0/components/NodeRenderer'
+
+// Demo sample spec — used by AppRunner while real generation still emits M1 specs
+// (ADR-0007 deferral). Canonical source: @app-creator/protocol/test/fixtures.demo.
+// Removed when ADR-0007 lands.
+export {SAMPLE_SPEC, DEMO_SPECS} from './v0/__demo__/sampleSpec'

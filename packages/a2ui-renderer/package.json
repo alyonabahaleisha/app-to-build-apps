@@ -9,8 +9,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:rn": "jest --config jest.config.rn.cjs"
+    "test": "jest"
   },
   "peerDependencies": {
     "react": ">=18.2.0",

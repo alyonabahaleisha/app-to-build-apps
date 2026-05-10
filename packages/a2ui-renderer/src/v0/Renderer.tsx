@@ -22,11 +22,15 @@
  *
  * Step 10: provides the Renderer wrapper for Milestone B interactive demo.
  * Step 11: AppRunner cuts over to this component from the M1 legacy renderer.
+ * Step 12: snapshot matrix tests import this component for the viewport boundary
+ *   test (T-0006-178).
  *
- * Exported as __V0_Renderer from the package root for the Milestone B demo shim.
+ * Exported as `Renderer` from the package root (src/index.ts).
+ * The `__V0_Renderer` shim alias was removed at Step 11 cutover.
  */
 import React, {useRef, useMemo} from 'react'
 import type {Spec} from '@app-creator/protocol'
+import {SpecSchema} from '@app-creator/protocol'
 import {RendererThemeProvider} from './theme/RendererThemeProvider.js'
 import {AICapabilitiesProvider} from './ai/AICapabilitiesProvider.js'
 import {HostProvider} from './host/HostContext.js'
@@ -139,8 +143,20 @@ function RendererInner({spec, host}: RendererProps) {
 
 /**
  * Renderer — public entry point.
+ *
+ * Validates the spec against SpecSchema before mounting. If validation fails
+ * (e.g. an M1 spec with unknown component types is fed post-Step-13), a
+ * ZodError is thrown synchronously during render. The host app's
+ * RenderErrorBoundary catches the error and shows the fallback UI.
+ *
+ * T-0006-177: M1 spec → SpecSchema.parse() rejects → RenderErrorBoundary fires.
  */
 export function Renderer({spec, host}: RendererProps) {
+  // Validate eagerly — throws ZodError on M1 or structurally invalid specs.
+  // The parse result is discarded (we use the typed `spec` prop directly);
+  // the call is purely for the side-effect of validation.
+  SpecSchema.parse(spec)
+
   return (
     <RendererThemeProvider stance={spec.stance} palette={spec.palette}>
       <AICapabilitiesProvider>

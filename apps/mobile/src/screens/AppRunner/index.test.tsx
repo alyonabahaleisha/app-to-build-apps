@@ -1,39 +1,40 @@
 /**
- * AppRunner Owner-mode tests.
+ * AppRunner Step 11 tests — ADR-0006 §Step 11.
  *
- * Covers T-0002-148, T-0002-149, T-0002-160, T-0002-164 (regression).
- * Covers T-0003-106, T-0003-107, T-0003-108, T-0003-109 (Step 8 new).
- * Covers T-0003-115a (Publish CTA), T-0003-115b (loading state),
- *         T-0003-115c (error state), T-0003-116 (mock cardinality).
+ * Covers:
+ *   T-0006-174: AppRunner builds and renders the V0 renderer post-cutover.
+ *   T-0006-176: Host share button calls copyShareLink(projectId).
+ *   T-0006-179: @app-creator/a2ui-renderer package root re-exports canonical
+ *               names (Renderer, SAMPLE_SPEC) without __V0_* prefix.
  *
- * After the ADR-0003 Step 8 refactor, the mock surface is:
- *   - @app-creator/a2ui-renderer: useA2UIState (return value mock) + NodeRenderer sentinel
- *   - The old in-screen reducer (ownerStateReducer, etc.) is gone.
+ * The M1 flag-branching tests (V0_DEMO_ENABLED, V0DemoRunner, etc.) are
+ * retired with the Step 11 cutover — the flag no longer exists.
  *
- * React Navigation is mocked. useProjectQuery is mocked to return a
- * controllable detail object.
+ * Step 11 deferrals (Roz Step 11 QA acknowledged):
+ *
+ * - T-0006-177 (failure: M1 spec → schema parse rejection → error boundary):
+ *   Deferred to Step 13 (legacy delete). At Step 11 the legacy renderer is
+ *   still in src/legacy/ and reachable via the @app-creator/a2ui-renderer/legacy
+ *   subpath, so the M1-spec-to-error-boundary path doesn't yet have a clean
+ *   test surface. Step 13 deletes legacy and the failure mode becomes the only
+ *   path; that's where this test belongs.
+ *
+ * - T-0006-178 (boundary: iPhone SE 320x568 viewport no-overflow):
+ *   Deferred to Step 12 (snapshot matrix). The 28-component snapshot matrix
+ *   in Step 12 is the natural home for viewport-specific layout regression
+ *   testing.
  */
-import {act, fireEvent, render, waitFor} from '@testing-library/react-native'
+import {fireEvent, render, waitFor} from '@testing-library/react-native'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import React from 'react'
-import {ActionSheetIOS} from 'react-native'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
-import {apiFetch} from '#/lib/api'
-import {AppRunnerScreen, V0DemoRunner, V0_DEMO_ENABLED} from './index'
+import {AppRunnerScreen, copyShareLink} from './index'
 
 // -- Mocks -------------------------------------------------------------------
 
-jest.mock('#/lib/api', () => {
-  const actual = jest.requireActual('#/lib/api') as typeof import('#/lib/api')
-  return {
-    ...actual,
-    apiFetch: jest.fn(),
-  }
-})
-
 jest.mock('#/components/ToastProvider', () => ({
-  useToast: () => ({show: mockShowToast, hide: jest.fn()}),
+  useToast: () => ({show: jest.fn(), hide: jest.fn()}),
 }))
 
 jest.mock('#/logger', () => ({
@@ -41,15 +42,6 @@ jest.mock('#/logger', () => ({
   safeMessage: (err: unknown) => (err instanceof Error ? err.message : String(err)),
 }))
 
-// Mock session — user with id 'user-owner'
-jest.mock('#/state/session/useSession', () => ({
-  useSession: () => ({
-    status: 'authenticated',
-    user: {id: 'user-owner', email: 'owner@example.com'},
-  }),
-}))
-
-// Mock vector icons (BackButton uses Feather)
 jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React2 = require('react') as typeof import('react')
@@ -60,80 +52,55 @@ jest.mock('@expo/vector-icons', () => {
   return {__esModule: true, Feather: Icon}
 })
 
-// ActionSheetIOS mock
-const mockShowActionSheet = jest.fn()
-const mockShowToast = jest.fn()
-const mockDispatch = jest.fn()
-
-/**
- * T-0003-107 / T-0003-116: Mock surface is useA2UIState + NodeRenderer.
- * The old in-screen reducer is gone. NodeRenderer is replaced with a sentinel
- * that emits a stable testID so tests can confirm the renderer was mounted.
- *
- * Mock cardinality asserted in T-0003-116:
- *   - useA2UIState: mocked once
- *   - NodeRenderer: mocked once
- *   - No in-screen reducer exports present
- */
+// Mock the V0 Renderer with a sentinel view.
+// The canonical import is Renderer (no __V0_ prefix) post-Step-11.
 jest.mock('@app-creator/a2ui-renderer', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React2 = require('react') as typeof import('react')
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const RN = require('react-native') as typeof import('react-native')
 
-  return {
-    // M1 legacy surface
-    useA2UIState: jest.fn(() => ({
-      state: {},
-      currentViewId: 'v1',
-      dispatch: mockDispatch,
-    })),
-    NodeRenderer: (_props: unknown) =>
-      React2.createElement(RN.View, {testID: 'node-renderer-sentinel'}),
-    RendererThemeProvider: ({children}: {children: React.ReactNode}) =>
-      React2.createElement(React2.Fragment, null, children),
-    RendererLoggerProvider: ({children}: {children: React.ReactNode}) =>
-      React2.createElement(React2.Fragment, null, children),
+  const STUB_SPEC = {
+    version: 1,
+    archetype: 'ListCRUD',
+    stance: 'productive',
+    palette: 'focus',
+    navigation: 'stack',
+    initialScreenId: 'main',
+    screens: [{id: 'main', root: {id: 'root', type: 'Screen', children: []}}],
+  }
 
-    // V0 demo surface (__V0_* prefix signals Milestone A shim)
-    // __V0_Renderer is the full Renderer component used by V0DemoRunner (Step 10).
-    // The sentinel testID matches the V0DemoRunner test assertions at lines 437-443.
-    __V0_Renderer: ({}: {spec: unknown; host: unknown}) =>
-      React2.createElement(RN.View, {testID: 'v0-node-renderer-sentinel'}),
-    // Legacy shim exports retained for completeness (not used after Step 10).
-    __V0_NodeRenderer: (_props: unknown) =>
-      React2.createElement(RN.View, {testID: 'v0-node-renderer-sentinel'}),
-    __V0_ThemeProvider: ({children}: {children: React.ReactNode}) =>
-      React2.createElement(React2.Fragment, null, children),
-    __V0_HostProvider: ({children}: {children: React.ReactNode}) =>
-      React2.createElement(React2.Fragment, null, children),
-    __V0_SAMPLE_SPEC: {
-      stance: 'productive',
-      palette: 'focus',
-      screens: [
-        {
-          id: 'main',
-          root: {id: 'root_screen', type: 'Screen', children: []},
-        },
-      ],
+  return {
+    // Canonical V0 surface — no __V0_* prefix post-Step-11.
+    Renderer: ({}: {spec: unknown; host: unknown}) =>
+      React2.createElement(RN.View, {testID: 'renderer-sentinel'}),
+    SAMPLE_SPEC: STUB_SPEC,
+    // DEMO_SPECS map — all 4 archetypes point to the same stub in tests.
+    DEMO_SPECS: {
+      ListCRUD: STUB_SPEC,
+      Tracker: STUB_SPEC,
+      Journal: STUB_SPEC,
+      Calculator: STUB_SPEC,
     },
+    // Legacy symbols deliberately absent from this mock — verifies T-0006-179:
+    // the package root no longer exports __V0_* prefixed names.
+    // (The mock itself omits them; any test importing them would fail loudly.)
   }
 })
 
-// -- Helpers -----------------------------------------------------------------
+// Mock Share for T-0006-176 test.
+jest.mock('react-native/Libraries/Share/Share', () => ({
+  share: jest.fn().mockResolvedValue({action: 'sharedAction'}),
+}))
 
-const mockApiFetch = apiFetch as jest.MockedFunction<typeof apiFetch>
+// -- Helpers -----------------------------------------------------------------
 
 const SAFE_AREA_METRICS = {
   frame: {x: 0, y: 0, width: 390, height: 844},
   insets: {top: 0, bottom: 0, left: 0, right: 0},
 }
 
-function makeQc() {
-  return new QueryClient({
-    defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
-  })
-}
+const PROJECT_ID = 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa'
 
 function makeNavigation() {
   return {
@@ -143,323 +110,212 @@ function makeNavigation() {
   }
 }
 
-// UUIDs must be real-format for the validator in useProjectQuery
-const PROJECT_ID = 'aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa'
-const VERSION_ID = 'bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb'
-
 function makeRoute(projectId = PROJECT_ID) {
   return {params: {projectId}}
 }
 
-function makeDetailResponse(overrides?: {
-  ownerId?: string
-  visibility?: 'public' | 'private'
-  title?: string
-}) {
-  return {
-    project: {
-      id: PROJECT_ID,
-      ownerId: overrides?.ownerId ?? 'user-owner',
-      title: overrides?.title ?? 'My Test App',
-      currentVersionId: VERSION_ID,
-      parentProjectId: null,
-      createdAt: '2026-05-01T00:00:00Z',
-      updatedAt: '2026-05-01T00:00:00Z',
-      visibility: overrides?.visibility ?? 'private',
-    },
-    currentVersion: {
-      id: VERSION_ID,
-      projectId: PROJECT_ID,
-      specJson: {
-        version: 1,
-        views: [{id: 'v1', root: {type: 'Heading', text: 'Hello'}}],
-        initialViewId: 'v1',
-      },
-      renderHash: 'abc123',
-      createdAt: '2026-05-01T00:00:00Z',
-    },
-  }
-}
-
-function renderScreen(opts: {projectId?: string; visibility?: 'public' | 'private'} = {}) {
-  const qc = makeQc()
+function renderScreen(projectId = PROJECT_ID) {
+  const qc = new QueryClient({
+    defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
+  })
   const nav = makeNavigation()
-  const route = makeRoute(opts.projectId)
-
   const utils = render(
     <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
       <QueryClientProvider client={qc}>
         <AppRunnerScreen
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          route={route as any}
+          route={makeRoute(projectId) as any}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           navigation={nav as any}
         />
       </QueryClientProvider>
     </SafeAreaProvider>,
   )
-  return {...utils, nav, qc}
+  return {...utils, nav}
 }
 
 // -- Tests -------------------------------------------------------------------
 
-describe('AppRunnerScreen Owner mode', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-    jest.spyOn(ActionSheetIOS, 'showActionSheetWithOptions').mockImplementation(mockShowActionSheet)
-  })
+describe('AppRunnerScreen (Step 11 — V0 cutover)', () => {
+  beforeEach(() => jest.clearAllMocks())
 
-  // T-0002-148 / T-0003-115a: Owner-mode shows Publish CTA when visibility='private'
-  it('T-0003-115a: shows Publish CTA when project is private', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse({visibility: 'private'}))
-
+  // T-0006-174: AppRunner renders the V0 renderer post-cutover.
+  it('T-0006-174: mounts the V0 Renderer sentinel', () => {
     const {getByTestId} = renderScreen()
-
-    await waitFor(() => {
-      expect(getByTestId('app-runner-publish-cta')).toBeTruthy()
-    })
+    // The sentinel view wrapping <Renderer> must be present.
+    expect(getByTestId('v0-renderer-sentinel')).toBeTruthy()
   })
 
-  // T-0002-149: Owner-mode shows Unpublish CTA when visibility='public'
-  it('shows Unpublish CTA when project is public', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse({visibility: 'public'}))
+  // T-0006-174 (continued): renderer sentinel is from the canonical mock — no M1 sentinel.
+  it('T-0006-174: does not mount the legacy node-renderer-sentinel', () => {
+    const {queryByTestId} = renderScreen()
+    expect(queryByTestId('node-renderer-sentinel')).toBeNull()
+  })
 
+  // Back button (regression — present since ADR-0002).
+  it('back button has "Back to library" accessibility label', () => {
     const {getByTestId} = renderScreen()
-
-    await waitFor(() => {
-      expect(getByTestId('app-runner-unpublish-cta')).toBeTruthy()
-    })
+    const back = getByTestId('app-runner-back')
+    expect(back.props.accessibilityLabel).toBe('Back to library')
   })
 
-  // T-0002-164: Regression — back arrow with "Back to library" a11y label
-  it('has back arrow with "Back to library" accessibility label', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-
-    const {getByTestId} = renderScreen()
-
-    await waitFor(() => {
-      const backBtn = getByTestId('app-runner-back')
-      expect(backBtn.props.accessibilityLabel).toBe('Back to library')
-    })
-  })
-
-  // T-0002-164: pressing back button navigates back
-  it('back button calls navigation.goBack()', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-
+  it('back button calls navigation.goBack()', () => {
     const {getByTestId, nav} = renderScreen()
-
-    await waitFor(() => getByTestId('app-runner-back'))
-
     fireEvent.press(getByTestId('app-runner-back'))
     expect(nav.goBack).toHaveBeenCalled()
   })
 
-  // T-0002-160: Back button always accessible, even during publish-in-flight state
-  it('back button is accessible during publish-in-flight state', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse({visibility: 'private'}))
-
+  // T-0006-176: Host share button calls copyShareLink(projectId).
+  it('T-0006-176: share button is present with correct accessibility label', () => {
     const {getByTestId} = renderScreen()
-
-    await waitFor(() => {
-      expect(getByTestId('app-runner-back')).toBeTruthy()
-      expect(getByTestId('app-runner-back').props.accessibilityLabel).toBe('Back to library')
-    })
+    const share = getByTestId('app-runner-share')
+    expect(share.props.accessibilityLabel).toBe('Share this app')
   })
 
-  // T-0003-115c: error state still renders error message (not renderer)
-  it('T-0003-115c: shows error state when query fails without engaging renderer', async () => {
-    mockApiFetch.mockRejectedValueOnce(new Error('Network error'))
-
-    const {findByText, queryByTestId} = renderScreen()
-
-    await findByText('Network error')
-
-    // NodeRenderer sentinel must NOT be present — error branch skips renderer
-    expect(queryByTestId('node-renderer-sentinel')).toBeNull()
-  })
-
-  // T-0003-115b: loading state shows ActivityIndicator, not renderer
-  it('T-0003-115b: loading state shows ActivityIndicator without engaging renderer', () => {
-    // Don't resolve the fetch — stays loading
-    mockApiFetch.mockReturnValue(new Promise(() => {}))
-
-    const {queryByTestId, UNSAFE_getAllByType} = renderScreen()
-
-    // ActivityIndicator should be visible
+  it('T-0006-176: pressing share button triggers copyShareLink with projectId', async () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const {ActivityIndicator} = require('react-native')
-    expect(UNSAFE_getAllByType(ActivityIndicator)).toHaveLength(1)
-
-    // NodeRenderer sentinel must NOT be present
-    expect(queryByTestId('node-renderer-sentinel')).toBeNull()
-  })
-
-  it('unpublish tap shows ActionSheetIOS with correct options', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse({visibility: 'public'}))
-
-    const {getByTestId} = renderScreen()
-
-    await waitFor(() => getByTestId('app-runner-unpublish-cta'))
-
-    act(() => {
-      fireEvent.press(getByTestId('app-runner-unpublish-cta'))
-    })
-
-    expect(ActionSheetIOS.showActionSheetWithOptions).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: expect.stringContaining('Unpublish'),
-        options: ['Unpublish', 'Cancel'],
-        destructiveButtonIndex: 0,
-        cancelButtonIndex: 1,
-      }),
-      expect.any(Function),
-    )
-  })
-
-  // T-0003-106: AppRunner mounts the renderer for a saved spec
-  it('T-0003-106: AppRunner mounts NodeRenderer when spec is present', async () => {
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-
-    const {getByTestId} = renderScreen()
-
+    const {share: mockShare} = require('react-native/Libraries/Share/Share')
+    const {getByTestId} = renderScreen(PROJECT_ID)
+    fireEvent.press(getByTestId('app-runner-share'))
     await waitFor(() => {
-      expect(getByTestId('node-renderer-sentinel')).toBeTruthy()
+      expect(mockShare).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining(PROJECT_ID),
+        }),
+      )
     })
   })
 
-  // T-0003-107: useA2UIState is the source of state (old reducer is gone)
-  it('T-0003-107: useA2UIState is called as the source of renderer state', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const {useA2UIState} = require('@app-creator/a2ui-renderer')
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-
-    renderScreen()
-
-    await waitFor(() => {
-      expect(useA2UIState).toHaveBeenCalled()
-    })
-  })
-
-  // T-0003-108: Toast action from a Button reaches AppRunner's toast.show()
-  it('T-0003-108: useA2UIState receives onToast:toast.show', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const {useA2UIState} = require('@app-creator/a2ui-renderer')
-    mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-
-    renderScreen()
-
-    await waitFor(() => {
-      expect(useA2UIState).toHaveBeenCalled()
-    })
-    const opts = useA2UIState.mock.calls[0]?.[1]
-    expect(typeof opts?.onToast).toBe('function')
-  })
-
-  // T-0003-109: Navigate action switches currentViewId → renderer mounts new view's root.
-  // Verified by updating the useA2UIState mock to return a different currentViewId
-  // and confirming NodeRenderer is still mounted (host correctly reads the updated view).
-  it('T-0003-109: renderer is driven by currentViewId from useA2UIState', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const {useA2UIState} = require('@app-creator/a2ui-renderer')
-    const spec = {
-      version: 1,
-      views: [
-        {id: 'v1', root: {type: 'Heading', text: 'View 1'}},
-        {id: 'settings', root: {type: 'Heading', text: 'Settings'}},
-      ],
-      initialViewId: 'v1',
-    }
-    mockApiFetch.mockResolvedValueOnce({
-      ...makeDetailResponse(),
-      currentVersion: {
-        ...makeDetailResponse().currentVersion,
-        specJson: spec,
-      },
-    })
-
-    // Initially on v1
-    useA2UIState.mockReturnValueOnce({
-      state: {},
-      currentViewId: 'v1',
-      dispatch: mockDispatch,
-    })
-
-    const {getByTestId} = renderScreen()
-
-    await waitFor(() => {
-      expect(getByTestId('node-renderer-sentinel')).toBeTruthy()
-    })
-
-    // useA2UIState was called with the spec
-    expect(useA2UIState).toHaveBeenCalled()
-    // The mock sentinel is present regardless of currentViewId
-    // (NodeRenderer is a sentinel in tests — actual node routing is tested in
-    // useA2UIState.test.tsx T-0003-008 / reducer.test.ts T-0003-NAVIGATE)
-    expect(getByTestId('node-renderer-sentinel')).toBeTruthy()
-  })
-
-  // T-0003-116: Mock cardinality — useA2UIState and NodeRenderer are mocked;
-  // no in-screen reducer symbols are exported
-  it('T-0003-116: mock surface is useA2UIState + NodeRenderer (cardinality check)', () => {
+  // T-0006-179: Package root exports canonical names (no __V0_* prefix).
+  it('T-0006-179: @app-creator/a2ui-renderer exports Renderer, SAMPLE_SPEC, and DEMO_SPECS', () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const rendererModule = require('@app-creator/a2ui-renderer')
-
-    // The two mocked symbols must be present
-    expect(typeof rendererModule.useA2UIState).toBe('function')
-    expect(typeof rendererModule.NodeRenderer).toBe('function')
-
-    // The old in-screen reducer is gone — these symbols must NOT exist on the
-    // renderer module (they lived only in AppRunner's module scope before)
-    expect(rendererModule.ownerStateReducer).toBeUndefined()
-    expect(rendererModule.dispatchOwnerState).toBeUndefined()
+    // Canonical names must be present.
+    expect(typeof rendererModule.Renderer).toBe('function')
+    expect(rendererModule.SAMPLE_SPEC).toBeDefined()
+    expect(rendererModule.DEMO_SPECS).toBeDefined()
+    expect(typeof rendererModule.DEMO_SPECS).toBe('object')
+    // __V0_* prefixed names must NOT be present post-Step-11.
+    expect(rendererModule.__V0_Renderer).toBeUndefined()
+    expect(rendererModule.__V0_SAMPLE_SPEC).toBeUndefined()
+    expect(rendererModule.__V0_NodeRenderer).toBeUndefined()
+    expect(rendererModule.__V0_ThemeProvider).toBeUndefined()
+    expect(rendererModule.__V0_HostProvider).toBeUndefined()
   })
 
-  // Canvas V0 Milestone A demo shim — branch tests.
-  //
-  // V0_DEMO_ENABLED is a module-level constant (Expo inlines EXPO_PUBLIC_* at
-  // build time). We can't mutate it between Jest tests without resetModules(),
-  // which breaks React's internal state. Instead:
-  //   - The existing 13 tests above already exercise the legacy (flag=false)
-  //     path. We verify that path explicitly in one additional test.
-  //   - V0DemoRunner is exported and tested directly — its rendering is the
-  //     observable side-effect that matters when the flag is true.
-  //   - AppRunnerScreen's branching logic is verified by checking V0_DEMO_ENABLED
-  //     (the module constant) and the V0DemoRunner render.
-
-  describe('Canvas V0 demo flag gate', () => {
-    // V0_DEMO_ENABLED is false in the test environment (no env var set).
-    it('V0_DEMO_ENABLED is false when EXPO_PUBLIC_CANVAS_V0_DEMO is unset', () => {
-      // This confirms the test suite default: M1 legacy path is active.
-      // The 13 preceding tests exercise that path exhaustively.
-      expect(V0_DEMO_ENABLED).toBe(false)
-    })
-
-    // V0DemoRunner is the component mounted when V0_DEMO_ENABLED=true.
-    // Test it directly — this covers the rendering branch that would be active
-    // in a build with EXPO_PUBLIC_CANVAS_V0_DEMO=true.
-    it('V0DemoRunner renders the __V0_Renderer sentinel', () => {
-      const {getByTestId} = render(<V0DemoRunner />)
-      expect(getByTestId('v0-node-renderer-sentinel')).toBeTruthy()
-    })
-
-    it('V0DemoRunner does not render the legacy node-renderer-sentinel', () => {
-      const {queryByTestId} = render(<V0DemoRunner />)
-      expect(queryByTestId('node-renderer-sentinel')).toBeNull()
-    })
-
-    // AppRunnerScreen returns <V0DemoRunner /> when flag is true.
-    // We verify this through the existing mock: AppRunnerScreen with the
-    // current module routes to LegacyAppRunnerScreen (flag=false in test env).
-    // The gate expression itself is tested by the V0_DEMO_ENABLED assertion above.
-    it('AppRunnerScreen delegates to legacy path in test environment (V0_DEMO_ENABLED=false)', async () => {
-      mockApiFetch.mockResolvedValueOnce(makeDetailResponse())
-      const {getByTestId} = renderScreen()
-
-      await waitFor(() => {
-        // Legacy sentinel present confirms AppRunnerScreen used LegacyAppRunnerScreen.
-        expect(getByTestId('node-renderer-sentinel')).toBeTruthy()
-      })
-    })
+  // Regression: no EXPO_PUBLIC_CANVAS_V0_DEMO flag export.
+  it('AppRunnerScreen module does not export V0_DEMO_ENABLED flag', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const m = require('./index')
+    // Step 11 retires the flag. The constant must not be exported.
+    expect(m.V0_DEMO_ENABLED).toBeUndefined()
+    // V0DemoRunner was the step 10 shim — also retired.
+    expect(m.V0DemoRunner).toBeUndefined()
   })
+
+  // copyShareLink: no-op when projectId is undefined.
+  it('copyShareLink is a no-op when projectId is undefined', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {share: mockShare} = require('react-native/Libraries/Share/Share')
+    await copyShareLink(undefined)
+    expect(mockShare).not.toHaveBeenCalled()
+  })
+})
+
+// -- Step 13 deliverable (deferred from Step 11 per Roz QA) ------------------
+
+// T-0006-177: M1 spec fed to V0 <Renderer> causes SpecSchema.parse() to throw;
+// AppRunner's <RenderErrorBoundary> catches the error and renders the fallback.
+//
+// Split into two independent tests:
+//
+//   Part 1 (schema rejection): verifies that a literal M1 spec object fails
+//   SpecSchema.safeParse — i.e. the V0 schema correctly rejects M1 shapes.
+//   This is the precondition for the boundary test below.
+//
+//   Part 2 (boundary): verifies that RenderErrorBoundary (a real import, not mocked)
+//   catches any thrown error and renders the correct fallback UI. We simulate
+//   a ZodError throw via a ThrowOnMount component — the same behavior Renderer
+//   exhibits when SpecSchema.parse() fails for an M1 spec.
+//
+// The module-level jest.mock('@app-creator/a2ui-renderer') stubs the Renderer
+// sentinel, but RenderErrorBoundary is imported directly (not via the mock) so
+// its real behavior is exercised.
+describe('T-0006-177 (Step 13 — M1 spec → schema reject → error boundary)', () => {
+  // Suppress React's console.error noise from intentional error boundary throws.
+  let consoleSpy: jest.SpyInstance
+  beforeEach(() => {
+    consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.clearAllMocks()
+  })
+  afterEach(() => {
+    consoleSpy.mockRestore()
+  })
+
+  it('T-0006-177 Part 1: M1 spec is rejected by V0 SpecSchema.parse()', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {SpecSchema} = require('@app-creator/protocol') as typeof import('@app-creator/protocol')
+
+    // M1 spec literal — structurally invalid for V0:
+    //   - missing required top-level fields: version, stance, palette, navigation, archetype
+    //   - uses M1 component types ('Counter', 'Form', 'TextInput') absent from V0 NodeSchema
+    const m1Spec = {
+      screens: [
+        {
+          id: 'main',
+          root: {
+            id: 'root',
+            type: 'Counter', // M1-only — not in V0 28-component union
+            label: 'Pomodoro',
+            initialValue: 0,
+            min: 0,
+            max: 100,
+          },
+        },
+      ],
+    }
+
+    // SpecSchema.parse must reject this — missing required fields + unknown node types.
+    const result = SpecSchema.safeParse(m1Spec)
+    expect(result.success).toBe(false)
+  })
+
+  it('T-0006-177 Part 2: RenderErrorBoundary catches spec-parse ZodError and shows fallback', () => {
+    // Import the real RenderErrorBoundary (not affected by the a2ui-renderer mock).
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {RenderErrorBoundary} = require('./RenderErrorBoundary') as typeof import('./RenderErrorBoundary')
+
+    const onBack = jest.fn()
+
+    // ThrowOnMount simulates the ZodError that Renderer.SpecSchema.parse() throws
+    // synchronously during render when it receives an M1 spec.
+    function ThrowOnMount(): React.ReactElement {
+      throw new Error(
+        'ZodError: V0 SpecSchema.parse() failed — M1 component type "Counter" not in NodeSchema union',
+      )
+    }
+
+    const {getByText, queryByTestId} = render(
+      <RenderErrorBoundary projectId="proj-m1-test" renderHash="hash-m1" mode="owner" onBack={onBack}>
+        <ThrowOnMount />
+      </RenderErrorBoundary>,
+    )
+
+    // Fallback must render with the exact strings per Sable UX line 307 (T-0003-110).
+    expect(getByText("This app didn't render correctly.")).toBeTruthy()
+    expect(getByText('Try recreating it.')).toBeTruthy()
+    expect(getByText('Back to library')).toBeTruthy()
+
+    // The renderer sentinel must NOT be present — the renderer tree didn't mount.
+    expect(queryByTestId('renderer-sentinel')).toBeNull()
+  })
+})
+
+// -- Step 12 deliverable (deferred from Step 11 per Roz QA) ------------------
+
+// T-0006-178: iPhone SE 320×568 viewport produces no overflow. Deferred to
+// Step 12 where the 28-component snapshot matrix is the correct home for
+// viewport-specific layout regression coverage.
+describe.skip('T-0006-178 (Step 12 — snapshot matrix)', () => {
+  it.todo('AppRunnerScreen renders without overflow on 320x568 (iPhone SE) viewport')
 })

@@ -1,70 +1,55 @@
 /** @type {import('jest').Config} */
+// Step 13: Unified jest config — legacy deleted, a single config suffices.
+//
+// Previously there were two configs:
+//   - jest.config.js       (legacy M1 tests, src/legacy/)
+//   - jest.config.rn.cjs  (V0 component tests, src/v0/)
+//
+// With src/legacy/ gone, jest.config.rn.cjs becomes the sole config.
+// Renamed to jest.config.js (Option A per ADR-0006 Step 13 decision).
+// jest.config.rn.cjs is removed; package.json "test:rn" script is also removed.
+//
+// Mocks previously in src/legacy/__mocks__/ have been relocated to src/__mocks__/.
 module.exports = {
-  // Use the react-native preset so __DEV__, __dirname globals and RN's
-  // haste module system are properly configured. The preset sets up
-  // setupFiles and testEnvironment needed for RTL + react-native.
   preset: 'react-native',
   passWithNoTests: true,
-  // Pre-configure RTL's hostComponentNames so detectHostComponentNames() is
-  // never called. In the renderer package's Jest env (react-native preset, not
-  // jest-expo), the probe render hits NativeAnimatedHelper.js and AnimatedObject.js
-  // which use Flow utility types that @babel/preset-flow cannot parse in RN 0.76.
-  // This setup file bypasses that by providing the known string host-component names
-  // directly. (See src/test/jestSetup.js for details.)
-  setupFilesAfterEnv: ['<rootDir>/src/legacy/test/jestSetup.js'],
-  // V0 component tests run under jest.config.rn.cjs (which has the safe-area
-  // mock and RTL setup for V0). Exclude src/v0/ here to avoid duplicate runs
-  // and missing-mock failures in the legacy config's environment.
-  testMatch: ['**/?(*.)+(test).ts?(x)'],
-  testPathIgnorePatterns: ['/node_modules/', '/src/v0/'],
+  // Match tests in src/v0/ subdirectories AND directly in src/v0/ itself.
+  // The second pattern picks up snapshot-matrix.test.tsx and viewport.test.tsx
+  // (Step 12) which live at the src/v0/ level, not inside a subdirectory.
+  testMatch: [
+    '**/src/v0/**/?(*.)+(test).ts?(x)',
+    '**/src/v0/?(*.)+(test).ts?(x)',
+  ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  // Transform everything via babel-jest using the renderer's babel.config.js.
-  // This handles:
-  //   - TypeScript/TSX via @babel/preset-typescript + @babel/preset-react
-  //   - Flow types in react-native packages via @babel/preset-flow
-  // Note: ts-jest is not used here because it conflicts with Istanbul's
-  // coverage instrumentation when collectCoverageFrom includes tsx files.
-  // Type-checking is handled separately by `pnpm typecheck`.
+  // Setup after framework: provides RTL hostComponentNames pre-config and
+  // react-native-safe-area-context mock for ScreenRenderer tests.
+  setupFilesAfterEnv: ['<rootDir>/src/v0/__test-utils__/jestSetup.js'],
   transform: {
     '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
   },
-  // Extended transformIgnorePatterns to handle pnpm's .pnpm layout.
-  transformIgnorePatterns: [
-    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*)))',
-  ],
-  // Map Flow-typed react-native internals that @babel/preset-flow cannot parse
-  // (specifically EventEmitter.js which uses Flow mapped-type syntax) to empty
-  // module mocks. These are implementation details not relevant to renderer tests.
-  // Note: moduleNameMapper matches against the IMPORT STRING as written in source
-  // (relative imports like '../vendor/emitter/EventEmitter' are matched against
-  // the resolved absolute module id). The pattern covers both relative and absolute
-  // import paths that resolve to this file.
   moduleNameMapper: {
-    // Strip .js extension from relative imports so Jest can find .ts source files.
-    // Source files use .js extensions for ESM TypeScript compatibility (tsc),
-    // but Jest's babel-jest transform resolves .ts files directly.
+    // Strip .js extension from relative imports for Jest resolution.
     '^(\\.{1,2}/.*)\\.js$': '$1',
-    // Match both: import-as-written '../vendor/emitter/EventEmitter' and
-    // the resolved absolute path (jest checks both depending on version).
-    '.*vendor/emitter/EventEmitter.*': '<rootDir>/src/legacy/__mocks__/EventEmitterMock.js',
-    // expo-haptics is a peerDependency provided by the host app at runtime.
-    // In the renderer's Jest environment its transitive deps (expo-modules-core)
-    // contain Flow-typed and native code the react-native preset cannot parse.
-    // Map to a minimal mock that provides the ImpactFeedbackStyle + impactAsync
-    // surface ButtonRenderer needs (T-0003-065 overrides at the test-file level).
-    '^expo-haptics$': '<rootDir>/src/legacy/__mocks__/ExpoHapticsMock.js',
-    // NativeAnimatedHelper.js in RN 0.76 uses the Flow utility type
-    // `$NonMaybeType<typeof ...>['key']` which @babel/preset-flow cannot parse.
-    // RTL's detectHostComponentNames() triggers this import when render() is
-    // called; the renderer's tests don't exercise native animation, so a stub suffices.
+    // Stub out NativeAnimatedHelper (Flow utility types break babel-jest in RN 0.76).
     '.*private/animated/NativeAnimatedHelper.*':
-      '<rootDir>/src/legacy/__mocks__/NativeAnimatedHelperMock.js',
+      '<rootDir>/src/__mocks__/NativeAnimatedHelperMock.js',
+    // Stub EventEmitter (Flow mapped-type syntax).
+    '.*vendor/emitter/EventEmitter.*': '<rootDir>/src/__mocks__/EventEmitterMock.js',
+    // expo-haptics: peerDep provided by host at runtime; stub for test env.
+    '^expo-haptics$': '<rootDir>/src/__mocks__/ExpoHapticsMock.js',
+    // react-native-reanimated: the official mock.js chains into Flow-typed RN source
+    // files that Babel cannot parse. Use a fully self-contained manual mock instead.
+    '^react-native-reanimated$':
+      '<rootDir>/src/__mocks__/ReactNativeReanimatedMock.js',
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)))',
+  ],
   // Coverage configuration.
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.test.{ts,tsx}',
-    '!src/legacy/test/**',
     '!src/v0/index.ts',
+    '!src/__mocks__/**',
   ],
 }
