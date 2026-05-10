@@ -6,6 +6,15 @@ export function hashUserId(userId: string): string {
   return createHash('sha256').update(userId).digest('hex').slice(0, 16)
 }
 
+/**
+ * sha256Hex — compute a full lowercase sha256 hex digest of a UTF-8 string.
+ * Used by generateAppSpec to compute prompt_hash (ADR-0007 §H).
+ * The canonical form is always lowercase (matching /^[a-f0-9]{64}$/).
+ */
+export function sha256Hex(input: string): string {
+  return createHash('sha256').update(input, 'utf8').digest('hex')
+}
+
 export function flattenZodIssues(err: unknown): unknown {
   if (err instanceof ZodError) {
     return err.issues.map(issue => ({

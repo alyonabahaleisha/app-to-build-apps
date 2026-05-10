@@ -209,6 +209,38 @@ export const events = pgTable(
 )
 
 // ---------------------------------------------------------------------------
+// out_of_scope_intent — ADR-0007 Step 5.
+//
+// Stores out-of-scope captures from the /out-of-scope-intent endpoint.
+// Detection telemetry fires in generate.ts; row insertion fires here via the
+// outOfScope route (two-step flow per ADR-0007 §H).
+//
+// Data sensitivity: auth-only. No read endpoint in V0; aggregate analytics
+// live outside the API request path.
+// ---------------------------------------------------------------------------
+export const outOfScopeIntent = pgTable(
+  'out_of_scope_intent',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    // ON DELETE SET NULL — row retained for analytics after account deletion.
+    userId: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
+    capability: text('capability').notNull(),
+    // sha256 hex, 64 chars. Lowercase enforcement is at the API layer.
+    promptHash: text('prompt_hash').notNull(),
+    reason: text('reason').notNull(),
+    // NULL = user dismissed without submitting email.
+    email: text('email'),
+    createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
+  },
+  t => ({
+    // Per-capability trend queries.
+    capabilityIdx: index('out_of_scope_intent_capability_idx').on(t.capability, t.createdAt.desc()),
+    // Per-user intent queries.
+    userIdx: index('out_of_scope_intent_user_idx').on(t.userId, t.createdAt.desc()),
+  }),
+)
+
+// ---------------------------------------------------------------------------
 // Type exports — used by services for typed inserts/selects.
 // ---------------------------------------------------------------------------
 export type User = typeof users.$inferSelect
@@ -225,3 +257,5 @@ export type MemoryEmbedding = typeof memoryEmbeddings.$inferSelect
 export type NewMemoryEmbedding = typeof memoryEmbeddings.$inferInsert
 export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
+export type OutOfScopeIntent = typeof outOfScopeIntent.$inferSelect
+export type NewOutOfScopeIntent = typeof outOfScopeIntent.$inferInsert

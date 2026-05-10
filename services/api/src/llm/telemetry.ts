@@ -23,7 +23,12 @@ import {safeMessage} from '../lib/logger.js'
 const log = pino({level: env.LOG_LEVEL})
 
 // ---------------------------------------------------------------------------
-// Event type union — the 9 documented event types for ADR-0004.
+// Event type union.
+//
+// ADR-0004 event types are preserved for backward compatibility (not yet
+// removed — that is Step 6). ADR-0007 Step 5 adds out_of_scope_intent_captured.
+// ADR-0007 Step 6 will remove all ADR-0004 event types and add the remaining
+// V0 event types (generate.completed, generate.invalid_spec, generate.out_of_scope).
 // ---------------------------------------------------------------------------
 export type EventType =
   | 'plan.completed'
@@ -35,6 +40,8 @@ export type EventType =
   | 'build.conformance_fallback'
   | 'edit.completed'
   | 'edit.patch_out_of_scope_fallback'
+  // ADR-0007 Step 5: out_of_scope_intent capture event.
+  | 'out_of_scope_intent_captured'
 
 // ---------------------------------------------------------------------------
 // Per-type payload whitelists.
@@ -84,6 +91,9 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
     'build_duration_ms',
   ],
   'edit.patch_out_of_scope_fallback': ['generationId', 'offendingOp', 'reason'],
+  // ADR-0007 Step 5 — out_of_scope_intent capture.
+  // has_email is boolean — presence of email in the captured row.
+  'out_of_scope_intent_captured': ['capability', 'has_email'],
 } as const
 
 // ---------------------------------------------------------------------------

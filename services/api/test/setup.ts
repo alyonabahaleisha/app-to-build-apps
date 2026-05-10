@@ -97,7 +97,7 @@ export async function getTestConnectionString(): Promise<string> {
 export async function truncateAll(): Promise<void> {
   if (!_pool) return
   await _pool.query(
-    'TRUNCATE TABLE memory_embeddings, facts, messages, project_versions, projects, events, users RESTART IDENTITY CASCADE',
+    'TRUNCATE TABLE memory_embeddings, facts, messages, project_versions, projects, events, out_of_scope_intent, users RESTART IDENTITY CASCADE',
   )
 }
 

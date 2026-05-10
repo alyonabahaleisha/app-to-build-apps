@@ -325,6 +325,9 @@ importers:
       '@app-creator/a2ui-schema':
         specifier: workspace:*
         version: link:../../packages/a2ui-schema
+      '@app-creator/protocol':
+        specifier: workspace:*
+        version: link:../../packages/protocol
       '@fastify/cors':
         specifier: ^10.0.1
         version: 10.1.0
