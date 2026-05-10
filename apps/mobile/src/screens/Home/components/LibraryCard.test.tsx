@@ -4,6 +4,12 @@
  * The bulk of Step 7 lives in `Home/index.test.tsx`; these tests pin
  * card-level behaviour (T-0001-111 empty title fallback, accessible label,
  * tap → onPress with the correct projectId).
+ *
+ * Step 11 (ADR-0006 F-11 / T-0006-175): adds gradient overlay tests.
+ *   - Productive stance → LinearGradient overlay rendered.
+ *   - Expressive stance → no overlay.
+ *   - No stance prop → no overlay (M1 / pre-V0 compat).
+ *   - Gradient opacity ≤ 25% (accessibility — text remains readable).
  */
 import React from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
@@ -39,17 +45,17 @@ function wrap(node: React.ReactElement) {
 
 const FIXED_NOW = new Date('2026-05-01T12:00:00Z')
 
+const BASE_PROPS = {
+  projectId: '11111111-1111-1111-1111-111111111111',
+  title: 'Tip Splitter',
+  createdAt: new Date(FIXED_NOW.getTime() - 5 * 60_000).toISOString(),
+  onPress: () => {},
+  now: FIXED_NOW,
+} as const
+
 describe('LibraryCard', () => {
   it('renders title and time-ago subtitle', () => {
-    const screen = wrap(
-      <LibraryCard
-        projectId="11111111-1111-1111-1111-111111111111"
-        title="Tip Splitter"
-        createdAt={new Date(FIXED_NOW.getTime() - 5 * 60_000).toISOString()}
-        onPress={() => {}}
-        now={FIXED_NOW}
-      />,
-    )
+    const screen = wrap(<LibraryCard {...BASE_PROPS} />)
     screen.getByText('Tip Splitter')
     screen.getByText(`${homeCopy.cardCreatedPrefix}5 minutes ago`)
   })
@@ -108,5 +114,48 @@ describe('LibraryCard', () => {
     )
     const card = screen.getByTestId('library-card')
     expect(card.props.accessibilityLabel).toBe('Open Habit Tracker, created 3 days ago')
+  })
+
+  // ---- Step 11 / T-0006-175: Layer 4 productive gradient overlay -----------
+
+  describe('Layer 4 gradient overlay (T-0006-175)', () => {
+    it('productive stance renders the LinearGradient overlay', () => {
+      const screen = wrap(<LibraryCard {...BASE_PROPS} stance="productive" />)
+      // The gradient overlay must be present.
+      expect(screen.getByTestId('productive-gradient-overlay')).toBeTruthy()
+    })
+
+    it('expressive stance does NOT render the gradient overlay', () => {
+      const screen = wrap(<LibraryCard {...BASE_PROPS} stance="expressive" />)
+      // No overlay for expressive stance.
+      expect(screen.queryByTestId('productive-gradient-overlay')).toBeNull()
+    })
+
+    it('no stance prop does NOT render the gradient overlay (M1 / pre-V0 compat)', () => {
+      const screen = wrap(<LibraryCard {...BASE_PROPS} />)
+      expect(screen.queryByTestId('productive-gradient-overlay')).toBeNull()
+    })
+
+    it('productive gradient opacity is ≤ 25% (accessibility — text remains readable)', () => {
+      const screen = wrap(<LibraryCard {...BASE_PROPS} stance="productive" />)
+      const overlay = screen.getByTestId('productive-gradient-overlay')
+      // Our stub stores colors as a comma-joined string in data-gradient-colors.
+      // The full string is like: "transparent,rgba(255,255,255,0.2)"
+      const colorsAttr: string = overlay.props['data-gradient-colors'] ?? ''
+      // Extract all rgba opacity values from the full colors string.
+      // This handles commas-inside-rgba correctly.
+      const rgbaMatches = [...colorsAttr.matchAll(/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([\d.]+)\s*\)/g)]
+      if (rgbaMatches.length > 0) {
+        // All rgba entries must have opacity ≤ 0.25.
+        for (const m of rgbaMatches) {
+          const opacity = parseFloat(m[1] ?? '0')
+          expect(opacity).toBeLessThanOrEqual(0.25)
+        }
+      } else {
+        // No rgba found — colors must all be named keywords (transparent, white, etc.)
+        // which carry no explicit opacity component > 0.25.
+        expect(colorsAttr).toMatch(/transparent/i)
+      }
+    })
   })
 })

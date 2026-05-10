@@ -16,6 +16,7 @@
 import React from 'react'
 import {AccessibilityInfo, Alert} from 'react-native'
 import {act, fireEvent, render, waitFor} from '@testing-library/react-native'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
@@ -140,6 +141,10 @@ function renderChat(opts: HarnessOptions = {}) {
     return <ChatScreen {...props} navigation={wrappedNav} />
   }
 
+  const qc = new QueryClient({
+    defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
+  })
+
   const result = render(
     <SafeAreaProvider
       initialMetrics={{
@@ -147,16 +152,18 @@ function renderChat(opts: HarnessOptions = {}) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <ToastProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
-            <Stack.Screen name="AppRunner" component={() => null} />
-            <Stack.Screen name="Home" component={() => null} />
-            <Stack.Screen name="SignIn" component={() => null} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ToastProvider>
+      <QueryClientProvider client={qc}>
+        <ToastProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
+              <Stack.Screen name="AppRunner" component={() => null} />
+              <Stack.Screen name="Home" component={() => null} />
+              <Stack.Screen name="SignIn" component={() => null} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ToastProvider>
+      </QueryClientProvider>
     </SafeAreaProvider>,
   )
 

@@ -16,8 +16,21 @@
  * them and we wait for state transitions.
  */
 
+import React from 'react'
 import {renderHook, act} from '@testing-library/react-native'
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {useGenerateMutation} from './generate'
+
+// Wrapper providing QueryClientProvider — required because useGenerateMutation
+// calls useQueryClient() internally (to invalidate the projects list on done).
+function makeWrapper() {
+  const qc = new QueryClient({
+    defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
+  })
+  const Wrapper = ({children}: {children: React.ReactNode}) =>
+    React.createElement(QueryClientProvider, {client: qc}, children)
+  return Wrapper
+}
 
 // ---------------------------------------------------------------------------
 // Module-level mocks
@@ -120,7 +133,7 @@ it('T-0002-131: phase is "thinking" synchronously when generate() is called', as
   // fetch never resolves — inspecting state before the await.
   global.fetch = jest.fn().mockReturnValue(new Promise(() => {})) as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
   expect(result.current.phase).toBe('idle')
 
   // Fire generate without awaiting.
@@ -140,7 +153,7 @@ it('T-0002-132: building_started SSE event transitions phase to "building"', asy
   const {fetch, enqueue, close} = makeMockFetch()
   global.fetch = fetch as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   // Start generate.
   const genPromise = result.current.generate({prompt: 'Build something'})
@@ -165,7 +178,7 @@ it('T-0002-133: done SSE event sets phase="done" and populates result', async ()
   const {fetch, enqueue, close} = makeMockFetch()
   global.fetch = fetch as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   await act(async () => {
     const genPromise = result.current.generate({prompt: 'A tip calculator'})
@@ -190,7 +203,7 @@ it('T-0002-136: stall timer fires after 30s of silence, phase becomes "stalled"'
   const {fetch, enqueue} = makeMockFetch()
   global.fetch = fetch as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   // Start generate, send thinking_started, then go silent.
   act(() => {
@@ -224,7 +237,7 @@ it('T-0002-137: stall timer cleared on building_started — no spurious "stalled
   const {fetch, enqueue, close} = makeMockFetch()
   global.fetch = fetch as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   act(() => {
     void result.current.generate({prompt: 'Build something'})
@@ -271,7 +284,7 @@ it('T-0002-141: network error mid-stream → connection_lost error code', async 
   const {fetch, enqueue, closeWithError} = makeMockFetch()
   global.fetch = fetch as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   await act(async () => {
     const genPromise = result.current.generate({prompt: 'Build something'})
@@ -298,7 +311,7 @@ it('T-0002-144: generate() sends Authorization header with session token', async
     userId: 'user-999',
   })
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   await act(async () => {
     const genPromise = result.current.generate({prompt: 'A streak counter'})
@@ -322,7 +335,7 @@ it('T-0002-144: generate() sends Authorization header with session token', async
 it('T-0002-146: second generate() call while first is in flight throws', async () => {
   global.fetch = jest.fn().mockReturnValue(new Promise(() => {})) as unknown as typeof fetch
 
-  const {result} = renderHook(() => useGenerateMutation())
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
 
   // Start first generate.
   act(() => {
