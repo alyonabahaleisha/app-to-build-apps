@@ -188,6 +188,22 @@ A full-area placeholder displayed when a collection is empty or content is unava
 
 A full-area loading indicator displayed while data is being fetched or processed. Shows an optional message alongside the activity indicator.
 
+## GridList
+
+A 2- or 3-column masonry grid backed by FlashList. Use in place of List when items benefit from visual density — photo grids, card grids, product tiles. The `columns` prop is a hint; the renderer collapses to 2 columns on devices narrower than 380pt to maintain a minimum 150pt cell width. `itemAspectRatio` constrains each cell's shape. An optional `emptyState` or `loadingState` node is shown when the collection is empty or loading.
+
+## Carousel
+
+A horizontally-scrollable card viewer backed by FlashList. Accepts either a `collectionId` (dynamic, one card per row) or a static `cards` array — the two are mutually exclusive and the schema rejects specs that set both or neither. `indicator` selects the page position display style (dots, fraction "1 / 5", or hidden). `autoplay` advances cards every 4 seconds but is hard-disabled when the user has Reduce Motion enabled — accessibility requirement.
+
+## Timeline
+
+A vertically-scrolling event log with a left-rail date indicator. Each event's date is read from `dateField` on the named collection; the field must have type `date` (cross-ref validated in Step 8). `dateFormat` controls how the date is displayed: relative ("2h ago"), absolute ("Jan 14, 2026"), or short ("Jan 14"). `groupBy` inserts date-group headers between events at day, week, or month boundaries. The left rail draws a continuous vertical line with `accent` circles at each event position.
+
+## ErrorState
+
+A centered error display that mirrors V0 EmptyState's layout but defaults to the `alert-triangle` icon in `warning` color. Use when a data fetch or action fails and the user may retry. `accessibilityRole="alert"` causes VoiceOver to announce the error immediately on render. The optional `action` and `actionLabel` render a full-width secondary button for a retry or navigation CTA.
+
 ## ConditionalSection
 
 A container that is visible only when a named collection satisfies a condition. `showWhen: 'whenEmpty'` shows the children when the collection has no rows; `showWhen: 'whenNotEmpty'` shows them when it has at least one.

@@ -539,7 +539,7 @@ fires on every `useEffect()` and `React.useEffect()` call within
 `packages/a2ui-renderer/src/v0/**`, with explicit exemptions per the
 list below.
 
-Each exception is a documented architectural decision. Adding a 6th
+Each exception is a documented architectural decision. Adding a 7th
 exception requires a new amendment to this section. As-shipped
 exceptions:
 
@@ -550,8 +550,9 @@ exceptions:
 | 3 | `queueMicrotask` ref-guard pattern in `<ListSummary>` for one-shot AI dispatch on mount | `src/v0/components/compound/ListSummary.tsx` only — narrowly scoped, NOT a general path exemption | Genuinely different from `useEffect`: no React lifecycle subscription, no cleanup hook, fires after render commit at microtask checkpoint. Strict-mode safe via persistent `dispatchedRef`. The pattern dispatches once on mount; an alternative `useEffect` would couple to React lifecycle for a fire-and-forget operation. **Restricted to ListSummary; do NOT generalize.** Future similar use cases require a separate §K amendment. | Step 8 (Roz Step 8 round-1 ruling — "ACCEPT WITH AMENDMENT NOTE") |
 | 4 | NavigationPrimitive lifecycle (mount registration + unmount cleanup) | `src/v0/nav/**` | `StackNav.tsx`, `TabsNav.tsx`, `ModalOverlayNav.tsx` each register a `NavigationPrimitive` to `forwardingPrimitive` ref on mount and signal `null` on unmount. The unmount cleanup specifically requires `useEffect`'s return-cleanup; no synchronous alternative exists for unmount-time work. The mount-time registration could be done via ref-guard during render in some cases, but the cleanup forces the exception. | Step 10 (Roz Step 10 round-1 ruling — "ACCEPT (Ruling A)") |
 | 5 | SearchBar SearchFilterContext write + cleanup on unmount | `src/v0/components/inputs/SearchBar.tsx` | `useEffect` cleanup (`return () => {...}`) is the only correct mechanism for unmount-time Map entry removal in React. No synchronous alternative for unmount-time work (same justification as nav/ exception #4). The effect writes the query to the Map on mount/update and clears it on unmount — necessary for the SearchFilterContext contract (T-0009-231). | ADR-0009 Step 2 (this PR) |
+| 6 | Carousel autoplay setInterval | `src/v0/components/lists/Carousel.tsx` | `setInterval` for time-based auto-advance has no synchronous equivalent in React. Timer must be started on mount/`shouldAutoplay`-true and cleared on unmount/`shouldAutoplay`-false. Strictly controlled via `shouldAutoplay = node.autoplay && !reducedMotion` guard so reduced-motion respect is at the gating layer, not inside the effect. | ADR-0009 Step 4 (V1 Phase 1 Lists & Data tier) |
 
-The ESLint rule's `ignores` list reflects these 5 exceptions. Adding
+The ESLint rule's `ignores` list reflects these 6 exceptions. Adding
 to the list without a §K amendment is forbidden.
 
 #### L. Reanimated worklets vs. JS-thread animations + FlashList v2 amendment

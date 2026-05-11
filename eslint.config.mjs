@@ -54,6 +54,9 @@ export default [
   //   4. __demo__/, __test-utils__/, *.test.{ts,tsx} — test/demo code may use useEffect
   //   5. components/inputs/SearchBar.tsx — ADR-0009 §E: useEffect required for
   //      SearchFilterContext cleanup on unmount (same lifecycle justification as nav/).
+  //   6. components/lists/Carousel.tsx — ADR-0006 §K exception #6 (ADR-0009 Phase 1):
+  //      setInterval autoplay has no synchronous equivalent; mount/unmount cleanup
+  //      via clearInterval is an imperative side-effect that genuinely requires useEffect.
   // -------------------------------------------------------------------------
   {
     files: ['packages/a2ui-renderer/src/v0/**/*.{ts,tsx}'],
@@ -67,6 +70,9 @@ export default [
       // SearchBar — ADR-0009 §E: SearchFilterContext write + cleanup on unmount.
       // useEffect is the only correct way to clear the Map entry on unmount.
       'packages/a2ui-renderer/src/v0/components/inputs/SearchBar.tsx',
+      // Carousel — ADR-0006 §K exception #6: setInterval autoplay with clearInterval
+      // cleanup on unmount. No synchronous equivalent exists for timer-based autoplay.
+      'packages/a2ui-renderer/src/v0/components/lists/Carousel.tsx',
       'packages/a2ui-renderer/src/v0/__demo__/**',
       'packages/a2ui-renderer/src/v0/__test-utils__/**',
       'packages/a2ui-renderer/src/v0/**/*.test.ts',

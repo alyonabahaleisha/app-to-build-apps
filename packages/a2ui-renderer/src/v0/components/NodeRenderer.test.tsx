@@ -1,8 +1,10 @@
 /**
  * NodeRenderer tests
  * T-0006-062: NodeRenderer discriminates 5 layout types correctly
- *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8)
+ *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8,
+ *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
+ * T-0009-109: NodeRenderer 43-arm boundary test
  */
 import React from 'react'
 import {render} from '@testing-library/react-native'
@@ -29,6 +31,7 @@ jest.mock('../ai/AICapabilitiesProvider', () => {
 
 // Minimal spec for RendererStateContext used by input components.
 // Includes a 'workouts' collection for compound tier components (Step 8).
+// Includes an 'events' collection for V1P1S4 Timeline / GridList / Carousel.
 const MINIMAL_SPEC: Spec = {
   version: 1,
   archetype: 'ListCRUD',
@@ -47,6 +50,16 @@ const MINIMAL_SPEC: Spec = {
         {name: 'uri', type: {type: 'image'} as const, required: false},
       ],
       seedData: [{name: 'Morning run', uri: 'file://run.jpg'}],
+      syncMode: 'local' as const,
+    },
+    {
+      id: 'events',
+      name: 'Events',
+      fields: [
+        {name: 'title', type: {type: 'string'} as const, required: true},
+        {name: 'createdAt', type: {type: 'date'} as const, required: true},
+      ],
+      seedData: [{title: 'Kickoff', createdAt: '2026-01-01T09:00:00Z'}],
       syncMode: 'local' as const,
     },
   ],
@@ -333,11 +346,90 @@ const CALLOUT: Extract<Node, {type: 'Callout'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended V1 Phase 1 Step 3): NodeRenderer discriminates 33 types correctly
-// T-0009-088: 33-arm test
+// Minimal node fixtures — V1 Phase 1 Step 2 (MoneyField, TimeField, MultiPicker,
+//                          Slider, RatingInput, SearchBar)
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 3 extended to 33 arms, T-0009-088)', () => {
+const MONEYFIELD: Extract<Node, {type: 'MoneyField'}> = {
+  id: 'mf1',
+  type: 'MoneyField',
+  label: 'Amount',
+  valueBinding: {kind: 'state', slot: 'numSlot'},
+}
+
+const TIMEFIELD: Extract<Node, {type: 'TimeField'}> = {
+  id: 'tif1',
+  type: 'TimeField',
+  label: 'Meeting time',
+  valueBinding: {kind: 'state', slot: 'strSlot'},
+}
+
+const MULTIPICKER: Extract<Node, {type: 'MultiPicker'}> = {
+  id: 'mp1',
+  type: 'MultiPicker',
+  label: 'Tags',
+  valueBinding: {kind: 'state', slot: 'strSlot'},
+  options: [{value: 'a', label: 'A'}, {value: 'b', label: 'B'}],
+}
+
+const SLIDER: Extract<Node, {type: 'Slider'}> = {
+  id: 'sl1',
+  type: 'Slider',
+  label: 'Volume',
+  valueBinding: {kind: 'state', slot: 'numSlot'},
+  min: 0,
+  max: 100,
+}
+
+const RATING_INPUT: Extract<Node, {type: 'RatingInput'}> = {
+  id: 'ri1',
+  type: 'RatingInput',
+  label: 'Rating',
+  valueBinding: {kind: 'state', slot: 'numSlot'},
+}
+
+const SEARCH_BAR: Extract<Node, {type: 'SearchBar'}> = {
+  id: 'sb1',
+  type: 'SearchBar',
+  valueBinding: {kind: 'state', slot: 'strSlot'},
+  placeholder: 'Search...',
+}
+
+// ---------------------------------------------------------------------------
+// Minimal node fixtures — V1 Phase 1 Step 4 (GridList, Carousel, Timeline, ErrorState)
+// ---------------------------------------------------------------------------
+
+const GRID_LIST: Extract<Node, {type: 'GridList'}> = {
+  id: 'gl1',
+  type: 'GridList',
+  collectionId: 'events',
+}
+
+const CAROUSEL: Extract<Node, {type: 'Carousel'}> = {
+  id: 'car1',
+  type: 'Carousel',
+  collectionId: 'events',
+}
+
+const TIMELINE: Extract<Node, {type: 'Timeline'}> = {
+  id: 'tl1',
+  type: 'Timeline',
+  collectionId: 'events',
+  dateField: 'createdAt',
+}
+
+const ERROR_STATE: Extract<Node, {type: 'ErrorState'}> = {
+  id: 'err1',
+  type: 'ErrorState',
+  headline: 'Something went wrong',
+}
+
+// ---------------------------------------------------------------------------
+// T-0006-062 (extended V1 Phase 1 Step 4): NodeRenderer discriminates 43 types correctly
+// T-0009-109: 43-arm boundary test
+// ---------------------------------------------------------------------------
+
+describe('NodeRenderer discrimination (T-0006-062 — Step 4 extended to 43 arms, T-0009-109)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
@@ -349,36 +441,53 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 3 extended to 33 arms
   })
 
   it.each([
+    // Layout tier (6)
     ['Screen', SCREEN],
     ['Section', SECTION],
     ['Stack', STACK],
     ['Row', ROW],
     ['Card', CARD],
     ['Divider', DIVIDER],
+    // Typography tier (3)
     ['Heading', HEADING],
     ['Body', BODY],
     ['Caption', CAPTION],
+    // Display tier (6)
     ['Stat', STAT],
     ['Badge', BADGE],
     ['Chip', CHIP],
     ['Avatar', AVATAR],
     ['AvatarGroup', AVATAR_GROUP],
     ['Callout', CALLOUT],
+    // Inputs tier (11)
     ['TextField', TEXTFIELD],
     ['NumberField', NUMBERFIELD],
     ['DateField', DATEFIELD],
     ['Picker', PICKER],
     ['Switch', SWITCH],
+    ['MoneyField', MONEYFIELD],
+    ['TimeField', TIMEFIELD],
+    ['MultiPicker', MULTIPICKER],
+    ['Slider', SLIDER],
+    ['RatingInput', RATING_INPUT],
+    ['SearchBar', SEARCH_BAR],
+    // Lists tier (9)
     ['List', LIST],
     ['ListItem', LIST_ITEM],
     ['SwipeableRow', SWIPEABLE_ROW],
     ['EmptyState', EMPTY_STATE],
     ['LoadingState', LOADING_STATE],
+    ['GridList', GRID_LIST],
+    ['Carousel', CAROUSEL],
+    ['Timeline', TIMELINE],
+    ['ErrorState', ERROR_STATE],
+    // Compound tier (5)
     ['ConditionalSection', CONDITIONAL_SECTION],
     ['ListSummary', LIST_SUMMARY],
     ['MediaTray', MEDIA_TRAY],
     ['ImagePicker', IMAGE_PICKER],
     ['Image', IMAGE],
+    // Actions tier (3)
     ['Button', BUTTON],
     ['FAB', FAB],
     ['IconButton', ICON_BUTTON],
@@ -386,27 +495,40 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 3 extended to 33 arms
     const host = makeHostCallbacks()
     const {toJSON} = renderNode(node, host)
 
-    // List with unknown collectionId renders an empty View (not null).
+    // List/GridList/Carousel/Timeline with unknown or empty collectionId may render empty View (not null).
     // ListSummary with fallback=hide renders null when AI unsupported.
     // All other nodes render non-null.
-    if (_type !== 'List' && _type !== 'ListSummary') {
+    if (_type !== 'ListSummary') {
       expect(toJSON()).not.toBeNull()
     }
     // onUnknownNodeType must NOT be called for known types.
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  it('does not call onUnknownNodeType for any of the 33 node types (T-0009-088)', () => {
+  // T-0009-109: 43-arm boundary test — all arms present, none call onUnknownNodeType
+  it('T-0009-109: does not call onUnknownNodeType for any of the 43 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
+      // Layout (6)
       SCREEN, SECTION, STACK, ROW, CARD, DIVIDER,
+      // Typography (3)
       HEADING, BODY, CAPTION,
+      // Display (6)
       STAT, BADGE, CHIP, AVATAR, AVATAR_GROUP, CALLOUT,
+      // Inputs (11)
       TEXTFIELD, NUMBERFIELD, DATEFIELD, PICKER, SWITCH,
+      MONEYFIELD, TIMEFIELD, MULTIPICKER, SLIDER, RATING_INPUT, SEARCH_BAR,
+      // Lists (9)
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
+      GRID_LIST, CAROUSEL, TIMELINE, ERROR_STATE,
+      // Compound (5)
       CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER, IMAGE,
+      // Actions (3)
       BUTTON, FAB, ICON_BUTTON,
     ]
+    // Total: 6 + 3 + 6 + 11 + 9 + 5 + 3 = 43
+    expect(allNodes.length).toBe(43)
+
     for (const node of allNodes) {
       renderNode(node, host)
     }

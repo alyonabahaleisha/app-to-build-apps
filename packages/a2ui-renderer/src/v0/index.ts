@@ -112,6 +112,11 @@ export {SwipeableRowRenderer} from './components/lists/SwipeableRow.js'
 export {EmptyStateRenderer} from './components/lists/EmptyState.js'
 export {LoadingStateRenderer} from './components/lists/LoadingState.js'
 export {LIST_DEFAULTS, ITEM_LAYOUT_HEIGHT} from './components/lists/defaults.js'
+// V1 Phase 1 Step 4 — Lists & Data tier expansion
+export {GridListRenderer} from './components/lists/GridList.js'
+export {CarouselRenderer} from './components/lists/Carousel.js'
+export {TimelineRenderer} from './components/lists/Timeline.js'
+export {ErrorStateRenderer} from './components/lists/ErrorState.js'
 
 // Step 8: Compound tier + AI dispatcher
 export {ConditionalSectionRenderer} from './components/compound/ConditionalSection.js'

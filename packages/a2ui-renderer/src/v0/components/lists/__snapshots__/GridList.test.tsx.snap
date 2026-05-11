@@ -1,0 +1,365 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GridListRenderer snapshot (T-0009-105) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "flex": 1,
+    }
+  }
+  testID="gridlist-container"
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 357,
+            "margin": 6,
+            "overflow": "hidden",
+            "width": 357,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 357,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+                "textAlign": "center",
+              }
+            }
+          >
+            Sunset
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 357,
+            "margin": 6,
+            "overflow": "hidden",
+            "width": 357,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 357,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+                "textAlign": "center",
+              }
+            }
+          >
+            Cityscape
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 357,
+            "margin": 6,
+            "overflow": "hidden",
+            "width": 357,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 357,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+                "textAlign": "center",
+              }
+            }
+          >
+            Portrait
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 357,
+            "margin": 6,
+            "overflow": "hidden",
+            "width": 357,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 357,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+                "textAlign": "center",
+              }
+            }
+          >
+            Landscape
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`GridListRenderer snapshot (T-0009-105) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="photos"
+  accessibilityRole="list"
+  style={
+    {
+      "flex": 1,
+    }
+  }
+  testID="gridlist-container"
+>
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 363,
+            "margin": 4,
+            "overflow": "hidden",
+            "width": 363,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 363,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+                "textAlign": "center",
+              }
+            }
+          >
+            Sunset
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 363,
+            "margin": 4,
+            "overflow": "hidden",
+            "width": 363,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 363,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+                "textAlign": "center",
+              }
+            }
+          >
+            Cityscape
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 363,
+            "margin": 4,
+            "overflow": "hidden",
+            "width": 363,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 363,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+                "textAlign": "center",
+              }
+            }
+          >
+            Portrait
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        style={
+          {
+            "borderRadius": 12,
+            "height": 363,
+            "margin": 4,
+            "overflow": "hidden",
+            "width": 363,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 12,
+              "justifyContent": "center",
+              "overflow": "hidden",
+              "padding": 4,
+              "width": 363,
+            }
+          }
+        >
+          <Text
+            numberOfLines={2}
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+                "textAlign": "center",
+              }
+            }
+          >
+            Landscape
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

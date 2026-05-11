@@ -1,7 +1,7 @@
 /**
  * gen-docs.ts — Generates packages/protocol/generated/docs.md
  *
- * One section per: 13 token types, 39 component schemas, 12 action verbs,
+ * One section per: 13 token types, 43 component schemas, 12 action verbs,
  * 5 binding types, plus top-level Spec / SpecScreen / Collection schemas.
  * ADR-0007's prompt builder concatenates this into the cacheable catalog block.
  *
@@ -10,18 +10,20 @@
  *      RadiusToken, SpaceToken, TypeRole — 7 token-name types; plus Archetype,
  *      BindingKind, Palette, SlotKind, Stance, Tone — 6 behavioral enums = 13 total)
  *   2. Component schemas (tier order: layout, typography, inputs, display,
- *      lists, compound, actions — 39 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
+ *      lists, compound, actions — 43 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
  *      V1 Phase 1 Step 3 adds AvatarGroup + Callout,
- *      V1 Phase 1 Step 2 adds MoneyField + TimeField + MultiPicker + Slider + RatingInput + SearchBar)
+ *      V1 Phase 1 Step 2 adds MoneyField + TimeField + MultiPicker + Slider + RatingInput + SearchBar,
+ *      V1 Phase 1 Step 4 adds GridList + Carousel + Timeline + ErrorState)
  *   3. Action verbs (schema-declaration order, matching actions.ts — 12 total)
  *   4. Binding types (StringBinding, NumberBinding, BooleanBinding, DateBinding,
  *      ImageBinding — 5 total)
  *   5. Top-level schemas (Collection, Spec, SpecScreen — 3 total)
  *
- * Total: 13 + 39 + 12 + 5 + 3 = 72 sections (≥60 per ADR AC).
+ * Total: 13 + 43 + 12 + 5 + 3 = 76 sections (≥60 per ADR AC).
  *
  * T-0005-183a guard: every component section must have a non-empty body
  * paragraph. Static description map ensures this — no silent-empty-doc.
+ * Step 4 update: 39 → 43 components.
  *
  * Run via: pnpm --filter @app-creator/protocol codegen
  */
@@ -101,6 +103,12 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   EmptyState: 'A full-area placeholder displayed when a collection is empty or content is unavailable. Shows a title, optional subtitle, and an optional call-to-action button.',
   LoadingState: 'A full-area loading indicator displayed while data is being fetched or processed. Shows an optional message alongside the activity indicator.',
 
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  GridList: 'A 2- or 3-column masonry grid backed by FlashList. Use in place of List when items benefit from visual density — photo grids, card grids, product tiles. The `columns` prop is a hint; the renderer collapses to 2 columns on devices narrower than 380pt to maintain a minimum 150pt cell width. `itemAspectRatio` constrains each cell\'s shape. An optional `emptyState` or `loadingState` node is shown when the collection is empty or loading.',
+  Carousel: 'A horizontally-scrollable card viewer backed by FlashList. Accepts either a `collectionId` (dynamic, one card per row) or a static `cards` array — the two are mutually exclusive and the schema rejects specs that set both or neither. `indicator` selects the page position display style (dots, fraction "1 / 5", or hidden). `autoplay` advances cards every 4 seconds but is hard-disabled when the user has Reduce Motion enabled — accessibility requirement.',
+  Timeline: 'A vertically-scrolling event log with a left-rail date indicator. Each event\'s date is read from `dateField` on the named collection; the field must have type `date` (cross-ref validated in Step 8). `dateFormat` controls how the date is displayed: relative ("2h ago"), absolute ("Jan 14, 2026"), or short ("Jan 14"). `groupBy` inserts date-group headers between events at day, week, or month boundaries. The left rail draws a continuous vertical line with `accent` circles at each event position.',
+  ErrorState: 'A centered error display that mirrors V0 EmptyState\'s layout but defaults to the `alert-triangle` icon in `warning` color. Use when a data fetch or action fails and the user may retry. `accessibilityRole="alert"` causes VoiceOver to announce the error immediately on render. The optional `action` and `actionLabel` render a full-width secondary button for a retry or navigation CTA.',
+
   // Compound tier
   ConditionalSection: 'A container that is visible only when a named collection satisfies a condition. `showWhen: \'whenEmpty\'` shows the children when the collection has no rows; `showWhen: \'whenNotEmpty\'` shows them when it has at least one.',
   ListSummary: 'Aggregates a numeric field across all rows in a named collection and displays the result with a label. Supported aggregations: count, sum, avg, min, max. Use for totals, averages, and record counts.',
@@ -171,7 +179,7 @@ for (const name of Object.keys(TOKEN_DESCRIPTIONS).sort()) {
   }
 }
 
-// 2. Component schemas (tier order — 39 sections)
+// 2. Component schemas (tier order — 43 sections)
 sections.push(`---\n\n## Component Schemas\n`)
 // Tier order matches components/index.ts: layout, typography, inputs, display, lists, compound, actions
 const COMPONENT_ORDER = [
@@ -189,8 +197,10 @@ const COMPONENT_ORDER = [
   'Stat', 'Badge', 'Chip', 'Avatar',
   // V1 Phase 1 Step 3 — display tier additions
   'AvatarGroup', 'Callout',
-  // Lists tier (5)
+  // Lists tier (5 → 9 with V1 Phase 1 Step 4)
   'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  'GridList', 'Carousel', 'Timeline', 'ErrorState',
   // Compound tier (4 → 5 with Image)
   'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker',
   // V1 Phase 1 Step 1 — compound addition

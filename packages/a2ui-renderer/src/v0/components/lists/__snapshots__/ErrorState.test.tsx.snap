@@ -1,0 +1,483 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorStateRenderer snapshot (T-0009-108) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Could not load data. Check your connection and try again.. Retry"
+  accessibilityRole="alert"
+  style={
+    {
+      "alignItems": "center",
+      "paddingHorizontal": 20,
+      "paddingVertical": 32,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 44,
+        "height": 88,
+        "justifyContent": "center",
+        "marginBottom": 20,
+        "width": 88,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={32}
+      bbWidth={32}
+      fill="none"
+      focusable={false}
+      height={32}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#C46A2A"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 32,
+            "width": 32,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={32}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4291062314,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 9v4"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 17h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#1A1715",
+        "fontSize": 22,
+        "fontWeight": "600",
+        "letterSpacing": -0.1,
+        "lineHeight": 30,
+        "marginBottom": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Could not load data
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#6B5F56",
+        "fontSize": 16,
+        "lineHeight": 26,
+        "marginBottom": 20,
+        "textAlign": "center",
+      }
+    }
+  >
+    Check your connection and try again.
+  </Text>
+  <View
+    accessibilityHint="Retry"
+    accessibilityLabel="Retry"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#EFE9DF",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "opacity": 1,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "lineHeight": 20,
+        }
+      }
+    >
+      Retry
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`ErrorStateRenderer snapshot (T-0009-108) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Could not load data. Check your connection and try again.. Retry"
+  accessibilityRole="alert"
+  style={
+    {
+      "alignItems": "center",
+      "paddingHorizontal": 20,
+      "paddingVertical": 32,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 44,
+        "height": 88,
+        "justifyContent": "center",
+        "marginBottom": 20,
+        "width": 88,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={32}
+      bbWidth={32}
+      fill="none"
+      focusable={false}
+      height={32}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#B8580C"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 32,
+            "width": 32,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={32}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4290271244,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4290271244,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 9v4"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4290271244,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 17h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4290271244,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <Text
+    accessibilityRole="header"
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 18,
+        "fontWeight": "600",
+        "letterSpacing": 0,
+        "lineHeight": 24,
+        "marginBottom": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Could not load data
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 16,
+        "lineHeight": 24,
+        "marginBottom": 20,
+        "textAlign": "center",
+      }
+    }
+  >
+    Check your connection and try again.
+  </Text>
+  <View
+    accessibilityHint="Retry"
+    accessibilityLabel="Retry"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderColor": "#ECEEF1",
+        "borderRadius": 12,
+        "borderWidth": 1,
+        "justifyContent": "center",
+        "minHeight": 44,
+        "opacity": 1,
+        "paddingHorizontal": 12,
+        "paddingVertical": 8,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 13,
+          "fontWeight": "500",
+          "lineHeight": 18,
+        }
+      }
+    >
+      Retry
+    </Text>
+  </View>
+</View>
+`;

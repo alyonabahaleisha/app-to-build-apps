@@ -3,7 +3,7 @@
  *
  * Section order per ADR-0005 §B:
  *   1. Node type alias (manual, for z.ZodType<Node> — resolves F-7)
- *   2. NodeSchema (z.lazy discriminated union over all 39 components)
+ *   2. NodeSchema (z.lazy discriminated union over all 43 components)
  *   3. SpecScreenSchema (top-level screen wrapper — renamed from ScreenSchema to
  *      avoid collision with the layout-component ScreenSchema in components/layout.ts)
  *   4. SpecSchema (top-level spec with .superRefine for initialScreenId cross-ref)
@@ -48,12 +48,20 @@ import {
   AvatarSchema,
   AvatarGroupSchema,
   CalloutSchema,
-  // Lists tier (5)
+  // Lists tier (5 → 9 with V1 Phase 1 Step 4)
   ListSchema,
   ListItemSchema,
   SwipeableRowSchema,
   EmptyStateSchema,
   LoadingStateSchema,
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  // Note: CarouselBaseSchema used in the discriminated union (not CarouselSchema)
+  // because z.discriminatedUnion requires ZodObject; superRefine returns ZodEffects.
+  GridListSchema,
+  CarouselBaseSchema,
+  CarouselSchema,
+  TimelineSchema,
+  ErrorStateSchema,
   // Compound tier (4 → 5 with Image)
   ConditionalSectionSchema,
   ListSummarySchema,
@@ -158,6 +166,11 @@ export type Node =
   | z.infer<typeof SwipeableRowSchema>
   | z.infer<typeof EmptyStateSchema>
   | z.infer<typeof LoadingStateSchema>
+  // Lists tier — V1 Phase 1 Step 4
+  | z.infer<typeof GridListSchema>
+  | z.infer<typeof CarouselSchema>
+  | z.infer<typeof TimelineSchema>
+  | z.infer<typeof ErrorStateSchema>
   // Compound tier — ConditionalSection has children: Node[]
   | {
       id: string
@@ -224,6 +237,12 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     SwipeableRowSchema,
     EmptyStateSchema,
     LoadingStateSchema,
+    // Lists tier — V1 Phase 1 Step 4
+    // CarouselBaseSchema (not CarouselSchema) in the union: superRefine → ZodEffects, not ZodObject
+    GridListSchema,
+    CarouselBaseSchema,
+    TimelineSchema,
+    ErrorStateSchema,
     // Compound tier — ConditionalSection children upgraded
     ConditionalSectionSchema.extend({children: z.array(NodeSchema)}),
     ListSummarySchema,

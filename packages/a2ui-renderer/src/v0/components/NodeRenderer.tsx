@@ -18,6 +18,8 @@
  *         = 33 arms total.
  * V1 Phase 1 Step 2: +6 inputs (MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar)
  *         = 39 arms total.
+ * V1 Phase 1 Step 4: +4 lists (GridList, Carousel, Timeline, ErrorState)
+ *         = 43 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -61,6 +63,11 @@ import {ListItemRenderer} from './lists/ListItem.js'
 import {SwipeableRowRenderer} from './lists/SwipeableRow.js'
 import {EmptyStateRenderer} from './lists/EmptyState.js'
 import {LoadingStateRenderer} from './lists/LoadingState.js'
+// V1 Phase 1 Step 4 — Lists & Data tier expansion
+import {GridListRenderer} from './lists/GridList.js'
+import {CarouselRenderer} from './lists/Carousel.js'
+import {TimelineRenderer} from './lists/Timeline.js'
+import {ErrorStateRenderer} from './lists/ErrorState.js'
 import {ConditionalSectionRenderer} from './compound/ConditionalSection.js'
 import {ListSummaryRenderer} from './compound/ListSummary.js'
 import {MediaTrayRenderer} from './compound/MediaTray.js'
@@ -144,6 +151,15 @@ export function NodeRenderer({node}: {node: Node}) {
       return <EmptyStateRenderer node={node} />
     case 'LoadingState':
       return <LoadingStateRenderer node={node} />
+    // Lists tier — V1 Phase 1 Step 4
+    case 'GridList':
+      return <GridListRenderer node={node} />
+    case 'Carousel':
+      return <CarouselRenderer node={node} />
+    case 'Timeline':
+      return <TimelineRenderer node={node} />
+    case 'ErrorState':
+      return <ErrorStateRenderer node={node} />
     // Compound tier (Step 8)
     case 'ConditionalSection':
       return <ConditionalSectionRenderer node={node} />

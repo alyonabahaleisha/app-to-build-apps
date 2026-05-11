@@ -1,0 +1,457 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimelineRenderer snapshot (T-0009-107) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="events"
+  accessibilityRole="list"
+  style={
+    {
+      "flex": 1,
+    }
+  }
+  testID="timeline-container"
+>
+  <View
+    accessibilityElementsHidden={true}
+    importantForAccessibility="no-hide-descendants"
+    style={
+      {
+        "backgroundColor": "#EFE9DF",
+        "bottom": 0,
+        "left": 19,
+        "position": "absolute",
+        "top": 0,
+        "width": 1,
+        "zIndex": 0,
+      }
+    }
+  />
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        accessibilityLabel="130d ago: Project kickoff"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 20,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4A7438",
+                "borderRadius": 6,
+                "height": 12,
+                "width": 12,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#B0A89E",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            130d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+              }
+            }
+          >
+            Project kickoff
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        accessibilityLabel="116d ago: Design review"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 20,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4A7438",
+                "borderRadius": 6,
+                "height": 12,
+                "width": 12,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#B0A89E",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            116d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+              }
+            }
+          >
+            Design review
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        accessibilityLabel="99d ago: Sprint planning"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 20,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4A7438",
+                "borderRadius": 6,
+                "height": 12,
+                "width": 12,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#B0A89E",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            99d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#1A1715",
+                "fontSize": 16,
+                "lineHeight": 26,
+              }
+            }
+          >
+            Sprint planning
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`TimelineRenderer snapshot (T-0009-107) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="events"
+  accessibilityRole="list"
+  style={
+    {
+      "flex": 1,
+    }
+  }
+  testID="timeline-container"
+>
+  <View
+    accessibilityElementsHidden={true}
+    importantForAccessibility="no-hide-descendants"
+    style={
+      {
+        "backgroundColor": "#ECEEF1",
+        "bottom": 0,
+        "left": 19,
+        "position": "absolute",
+        "top": 0,
+        "width": 1,
+        "zIndex": 0,
+      }
+    }
+  />
+  <View
+    testID="flashlist"
+  >
+    <View>
+      <View
+        accessibilityLabel="130d ago: Project kickoff"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 8,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4F46E5",
+                "borderRadius": 4,
+                "height": 8,
+                "width": 8,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#A2A8B2",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            130d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+              }
+            }
+          >
+            Project kickoff
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        accessibilityLabel="116d ago: Design review"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 8,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4F46E5",
+                "borderRadius": 4,
+                "height": 8,
+                "width": 8,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#A2A8B2",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            116d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+              }
+            }
+          >
+            Design review
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View>
+      <View
+        accessibilityLabel="99d ago: Sprint planning"
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "paddingBottom": 8,
+            "zIndex": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "paddingTop": 4,
+              "width": 40,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "backgroundColor": "#4F46E5",
+                "borderRadius": 4,
+                "height": 8,
+                "width": 8,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#A2A8B2",
+                "fontSize": 11,
+                "lineHeight": 14,
+                "marginBottom": 4,
+              }
+            }
+          >
+            99d ago
+          </Text>
+          <Text
+            style={
+              {
+                "color": "#14171A",
+                "fontSize": 16,
+                "lineHeight": 24,
+              }
+            }
+          >
+            Sprint planning
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

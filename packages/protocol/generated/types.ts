@@ -191,6 +191,11 @@ export type Node =
   | {id: string; type: 'SwipeableRow'; leading?: Slot; trailing?: Slot; child: Node; accessibilityLabel?: string}
   | {id: string; type: 'EmptyState'; title: string; subtitle?: string; action?: Action; accessibilityLabel?: string}
   | {id: string; type: 'LoadingState'; message?: string; accessibilityLabel?: string}
+  // Lists tier — V1 Phase 1 Step 4 (GridList, Carousel, Timeline, ErrorState)
+  | {id: string; type: 'GridList'; collectionId: string; columns?: 2 | 3; gap?: 'space-none' | 'space-xs' | 'space-sm' | 'space-md' | 'space-lg' | 'space-xl'; itemAspectRatio?: '1:1' | '4:5' | '3:4'; emptyState?: unknown; loadingState?: unknown; accessibilityLabel?: string}
+  | {id: string; type: 'Carousel'; collectionId?: string; cards?: unknown[]; indicator?: 'dots' | 'fraction' | 'none'; cardWidth?: 'snap' | 'peek' | 'full'; autoplay?: boolean; accessibilityLabel?: string}
+  | {id: string; type: 'Timeline'; collectionId: string; dateField: string; dateFormat?: 'relative' | 'absolute' | 'short'; groupBy?: 'none' | 'day' | 'week' | 'month'; accessibilityLabel?: string}
+  | {id: string; type: 'ErrorState'; icon?: string; headline: string; body?: string; actionLabel?: string; action?: Action; accessibilityLabel?: string}
   // Compound tier
   | {id: string; type: 'ConditionalSection'; collectionId: string; showWhen: 'whenEmpty' | 'whenNotEmpty'; children: Node[]; accessibilityLabel?: string}
   | {id: string; type: 'ListSummary'; collectionId: string; field: string; aggregation: 'count' | 'sum' | 'avg' | 'min' | 'max'; label?: string; accessibilityLabel?: string}

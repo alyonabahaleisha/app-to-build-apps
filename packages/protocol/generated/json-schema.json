@@ -2292,6 +2292,202 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "GridList"
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "columns": {
+                        "type": "number",
+                        "enum": [
+                          2,
+                          3
+                        ]
+                      },
+                      "gap": {
+                        "type": "string",
+                        "enum": [
+                          "space-none",
+                          "space-xs",
+                          "space-sm",
+                          "space-md",
+                          "space-lg",
+                          "space-xl"
+                        ]
+                      },
+                      "itemAspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "1:1",
+                          "4:5",
+                          "3:4"
+                        ]
+                      },
+                      "emptyState": {},
+                      "loadingState": {},
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "collectionId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Carousel"
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "cards": {
+                        "type": "array",
+                        "items": {},
+                        "maxItems": 10
+                      },
+                      "indicator": {
+                        "type": "string",
+                        "enum": [
+                          "dots",
+                          "fraction",
+                          "none"
+                        ]
+                      },
+                      "cardWidth": {
+                        "type": "string",
+                        "enum": [
+                          "snap",
+                          "peek",
+                          "full"
+                        ]
+                      },
+                      "autoplay": {
+                        "type": "boolean"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Timeline"
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "dateField": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "dateFormat": {
+                        "type": "string",
+                        "enum": [
+                          "relative",
+                          "absolute",
+                          "short"
+                        ]
+                      },
+                      "groupBy": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "day",
+                          "week",
+                          "month"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "collectionId",
+                      "dateField"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "ErrorState"
+                      },
+                      "icon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "headline": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "body": {
+                        "type": "string",
+                        "maxLength": 400
+                      },
+                      "actionLabel": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "action": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "headline"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "ConditionalSection"
                       },
                       "collectionId": {
@@ -2520,7 +2716,7 @@
                         "const": "Image"
                       },
                       "source": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/34/properties/valueBinding"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/38/properties/valueBinding"
                       },
                       "aspectRatio": {
                         "type": "string",

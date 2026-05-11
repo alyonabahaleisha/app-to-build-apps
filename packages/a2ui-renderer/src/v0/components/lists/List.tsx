@@ -162,8 +162,9 @@ export function buildAnimationProps(reducedMotion: boolean) {
  * Returns true if the row has at least one string field that contains `query`
  * as a case-insensitive substring.
  * `query` must already be lowercased (SearchFilterContext stores it lowercased).
+ * Exported for use by GridList and other collection renderers.
  */
-function rowMatchesQuery(row: Row, query: string): boolean {
+export function rowMatchesQuery(row: Row, query: string): boolean {
   for (const value of Object.values(row)) {
     if (typeof value === 'string' && value.toLowerCase().includes(query)) {
       return true

@@ -64,7 +64,12 @@ These shape every decision below:
    they don't change how the schema is fed to the LLM.
 6. **All renderer components are pure functions of `{node, state,
    dispatch}`.** No `useEffect` outside the §K-approved exceptions
-   (ADR-0006). Phase 1 introduces NO new §K exceptions.
+   (ADR-0006). Phase 1 introduces ONE new §K exception: Carousel
+   autoplay setInterval (exception #6 in ADR-0006 §K) — formalized in
+   this PR Step 4 to handle time-based auto-advance with mount/unmount
+   cleanup, which has no synchronous React equivalent. Reduced-motion
+   respect is at the gating layer (`shouldAutoplay = node.autoplay &&
+   !reducedMotion`).
 
 ### Inconsistency I'm closing as part of this ADR
 

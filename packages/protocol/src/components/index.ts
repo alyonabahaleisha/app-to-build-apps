@@ -42,15 +42,21 @@ export type {
 export {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 export type {Stat, Badge, Chip, Avatar, AvatarGroup, Callout} from './display.js'
 
-// Lists tier (5)
+// Lists tier (5 → 9 with V1 Phase 1 Step 4)
 export {
   ListSchema,
   ListItemSchema,
   SwipeableRowSchema,
   EmptyStateSchema,
   LoadingStateSchema,
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  GridListSchema,
+  CarouselBaseSchema,
+  CarouselSchema,
+  TimelineSchema,
+  ErrorStateSchema,
 } from './lists.js'
-export type {List, ListItem, SwipeableRow, EmptyState, LoadingState} from './lists.js'
+export type {List, ListItem, SwipeableRow, EmptyState, LoadingState, GridList, Carousel, Timeline, ErrorState} from './lists.js'
 
 // Compound tier (4 → 5 with Image)
 export {
@@ -104,6 +110,11 @@ import {
   SwipeableRowSchema,
   EmptyStateSchema,
   LoadingStateSchema,
+  GridListSchema,
+  CarouselBaseSchema,
+  CarouselSchema,
+  TimelineSchema,
+  ErrorStateSchema,
 } from './lists.js'
 import {
   ConditionalSectionSchema,
@@ -114,11 +125,12 @@ import {
 } from './compound.js'
 import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 39 component schemas in one array — used by the Step 5 discriminated union.
+// All 43 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
 // V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema (→33).
 // V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema (→35).
 // V1 Phase 1 Step 2 adds: MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar (→39).
+// V1 Phase 1 Step 4 adds: GridList, Carousel, Timeline, ErrorState (→43).
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
@@ -152,6 +164,13 @@ export const ALL_COMPONENT_SCHEMAS = [
   SwipeableRowSchema,
   EmptyStateSchema,
   LoadingStateSchema,
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  // Note: CarouselBaseSchema used here (not CarouselSchema) because z.discriminatedUnion
+  // requires ZodObject; CarouselSchema's superRefine returns ZodEffects (incompatible).
+  GridListSchema,
+  CarouselBaseSchema,
+  TimelineSchema,
+  ErrorStateSchema,
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
@@ -197,6 +216,11 @@ export type ComponentNode =
   | z.infer<typeof SwipeableRowSchema>
   | z.infer<typeof EmptyStateSchema>
   | z.infer<typeof LoadingStateSchema>
+  // V1 Phase 1 Step 4 — Lists & Data tier expansion
+  | z.infer<typeof GridListSchema>
+  | z.infer<typeof CarouselSchema>
+  | z.infer<typeof TimelineSchema>
+  | z.infer<typeof ErrorStateSchema>
   | z.infer<typeof ConditionalSectionSchema>
   | z.infer<typeof ListSummarySchema>
   | z.infer<typeof MediaTraySchema>
