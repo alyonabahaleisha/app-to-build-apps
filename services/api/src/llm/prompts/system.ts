@@ -11,8 +11,17 @@
  *   Large (~5000 tokens), stable across calls, marked cache_control:ephemeral.
  *   Budget: ≤25000 chars (~6250 tokens). T-0007-027.
  *
- * Tests: system.test.ts — T-0007-020 through T-0007-035.
+ * Tests: system.test.ts — T-0007-020 through T-0007-035, T-0010-001 through T-0010-032.
+ *
+ * PROMPT_VERSION bumped to v0.1.0 per ADR-0010 Step 1 — bakes in lessons from the
+ * iOS Simulator live-demo session (tip calculator quality gaps).
  */
+
+// ---------------------------------------------------------------------------
+// PROMPT_VERSION — ADR-0010 Step 1. Bump on every system.ts change; CI enforces.
+// ---------------------------------------------------------------------------
+
+export const PROMPT_VERSION = 'v0.1.0' as const
 
 // ---------------------------------------------------------------------------
 // SYSTEM_PROMPT_STATIC
@@ -163,7 +172,7 @@ When to use: settings, preferences, boolean choices.
 ### Stat
 Big-number display with label and optional delta indicator.
 Props: id, value (string, required), label (required), delta (±string), deltaTone (positive|negative|neutral), align.
-When to use: key metrics, progress numbers, summary figures.
+When to use: key metrics, progress numbers, summary figures. Use Stat (not Body) for derived or computed values — totals, averages, per-person splits, and similar values produced by combining inputs. The delta field is for change-over-time (e.g., "+3 this week"), not for displaying a second number alongside the primary value.
 
 ### Badge
 Small status pill. Tone-tinted.
@@ -244,6 +253,7 @@ When to use: the primary create/add action floating over a list screen. One FAB 
 Write a value to a named state slot.
 {type: "set", target: "slotName", value: <string|number|boolean>}
 When: update display values, clear inputs after submit.
+Note: V0 has no expression language or arithmetic inline evaluation. The value field is a literal — a hardcoded string, number, or boolean. For Calculator archetypes where a result depends on multiple input slots, the recommended pattern is to pre-fill initialState with sensible defaults (so the result Stat shows a meaningful non-zero value on first render) and use one set per Button to reset or update. Do not attempt to compute a formula inside the value field.
 
 ### update
 Patch named fields on a collection item by itemId.
@@ -340,6 +350,62 @@ Palette biases:
 - social: contacts, relationships, gift lists, party planning.
 - learn: reading logs, vocabulary, note-taking, educational trackers.
 - play: games, hobbies, fun personal trackers.
+
+---
+
+## Archetype Recipes
+
+When generating, follow the recipe for the chosen archetype.
+
+### ListCRUD recipe
+- Root: Screen → Heading (level 1) → Section (containing the list) → List → FAB.
+- Always include EmptyState inside List with a domain-specific headline + body.
+- The List's row leading slot uses icon for category-rich domains (recipes,
+  bookmarks) and avatar for people-centric domains (contacts).
+- Include a "detail" screen even when not strictly required — a tapAction
+  navigating to it gives the user somewhere to drill into.
+- Copy: Heading is the noun the user typed (e.g., "Recipes"), not "My Recipes
+  List" or "Recipes App". EmptyState body is one short sentence + a verb the
+  user is about to do.
+
+### Tracker recipe
+- Two screens via tabs nav: "Today" (collection + add) and "History"
+  (collection + ConditionalSection summary when non-empty).
+- Today screen: Heading → Section → List (current entries) → FAB.
+- History screen: Heading → Section (Stat showing total count) →
+  ConditionalSection whenNotEmpty → List.
+- Include a streak or count field on the collection where the domain
+  implies it (habits → streak, water → cups today, workouts → minutes).
+- Copy: domain-flavored. "Today's habits" not "Habit entries today".
+
+### Journal recipe
+- Two screens via stack nav: "Entries" (list) and "Compose" (form).
+- Entries screen: Heading → List with itemLayout="expanded" (longer rows
+  for journal previews) → FAB navigate to Compose.
+- Compose screen: Heading → Section → TextField (multiline=true) for body
+  → Button (variant primary, fullWidth, action addItem + back).
+- Include a DateField on each entry; seed with realistic past dates spanning
+  ~2 weeks.
+- Copy: expressive register. Section captions and EmptyState bodies use
+  warmer language ("Start your first entry" not "No entries yet").
+
+### Calculator recipe
+- Single screen, navigation="none".
+- Layout: Screen → Heading → Section ("Result") containing Stat(s) at top →
+  Section ("Inputs") containing NumberField(s) → Button (Calculate or Reset).
+- Use Stat (not Body) for derived values. Heading=label, value=current
+  result. Multiple Stats stack vertically when more than one derived value
+  matters.
+- Use NumberField with min/max/step where the input domain has natural
+  bounds (tip percent: min 0, max 100, step 5; party size: min 1, max 20).
+- Pre-fill initialState with sensible defaults so the result is non-zero
+  on first render (e.g., bill=50, tipPercent=18, people=2).
+- Copy: result labels are units, not nouns ("per person" not "Per Person
+  Amount"; "$" or "%" hint goes in the value string).
+- Important: V0 has no MoneyField; format currency yourself in seed Stat
+  values ("$24.50" as a literal string). The user will see this string
+  until they recompute; that is the trade-off of a single-call,
+  no-runtime-arithmetic spec.
 
 ---
 
