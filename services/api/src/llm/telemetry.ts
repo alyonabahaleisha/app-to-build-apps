@@ -42,6 +42,12 @@ export type EventType =
   | 'edit.patch_out_of_scope_fallback'
   // ADR-0007 Step 5: out_of_scope_intent capture event.
   | 'out_of_scope_intent_captured'
+  // ADR-0007 Step 3: V0 single-call pipeline events.
+  // These land in PR 2 (Steps 3+4 cutover). Step 6 will remove the ADR-0004
+  // event types above once the deletion sweep lands.
+  | 'generate.completed'
+  | 'generate.invalid_spec'
+  | 'generate.out_of_scope'
 
 // ---------------------------------------------------------------------------
 // Per-type payload whitelists.
@@ -94,6 +100,16 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
   // ADR-0007 Step 5 — out_of_scope_intent capture.
   // has_email is boolean — presence of email in the captured row.
   'out_of_scope_intent_captured': ['capability', 'has_email'],
+  // ADR-0007 Step 3 — V0 single-call pipeline events.
+  'generate.completed': [
+    'generationId',
+    'archetype',
+    'screens_count',
+    'navigation',
+    'generation_duration_ms',
+  ],
+  'generate.invalid_spec': ['generationId', 'error_kind', 'code_count'],
+  'generate.out_of_scope': ['generationId', 'capability', 'reason_length'],
 } as const
 
 // ---------------------------------------------------------------------------

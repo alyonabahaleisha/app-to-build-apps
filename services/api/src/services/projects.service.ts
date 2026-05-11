@@ -1,34 +1,37 @@
 /**
- * Projects service — ADR-0001 Step 4.
+ * Projects service — ADR-0007 Step 4 V0 cutover.
  *
- * Three operations on the project library:
- *   - create({ownerId, spec, parentProjectId?}) → ProjectDetail
+ * Three read operations + one write:
+ *   - create({ownerId, spec, parentProjectId?, originalPrompt?, parentVersionId?}) → ProjectDetail
  *   - list(ownerId)                            → ProjectListItem[]   (specJson EXCLUDED)
  *   - get(ownerId, projectId)                  → ProjectDetail | null
+ *   - getVersion(versionId)                    → ProjectVersion | null
+ *   - applyEdit(...)                           → ProjectDetail  (preserved for Step 6 sweep)
+ *
+ * V0 changes vs M1:
+ *   - `spec` type: A2UISpec → Spec (from @app-creator/protocol)
+ *   - `plan` parameter: dropped from create()
+ *   - renderHash: uses @app-creator/protocol's renderHash (not lib/canonical.ts)
+ *   - deepValidateSpec: replaced by validateCrossRefs
+ *   - migrateCollectionData: V0 stub — always returns {} (V0.5 flips this on)
+ *   - plan_json: always NULL on V0 inserts (per ADR-0007 §G)
+ *   - parentVersionId: optional; when present, triggers collection data migration
+ *
+ * Title derivation (T-0007-099):
+ *   Walk spec.screens[0].root depth-first; return the first Heading.text
+ *   (whitespace-trimmed). Fallback: first 40 chars of originalPrompt
+ *   (whitespace-trimmed, truncated with '…' suffix if > 40 chars).
+ *   If prompt is empty → literal "Untitled".
  *
  * Sensitivity (per retro-lessons.md `normalizeRow` lesson):
- *   `list` is a `public-safe`-ish surface (still scoped to the owner) and
- *   intentionally OMITS `specJson`. Only `get` returns the full version.
+ *   `list` omits `specJson`. Only `get` returns the full version.
  *   The TS types make this impossible to "accidentally" include.
- *
- * Validation order (per ADR §Step 4 + T-0001-130/131/138):
- *   1. Zod parse — shape, enums, recursive node schema.
- *   2. deepValidateSpec — depth ≤ 8, action targets resolved, view ids resolved.
- *   3. Compute renderHash from canonicalized spec bytes.
- *   4. Single transaction: INSERT project (current_version_id NULL) →
- *      INSERT project_version → UPDATE project.current_version_id.
- *
- * Title derivation:
- *   - First Heading text in the first view, whitespace-trimmed.
- *   - Empty / missing → "Untitled".
- *   - >60 chars → first 60 chars + ellipsis (total length 61, T-0001-059).
  */
 import {desc, eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import {A2UISpecSchema, PlanSchema, type A2UINode, type A2UISpec, type Plan} from '@app-creator/a2ui-schema'
+import {SpecSchema, validateCrossRefs, renderHash, type Spec} from '@app-creator/protocol'
 
-import {renderHash} from '../lib/canonical.js'
 import * as schema from '../db/schema.js'
 import {
   projects,
@@ -37,44 +40,30 @@ import {
   type Project,
   type ProjectVersion,
 } from '../db/schema.js'
-import {deepValidateSpec} from './specValidation.js'
 
 type Db = NodePgDatabase<typeof schema>
 
 // ---------------------------------------------------------------------------
-// Public types — derived from the Drizzle row types via Pick/Omit so column
-// renames in `schema.ts` propagate here automatically.
+// Public types
 // ---------------------------------------------------------------------------
 
 export interface CreateProjectInput {
   ownerId: string
-  spec: A2UISpec
+  spec: Spec
   parentProjectId?: string
   /**
    * The user's original prompt text. Stored verbatim on the project row
-   * (ADR-0002 §G) and inserted as the first `messages` row for future memory
-   * features. Defaults to '' for backward compat with ADR-0001 callers.
+   * and inserted as the first `messages` row.
    */
   originalPrompt?: string
   /**
-   * ADR-0004 Step 4: optional plan artifact from the Plan→Build pipeline.
-   * When provided: runtime-validated via PlanSchema.parse() before any DB write.
-   * When absent (undefined): plan_json is written as NULL, which is the
-   * explicit signal that this version came from the M1 single-call fallback
-   * path (ADR-0004 §F-3, §G).
-   *
-   * Data sensitivity: owner-only. Must NOT be exposed via the public
-   * /library/:id response (ADR-0004 §Data Sensitivity, Step 7 enforces this).
+   * V0: when set, this generation is a re-prompt-to-edit. The service applies
+   * best-effort collection data migration from the parent version to the new spec.
+   * When absent: fresh creation.
    */
-  plan?: Plan
+  parentVersionId?: string
 }
 
-/**
- * The list-item shape. Note the absence of `specJson` and `ownerId` — the
- * former defends T-0001-064 (the `userCount`/`normalizeRow` retro-lesson),
- * the latter is implicit (the list is owner-scoped, the caller already
- * knows whose list they're looking at).
- */
 export type ProjectListItem = Pick<
   Project,
   'id' | 'title' | 'currentVersionId' | 'parentProjectId'
@@ -84,100 +73,91 @@ export type ProjectListItem = Pick<
 }
 
 export interface ProjectDetail {
-  /**
-   * Project columns — `currentVersionId` is non-null after `create()` returns.
-   * The DB column is nullable (the FK breaks an insertion cycle); the service
-   * narrows it for callers because by the time `create()` resolves, the field
-   * is always populated.
-   */
   project: Omit<Project, 'currentVersionId'> & {currentVersionId: string}
   currentVersion: ProjectVersion
 }
 
 // ---------------------------------------------------------------------------
-// Title derivation — exported for visibility in tests/debugging.
+// Title derivation — T-0007-099
 // ---------------------------------------------------------------------------
 
-const MAX_TITLE_LENGTH = 60
+const MAX_PROMPT_TITLE_LENGTH = 40
 
-function findFirstHeadingText(node: A2UINode): string | undefined {
-  if (node.type === 'Heading') return node.text
-  if (node.type === 'List') {
-    for (const item of node.items) {
-      const found = findFirstHeadingText(item)
-      if (found !== undefined) return found
+type AnyNode = {type: string; [key: string]: unknown}
+
+function findFirstHeadingText(node: AnyNode): string | undefined {
+  if (node.type === 'Heading') {
+    const text = node['text']
+    if (text && typeof text === 'object' && 'value' in text) {
+      // V0 binding: {kind: 'literal', value: string}
+      return String((text as {value: unknown}).value)
     }
+    if (typeof text === 'string') return text
     return undefined
   }
-  if (node.type === 'Form') {
-    for (const field of node.fields) {
-      const found = findFirstHeadingText(field)
-      if (found !== undefined) return found
+  // Walk container children arrays
+  const childrenFields = ['children', 'items'] as const
+  for (const field of childrenFields) {
+    const children = node[field]
+    if (Array.isArray(children)) {
+      for (const child of children as AnyNode[]) {
+        const found = findFirstHeadingText(child)
+        if (found !== undefined) return found
+      }
     }
-    return undefined
-  }
-  if (node.type === 'Container') {
-    for (const child of node.children) {
-      const found = findFirstHeadingText(child)
-      if (found !== undefined) return found
-    }
-    return undefined
   }
   return undefined
 }
 
-export function deriveTitle(spec: A2UISpec): string {
-  const firstView = spec.views[0]
-  // A2UISpecSchema requires .min(1) views, so firstView is always defined,
-  // but TS narrowing on array access still wants a guard.
-  if (!firstView) return 'Untitled'
-  const heading = findFirstHeadingText(firstView.root)
-  const trimmed = heading?.trim() ?? ''
-  if (trimmed === '') return 'Untitled'
-  if (trimmed.length > MAX_TITLE_LENGTH) {
-    return trimmed.slice(0, MAX_TITLE_LENGTH) + '…'
+export function deriveTitle(spec: Spec, originalPrompt = ''): string {
+  // Walk spec.screens[0].root depth-first for a Heading node.
+  const firstScreen = spec.screens[0]
+  if (firstScreen) {
+    const heading = findFirstHeadingText(firstScreen.root as AnyNode)
+    const trimmed = heading?.trim() ?? ''
+    if (trimmed.length > 0) return trimmed
   }
-  return trimmed
+
+  // Fallback: first 40 chars of originalPrompt.
+  const trimmedPrompt = originalPrompt.trim()
+  if (trimmedPrompt.length === 0) return 'Untitled'
+  if (trimmedPrompt.length > MAX_PROMPT_TITLE_LENGTH) {
+    return trimmedPrompt.slice(0, MAX_PROMPT_TITLE_LENGTH) + '…'
+  }
+  return trimmedPrompt
 }
 
 // ---------------------------------------------------------------------------
-// Service factory — `db` is injected so route tests can swap in a sabotaged
-// proxy (T-0001-062) and so the production binding stays at the route layer.
+// migrateCollectionData — V0 stub (ADR-0007 §B Notes for Colby)
+//
+// V0 returns {} for all inputs. V0.5 flips this on when collection rows
+// persist server-side. T-0007-180 locks the V0 stub so V0.5's activation
+// is detected when this test starts failing.
+// ---------------------------------------------------------------------------
+
+async function migrateCollectionData(
+  _parentVersionId: string,
+  _newSpec: Spec,
+): Promise<Record<string, unknown[]>> {
+  return {}
+}
+
+// ---------------------------------------------------------------------------
+// Service factory
 // ---------------------------------------------------------------------------
 
 export interface ProjectsService {
   create: (input: CreateProjectInput) => Promise<ProjectDetail>
   list: (ownerId: string) => Promise<ProjectListItem[]>
   get: (ownerId: string, projectId: string) => Promise<ProjectDetail | null>
-  /**
-   * Look up a single project_versions row by its primary key.
-   *
-   * Returns null when no row with that versionId exists — does NOT throw.
-   * This contract is tested by T-0004-125 (rev-1: closes Step 4 ratio gap).
-   *
-   * Caller context: owner-gated routes and the pipeline orchestrator (Step 5)
-   * use this to load the current plan before re-prompting the planner.
-   * planJson is included here (owner-only path; ADR-0004 §G).
-   */
   getVersion: (versionId: string) => Promise<ProjectVersion | null>
   /**
-   * ADR-0004 Step 7: Apply an edit result to a project.
-   *
-   * Inside a single transaction:
-   *   1. Insert a new project_versions row with the updated spec, render hash,
-   *      and the reconstructed/updated plan from the edit pipeline.
-   *   2. Update projects.current_version_id to the new version's id.
-   *
-   * Last-writer-wins on simultaneous edits — both writes succeed but
-   * current_version_id ends at the latest committed (T-0004-089).
-   *
-   * `plan` is always populated for edit-path versions — the planner
-   * reconstructs a plan even for legacy versions with plan_json IS NULL.
+   * applyEdit is preserved for Step 6 deletion sweep. It is no longer called
+   * by the V0 generate route (re-prompt-to-edit goes through create() now).
    */
   applyEdit: (
     projectId: string,
-    newSpec: A2UISpec,
-    plan: Plan,
+    newSpec: Spec,
   ) => Promise<ProjectDetail>
 }
 
@@ -188,27 +168,30 @@ export function createProjectsService(db: Db): ProjectsService {
       spec,
       parentProjectId,
       originalPrompt = '',
-      plan,
+      parentVersionId,
     }: CreateProjectInput): Promise<ProjectDetail> {
-      // 1. Zod validation — throws ZodError on shape failure (T-0001-055).
-      const parsed = A2UISpecSchema.parse(spec)
+      // 1. Defensive Zod re-validation — Zod parse already ran in generate.ts;
+      //    this is the service boundary's defence-in-depth check.
+      const parsed = SpecSchema.parse(spec)
 
-      // 2. Deep validation — throws ValidationError on depth / unresolved
-      //    target / unresolved view (T-0001-130/131/138). BEFORE any DB write.
-      deepValidateSpec(parsed)
+      // 2. Cross-ref validation at service boundary.
+      const crossRef = validateCrossRefs(parsed)
+      if (!crossRef.ok) {
+        throw new Error(
+          `invalid_spec: cross_ref errors: ${crossRef.errors.map(e => e.code).join(', ')}`,
+        )
+      }
 
-      // 3. ADR-0004 Step 4: runtime-validate the plan before any DB write.
-      //    Fail fast on a structurally invalid plan so we never persist garbage
-      //    in plan_json (T-0004-059). When plan is undefined, planJson is NULL.
-      const validatedPlan = plan !== undefined ? PlanSchema.parse(plan) : null
+      // 3. Best-effort collection data migration (V0: always {}).
+      const _migratedData = parentVersionId
+        ? await migrateCollectionData(parentVersionId, parsed)
+        : {}
 
       // 4. Cheap derivations.
-      const title = deriveTitle(parsed)
+      const title = deriveTitle(parsed, originalPrompt)
       const hash = renderHash(parsed)
 
-      // 5. Transactional write. Insert project with NULL current_version_id,
-      //    insert version, update project, insert messages row. Any failure
-      //    rolls back all inserts (T-0001-062, T-0002-043).
+      // 5. Transactional write.
       return await db.transaction(async tx => {
         const [projectRow] = await tx
           .insert(projects)
@@ -228,9 +211,8 @@ export function createProjectsService(db: Db): ProjectsService {
             projectId: projectRow.id,
             specJson: parsed,
             renderHash: hash,
-            // NULL signals M1 fallback path; populated when planner ran
-            // successfully (ADR-0004 §G).
-            planJson: validatedPlan,
+            // V0: plan_json is always NULL (ADR-0007 §G: plan column deprecated).
+            planJson: null,
           })
           .returning()
         if (!versionRow) throw new Error('project_versions insert returned no row')
@@ -240,9 +222,6 @@ export function createProjectsService(db: Db): ProjectsService {
           .set({currentVersionId: versionRow.id})
           .where(eq(projects.id, projectRow.id))
 
-        // Insert the user's original prompt as the first messages row so the
-        // chat history table is seeded for future edit/memory features
-        // (ADR-0002 §G, T-0002-043). Only insert if the prompt is non-empty.
         if (originalPrompt.length > 0) {
           await tx.insert(messages).values({
             projectId: projectRow.id,
@@ -258,14 +237,6 @@ export function createProjectsService(db: Db): ProjectsService {
       })
     },
 
-    /**
-     * Owner-scoped list. Returns the public-safe shape: id/title/timestamps/
-     * currentVersionId/parentProjectId — explicitly NO `specJson`.
-     *
-     * Per retro-lessons.md `normalizeRow` lesson, omission of `specJson` here
-     * is enforced both at the SELECT (we list specific columns) and at the
-     * type level (`ProjectListItem` doesn't include it).
-     */
     async list(ownerId: string): Promise<ProjectListItem[]> {
       const rows = await db
         .select({
@@ -280,10 +251,6 @@ export function createProjectsService(db: Db): ProjectsService {
         .where(eq(projects.ownerId, ownerId))
         .orderBy(desc(projects.updatedAt))
 
-      // currentVersionId is nullable in the DB schema; the union here would
-      // expose null to callers. After `create()` runs in a transaction, it's
-      // never null in committed rows, so we narrow to string. T-0001-068
-      // verifies that `list` never observes a half-formed row.
       return rows.map(r => ({
         id: r.id,
         title: r.title,
@@ -294,25 +261,13 @@ export function createProjectsService(db: Db): ProjectsService {
       }))
     },
 
-    /**
-     * Owner-scoped get. Returns null when the project doesn't exist OR when
-     * it exists but isn't owned by the requested user. The route translates
-     * null into 404 (T-0001-056, T-0001-065 — 404, NOT 403).
-     *
-     * Data sensitivity: `currentVersion` includes `planJson` (owner-only).
-     * The public /library/:id route (Step 7) must NOT pass this ProjectDetail
-     * shape directly to the response — it must exclude planJson explicitly.
-     */
     async get(ownerId: string, projectId: string): Promise<ProjectDetail | null> {
       const projectRows = await db.select().from(projects).where(eq(projects.id, projectId))
       const project = projectRows[0]
       if (!project) return null
       if (project.ownerId !== ownerId) return null
-      if (project.currentVersionId === null) {
-        // Defensive: `create` always sets this. A null here means a partial
-        // write slipped through (shouldn't happen) — treat as not-found.
-        return null
-      }
+      if (project.currentVersionId === null) return null
+
       const versionRows = await db
         .select()
         .from(projectVersions)
@@ -326,16 +281,6 @@ export function createProjectsService(db: Db): ProjectsService {
       }
     },
 
-    /**
-     * Look up a single project_versions row by its primary key.
-     *
-     * Returns null when no row with that versionId exists — does NOT throw.
-     * Contract tested by T-0004-125 (rev-1).
-     *
-     * Used by the pipeline orchestrator (Step 5) to load the current plan
-     * before re-prompting the planner. planJson is owner-only and must not
-     * be forwarded to public consumers (ADR-0004 §Data Sensitivity).
-     */
     async getVersion(versionId: string): Promise<ProjectVersion | null> {
       const rows = await db
         .select()
@@ -345,24 +290,15 @@ export function createProjectsService(db: Db): ProjectsService {
     },
 
     /**
-     * ADR-0004 Step 7: Apply an edit result to a project.
-     *
-     * Transactional two-step: insert new version row, update project's
-     * current_version_id. The plan is always populated (edit pipeline
-     * reconstructs a plan even for legacy NULL-plan versions).
-     *
-     * Returns the updated project + new version. T-0004-089 verifies last-
-     * writer-wins: two concurrent calls both insert rows; the final
-     * current_version_id is whichever committed last.
+     * applyEdit — preserved for Step 6 deletion sweep.
+     * V0 re-prompt-to-edit goes through create() with parentVersionId.
+     * plan parameter removed (ADR-0007 — planner deleted).
      */
     async applyEdit(
       projectId: string,
-      newSpec: A2UISpec,
-      plan: Plan,
+      newSpec: Spec,
     ): Promise<ProjectDetail> {
-      // Validate both artifacts before touching the DB.
-      const parsed = A2UISpecSchema.parse(newSpec)
-      const validatedPlan = PlanSchema.parse(plan)
+      const parsed = SpecSchema.parse(newSpec)
       const hash = renderHash(parsed)
 
       return await db.transaction(async tx => {
@@ -372,7 +308,7 @@ export function createProjectsService(db: Db): ProjectsService {
             projectId,
             specJson: parsed,
             renderHash: hash,
-            planJson: validatedPlan,
+            planJson: null,
           })
           .returning()
         if (!versionRow) throw new Error('project_versions insert returned no row')

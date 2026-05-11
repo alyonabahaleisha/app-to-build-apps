@@ -98,10 +98,9 @@ function authHeader(userId: string, email: string): {authorization: string} {
 async function makeProject(
   db: Db,
   ownerId: string,
-  plan?: Plan,
 ): Promise<{projectId: string; versionId: string}> {
   const svc = createProjectsService(db)
-  const detail = await svc.create({ownerId, spec: validSpec(), plan})
+  const detail = await svc.create({ownerId, spec: validSpec()})
   return {
     projectId: detail.project.id,
     versionId: detail.currentVersion.id,
@@ -302,7 +301,8 @@ describe('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (unit, no Docker
 
   // T-0004-099: InvalidSpecError → 422 invalid_spec
   it('T-0004-099: InvalidSpecError has code invalid_spec', () => {
-    const err = new InvalidSpecError('invalid_spec', 'patch result invalid')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const err = new InvalidSpecError('invalid_spec', 'patch result invalid' as any)
     expect(err.code).toBe('invalid_spec')
   })
 
@@ -392,7 +392,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       mockRunPipelineEdit.mockResolvedValue(happyEditResult())
 
@@ -427,7 +427,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId, versionId: originalVersionId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId, versionId: originalVersionId} = await makeProject(db, userId)
 
       mockRunPipelineEdit.mockResolvedValue(happyEditResult())
 
@@ -481,7 +481,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       // Each call returns a slightly different spec (different text)
       let callCount = 0
@@ -549,7 +549,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     try {
       const owner = await makeUser(db)
       const attacker = await makeUser(db)
-      const {projectId} = await makeProject(db, owner.id, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, owner.id)
 
       const res = await server.inject({
         method: 'POST',
@@ -578,7 +578,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       // Simulate: pipeline internally retried and succeeded
       mockRunPipelineEdit.mockResolvedValue(happyEditResult())
@@ -604,7 +604,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       mockRunPipelineEdit.mockRejectedValue(
         new PatchOutOfScopeError(0, "op.path '/views/1' outside intent"),
@@ -632,7 +632,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       // runPipelineEdit already handles this internally and throws PatchOutOfScopeError
       mockRunPipelineEdit.mockRejectedValue(
@@ -661,10 +661,11 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       mockRunPipelineEdit.mockRejectedValue(
-        new InvalidSpecError('invalid_spec', 'patch result failed validation'),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new InvalidSpecError('invalid_spec', 'patch result failed validation' as any),
       )
 
       const res = await server.inject({
@@ -732,7 +733,7 @@ describeIntegration('ADR-0004 Step 7 — POST /me/projects/:projectId/edit (inte
     const server = await buildEditServer({db})
     try {
       const {id: userId, email} = await makeUser(db)
-      const {projectId} = await makeProject(db, userId, MINIMAL_VALID_PLAN)
+      const {projectId} = await makeProject(db, userId)
 
       const sensitivePrompt = 'sensitive user input should not appear in response'
       mockRunPipelineEdit.mockResolvedValue(happyEditResult({

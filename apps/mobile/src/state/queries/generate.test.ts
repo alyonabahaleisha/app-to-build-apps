@@ -332,6 +332,41 @@ it('T-0002-144: generate() sends Authorization header with session token', async
 // T-0002-146: in-flight guard
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// T-0007-101: out_of_scope SSE event — mobile consumer handles it
+// ---------------------------------------------------------------------------
+
+it('T-0007-101: out_of_scope SSE event transitions phase to "out_of_scope" and populates outOfScope result', async () => {
+  const {fetch, enqueue, close} = makeMockFetch()
+  global.fetch = fetch as unknown as typeof fetch
+
+  const {result} = renderHook(() => useGenerateMutation(), {wrapper: makeWrapper()})
+
+  await act(async () => {
+    const genPromise = result.current.generate({prompt: 'Build something with photos'})
+    enqueue(sseEvent('thinking_started'))
+    enqueue(sseEvent('building_started'))
+    enqueue(
+      sseEvent('out_of_scope', {
+        capability: 'vision',
+        reason: 'requires photo analysis',
+        prompt_hash: 'a'.repeat(64),
+      }),
+    )
+    enqueue(sseDone())
+    close()
+    await genPromise
+  })
+
+  expect(result.current.phase).toBe('out_of_scope')
+  expect(result.current.outOfScope).toBeDefined()
+  expect(result.current.outOfScope?.capability).toBe('vision')
+  expect(result.current.outOfScope?.reason).toBe('requires photo analysis')
+  expect(result.current.outOfScope?.prompt_hash).toBe('a'.repeat(64))
+  // No project result populated on out_of_scope path
+  expect(result.current.result).toBeNull()
+})
+
 it('T-0002-146: second generate() call while first is in flight throws', async () => {
   global.fetch = jest.fn().mockReturnValue(new Promise(() => {})) as unknown as typeof fetch
 

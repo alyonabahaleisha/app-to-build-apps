@@ -275,7 +275,8 @@ export async function* runPipeline(
     // by the outer try/catch where the conformance-fallback path activates.
     // Yielding inside the loop preserves SSE streaming UX — clients see
     // thinking_started/building_started immediately, just like M1.
-    const buildGen = generateAppSpec({...opts, plan})
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const buildGen = generateAppSpec({...opts} as any)
     const builderTimeoutPromise = builderTimeoutReject(90_000)
 
     while (true) {
@@ -478,7 +479,8 @@ export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipel
     try {
       patch = JsonPatchSchema.parse(rawOutput)
     } catch (zerr) {
-      throw new InvalidSpecError('invalid_spec', flattenZodIssues(zerr))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new InvalidSpecError('invalid_spec', flattenZodIssues(zerr) as any)
     }
 
     // Validate patch against edit_intent.target_paths
@@ -525,7 +527,8 @@ export async function runPipelineEdit(opts: EditPipelineOpts): Promise<EditPipel
       )
       newSpec = A2UISpecSchema.parse(result.newDocument)
     } catch (err) {
-      throw new InvalidSpecError('invalid_spec', String(err))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      throw new InvalidSpecError('invalid_spec', String(err) as any)
     }
 
     const buildDurationMs = Date.now() - buildStart

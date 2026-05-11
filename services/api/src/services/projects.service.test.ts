@@ -6,15 +6,22 @@
  *
  * T-IDs covered here:
  *   Happy:       T-0001-049, 050, 051, 052
- *   Failure:     T-0001-055, 130, 131, 138
- *   Boundary:    T-0001-059, 121
+ *   Failure:     T-0001-055
+ *   Boundary:    T-0001-059 (V0: 40-char title truncation), T-0001-121
  *   Error:       T-0001-062 (mid-tx rollback)
  *   Concurrency: T-0001-067, 068
  *   Regression:  T-0001-069, 070
  *
- * ADR-0004 Step 4 additions:
- *   Happy:    T-0004-057, T-0004-058
- *   Negative: T-0004-059, T-0004-125
+ * ADR-0004 Step 4 additions (V0 update):
+ *   Happy:    T-0004-057 (V0: plan_json always NULL), T-0004-058
+ *   Stable:   T-0004-125
+ *
+ * ADR-0007 V0 cutover:
+ *   - plan param removed from create()
+ *   - deepValidateSpec removed (validateCrossRefs used in V0; service boundary)
+ *   - T-0001-130/131/138 removed (M1 deepValidateSpec era — no longer applies)
+ *   - T-0004-059 removed (invalid plan — concept gone in V0)
+ *   - T-0001-059 boundary: 40 chars + '…' (V0), not 60
  *
  * The route file covers list-shape / get-shape / 404-not-403 / cross-user
  * isolation / audit log / fork roundtrip (T-0001-053, 054, 056, 057, 058,
@@ -22,66 +29,21 @@
  */
 import {randomUUID} from 'node:crypto'
 
-import {ZodError} from 'zod'
 import {eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import type {Plan} from '@app-creator/a2ui-schema'
-
 import * as schema from '../db/schema.js'
 import {projects, projectVersions, messages, users} from '../db/schema.js'
-import {ValidationError} from './specValidation.js'
 import {createProjectsService, type ProjectsService} from './projects.service.js'
 import {
-  specWithDeepNesting,
   specWithFork,
   specWithHeading,
   specWithLongHeading,
-  specWithUnresolvedTargetId,
-  specWithUnresolvedViewId,
   specWithoutHeading,
   uniqueEmail,
   validSpec,
 } from '../../test/factories.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
-
-// ---------------------------------------------------------------------------
-// ADR-0004 Step 4 fixtures — plan shapes for T-0004-057/058/059.
-// ---------------------------------------------------------------------------
-
-/** A valid Plan matching PlanSchema. Used for T-0004-057. */
-const VALID_PLAN: Plan = {
-  version: 1,
-  archetype: 'Calculator',
-  screens: [
-    {
-      id: 'main',
-      role: 'home',
-      purpose: 'Enter inputs and see the result',
-      key_components: ['Form', 'Button', 'Text'],
-    },
-  ],
-  navigation: 'none',
-}
-
-/**
- * An invalid plan shape that fails PlanSchema (archetype not in the closed
- * enum). Used for T-0004-059 to verify the runtime Zod check fires before
- * any DB write.
- */
-const INVALID_PLAN = {
-  version: 1,
-  archetype: 'NotAnArchetype', // not in PlanArchetypeSchema
-  screens: [
-    {
-      id: 'main',
-      role: 'home',
-      purpose: 'test',
-      key_components: ['Button'],
-    },
-  ],
-  navigation: 'none',
-} as unknown as Plan
 
 type Db = NodePgDatabase<typeof schema>
 
@@ -137,7 +99,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   // -------------------------------------------------------------------------
   // T-0001-050 — Happy: title auto-derives from first Heading text
   // -------------------------------------------------------------------------
-  it('T-0001-050: title auto-derives from the first Heading text in the first view', async () => {
+  it('T-0001-050: title auto-derives from the first Heading text in the first screen', async () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({ownerId, spec: specWithHeading('Recipe Box')})
     expect(detail.project.title).toBe('Recipe Box')
@@ -146,7 +108,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   // -------------------------------------------------------------------------
   // T-0001-051 — Happy: title falls back to "Untitled" when no Heading
   // -------------------------------------------------------------------------
-  it('T-0001-051: title falls back to "Untitled" when the spec contains no Heading', async () => {
+  it('T-0001-051: title falls back to "Untitled" when the spec contains no Heading and no originalPrompt', async () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({ownerId, spec: specWithoutHeading()})
     expect(detail.project.title).toBe('Untitled')
@@ -173,11 +135,11 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // T-0001-055 — Failure: invalid spec throws ZodError BEFORE any DB write
+  // T-0001-055 — Failure: invalid spec throws before any DB write
   // -------------------------------------------------------------------------
-  it('T-0001-055: create with an invalid spec throws ZodError before writing any row', async () => {
+  it('T-0001-055: create with an invalid spec throws before writing any row', async () => {
     const ownerId = await makeUser(db)
-    const malformed = {version: 999, views: []} as unknown as Parameters<
+    const malformed = {version: 999, screens: []} as unknown as Parameters<
       typeof service.create
     >[0]['spec']
 
@@ -191,68 +153,15 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // T-0001-130 — Failure: unresolved targetId throws ValidationError, no writes
+  // T-0001-059 — Boundary: title heading > 40 chars → 40 + ellipsis (total 41)
+  // V0 title derivation truncates at 40 chars (vs M1's 60 chars).
   // -------------------------------------------------------------------------
-  it('T-0001-130: create with an unresolved action targetId throws ValidationError({code: unresolved_target_id}) and writes nothing', async () => {
-    const ownerId = await makeUser(db)
-    try {
-      await service.create({ownerId, spec: specWithUnresolvedTargetId()})
-      throw new Error('expected throw')
-    } catch (err) {
-      expect(err).toBeInstanceOf(ValidationError)
-      expect((err as ValidationError).code).toBe('unresolved_target_id')
-    }
-
-    const projectRows = await db.select().from(projects)
-    const versionRows = await db.select().from(projectVersions)
-    expect(projectRows).toHaveLength(0)
-    expect(versionRows).toHaveLength(0)
-  })
-
-  // -------------------------------------------------------------------------
-  // T-0001-131 — Failure: depth > 8 throws max_depth_exceeded, no writes
-  // -------------------------------------------------------------------------
-  it('T-0001-131: create with a 9-level spec throws ValidationError({code: max_depth_exceeded}); 8-level spec succeeds', async () => {
-    const ownerId = await makeUser(db)
-
-    try {
-      await service.create({ownerId, spec: specWithDeepNesting(9)})
-      throw new Error('expected throw')
-    } catch (err) {
-      expect(err).toBeInstanceOf(ValidationError)
-      expect((err as ValidationError).code).toBe('max_depth_exceeded')
-    }
-    expect(await db.select().from(projects)).toHaveLength(0)
-
-    // Boundary: 8 levels passes and writes a row.
-    const ok = await service.create({ownerId, spec: specWithDeepNesting(8)})
-    expect(ok.project.id).toBeDefined()
-  })
-
-  // -------------------------------------------------------------------------
-  // T-0001-138 — Failure: navigate to unknown viewId throws unresolved_view_id
-  // -------------------------------------------------------------------------
-  it('T-0001-138: create with a Form.submitAction navigating to an unknown viewId throws ValidationError({code: unresolved_view_id})', async () => {
-    const ownerId = await makeUser(db)
-    try {
-      await service.create({ownerId, spec: specWithUnresolvedViewId()})
-      throw new Error('expected throw')
-    } catch (err) {
-      expect(err).toBeInstanceOf(ValidationError)
-      expect((err as ValidationError).code).toBe('unresolved_view_id')
-    }
-    expect(await db.select().from(projects)).toHaveLength(0)
-  })
-
-  // -------------------------------------------------------------------------
-  // T-0001-059 — Boundary: title heading > 60 chars → 60 + ellipsis (total 61)
-  // -------------------------------------------------------------------------
-  it('T-0001-059: title heading >60 chars → truncated to 60 + ellipsis; resulting length is exactly 61', async () => {
+  it('T-0001-059: title heading >40 chars → truncated to 40 + ellipsis; resulting length is exactly 41', async () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({ownerId, spec: specWithLongHeading()})
-    expect(detail.project.title).toHaveLength(61)
+    expect(detail.project.title).toHaveLength(41)
     expect(detail.project.title.endsWith('…')).toBe(true)
-    expect(detail.project.title.slice(0, 60)).toBe('A'.repeat(60))
+    expect(detail.project.title.slice(0, 40)).toBe('A'.repeat(40))
   })
 
   // -------------------------------------------------------------------------
@@ -297,6 +206,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
         return Reflect.get(target, prop, receiver)
       },
     })
+
     const failingService = createProjectsService(sabotaged)
 
     await expect(
@@ -386,8 +296,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // Sanity: get() returns null for a non-owner (route-layer test asserts the
-  // 404 surface; here we assert the service contract).
+  // Sanity: get() returns null for a non-owner
   // -------------------------------------------------------------------------
   it('get returns null when the project is not owned by the requested user', async () => {
     const ownerA = await makeUser(db)
@@ -408,8 +317,7 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // Sanity: parentProjectId roundtrip on the service layer (route layer
-  // asserts the HTTP shape — T-0001-122 there).
+  // Sanity: parentProjectId roundtrip on the service layer
   // -------------------------------------------------------------------------
   it('create persists parentProjectId when supplied', async () => {
     const ownerId = await makeUser(db)
@@ -477,14 +385,14 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // T-0004-057 — Happy: create with plan writes plan_json populated in DB
+  // T-0004-057 — V0 update: plan_json is ALWAYS NULL (V0 drops plan)
+  // The M1 test asserted plan_json was populated; V0 asserts it is always NULL.
   // -------------------------------------------------------------------------
-  it('T-0004-057: create with a valid plan writes plan_json to project_versions; SELECT confirms the stored object', async () => {
+  it('T-0004-057: V0 create always writes plan_json: NULL regardless of input (plan concept removed)', async () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({
       ownerId,
       spec: specWithHeading('Tip Calculator'),
-      plan: VALID_PLAN,
     })
 
     const pool = await getTestPool()
@@ -493,25 +401,18 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
       [detail.currentVersion.id],
     )
     expect(rows).toHaveLength(1)
-    // plan_json must NOT be null — it was supplied.
-    expect(rows[0]?.plan_json).not.toBeNull()
-    // The stored object must match the input plan shape.
-    expect(rows[0]?.plan_json).toMatchObject({
-      version: 1,
-      archetype: 'Calculator',
-      navigation: 'none',
-    })
+    // V0: plan_json must always be NULL (ADR-0007 §G).
+    expect(rows[0]?.plan_json).toBeNull()
   })
 
   // -------------------------------------------------------------------------
-  // T-0004-058 — Happy: create without plan writes plan_json as NULL
+  // T-0004-058 — Happy: create without plan writes plan_json as NULL (unchanged)
   // -------------------------------------------------------------------------
-  it('T-0004-058: create without plan argument writes plan_json: NULL (M1 fallback signal)', async () => {
+  it('T-0004-058: create without plan argument writes plan_json: NULL', async () => {
     const ownerId = await makeUser(db)
     const detail = await service.create({
       ownerId,
       spec: specWithHeading('No Plan App'),
-      // plan is deliberately absent — M1 fallback path
     })
 
     const pool = await getTestPool()
@@ -524,35 +425,13 @@ describe('ADR-0001 Step 4 — projectsService (unit)', () => {
   })
 
   // -------------------------------------------------------------------------
-  // T-0004-059 — Negative: create with an invalid plan throws Zod before DB write
-  // -------------------------------------------------------------------------
-  it('T-0004-059: create with a Zod-invalid plan throws ZodError before any DB write; no project_versions row created', async () => {
-    const ownerId = await makeUser(db)
-
-    await expect(
-      service.create({
-        ownerId,
-        spec: specWithHeading('Bad Plan App'),
-        plan: INVALID_PLAN,
-      }),
-    ).rejects.toThrow(ZodError)
-
-    // Defense: no rows should have been written.
-    const projectRows = await db.select().from(projects).where(eq(projects.ownerId, ownerId))
-    const versionRows = await db.select().from(projectVersions)
-    expect(projectRows).toHaveLength(0)
-    expect(versionRows).toHaveLength(0)
-  })
-
-  // -------------------------------------------------------------------------
   // T-0004-125 — Negative: getVersion with a valid-format UUID that has no
-  // matching row returns null, not throws (rev-1: closes Step 4 ratio gap).
+  // matching row returns null, not throws.
   // -------------------------------------------------------------------------
   it('T-0004-125: getVersion with a valid UUID that has no matching row returns null (not throws, not undefined)', async () => {
     const phantomVersionId = randomUUID()
     const result = await service.getVersion(phantomVersionId)
-    // Explicit null — not undefined, not an empty row. The caller must be able
-    // to `if (version === null)` to detect the missing-row case.
+    // Explicit null — not undefined, not an empty row.
     expect(result).toBeNull()
   })
 

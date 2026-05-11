@@ -15,15 +15,22 @@ export function sha256Hex(input: string): string {
   return createHash('sha256').update(input, 'utf8').digest('hex')
 }
 
-export function flattenZodIssues(err: unknown): unknown {
+/**
+ * flattenZodIssues — extract error codes from a ZodError.
+ *
+ * Returns ONLY the closed-enum `code` strings — never `message` or `path`.
+ * Returning paths or messages would leak LLM-emitted strings (collection IDs,
+ * slot names, screen IDs) back to the client. Per ADR-0007 §F and the
+ * retro-lessons.md normalizeRow lesson.
+ *
+ * Carryforward from PR 1 NOTE-3: the M1 shape `{path, message, code}[]` is
+ * replaced here with `string[]` of codes only.
+ */
+export function flattenZodIssues(err: unknown): string[] {
   if (err instanceof ZodError) {
-    return err.issues.map(issue => ({
-      path: issue.path.join('.'),
-      message: issue.message,
-      code: issue.code,
-    }))
+    return err.issues.map(issue => issue.code)
   }
-  return String(err)
+  return ['unknown_error']
 }
 
 export function sleep(ms: number): Promise<void> {

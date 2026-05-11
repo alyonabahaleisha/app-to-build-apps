@@ -1,43 +1,51 @@
 /**
- * POST /generate — SSE-driven app generation route. ADR-0002 Step 4.
+ * POST /generate — SSE-driven app generation route. ADR-0007 Step 4 V0 cutover.
  *
- * Wire protocol (ADR-0002 §C, CLAUDE.md §7):
+ * Wire protocol (ADR-0002 §C, CLAUDE.md §7, ADR-0007 §J):
  *   Content-Type: text/event-stream; one `data: <JSON>\n\n` per event.
  *   Events: thinking_started → building_started → done → [DONE].
+ *           OR: thinking_started → building_started → out_of_scope → [DONE].
  *   On LLM error: thinking_started (if emitted) → error → [DONE].
  *
  * Pre-flight failures (body validation, rate-limit, prompt_too_large,
- * missing auth): plain JSON 4xx — NO SSE stream opened (T-0002-045/046/
- * 047/059/062).
+ * missing auth): plain JSON 4xx — NO SSE stream opened.
  *
  * Client-disconnect behaviour (ADR-0002 §O): the Anthropic call completes
- * regardless. Project persists. `client_disconnect_during_generate` is logged.
+ * regardless. Project persists on done. `client_disconnect_during_generate` is logged.
  *
  * Security notes:
- *   - Thinking trace text NEVER appears in SSE output (T-0002-057).
- *   - `userId` hash is handled inside `generateAppSpec`; the route never
- *     touches it (T-0002-035 defence).
- *   - Raw prompt is never logged at INFO level (AC-CG-Q1).
+ *   - `userId` hash is handled inside `generateAppSpec`; the route never touches it.
+ *   - Raw prompt is never logged at INFO level.
+ *   - Error responses include only closed-enum codes (no LLM-emitted strings).
+ *   - `done` event does NOT include `plan` field (plan removed in V0).
+ *
+ * V0 changes vs M1:
+ *   - Drops `runPipeline` import; uses `generateAppSpec` directly.
+ *   - Handles new `out_of_scope` event type (no project persisted).
+ *   - Error detail shape: `{kind: 'zod'|'cross_ref', codes: string[]}` not `{path, message, code}[]`.
+ *   - `done` event no longer includes `plan` field (T-0007-091).
+ *   - Body schema does NOT accept `plan` field (T-0007-090).
+ *   - `done` event includes `generationId` (T-0007-092).
+ *   - parentPromptContext combined with prompt applies to 12,000-char gate (T-0007-179).
  */
 import type {FastifyInstance, FastifyPluginAsync} from 'fastify'
 import {z} from 'zod'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import type {A2UISpec, Plan} from '@app-creator/a2ui-schema'
 import * as schema from '../db/schema.js'
 import {projects} from '../db/schema.js'
 import {eq} from 'drizzle-orm'
 import {requireAuth, type AuthenticatedRequest} from '../lib/auth.js'
 import {safeMessage} from '../lib/logger.js'
 import {rateLimit} from '../lib/rateLimit.js'
-import {runPipeline} from '../llm/pipeline.js'
+import {generateAppSpec} from '../llm/generate.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from '../llm/errors.js'
 import {createProjectsService, type ProjectsService} from '../services/projects.service.js'
 
 type Db = NodePgDatabase<typeof schema>
 
 // ---------------------------------------------------------------------------
-// Body schema
+// Body schema — V0: no `plan` field
 // ---------------------------------------------------------------------------
 
 const GenerateBodySchema = z.object({
@@ -59,14 +67,14 @@ const RATE_LIMIT_WINDOW_MS = 60_000
 // ---------------------------------------------------------------------------
 
 /**
- * Rough upper bound on total token input chars. We check the prompt length
- * plus a conservative 11000-char budget for the static system + catalog
- * blocks (measured from the actual prompt text in system.ts; 12000 total cap
- * per ADR-0002 §D). This avoids an actual token count call.
+ * Rough upper bound on total token input chars. Checks prompt + optional
+ * parentPromptContext (composed into the user message) against the 12,000-char
+ * gate (T-0007-076, T-0007-179).
  */
-function estimateTotalInputChars(prompt: string): number {
+function estimateTotalInputChars(prompt: string, parentPromptContext?: string): number {
   const SYSTEM_CATALOG_ESTIMATE = 11_000
-  return prompt.length + SYSTEM_CATALOG_ESTIMATE
+  const contextLen = parentPromptContext ? parentPromptContext.length : 0
+  return prompt.length + contextLen + SYSTEM_CATALOG_ESTIMATE
 }
 
 interface MappedError {
@@ -77,7 +85,7 @@ interface MappedError {
 
 /**
  * Translate LLM errors to the wire code + HTTP status.
- *   InvalidSpecError  → {code: 'invalid_spec', detail: <zod issues>}
+ *   InvalidSpecError  → {code: 'invalid_spec', detail: {kind, codes}}
  *   RateLimitedError  → {code: 'rate_limited'}, status 503
  *   AnthropicTransportError → {code: 'internal'}, status 500
  *   unknown           → {code: 'internal'}, status 500
@@ -122,15 +130,13 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
   opts: GenerateRoutesOptions,
 ) => {
   const projectsService = await resolveService(opts)
-  // Keep a reference to the db for the parent-ACL lookup. Production falls
-  // through to the singleton; tests inject their own pool.
   const resolvedDb: Db = opts.db ?? (await import('../db/index.js').then(m => m.getDb()))
 
   fastify.post('/generate', {preHandler: [requireAuth]}, async (req, reply) => {
     const userId = (req as unknown as AuthenticatedRequest).user.id
 
     // ------------------------------------------------------------------
-    // 1. Body validation — 400 JSON, no SSE (T-0002-045/046/052)
+    // 1. Body validation — 400 JSON, no SSE
     // ------------------------------------------------------------------
     let body: z.infer<typeof GenerateBodySchema>
     try {
@@ -140,7 +146,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
     }
 
     // ------------------------------------------------------------------
-    // 2. Rate limit — 400 JSON, no SSE (T-0002-062)
+    // 2. Rate limit — 429 JSON, no SSE
     // ------------------------------------------------------------------
     const rl = rateLimit(`generate:${userId}`, RATE_LIMIT_PER_MINUTE, RATE_LIMIT_WINDOW_MS)
     if (!rl.allowed) {
@@ -149,14 +155,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
     }
 
     // ------------------------------------------------------------------
-    // 3. Prompt length guard — 400 JSON, no SSE (T-0002-047)
-    // ------------------------------------------------------------------
-    if (estimateTotalInputChars(body.prompt) >= MAX_TOTAL_INPUT_CHARS) {
-      return reply.code(400).send({error: 'prompt_too_large'})
-    }
-
-    // ------------------------------------------------------------------
-    // 4. parent_project_id ACL — 404 JSON, no SSE (T-0002-060/061)
+    // 3. parent_project_id ACL — 404 JSON, no SSE
     //    Project must EITHER be public OR owned by the caller.
     //    If neither → 404 (don't reveal existence).
     // ------------------------------------------------------------------
@@ -174,14 +173,21 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
     }
 
     // ------------------------------------------------------------------
-    // 5. Open SSE stream (T-0002-058)
+    // 4. Prompt + context length guard — 400 JSON, no SSE (T-0007-076, T-0007-179)
+    //    Combined prompt + parentPromptContext is checked here, not just prompt.
+    // ------------------------------------------------------------------
+    if (estimateTotalInputChars(body.prompt, parentPromptContext) >= MAX_TOTAL_INPUT_CHARS) {
+      return reply.code(400).send({error: 'prompt_too_large'})
+    }
+
+    // ------------------------------------------------------------------
+    // 5. Open SSE stream
     // ------------------------------------------------------------------
     reply.raw.setHeader('Content-Type', 'text/event-stream')
     reply.raw.setHeader('Cache-Control', 'no-cache')
     reply.raw.setHeader('X-Accel-Buffering', 'no')
     reply.raw.setHeader('Connection', 'keep-alive')
 
-    // Server keeps streaming even if the client disconnects (ADR-0002 §O).
     let clientGone = false
     req.raw.on('close', () => {
       clientGone = true
@@ -193,23 +199,27 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
     try {
       let thinkingDurationMs = 0
       let generationDurationMs = 0
-      let doneSpec: A2UISpec | null = null
-      let donePlan: Plan | null = null
+      let generationId: string | null = null
+      let doneSpec: import('@app-creator/protocol').Spec | null = null
+      // out_of_scope tracking
+      let outOfScopeEvent: import('../llm/generate.js').OutOfScopeEvent | null = null
 
-      for await (const event of runPipeline({
+      for await (const event of generateAppSpec({
         userId,
         prompt: body.prompt,
         parentPromptContext,
       })) {
         if (event.type === 'done') {
-          // Don't emit 'done' yet — need to persist first, then build the
-          // enriched done payload that includes project metadata.
+          // Don't emit 'done' yet — need to persist first.
           doneSpec = event.spec
-          donePlan = event.plan
+          generationId = event.generationId
           thinkingDurationMs = event.thinking_duration_ms
           generationDurationMs = event.generation_duration_ms
+        } else if (event.type === 'out_of_scope') {
+          // Capture — emit after the loop.
+          outOfScopeEvent = event
         } else {
-          // emit thinking_started and building_started immediately
+          // thinking_started and building_started emit immediately.
           if (!clientGone) {
             reply.raw.write(`data: ${JSON.stringify(event)}\n\n`)
           }
@@ -217,11 +227,27 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
       }
 
       // ------------------------------------------------------------------
-      // 7. Persist project (runs regardless of clientGone per ADR-0002 §O)
+      // 7a. out_of_scope path — emit event, no project persisted
       // ------------------------------------------------------------------
-      if (doneSpec === null) {
-        // Defensive: generator should always yield 'done' or throw.
-        throw new Error('generator completed without done event')
+      if (outOfScopeEvent !== null) {
+        if (!clientGone) {
+          reply.raw.write(
+            `data: ${JSON.stringify({
+              type: 'out_of_scope',
+              capability: outOfScopeEvent.capability,
+              reason: outOfScopeEvent.reason,
+              prompt_hash: outOfScopeEvent.prompt_hash,
+            })}\n\n`,
+          )
+        }
+        return
+      }
+
+      // ------------------------------------------------------------------
+      // 7b. done path — persist project, emit done event
+      // ------------------------------------------------------------------
+      if (doneSpec === null || generationId === null) {
+        throw new Error('generator completed without done or out_of_scope event')
       }
 
       const detail = await projectsService.create({
@@ -229,13 +255,11 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
         spec: doneSpec,
         originalPrompt: body.prompt,
         parentProjectId: body.parent_project_id,
-        // Translate null back to undefined for the service boundary:
-        // plan?: Plan (optional), so null is not accepted.
-        plan: donePlan ?? undefined,
       })
 
-      const doneEvent = {
+      const doneEventPayload = {
         type: 'done',
+        generationId,
         project: {
           id: detail.project.id,
           title: detail.project.title,
@@ -245,14 +269,13 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
           created_at: detail.project.createdAt.toISOString(),
         },
         spec: doneSpec,
-        plan: donePlan,
         render_hash: detail.currentVersion.renderHash,
         thinking_duration_ms: thinkingDurationMs,
         generation_duration_ms: generationDurationMs,
       }
 
       if (!clientGone) {
-        reply.raw.write(`data: ${JSON.stringify(doneEvent)}\n\n`)
+        reply.raw.write(`data: ${JSON.stringify(doneEventPayload)}\n\n`)
       } else {
         req.log.info(
           {

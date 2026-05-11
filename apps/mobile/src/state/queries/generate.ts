@@ -30,7 +30,7 @@ import {projectsKeys} from '#/state/queries/projects'
 
 // -- Public types ------------------------------------------------------------
 
-export type GeneratePhase = 'idle' | 'thinking' | 'building' | 'stalled' | 'done' | 'error'
+export type GeneratePhase = 'idle' | 'thinking' | 'building' | 'stalled' | 'done' | 'out_of_scope' | 'error'
 
 export interface GenerateResult {
   project: {
@@ -45,6 +45,12 @@ export interface GenerateResult {
   generation_duration_ms: number
 }
 
+export interface OutOfScopeResult {
+  capability: 'image_gen' | 'vision' | 'chat' | 'transcription' | 'classification' | 'unknown'
+  reason: string
+  prompt_hash: string
+}
+
 export interface GenerateError {
   code:
     | 'invalid_input'
@@ -54,6 +60,13 @@ export interface GenerateError {
     | 'internal'
     | 'connection_lost'
   detail?: unknown
+}
+
+export interface GenerateOutOfScopeEvent {
+  type: 'out_of_scope'
+  capability: OutOfScopeResult['capability']
+  reason: string
+  prompt_hash: string
 }
 
 export interface GenerateInput {
@@ -69,9 +82,18 @@ export function isActivePhase(phase: GeneratePhase): phase is 'thinking' | 'buil
   return phase === 'thinking' || phase === 'building' || phase === 'stalled'
 }
 
+/**
+ * Type guard: returns true when the phase indicates an out-of-scope detection
+ * (user should see "notify me" form).
+ */
+export function isOutOfScopePhase(phase: GeneratePhase): phase is 'out_of_scope' {
+  return phase === 'out_of_scope'
+}
+
 export interface UseGenerateMutationResult {
   phase: GeneratePhase
   result: GenerateResult | null
+  outOfScope: OutOfScopeResult | null
   error: GenerateError | null
   generate: (input: GenerateInput) => Promise<void>
   reset: () => void
@@ -87,6 +109,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
   const qc = useQueryClient()
   const [phase, setPhase] = useState<GeneratePhase>('idle')
   const [result, setResult] = useState<GenerateResult | null>(null)
+  const [outOfScope, setOutOfScope] = useState<OutOfScopeResult | null>(null)
   const [error, setError] = useState<GenerateError | null>(null)
 
   // Refs for cross-render state that doesn't drive UI directly.
@@ -122,6 +145,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
     phaseRef.current = 'idle'
     setPhase('idle')
     setResult(null)
+    setOutOfScope(null)
     setError(null)
   }, [clearStall])
 
@@ -139,6 +163,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
       phaseRef.current = 'thinking'
       setPhase('thinking')
       setResult(null)
+      setOutOfScope(null)
       setError(null)
       armStall()
 
@@ -217,6 +242,17 @@ export function useGenerateMutation(): UseGenerateMutationResult {
               // list cache so the next visit refetches; without this the
               // 5-min staleTime hides the new row until cache expires.
               void qc.invalidateQueries({queryKey: projectsKeys.list()})
+            } else if (type === 'out_of_scope') {
+              // Out-of-scope detection: surface to UI for "notify me" form.
+              // No project was persisted on the server.
+              clearStall()
+              phaseRef.current = 'out_of_scope'
+              setPhase('out_of_scope')
+              setOutOfScope({
+                capability: data['capability'] as OutOfScopeResult['capability'],
+                reason: String(data['reason'] ?? ''),
+                prompt_hash: String(data['prompt_hash'] ?? ''),
+              })
             } else if (type === 'error') {
               clearStall()
               phaseRef.current = 'error'
@@ -254,5 +290,5 @@ export function useGenerateMutation(): UseGenerateMutationResult {
     [armStall, clearStall],
   )
 
-  return {phase, result, error, generate, reset}
+  return {phase, result, outOfScope, error, generate, reset}
 }

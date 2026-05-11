@@ -29,7 +29,6 @@ import {uniqueEmail, userJwt, validSpec} from '../../test/factories.js'
 import {createProjectsService} from '../services/projects.service.js'
 import {resetRateLimitForTests} from '../lib/rateLimit.js'
 import type {LibraryService} from '../services/library.service.js'
-import {MINIMAL_VALID_PLAN} from '../../test/mocks/anthropic.js'
 
 // ---------------------------------------------------------------------------
 // T-0004-121 / T-0004-121b helpers — plan-leak detection
@@ -516,13 +515,12 @@ describe('ADR-0002 Step 6 — library routes', () => {
     const server = await buildLibraryServer({db})
     const {id: ownerId, email} = await makeUser(db, 'planjsoncheck')
 
-    // Create a project with plan_json populated (new pipeline path)
+    // Create a project (V0: plan_json is always NULL, plan param removed)
     const svc = createProjectsService(db)
     const detail = await svc.create({
       ownerId,
       spec: validSpec(),
       originalPrompt: 'test prompt for plan leak check',
-      plan: MINIMAL_VALID_PLAN,
     })
     const projectId = detail.project.id
 

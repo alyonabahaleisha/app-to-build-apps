@@ -12,15 +12,27 @@ export class EnvMissingError extends Error {
   }
 }
 
-export class InvalidSpecError extends Error {
-  readonly code: 'invalid_spec' | 'no_tool_use'
-  readonly detail?: unknown
+/**
+ * Detail shape for invalid_spec errors (ADR-0007 §F, PR 2 cutover).
+ *
+ * Only closed-enum codes are returned — never message or path (which can
+ * echo LLM-emitted slot names, collection IDs, screen IDs).
+ */
+export type InvalidSpecDetail =
+  | {kind: 'zod'; codes: string[]}
+  | {kind: 'cross_ref'; codes: string[]}
 
-  constructor(code: 'invalid_spec' | 'no_tool_use', detail?: unknown) {
+export class InvalidSpecError extends Error {
+  readonly code: 'invalid_spec' | 'no_tool_use' | 'unknown_tool'
+  readonly detail?: InvalidSpecDetail
+
+  constructor(code: 'invalid_spec' | 'no_tool_use' | 'unknown_tool', detail?: InvalidSpecDetail) {
     super(
       code === 'no_tool_use'
         ? 'Anthropic response contained no tool_use block'
-        : 'LLM output failed A2UISpecSchema validation',
+        : code === 'unknown_tool'
+          ? 'Anthropic responded with an unknown tool name'
+          : 'LLM output failed SpecSchema validation',
     )
     this.name = 'InvalidSpecError'
     this.code = code

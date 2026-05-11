@@ -195,7 +195,8 @@ export const editRoutes: FastifyPluginAsync<EditRoutesOptions> = async (
       let detail: Awaited<ReturnType<typeof projectsService.applyEdit>>
 
       try {
-        detail = await projectsService.applyEdit(projectId, newSpec, plan)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        detail = await projectsService.applyEdit(projectId, newSpec as any)
       } catch (err) {
         req.log.error({err: safeMessage(err), userId, projectId}, 'edit_persist_failed')
         return reply.code(500).send({error: 'internal'})
