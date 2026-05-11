@@ -18,14 +18,14 @@ import {eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
 import * as schema from '../db/schema.js'
-import {projects, users} from '../db/schema.js'
+import {miniApps, users} from '../db/schema.js'
 import {
   createLibraryService,
   decodeCursor,
   encodeCursor,
   InvalidCursorError,
 } from './library.service.js'
-import {createProjectsService} from './projects.service.js'
+import {createMiniAppsService} from './miniApps.service.js'
 import {uniqueEmail, validSpec} from '../../test/factories.js'
 import {closeTestPool, getTestDb, truncateAll} from '../../test/setup.js'
 
@@ -52,30 +52,30 @@ async function makePublicProject(
     publishedAt?: Date
   } = {},
 ): Promise<string> {
-  const projSvc = createProjectsService(db)
-  const detail = await projSvc.create({
+  const svc = createMiniAppsService(db)
+  const detail = await svc.create({
     ownerId,
     spec: validSpec(),
     originalPrompt: 'test prompt',
-    parentProjectId: opts.parentProjectId,
+    parentMiniAppId: opts.parentProjectId,
   })
-  const projectId = detail.project.id
+  const miniAppId = detail.miniApp.id
 
   // Set published_at directly since marketplace publish also sets handle which
   // may conflict in bulk-create scenarios. We just set the DB columns directly.
   const publishedAt = opts.publishedAt ?? new Date()
   await db
-    .update(projects)
+    .update(miniApps)
     .set({visibility: 'public', publishedAt})
-    .where(eq(projects.id, projectId))
+    .where(eq(miniApps.id, miniAppId))
 
-  return projectId
+  return miniAppId
 }
 
 async function makePrivateProject(db: Db, ownerId: string): Promise<string> {
-  const projSvc = createProjectsService(db)
-  const detail = await projSvc.create({ownerId, spec: validSpec()})
-  return detail.project.id
+  const svc = createMiniAppsService(db)
+  const detail = await svc.create({ownerId, spec: validSpec()})
+  return detail.miniApp.id
 }
 
 // ---------------------------------------------------------------------------
@@ -316,11 +316,11 @@ describe('ADR-0002 Step 6 — libraryService', () => {
     expect(page1.items.length).toBe(2)
     expect(page1.next_cursor).not.toBeNull()
 
-    // Unpublish the 3rd project (would be first item on page 2)
+    // Unpublish the 3rd mini-app (would be first item on page 2)
     await db
-      .update(projects)
+      .update(miniApps)
       .set({visibility: 'private', publishedAt: null})
-      .where(eq(projects.id, ids[2]!))
+      .where(eq(miniApps.id, ids[2]!))
 
     // Page 2 should skip the now-private project and return only 1 item
     const page2 = await svc.list({limit: 2, cursor: page1.next_cursor!})

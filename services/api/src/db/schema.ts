@@ -1,34 +1,37 @@
 /**
  * Drizzle schema — App Creator MVP, ADR-0001 Step 1 + ADR-0002 Step 1.
  *
- * Seven tables: users, projects, project_versions, messages, facts,
- * memory_embeddings (pgvector), events.
+ * ADR-0011 Step 1: renamed tables.
+ *   `projects`         → `mini_apps`        (TS export: miniApps)
+ *   `project_versions` → `mini_app_versions` (TS export: miniAppVersions)
+ *   Column renames:
+ *     mini_apps.parent_mini_app_id    (was parent_project_id)
+ *     mini_app_versions.mini_app_id   (was project_id)
+ *     messages.mini_app_id            (was project_id)
+ *     events.mini_app_id              (was project_id)
+ *   New columns on mini_apps:
+ *     stance, accent_palette, cover_art_seed, archetype — all text NOT NULL
+ *     sync_mode — text NOT NULL, app-level default 'cloud-private' for new rows
+ *                (NO Postgres-level DEFAULT; migration backfills pre-existing rows
+ *                 with 'local' via COALESCE — see migration 0007 for rationale)
+ *     archived_at, deleted_at — timestamptz nullable (migration 0009)
  *
- * ADR-0002 Step 1 additions:
- * - `users.handle`              — text, UNIQUE, nullable. Populated lazily on
- *                                 first publish. See 0003_marketplace_columns.sql.
- * - `projects.visibility`       — text NOT NULL DEFAULT 'private'. CHECK
- *                                 constrains to {'private','public'}. Text +
- *                                 CHECK (not pgEnum) for future extensibility
- *                                 (see ADR-0002 §B).
- * - `projects.published_at`     — timestamptz, nullable. Set on first publish;
- *                                 nulled on unpublish. NOT updated on re-publish
- *                                 (represents "first publish time at this
- *                                 visibility cycle").
- * - `projects.original_prompt`  — text NOT NULL DEFAULT ''. Stored verbatim from
- *                                 the user's prompt; never logged at INFO (AC-CG-Q1).
+ * The Project* / NewProject* / ProjectVersion* type names are DELETED, not
+ * aliased — per Cal's hard-cutover directive. Any caller that still uses the
+ * old names will fail typecheck (that's the point).
+ *
+ * Other tables: users, messages, facts, memory_embeddings, events,
+ * out_of_scope_intent — unchanged except column renames noted above.
  *
  * Notes for future readers:
  * - Per ARCHITECTURE.md §5, `users` is mirrored from Supabase auth — the row's
  *   `id` matches the Supabase auth.users.id (a uuid). On every sign-in we
  *   upsert (see /auth/sync in ADR-0001 Step 3).
- * - `projects.current_version_id` is intentionally **nullable here** and the
+ * - `mini_apps.current_version_id` is intentionally **nullable here** and the
  *   FK constraint is added in `0002_project_version_fk.sql` to break the
- *   `projects ↔ project_versions` cycle (see ADR-0001 §"Notes for Colby" #2).
+ *   `mini_apps ↔ mini_app_versions` cycle.
  * - `memory_embeddings.embedding` uses pgvector dimension 1536
- *   (text-embedding-3-small). The migration must run
- *   `CREATE EXTENSION IF NOT EXISTS vector;` first — handled by hand in
- *   0001_init.sql since drizzle-kit doesn't emit it.
+ *   (text-embedding-3-small).
  * - Per retro-lessons.md (`normalizeRow` + passwordHash leak): table column
  *   sets are deliberately tight. Anything that looks PII-ish is called out in
  *   ADR-0001 §Data Sensitivity. Future store methods returning these rows
@@ -37,6 +40,7 @@
 import {sql} from 'drizzle-orm'
 import {
   bigserial,
+  boolean,
   index,
   integer,
   jsonb,
@@ -61,78 +65,87 @@ export const users = pgTable('users', {
 })
 
 // ---------------------------------------------------------------------------
-// projects — owned by a user, points at the "current" project_version row.
+// mini_apps — owned by a user, points at the "current" mini_app_versions row.
+// (ADR-0011: renamed from `projects`)
 // ---------------------------------------------------------------------------
-export const projects = pgTable(
-  'projects',
+export const miniApps = pgTable(
+  'mini_apps',
   {
     id: uuid('id').primaryKey().defaultRandom(),
     ownerId: uuid('owner_id')
       .notNull()
       .references(() => users.id, {onDelete: 'cascade'}),
     title: text('title').notNull(),
-    // Nullable here; FK added in 0002_project_version_fk.sql once
-    // project_versions exists. Avoids the chicken/egg cycle on first INSERT.
+    // Nullable here; FK carried from 0002_project_version_fk.sql.
+    // The FK now references mini_app_versions.id (Postgres updated the FK
+    // target automatically when we renamed the table in migration 0007).
     currentVersionId: uuid('current_version_id'),
-    parentProjectId: uuid('parent_project_id'),
+    parentMiniAppId: uuid('parent_mini_app_id'),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', {withTimezone: true}).notNull().defaultNow(),
-    // ADR-0002: visibility + publish state. Text + CHECK (not pgEnum) per §B
-    // of ADR-0002 — easier to extend for a future 'unlisted' value.
+    // ADR-0002: visibility + publish state (text + CHECK, not pgEnum).
     visibility: text('visibility').notNull().default('private'),
     // Nullable — null means never published (or unpublished).
     publishedAt: timestamp('published_at', {withTimezone: true}),
-    // Stored verbatim; never logged at INFO level (AC-CG-Q1). Populated on
-    // /generate; carried to Library remixers via /library/:id (AC-CG-P6).
+    // Stored verbatim; never logged at INFO level (AC-CG-Q1).
     originalPrompt: text('original_prompt').notNull().default(''),
+    // ADR-0011: new V0 columns.
+    // App-level defaults (no Postgres-level DEFAULT for sync_mode — see migration 0007).
+    stance: text('stance').notNull(),
+    accentPalette: text('accent_palette').notNull(),
+    coverArtSeed: text('cover_art_seed').notNull(),
+    archetype: text('archetype').notNull(),
+    // New-row default is 'cloud-private'; existing rows backfilled to 'local' in migration.
+    syncMode: text('sync_mode').notNull().default('cloud-private'),
+    // ADR-0011 Step 3: soft-delete + archive timestamps.
+    archivedAt: timestamp('archived_at', {withTimezone: true}),
+    deletedAt: timestamp('deleted_at', {withTimezone: true}),
   },
   t => ({
     // Library list query: WHERE owner_id = $1 ORDER BY updated_at DESC.
-    ownerIdx: index('projects_owner_idx').on(t.ownerId, t.updatedAt.desc()),
-    // ADR-0002 §M: partial index for /library feed — only public rows,
-    // ordered by published_at DESC then id for stable cursor pagination.
-    // Drizzle does not generate SQL for partial indexes; the actual partial
-    // index lives in 0003_marketplace_columns.sql. This marker documents
-    // the intent and is a no-op at the Drizzle schema level.
-    libraryIdx: index('projects_library_idx').on(t.visibility, t.publishedAt.desc(), t.id),
+    ownerIdx: index('mini_apps_owner_idx').on(t.ownerId, t.updatedAt.desc()),
+    // Partial index for /library feed — only public rows.
+    // Actual partial index created in 0003_marketplace_columns.sql (renamed in 0007).
+    // This marker is a Drizzle schema hint; the partial WHERE clause lives in the SQL.
+    libraryIdx: index('mini_apps_library_idx').on(t.visibility, t.publishedAt.desc(), t.id),
   }),
 )
 
 // ---------------------------------------------------------------------------
-// project_versions — immutable A2UI specs. One row per generation/edit.
+// mini_app_versions — immutable A2UI specs. One row per generation/edit.
+// (ADR-0011: renamed from `project_versions`)
 // ---------------------------------------------------------------------------
-export const projectVersions = pgTable(
-  'project_versions',
+export const miniAppVersions = pgTable(
+  'mini_app_versions',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    projectId: uuid('project_id')
+    miniAppId: uuid('mini_app_id')
       .notNull()
-      .references(() => projects.id, {onDelete: 'cascade'}),
+      .references(() => miniApps.id, {onDelete: 'cascade'}),
     specJson: jsonb('spec_json').notNull(),
     // sha256(canonicalize(spec_json)) — see packages/a2ui-schema/src/canonical.ts
     renderHash: text('render_hash').notNull(),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
     // ADR-0004 Step 4: nullable plan artifact. NULL = M1 fallback path.
-    // Populated by Plan→Build pipeline when PLAN_BUILD_PIPELINE_PERCENT > 0
-    // and the planner runs successfully. See migration 0005_plan_json.sql.
-    // owner-only field: excluded from public /library/:id response (Step 7).
+    // V0: always NULL (plan concept removed per ADR-0007 §G).
     planJson: jsonb('plan_json'),
   },
   t => ({
-    projectIdx: index('project_versions_project_idx').on(t.projectId),
+    miniAppIdx: index('mini_app_versions_mini_app_idx').on(t.miniAppId),
   }),
 )
 
 // ---------------------------------------------------------------------------
-// messages — chat history per project (for the LLM call context).
+// messages — chat history per mini_app (for the LLM call context).
+// (ADR-0011: mini_app_id renamed from project_id)
 // ---------------------------------------------------------------------------
 export const messages = pgTable(
   'messages',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-    projectId: uuid('project_id')
+    miniAppId: uuid('mini_app_id')
       .notNull()
-      .references(() => projects.id, {onDelete: 'cascade'}),
+      .references(() => miniApps.id, {onDelete: 'cascade'}),
     role: text('role').notNull(), // 'user' | 'assistant' | 'system'
     content: text('content').notNull(),
     // Tool-call metadata if assistant emitted a structured tool input.
@@ -140,7 +153,7 @@ export const messages = pgTable(
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
   t => ({
-    projectIdx: index('messages_project_idx').on(t.projectId, t.createdAt),
+    miniAppIdx: index('messages_mini_app_idx').on(t.miniAppId, t.createdAt),
   }),
 )
 
@@ -187,13 +200,14 @@ export const memoryEmbeddings = pgTable(
 
 // ---------------------------------------------------------------------------
 // events — analytics + LLM call audit. Payload is scrubbed (no PII).
+// (ADR-0011: mini_app_id renamed from project_id)
 // ---------------------------------------------------------------------------
 export const events = pgTable(
   'events',
   {
     id: bigserial('id', {mode: 'number'}).primaryKey(),
     userId: uuid('user_id').references(() => users.id, {onDelete: 'set null'}),
-    projectId: uuid('project_id').references(() => projects.id, {onDelete: 'set null'}),
+    miniAppId: uuid('mini_app_id').references(() => miniApps.id, {onDelete: 'set null'}),
     eventType: text('event_type').notNull(),
     // Per ARCHITECTURE.md §9: scrubbed of PII before write.
     payloadJson: jsonb('payload_json')
@@ -210,13 +224,7 @@ export const events = pgTable(
 
 // ---------------------------------------------------------------------------
 // out_of_scope_intent — ADR-0007 Step 5.
-//
-// Stores out-of-scope captures from the /out-of-scope-intent endpoint.
-// Detection telemetry fires in generate.ts; row insertion fires here via the
-// outOfScope route (two-step flow per ADR-0007 §H).
-//
-// Data sensitivity: auth-only. No read endpoint in V0; aggregate analytics
-// live outside the API request path.
+// ADR-0011 Step 1 (migration 0008): adds notify_opt_in column.
 // ---------------------------------------------------------------------------
 export const outOfScopeIntent = pgTable(
   'out_of_scope_intent',
@@ -230,6 +238,8 @@ export const outOfScopeIntent = pgTable(
     reason: text('reason').notNull(),
     // NULL = user dismissed without submitting email.
     email: text('email'),
+    // ADR-0011 Step 1 (migration 0008): opt-in for V0.5 notifications.
+    notifyOptIn: boolean('notify_opt_in').notNull().default(false),
     createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
   },
   t => ({
@@ -242,13 +252,16 @@ export const outOfScopeIntent = pgTable(
 
 // ---------------------------------------------------------------------------
 // Type exports — used by services for typed inserts/selects.
+// Old Project* / ProjectVersion* names are DELETED (not aliased) per
+// ADR-0011 Cal hard-cutover directive. TypeCheck fails on any caller that
+// still uses the old names — that's the refactor safety net.
 // ---------------------------------------------------------------------------
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
-export type Project = typeof projects.$inferSelect
-export type NewProject = typeof projects.$inferInsert
-export type ProjectVersion = typeof projectVersions.$inferSelect
-export type NewProjectVersion = typeof projectVersions.$inferInsert
+export type MiniApp = typeof miniApps.$inferSelect
+export type NewMiniApp = typeof miniApps.$inferInsert
+export type MiniAppVersion = typeof miniAppVersions.$inferSelect
+export type NewMiniAppVersion = typeof miniAppVersions.$inferInsert
 export type Message = typeof messages.$inferSelect
 export type NewMessage = typeof messages.$inferInsert
 export type Fact = typeof facts.$inferSelect

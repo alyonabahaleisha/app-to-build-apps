@@ -15,14 +15,14 @@ import {eq} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
 import * as schema from '../db/schema.js'
-import {projects, users} from '../db/schema.js'
+import {miniApps, users} from '../db/schema.js'
 import {
   createMarketplaceService,
   HandleRequiredError,
   HandleTakenError,
   NotFoundError,
 } from './marketplace.service.js'
-import {createProjectsService} from './projects.service.js'
+import {createMiniAppsService} from './miniApps.service.js'
 import {uniqueEmail, validSpec} from '../../test/factories.js'
 import {closeTestPool, getTestDb, truncateAll} from '../../test/setup.js'
 
@@ -39,9 +39,9 @@ async function makeUser(db: Db, email = uniqueEmail()): Promise<string> {
 }
 
 async function makeProject(db: Db, ownerId: string): Promise<string> {
-  const svc = createProjectsService(db)
+  const svc = createMiniAppsService(db)
   const detail = await svc.create({ownerId, spec: validSpec()})
-  return detail.project.id
+  return detail.miniApp.id
 }
 
 // ---------------------------------------------------------------------------
@@ -82,7 +82,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     const [userRow] = await db.select().from(users).where(eq(users.id, userId))
     expect(userRow?.handle).toBe('alyona')
 
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     expect(projectRow?.visibility).toBe('public')
     expect(projectRow?.publishedAt).toBeInstanceOf(Date)
   })
@@ -131,7 +131,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     expect(second.project.visibility).toBe('public')
 
     // DB row unchanged
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     expect(projectRow?.visibility).toBe('public')
   })
 
@@ -151,7 +151,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     expect(result.project.visibility).toBe('private')
     expect(result.project.published_at).toBeNull()
 
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     expect(projectRow?.visibility).toBe('private')
     expect(projectRow?.publishedAt).toBeNull()
   })
@@ -171,7 +171,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     expect(result.project.published_at).toBeNull()
 
     // DB unchanged — no publish_at was ever set
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     expect(projectRow?.visibility).toBe('private')
     expect(projectRow?.publishedAt).toBeNull()
   })
@@ -205,8 +205,8 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     }
 
     // Winner's project is public; loser's is private
-    const [rowA] = await db.select().from(projects).where(eq(projects.id, projectA))
-    const [rowB] = await db.select().from(projects).where(eq(projects.id, projectB))
+    const [rowA] = await db.select().from(miniApps).where(eq(miniApps.id, projectA))
+    const [rowB] = await db.select().from(miniApps).where(eq(miniApps.id, projectB))
 
     const visibilities = [rowA?.visibility, rowB?.visibility].sort()
     expect(visibilities).toEqual(['private', 'public'])
@@ -232,7 +232,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     expect(r2.project.visibility).toBe('public')
 
     // Both responses carry the same (or close) published_at — only one UPDATE ran
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     expect(projectRow?.visibility).toBe('public')
     expect(projectRow?.publishedAt).toBeInstanceOf(Date)
   })
@@ -252,7 +252,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
     await svc.publish({userId, projectId})
     await svc.unpublish({userId, projectId})
 
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
     // After unpublish wins, final state must be private with null published_at
     expect(projectRow?.visibility).toBe('private')
     expect(projectRow?.publishedAt).toBeNull()
@@ -271,7 +271,7 @@ describe('ADR-0002 Step 5 — marketplaceService (unit)', () => {
 
     // Both handle and visibility must be updated together
     const [userRow] = await db.select().from(users).where(eq(users.id, userId))
-    const [projectRow] = await db.select().from(projects).where(eq(projects.id, projectId))
+    const [projectRow] = await db.select().from(miniApps).where(eq(miniApps.id, projectId))
 
     expect(userRow?.handle).toBe('atomichandle')
     expect(projectRow?.visibility).toBe('public')

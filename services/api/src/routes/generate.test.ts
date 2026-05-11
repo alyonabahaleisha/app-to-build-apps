@@ -24,7 +24,7 @@ import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 import {eq} from 'drizzle-orm'
 
 import * as schema from '../db/schema.js'
-import {users, projects, projectVersions} from '../db/schema.js'
+import {users, miniApps, miniAppVersions} from '../db/schema.js'
 import {createLogSink} from '../../test/mocks/pinoStream.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
 import {userJwt, uniqueEmail} from '../../test/factories.js'
@@ -57,7 +57,7 @@ process.env.ANTHROPIC_API_KEY = 'sk-ant-test-key'
 // ---------------------------------------------------------------------------
 
 import {generateRoutes} from './generate.js'
-import {createProjectsService} from '../services/projects.service.js'
+import {createMiniAppsService} from '../services/miniApps.service.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from '../llm/errors.js'
 import type {Spec} from '@app-creator/protocol'
 
@@ -292,6 +292,10 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      archive: jest.fn(),
+      unarchive: jest.fn(),
+      rename: jest.fn(),
+      delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -342,6 +346,10 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      archive: jest.fn(),
+      unarchive: jest.fn(),
+      rename: jest.fn(),
+      delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -385,6 +393,10 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      archive: jest.fn(),
+      unarchive: jest.fn(),
+      rename: jest.fn(),
+      delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -427,6 +439,10 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      archive: jest.fn(),
+      unarchive: jest.fn(),
+      rename: jest.fn(),
+      delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -506,20 +522,27 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   it('T-0007-083: SSE response has Content-Type, Cache-Control, X-Accel-Buffering, Connection headers', async () => {
     const mockService = {
       create: jest.fn().mockResolvedValue({
-        project: {
+        miniApp: {
           id: randomUUID(),
           title: 'Test',
           visibility: 'private' as const,
-          parentProjectId: null,
+          parentMiniAppId: null,
           originalPrompt: '',
           createdAt: new Date(),
           updatedAt: new Date(),
           ownerId: 'u1',
           currentVersionId: 'v1',
+          stance: 'productive',
+          accentPalette: 'neutral',
+          coverArtSeed: randomUUID(),
+          archetype: 'Calculator',
+          syncMode: 'cloud-private',
+          archivedAt: null,
+          deletedAt: null,
         },
         currentVersion: {
           id: 'v1',
-          projectId: 'p1',
+          miniAppId: 'p1',
           renderHash: 'abc',
           specJson: MINIMAL_VALID_V0_SPEC,
           planJson: null,
@@ -529,6 +552,10 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
+      archive: jest.fn(),
+      unarchive: jest.fn(),
+      rename: jest.fn(),
+      delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
 
@@ -563,14 +590,16 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   it('T-0007-085: SSE stream terminates with data: [DONE]', async () => {
     const mockService = {
       create: jest.fn().mockResolvedValue({
-        project: {
+        miniApp: {
           id: randomUUID(), title: 'T', visibility: 'private' as const,
-          parentProjectId: null, originalPrompt: '', createdAt: new Date(),
+          parentMiniAppId: null, originalPrompt: '', createdAt: new Date(),
           updatedAt: new Date(), ownerId: 'u', currentVersionId: 'v',
+          stance: 'productive', accentPalette: 'neutral', coverArtSeed: randomUUID(),
+          archetype: 'Calculator', syncMode: 'cloud-private', archivedAt: null, deletedAt: null,
         },
-        currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
+        currentVersion: {id: 'v', miniAppId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
 
@@ -599,7 +628,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   it('T-0007-087: error response does not contain raw prompt', async () => {
     const sensitivePrompt = 'unique-secret-prompt-' + randomUUID()
     const mockService = {
-      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -640,7 +669,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
     // must NOT appear in the SSE error event JSON.
     const llmEmittedSlotName = 'mySecretSlot'
     const mockService = {
-      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -689,7 +718,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   // -------------------------------------------------------------------------
   it('T-0007-089: error response does not contain stack trace', async () => {
     const mockService = {
-      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -723,14 +752,16 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
     setupHappyMock()
     const mockService = {
       create: jest.fn().mockResolvedValue({
-        project: {
+        miniApp: {
           id: randomUUID(), title: 'T', visibility: 'private' as const,
-          parentProjectId: null, originalPrompt: '', createdAt: new Date(),
+          parentMiniAppId: null, originalPrompt: '', createdAt: new Date(),
           updatedAt: new Date(), ownerId: 'u', currentVersionId: 'v',
+          stance: 'productive', accentPalette: 'neutral', coverArtSeed: randomUUID(),
+          archetype: 'Calculator', syncMode: 'cloud-private', archivedAt: null, deletedAt: null,
         },
-        currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
+        currentVersion: {id: 'v', miniAppId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
 
     const loggerInstance = pino({level: 'silent'})
@@ -760,14 +791,16 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
     const genId = randomUUID()
     const mockService = {
       create: jest.fn().mockResolvedValue({
-        project: {
+        miniApp: {
           id: randomUUID(), title: 'Tip Calc', visibility: 'private' as const,
-          parentProjectId: null, originalPrompt: 'ab', createdAt: new Date(),
+          parentMiniAppId: null, originalPrompt: 'ab', createdAt: new Date(),
           updatedAt: new Date(), ownerId: 'u', currentVersionId: 'v',
+          stance: 'productive', accentPalette: 'neutral', coverArtSeed: randomUUID(),
+          archetype: 'Calculator', syncMode: 'cloud-private', archivedAt: null, deletedAt: null,
         },
-        currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
+        currentVersion: {id: 'v', miniAppId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), archive: jest.fn(), unarchive: jest.fn(), rename: jest.fn(), delete: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -920,9 +953,9 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       expect(oosEvent).toBeDefined()
       expect(oosEvent!['capability']).toBe('vision')
 
-      // No project persisted
-      const projectRows = await db.select().from(projects).where(eq(projects.ownerId, userId))
-      expect(projectRows).toHaveLength(0)
+      // No mini-app persisted
+      const miniAppRows = await db.select().from(miniApps).where(eq(miniApps.ownerId, userId))
+      expect(miniAppRows).toHaveLength(0)
     } finally {
       await server.close()
     }
@@ -931,7 +964,7 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   // -------------------------------------------------------------------------
   // T-0007-071: done.project.title derived from spec's first Heading text
   // -------------------------------------------------------------------------
-  it('T-0007-071: done.project.title is derived from spec first Heading text', async () => {
+  it('T-0007-071: done.miniApp.title is derived from spec first Heading text', async () => {
     mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
 
     const userId = await makeUser(db)
@@ -948,9 +981,9 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
         (e): e is Record<string, unknown> => typeof e === 'object' && e['type'] === 'done',
       )
       expect(doneEvent).toBeDefined()
-      const project = doneEvent!['project'] as Record<string, unknown>
+      const miniApp = doneEvent!['miniApp'] as Record<string, unknown>
       // MINIMAL_VALID_V0_SPEC has Heading text 'Tip Calculator'
-      expect(project['title']).toBe('Tip Calculator')
+      expect(miniApp['title']).toBe('Tip Calculator')
     } finally {
       await server.close()
     }
@@ -992,23 +1025,23 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   it('T-0007-082: parent_project_id ACL: public → accepted; owner private → accepted; unowned private → 404; nonexistent → 404', async () => {
     const ownerA = await makeUser(db)
     const ownerB = await makeUser(db)
-    const service = createProjectsService(db)
+    const service = createMiniAppsService(db)
     const pool = await getTestPool()
 
-    // Create a private project owned by ownerA
-    const privateProject = await service.create({
+    // Create a private mini-app owned by ownerA
+    const privateApp = await service.create({
       ownerId: ownerA,
       spec: MINIMAL_VALID_V0_SPEC,
       originalPrompt: 'private',
     })
 
-    // ownerB can't access ownerA's private project → 404
+    // ownerB can't access ownerA's private mini-app → 404
     const server = await buildGenerateServer({db})
     try {
       const resPrivate = await server.inject({
         method: 'POST', url: '/generate',
         headers: {...authHeader(ownerB, uniqueEmail()), 'content-type': 'application/json'},
-        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateProject.project.id}),
+        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateApp.miniApp.id}),
       })
       expect(resPrivate.statusCode).toBe(404)
 
@@ -1020,25 +1053,25 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       })
       expect(resNonexistent.statusCode).toBe(404)
 
-      // ownerA accessing own private project → accepted (passes ACL, proceeds)
+      // ownerA accessing own private mini-app → accepted (passes ACL, proceeds)
       mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
       const resOwner = await server.inject({
         method: 'POST', url: '/generate',
         headers: {...authHeader(ownerA, uniqueEmail()), 'content-type': 'application/json'},
-        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateProject.project.id}),
+        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateApp.miniApp.id}),
       })
       expect(resOwner.statusCode).toBe(200)
       expect(resOwner.headers['content-type']).toContain('text/event-stream')
 
-      // Make the project public, ownerB can now access
-      await pool.query("UPDATE projects SET visibility = 'public' WHERE id = $1", [
-        privateProject.project.id,
+      // Make the mini-app public, ownerB can now access
+      await pool.query("UPDATE mini_apps SET visibility = 'public' WHERE id = $1", [
+        privateApp.miniApp.id,
       ])
       mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
       const resPublic = await server.inject({
         method: 'POST', url: '/generate',
         headers: {...authHeader(ownerB, uniqueEmail()), 'content-type': 'application/json'},
-        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateProject.project.id}),
+        payload: JSON.stringify({prompt: 'ab', parent_project_id: privateApp.miniApp.id}),
       })
       expect(resPublic.headers['content-type']).toContain('text/event-stream')
     } finally {
@@ -1063,18 +1096,18 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
         payload: JSON.stringify({prompt: 'Build me a calculator'}),
       })
 
-      const projectRows = await db.select().from(projects).where(eq(projects.ownerId, userId))
-      expect(projectRows).toHaveLength(1)
+      const miniAppRows = await db.select().from(miniApps).where(eq(miniApps.ownerId, userId))
+      expect(miniAppRows).toHaveLength(1)
     } finally {
       await server.close()
     }
   })
 
   // -------------------------------------------------------------------------
-  // T-0007-094: projectsService.create returns ProjectDetail, inserts rows
+  // T-0007-094: miniAppsService.create returns MiniAppDetail, inserts rows
   // -------------------------------------------------------------------------
-  it('T-0007-094: projectsService.create inserts 1 project + 1 version row', async () => {
-    const service = createProjectsService(db)
+  it('T-0007-094: miniAppsService.create inserts 1 mini_app + 1 version row', async () => {
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const detail = await service.create({
@@ -1083,24 +1116,24 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       originalPrompt: 'A tip calculator',
     })
 
-    expect(detail.project.id).toBeDefined()
+    expect(detail.miniApp.id).toBeDefined()
     expect(detail.currentVersion.id).toBeDefined()
 
-    const projectRows = await db.select().from(projects).where(eq(projects.ownerId, userId))
-    expect(projectRows).toHaveLength(1)
+    const miniAppRows = await db.select().from(miniApps).where(eq(miniApps.ownerId, userId))
+    expect(miniAppRows).toHaveLength(1)
 
     const versionRows = await db
       .select()
-      .from(projectVersions)
-      .where(eq(projectVersions.projectId, detail.project.id))
+      .from(miniAppVersions)
+      .where(eq(miniAppVersions.miniAppId, detail.miniApp.id))
     expect(versionRows).toHaveLength(1)
   })
 
   // -------------------------------------------------------------------------
   // T-0007-095: renderHash uses @app-creator/protocol, not M1 lib/canonical
   // -------------------------------------------------------------------------
-  it('T-0007-095: project_versions.renderHash matches @app-creator/protocol renderHash', async () => {
-    const service = createProjectsService(db)
+  it('T-0007-095: mini_app_versions.renderHash matches @app-creator/protocol renderHash', async () => {
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const detail = await service.create({
@@ -1117,8 +1150,8 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   // -------------------------------------------------------------------------
   // T-0007-096: plan_json is NULL on V0 inserts
   // -------------------------------------------------------------------------
-  it('T-0007-096: project_versions.plan_json is NULL on V0 inserts', async () => {
-    const service = createProjectsService(db)
+  it('T-0007-096: mini_app_versions.plan_json is NULL on V0 inserts', async () => {
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const detail = await service.create({
@@ -1129,16 +1162,16 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
 
     const versionRows = await db
       .select()
-      .from(projectVersions)
-      .where(eq(projectVersions.id, detail.currentVersion.id))
+      .from(miniAppVersions)
+      .where(eq(miniAppVersions.id, detail.currentVersion.id))
     expect(versionRows[0]!.planJson).toBeNull()
   })
 
   // -------------------------------------------------------------------------
   // T-0007-097: service re-validates spec; cross-ref failure throws
   // -------------------------------------------------------------------------
-  it('T-0007-097: projectsService.create throws when spec fails validateCrossRefs', async () => {
-    const service = createProjectsService(db)
+  it('T-0007-097: miniAppsService.create throws when spec fails validateCrossRefs', async () => {
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     // Spec with navigate action targeting nonexistent screen
@@ -1174,7 +1207,7 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   // -------------------------------------------------------------------------
   // T-0007-098: service create() does NOT accept plan parameter
   // -------------------------------------------------------------------------
-  it('T-0007-098: CreateProjectInput does not have plan property (TypeScript compile guard)', () => {
+  it('T-0007-098: CreateMiniAppInput does not have plan property (TypeScript compile guard)', () => {
     // This is a compile-time check enforced by TypeScript.
     // Runtime: calling create() without plan works fine.
     const input = {
@@ -1191,7 +1224,7 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   // T-0007-099: title derivation algorithm
   // -------------------------------------------------------------------------
   it('T-0007-099a: title from spec screens[0].root Heading text', async () => {
-    const service = createProjectsService(db)
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const detail = await service.create({
@@ -1199,11 +1232,11 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       spec: MINIMAL_VALID_V0_SPEC,
       originalPrompt: 'some prompt',
     })
-    expect(detail.project.title).toBe('Tip Calculator')
+    expect(detail.miniApp.title).toBe('Tip Calculator')
   })
 
   it('T-0007-099b: title falls back to prompt (first 40 chars) when screens[0] has no Heading', async () => {
-    const service = createProjectsService(db)
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const noHeadingSpec: Spec = {
@@ -1230,11 +1263,11 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       spec: noHeadingSpec,
       originalPrompt: longPrompt,
     })
-    expect(detail.project.title).toBe('A'.repeat(40) + '…')
+    expect(detail.miniApp.title).toBe('A'.repeat(40) + '…')
   })
 
   it('T-0007-099c: title is "Untitled" when no Heading and empty prompt', async () => {
-    const service = createProjectsService(db)
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const noHeadingSpec: Spec = {
@@ -1260,14 +1293,14 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       spec: noHeadingSpec,
       originalPrompt: '',
     })
-    expect(detail.project.title).toBe('Untitled')
+    expect(detail.miniApp.title).toBe('Untitled')
   })
 
   // -------------------------------------------------------------------------
   // T-0007-100: two concurrent creates → distinct IDs
   // -------------------------------------------------------------------------
-  it('T-0007-100: two concurrent projectsService.create calls produce distinct project + version IDs', async () => {
-    const service = createProjectsService(db)
+  it('T-0007-100: two concurrent miniAppsService.create calls produce distinct mini_app + version IDs', async () => {
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const [detail1, detail2] = await Promise.all([
@@ -1275,20 +1308,20 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       service.create({ownerId: userId, spec: MINIMAL_VALID_V0_SPEC, originalPrompt: 'app two'}),
     ])
 
-    expect(detail1.project.id).not.toBe(detail2.project.id)
+    expect(detail1.miniApp.id).not.toBe(detail2.miniApp.id)
     expect(detail1.currentVersion.id).not.toBe(detail2.currentVersion.id)
   })
 
   // -------------------------------------------------------------------------
   // T-0007-179: combined prompt + parentPromptContext > 12000 chars → 400 prompt_too_large
   // -------------------------------------------------------------------------
-  it('T-0007-179: prompt + parentPromptContext from parent project exceeding 12000 total chars → 400 prompt_too_large', async () => {
+  it('T-0007-179: prompt + parentPromptContext from parent mini-app exceeding 12000 total chars → 400 prompt_too_large', async () => {
     const ownerA = await makeUser(db)
 
-    // Create parent project with a very long originalPrompt
-    const service = createProjectsService(db)
+    // Create parent mini-app with a very long originalPrompt
+    const service = createMiniAppsService(db)
     const longOriginalPrompt = 'B'.repeat(11_000)
-    const parentProject = await service.create({
+    const parentApp = await service.create({
       ownerId: ownerA,
       spec: MINIMAL_VALID_V0_SPEC,
       originalPrompt: longOriginalPrompt,
@@ -1296,8 +1329,8 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
 
     // Make parent public so ownerA can call with it
     const pool = await getTestPool()
-    await pool.query("UPDATE projects SET visibility = 'public' WHERE id = $1", [
-      parentProject.project.id,
+    await pool.query("UPDATE mini_apps SET visibility = 'public' WHERE id = $1", [
+      parentApp.miniApp.id,
     ])
 
     const server = await buildGenerateServer({db})
@@ -1308,7 +1341,7 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
         headers: {...authHeader(ownerA, uniqueEmail()), 'content-type': 'application/json'},
         payload: JSON.stringify({
           prompt: 'a'.repeat(2000),
-          parent_project_id: parentProject.project.id,
+          parent_project_id: parentApp.miniApp.id,
         }),
       })
 
@@ -1325,8 +1358,8 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
   // -------------------------------------------------------------------------
   it('T-0007-180a: migrateCollectionData V0 stub returns {} when parent version has collections', async () => {
     // The stub is always {} in V0. We verify by calling create() with parentVersionId
-    // and checking that the spec's data is handled (no errors, project created).
-    const service = createProjectsService(db)
+    // and checking that the spec's data is handled (no errors, mini-app created).
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     const parentDetail = await service.create({
@@ -1343,11 +1376,11 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       parentVersionId: parentDetail.currentVersion.id,
     })
 
-    expect(childDetail.project.id).toBeDefined()
+    expect(childDetail.miniApp.id).toBeDefined()
   })
 
   it('T-0007-180b: migrateCollectionData V0 stub returns {} for nonexistent parentVersionId', async () => {
-    const service = createProjectsService(db)
+    const service = createMiniAppsService(db)
     const userId = await makeUser(db)
 
     // Nonexistent parent version — stub still returns {}
@@ -1358,6 +1391,6 @@ describe('ADR-0007 Step 4 — POST /generate route (integration, requires Docker
       parentVersionId: randomUUID(),
     })
 
-    expect(detail.project.id).toBeDefined()
+    expect(detail.miniApp.id).toBeDefined()
   })
 })

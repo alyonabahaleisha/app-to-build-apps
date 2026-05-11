@@ -27,7 +27,7 @@ import * as schema from '../db/schema.js'
 import {users} from '../db/schema.js'
 import {closeTestPool, getTestDb, truncateAll} from '../../test/setup.js'
 import {uniqueEmail, userJwt, validSpec} from '../../test/factories.js'
-import {createProjectsService} from '../services/projects.service.js'
+import {createMiniAppsService} from '../services/miniApps.service.js'
 import {resetRateLimitForTests} from '../lib/rateLimit.js'
 import type {MarketplaceService} from '../services/marketplace.service.js'
 
@@ -73,9 +73,9 @@ async function makeUser(
 }
 
 async function makeProject(db: Db, ownerId: string): Promise<string> {
-  const svc = createProjectsService(db)
+  const svc = createMiniAppsService(db)
   const detail = await svc.create({ownerId, spec: validSpec()})
-  return detail.project.id
+  return detail.miniApp.id
 }
 
 function authHeader(sub: string, email: string): {authorization: string} {
@@ -623,8 +623,8 @@ describe('ADR-0002 Step 5 — marketplace routes', () => {
   it('T-0002-097: publish response must not contain original_prompt', async () => {
     const {id: userId, email} = await makeUser(db)
 
-    // Create a project with a distinctive prompt
-    const svc = createProjectsService(db)
+    // Create a mini-app with a distinctive prompt
+    const svc = createMiniAppsService(db)
     const detail = await svc.create({
       ownerId: userId,
       spec: validSpec(),
@@ -635,7 +635,7 @@ describe('ADR-0002 Step 5 — marketplace routes', () => {
     try {
       const res = await server.inject({
         method: 'POST',
-        url: `/projects/${detail.project.id}/publish`,
+        url: `/projects/${detail.miniApp.id}/publish`,
         headers: authHeader(userId, email),
         payload: {handle: 'noprompt'},
       })

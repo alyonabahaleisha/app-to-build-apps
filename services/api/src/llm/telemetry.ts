@@ -76,14 +76,14 @@ export class EventPayloadValidationError extends Error {
 // ---------------------------------------------------------------------------
 // writeEvent — public API
 //
-// ctx is optional: projectId and userId are stored on the events row when
-// present (for per-project and per-user analytics joins), but are never
+// ctx is optional: miniAppId and userId are stored on the events row when
+// present (for per-mini-app and per-user analytics joins), but are never
 // included in the payload (PII stays out of payload_json).
 // ---------------------------------------------------------------------------
 export async function writeEvent(
   eventType: EventType,
   payload: Record<string, unknown>,
-  ctx?: {projectId?: string; userId?: string},
+  ctx?: {miniAppId?: string; userId?: string},
 ): Promise<void> {
   // 1. Whitelist validation — synchronous, throws before any I/O.
   const allowed = EVENT_PAYLOAD_WHITELIST[eventType]
@@ -110,7 +110,7 @@ export async function writeEvent(
       eventType,
       payloadJson: payload,
       userId: ctx?.userId,
-      projectId: ctx?.projectId,
+      miniAppId: ctx?.miniAppId,
       ...(durationMs !== undefined ? {durationMs} : {}),
     })
   } catch (err) {

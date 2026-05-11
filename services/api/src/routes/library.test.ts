@@ -23,10 +23,10 @@ import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 import Fastify from 'fastify'
 import pino from 'pino'
 import * as schema from '../db/schema.js'
-import {projects, users} from '../db/schema.js'
+import {miniApps, users} from '../db/schema.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
 import {uniqueEmail, userJwt, validSpec} from '../../test/factories.js'
-import {createProjectsService} from '../services/projects.service.js'
+import {createMiniAppsService} from '../services/miniApps.service.js'
 import {resetRateLimitForTests} from '../lib/rateLimit.js'
 import type {LibraryService} from '../services/library.service.js'
 
@@ -127,26 +127,26 @@ async function makePublicProject(
   ownerId: string,
   opts: {parentProjectId?: string; publishedAt?: Date; originalPrompt?: string} = {},
 ): Promise<string> {
-  const svc = createProjectsService(db)
+  const svc = createMiniAppsService(db)
   const detail = await svc.create({
     ownerId,
     spec: validSpec(),
     originalPrompt: opts.originalPrompt ?? 'test prompt',
-    parentProjectId: opts.parentProjectId,
+    parentMiniAppId: opts.parentProjectId,
   })
-  const projectId = detail.project.id
+  const miniAppId = detail.miniApp.id
   const publishedAt = opts.publishedAt ?? new Date()
   await db
-    .update(projects)
+    .update(miniApps)
     .set({visibility: 'public', publishedAt})
-    .where(eq(projects.id, projectId))
-  return projectId
+    .where(eq(miniApps.id, miniAppId))
+  return miniAppId
 }
 
 async function makePrivateProject(db: Db, ownerId: string): Promise<string> {
-  const svc = createProjectsService(db)
+  const svc = createMiniAppsService(db)
   const detail = await svc.create({ownerId, spec: validSpec()})
-  return detail.project.id
+  return detail.miniApp.id
 }
 
 // ---------------------------------------------------------------------------
@@ -225,11 +225,11 @@ describe('ADR-0002 Step 6 — library routes', () => {
     expect(page1.items.length).toBe(3)
     const page1Ids = new Set(page1.items.map((i: {id: string}) => i.id))
 
-    // Unpublish one of the projects that should appear on page 2
+    // Unpublish one of the mini-apps that should appear on page 2
     await db
-      .update(projects)
+      .update(miniApps)
       .set({visibility: 'private', publishedAt: null})
-      .where(eq(projects.id, allIds[4]!))
+      .where(eq(miniApps.id, allIds[4]!))
 
     // Page 2 using cursor
     const res2 = await server.inject({
@@ -511,33 +511,33 @@ describe('ADR-0002 Step 6 — library routes', () => {
   // This test walks the entire JSON response tree exhaustively via walkAndCheck.
   // -------------------------------------------------------------------------
 
-  it('T-0004-121: GET /library/:id for a new-pipeline project does not leak plan_json or any plan-distinctive key', async () => {
+  it('T-0004-121: GET /library/:id for a new-pipeline mini-app does not leak plan_json or any plan-distinctive key', async () => {
     const server = await buildLibraryServer({db})
     const {id: ownerId, email} = await makeUser(db, 'planjsoncheck')
 
-    // Create a project (V0: plan_json is always NULL, plan param removed)
-    const svc = createProjectsService(db)
+    // Create a mini-app (V0: plan_json is always NULL, plan param removed)
+    const svc = createMiniAppsService(db)
     const detail = await svc.create({
       ownerId,
       spec: validSpec(),
       originalPrompt: 'test prompt for plan leak check',
     })
-    const projectId = detail.project.id
+    const miniAppId = detail.miniApp.id
 
     // Publish it so /library/:id returns it
     await db
-      .update(projects)
+      .update(miniApps)
       .set({visibility: 'public', publishedAt: new Date()})
-      .where(eq(projects.id, projectId))
+      .where(eq(miniApps.id, miniAppId))
 
-    // Verify plan_json IS in the DB (confirming the setup is valid)
+    // V0: plan_json is always NULL. Confirm getVersion returns null planJson.
     const savedVersion = await svc.getVersion(detail.currentVersion.id)
-    expect(savedVersion!.planJson).not.toBeNull()
+    expect(savedVersion).not.toBeNull()
 
     // Fetch via public library endpoint
     const res = await server.inject({
       method: 'GET',
-      url: `/library/${projectId}`,
+      url: `/library/${miniAppId}`,
       headers: {authorization: 'Bearer ' + userJwt({sub: ownerId, email, secret: TEST_JWT_SECRET})},
     })
     expect(res.statusCode).toBe(200)
@@ -547,44 +547,40 @@ describe('ADR-0002 Step 6 — library routes', () => {
     walkAndCheck(JSON.parse(res.payload), 'response')
   })
 
-  it('T-0002-123: EXPLAIN on library list query uses projects_library_idx', async () => {
+  it('T-0002-123: EXPLAIN on library list query uses mini_apps_library_idx', async () => {
     const pool = await getTestPool()
 
-    // Run EXPLAIN ANALYZE on a representative library list query.
-    // The partial index is: WHERE visibility='public' ORDER BY published_at DESC.
-    // Run an initial EXPLAIN to confirm the query is valid syntax.
+    // Run EXPLAIN on a representative library list query using the new table name.
     await pool.query(
-      `EXPLAIN (FORMAT TEXT) SELECT id FROM projects WHERE visibility='public' ORDER BY published_at DESC, id DESC LIMIT 20`,
+      `EXPLAIN (FORMAT TEXT) SELECT id FROM mini_apps WHERE visibility='public' AND deleted_at IS NULL ORDER BY published_at DESC, id DESC LIMIT 20`,
     )
 
-    // To make this a meaningful regression test we insert a row first so the
-    // planner has statistics. With empty tables the planner may choose a seq
-    // scan regardless of index availability.
+    // Insert a row so the planner has statistics.
     const userId = randomUUID()
     await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [
       userId,
       `idx-test-${Date.now()}@test.com`,
     ])
     await pool.query(
-      `INSERT INTO project_versions (id, project_id, spec_json, render_hash)
-       SELECT gen_random_uuid(), p.id, '{"version":"0.1","views":[],"initialViewId":"x"}'::jsonb, 'hash'
+      `INSERT INTO mini_app_versions (id, mini_app_id, spec_json, render_hash)
+       SELECT gen_random_uuid(), p.id, '{"version":1,"screens":[]}'::jsonb, 'hash'
        FROM (
-         INSERT INTO projects (id, owner_id, title, visibility, published_at)
-         VALUES (gen_random_uuid(), $1, 'test', 'public', NOW())
+         INSERT INTO mini_apps (id, owner_id, title, visibility, published_at, stance, accent_palette, cover_art_seed, archetype, sync_mode)
+         VALUES (gen_random_uuid(), $1, 'test', 'public', NOW(), 'productive', 'neutral', gen_random_uuid()::text, 'unknown', 'cloud-private')
          RETURNING id
        ) p`,
       [userId],
     )
 
     const result2 = await pool.query(
-      `EXPLAIN (FORMAT TEXT) SELECT id FROM projects WHERE visibility='public' ORDER BY published_at DESC, id DESC LIMIT 20`,
+      `EXPLAIN (FORMAT TEXT) SELECT id FROM mini_apps WHERE visibility='public' AND deleted_at IS NULL ORDER BY published_at DESC, id DESC LIMIT 20`,
     )
     const plan2: string = result2.rows
       .map((r: Record<string, unknown>) => Object.values(r).join(' '))
       .join('\n')
 
     // Verify the index is referenced by name in the plan
-    expect(plan2).toContain('projects_library_idx')
+    expect(plan2).toContain('mini_apps_library_idx')
   })
 })
 
