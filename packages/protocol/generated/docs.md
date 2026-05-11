@@ -224,6 +224,22 @@ A camera and photo-library picker bound to an ImageBinding slot. The selected im
 
 A single image display component backed by an ImageBinding source. The required `alt` prop provides VoiceOver text — the schema rejects empty alt strings. `aspectRatio` constrains the rendered dimensions; `fit` controls cover-vs-contain scaling; `radius` rounds corners. On load error, renders the `fallbackIcon` (default: `image`) centered on a `bg-elevated` background.
 
+## TransactionRow
+
+A two-line financial transaction row. Shows merchant name and ISO date on the left; formatted currency amount on the right. Positive amounts render in `success` color (inflow); negative amounts render in `fg` (NOT `danger` — outflows are neutral). An optional `categoryIcon` appears in a 32pt circle with subtle tint background. Amount is formatted via `Intl.NumberFormat` with the specified currency code.
+
+## Receipt
+
+An itemized receipt with label-amount rows separated by dotted leaders. Each row has a `label`, `amount` (NumberBinding, in cents), and optional `quantity`. The receipt footer shows `subtotal`, optional `tax`, optional `tip`, and `total`. iOS `borderStyle: dotted` is unreliable — the renderer falls back to repeated `.` characters as the leader. The cross-ref validator checks that `|subtotal + tax + tip − total| ≤ 1 cent` (T-0009-118/119); mismatches beyond that tolerance produce a `receipt_total_mismatch` warning.
+
+## MetricTile
+
+A KPI tile displaying a prominent value, label, optional delta indicator, and optional sparkline chart. `value` and `label` are hardcoded strings. `delta` shows a change string; `deltaTone` colors it: `positive` → success, `negative` → danger, `neutral` → fg-muted. `sparklineData` accepts up to 30 data points rendered as a `<Polyline>` via react-native-svg. Single-point sparkline renders as a horizontal line at midpoint. Without `sparklineData`, no sparkline area is rendered.
+
+## StepList
+
+An ordered list of steps rendered in either `numbered` or `checklist` style. In `numbered` style, steps show index circles connected by a vertical rail line. In `checklist` style, each step has a checkbox bound via an optional `done` BooleanBinding. Each step has a `title` (required) and optional `body` text. Maximum 20 steps.
+
 ## Button
 
 A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.

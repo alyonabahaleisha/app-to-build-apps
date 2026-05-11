@@ -20,6 +20,8 @@
  *         = 39 arms total.
  * V1 Phase 1 Step 4: +4 lists (GridList, Carousel, Timeline, ErrorState)
  *         = 43 arms total.
+ * V1 Phase 1 Step 5: +4 compound (TransactionRow, Receipt, MetricTile, StepList)
+ *         = 47 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -73,6 +75,11 @@ import {ListSummaryRenderer} from './compound/ListSummary.js'
 import {MediaTrayRenderer} from './compound/MediaTray.js'
 import {ImagePickerRenderer} from './compound/ImagePicker.js'
 import {ImageRenderer} from './compound/Image.js'
+// V1 Phase 1 Step 5 — Productivity domain compounds
+import {TransactionRowRenderer} from './compound/TransactionRow.js'
+import {ReceiptRenderer} from './compound/Receipt.js'
+import {MetricTileRenderer} from './compound/MetricTile.js'
+import {StepListRenderer} from './compound/StepList.js'
 import {ButtonRenderer} from './actions/Button.js'
 import {FABRenderer} from './actions/FAB.js'
 import {IconButtonRenderer} from './actions/IconButton.js'
@@ -172,6 +179,15 @@ export function NodeRenderer({node}: {node: Node}) {
     // Compound tier — V1 Phase 1 Step 1
     case 'Image':
       return <ImageRenderer node={node} />
+    // Compound tier — V1 Phase 1 Step 5
+    case 'TransactionRow':
+      return <TransactionRowRenderer node={node} />
+    case 'Receipt':
+      return <ReceiptRenderer node={node} />
+    case 'MetricTile':
+      return <MetricTileRenderer node={node} />
+    case 'StepList':
+      return <StepListRenderer node={node} />
     // Actions tier (Step 9)
     case 'Button':
       return <ButtonRenderer node={node} />

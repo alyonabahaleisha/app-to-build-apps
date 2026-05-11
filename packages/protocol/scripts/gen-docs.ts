@@ -1,7 +1,7 @@
 /**
  * gen-docs.ts — Generates packages/protocol/generated/docs.md
  *
- * One section per: 13 token types, 43 component schemas, 12 action verbs,
+ * One section per: 13 token types, 47 component schemas, 12 action verbs,
  * 5 binding types, plus top-level Spec / SpecScreen / Collection schemas.
  * ADR-0007's prompt builder concatenates this into the cacheable catalog block.
  *
@@ -10,16 +10,17 @@
  *      RadiusToken, SpaceToken, TypeRole — 7 token-name types; plus Archetype,
  *      BindingKind, Palette, SlotKind, Stance, Tone — 6 behavioral enums = 13 total)
  *   2. Component schemas (tier order: layout, typography, inputs, display,
- *      lists, compound, actions — 43 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
+ *      lists, compound, actions — 47 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
  *      V1 Phase 1 Step 3 adds AvatarGroup + Callout,
  *      V1 Phase 1 Step 2 adds MoneyField + TimeField + MultiPicker + Slider + RatingInput + SearchBar,
- *      V1 Phase 1 Step 4 adds GridList + Carousel + Timeline + ErrorState)
+ *      V1 Phase 1 Step 4 adds GridList + Carousel + Timeline + ErrorState,
+ *      V1 Phase 1 Step 5 adds TransactionRow + Receipt + MetricTile + StepList)
  *   3. Action verbs (schema-declaration order, matching actions.ts — 12 total)
  *   4. Binding types (StringBinding, NumberBinding, BooleanBinding, DateBinding,
  *      ImageBinding — 5 total)
  *   5. Top-level schemas (Collection, Spec, SpecScreen — 3 total)
  *
- * Total: 13 + 43 + 12 + 5 + 3 = 76 sections (≥60 per ADR AC).
+ * Total: 13 + 47 + 12 + 5 + 3 = 80 sections (≥60 per ADR AC).
  *
  * T-0005-183a guard: every component section must have a non-empty body
  * paragraph. Static description map ensures this — no silent-empty-doc.
@@ -115,6 +116,12 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   MediaTray: 'A horizontally-scrolling image tray that renders one image card per row in the named collection. The `imageField` must be an image-type field on the collection. Tapping a card fires the optional `tapAction`.',
   ImagePicker: 'A camera and photo-library picker bound to an ImageBinding slot. The selected image URI is written to the bound slot. The `optional` flag controls whether the user must select an image.',
 
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  TransactionRow: 'A two-line financial transaction row. Shows merchant name and ISO date on the left; formatted currency amount on the right. Positive amounts render in `success` color (inflow); negative amounts render in `fg` (NOT `danger` — outflows are neutral). An optional `categoryIcon` appears in a 32pt circle with subtle tint background. Amount is formatted via `Intl.NumberFormat` with the specified currency code.',
+  Receipt: 'An itemized receipt with label-amount rows separated by dotted leaders. Each row has a `label`, `amount` (NumberBinding, in cents), and optional `quantity`. The receipt footer shows `subtotal`, optional `tax`, optional `tip`, and `total`. iOS `borderStyle: dotted` is unreliable — the renderer falls back to repeated `.` characters as the leader. The cross-ref validator checks that `|subtotal + tax + tip − total| ≤ 1 cent` (T-0009-118/119); mismatches beyond that tolerance produce a `receipt_total_mismatch` warning.',
+  MetricTile: 'A KPI tile displaying a prominent value, label, optional delta indicator, and optional sparkline chart. `value` and `label` are hardcoded strings. `delta` shows a change string; `deltaTone` colors it: `positive` → success, `negative` → danger, `neutral` → fg-muted. `sparklineData` accepts up to 30 data points rendered as a `<Polyline>` via react-native-svg. Single-point sparkline renders as a horizontal line at midpoint. Without `sparklineData`, no sparkline area is rendered.',
+  StepList: 'An ordered list of steps rendered in either `numbered` or `checklist` style. In `numbered` style, steps show index circles connected by a vertical rail line. In `checklist` style, each step has a checkbox bound via an optional `done` BooleanBinding. Each step has a `title` (required) and optional `body` text. Maximum 20 steps.',
+
   // Actions tier
   Button: 'A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.',
   Fab: 'A Floating Action Button that anchors to the bottom-right corner of its containing screen. Displays a named icon and fires an action on tap. Use for the single primary creation or navigation action on a screen.',
@@ -179,7 +186,7 @@ for (const name of Object.keys(TOKEN_DESCRIPTIONS).sort()) {
   }
 }
 
-// 2. Component schemas (tier order — 43 sections)
+// 2. Component schemas (tier order — 47 sections)
 sections.push(`---\n\n## Component Schemas\n`)
 // Tier order matches components/index.ts: layout, typography, inputs, display, lists, compound, actions
 const COMPONENT_ORDER = [
@@ -201,10 +208,12 @@ const COMPONENT_ORDER = [
   'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
   // V1 Phase 1 Step 4 — Lists & Data tier expansion
   'GridList', 'Carousel', 'Timeline', 'ErrorState',
-  // Compound tier (4 → 5 with Image)
+  // Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5)
   'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker',
   // V1 Phase 1 Step 1 — compound addition
   'Image',
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
   // Actions tier (2 → 3 with IconButton)
   'Button', 'Fab',
   // V1 Phase 1 Step 1 — actions addition

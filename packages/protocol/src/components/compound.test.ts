@@ -2,8 +2,9 @@
  * Compound component schema tests — T-0005-072..097, T-0005-098..125
  * T-0005-072a..072r (F-09): ImagePicker × 3 binding kinds
  * V1 Phase 1 Step 1 additions: T-0009-006..010 (ImageSchema)
+ * V1 Phase 1 Step 5 additions: T-0009-111, 116-117, 121, 125, 128, 134, 236
  * Components: ConditionalSection, ListSummary, MediaTray, ImagePicker (4 compound tier)
- * V1 additions: Image (1 new)
+ * V1 additions: Image (1 new), TransactionRow, Receipt, MetricTile, StepList (4 new)
  */
 import {
   ConditionalSectionSchema,
@@ -11,6 +12,10 @@ import {
   MediaTraySchema,
   ImagePickerSchema,
   ImageSchema,
+  TransactionRowSchema,
+  ReceiptSchema,
+  MetricTileSchema,
+  StepListSchema,
 } from './compound.js'
 import {
   CONDITIONAL_SECTION_FIXTURE,
@@ -272,6 +277,337 @@ describe('ImagePickerSchema', () => {
   it('rejects extra props (.strict())', () => {
     expect(() =>
       ImagePickerSchema.parse({...IMAGE_PICKER_FIXTURE, quality: 0.8}),
+    ).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// V1 Phase 1 Step 5 — Productivity domain compound schemas
+// ---------------------------------------------------------------------------
+
+// ---- TransactionRow (T-0009-111, T-0009-134) ----
+
+describe('TransactionRowSchema (T-0009-111, T-0009-134)', () => {
+  const VALID_TRANSACTION = {
+    id: 'txn1',
+    type: 'TransactionRow' as const,
+    date: '2026-01-15',
+    merchant: 'Acme Coffee',
+    amount: {kind: 'literal' as const, value: 1250},
+    currency: 'USD' as const,
+  }
+
+  // T-0009-111: happy path with required fields
+  it('T-0009-111: parses with date, merchant, amount, currency', () => {
+    expect(() => TransactionRowSchema.parse(VALID_TRANSACTION)).not.toThrow()
+  })
+
+  it('parses without optional currency (defaults to undefined, renderer fills USD)', () => {
+    const {currency: _c, ...rest} = VALID_TRANSACTION
+    expect(() => TransactionRowSchema.parse(rest)).not.toThrow()
+  })
+
+  it('accepts optional categoryIcon', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, categoryIcon: 'shopping-bag'}),
+    ).not.toThrow()
+  })
+
+  it('accepts negative amount (outflow)', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, amount: {kind: 'literal', value: -500}}),
+    ).not.toThrow()
+  })
+
+  it('accepts state binding for amount', () => {
+    expect(() =>
+      TransactionRowSchema.parse({
+        ...VALID_TRANSACTION,
+        amount: {kind: 'state', slot: 'amountSlot'},
+      }),
+    ).not.toThrow()
+  })
+
+  it('rejects empty date', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, date: ''}),
+    ).toThrow()
+  })
+
+  it('rejects merchant over 80 chars', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, merchant: 'A'.repeat(81)}),
+    ).toThrow()
+  })
+
+  // T-0009-134: currency 'XYZ' not in CurrencySchema
+  it('T-0009-134: rejects currency "XYZ" (not in CurrencySchema)', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, currency: 'XYZ'}),
+    ).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      TransactionRowSchema.parse({...VALID_TRANSACTION, note: 'coffee'}),
+    ).toThrow()
+  })
+
+  it('accepts diverse merchant names (i18n)', () => {
+    for (const merchant of ['José García', '李明商店', "O'Brien's Pub"]) {
+      expect(() =>
+        TransactionRowSchema.parse({...VALID_TRANSACTION, merchant}),
+      ).not.toThrow()
+    }
+  })
+})
+
+// ---- Receipt (T-0009-116, T-0009-117) ----
+
+describe('ReceiptSchema (T-0009-116, T-0009-117)', () => {
+  const RECEIPT_ITEM = {
+    label: 'Cappuccino',
+    amount: {kind: 'literal' as const, value: 450},
+  }
+
+  const VALID_RECEIPT = {
+    id: 'rcp1',
+    type: 'Receipt' as const,
+    items: [RECEIPT_ITEM],
+    subtotal: {kind: 'literal' as const, value: 450},
+    total: {kind: 'literal' as const, value: 450},
+  }
+
+  // T-0009-116: happy path
+  it('T-0009-116: parses with items, subtotal, total', () => {
+    expect(() => ReceiptSchema.parse(VALID_RECEIPT)).not.toThrow()
+  })
+
+  it('accepts optional tax and tip', () => {
+    expect(() =>
+      ReceiptSchema.parse({
+        ...VALID_RECEIPT,
+        tax: {kind: 'literal', value: 45},
+        tip: {kind: 'literal', value: 90},
+        total: {kind: 'literal', value: 585},
+      }),
+    ).not.toThrow()
+  })
+
+  it('accepts items with quantity', () => {
+    expect(() =>
+      ReceiptSchema.parse({
+        ...VALID_RECEIPT,
+        items: [{...RECEIPT_ITEM, quantity: 2}],
+      }),
+    ).not.toThrow()
+  })
+
+  it('accepts all valid currencies', () => {
+    for (const currency of ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'INR'] as const) {
+      expect(() => ReceiptSchema.parse({...VALID_RECEIPT, currency})).not.toThrow()
+    }
+  })
+
+  // T-0009-117: 51 items rejects (max 50)
+  it('T-0009-117: rejects 51 items (max 50)', () => {
+    const items = Array.from({length: 51}, (_, i) => ({
+      label: `Item ${i + 1}`,
+      amount: {kind: 'literal' as const, value: 100},
+    }))
+    expect(() => ReceiptSchema.parse({...VALID_RECEIPT, items})).toThrow()
+  })
+
+  it('accepts exactly 50 items (boundary)', () => {
+    const items = Array.from({length: 50}, (_, i) => ({
+      label: `Item ${i + 1}`,
+      amount: {kind: 'literal' as const, value: 100},
+    }))
+    expect(() => ReceiptSchema.parse({...VALID_RECEIPT, items})).not.toThrow()
+  })
+
+  it('rejects 0 items (min 1)', () => {
+    expect(() => ReceiptSchema.parse({...VALID_RECEIPT, items: []})).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      ReceiptSchema.parse({...VALID_RECEIPT, discount: 100}),
+    ).toThrow()
+  })
+
+  it('rejects item quantity that is not a positive integer', () => {
+    expect(() =>
+      ReceiptSchema.parse({
+        ...VALID_RECEIPT,
+        items: [{...RECEIPT_ITEM, quantity: 0}],
+      }),
+    ).toThrow()
+  })
+})
+
+// ---- MetricTile (T-0009-121, T-0009-236) ----
+
+describe('MetricTileSchema (T-0009-121, T-0009-236)', () => {
+  const VALID_METRIC = {
+    id: 'met1',
+    type: 'MetricTile' as const,
+    value: '42',
+    label: 'Tasks completed',
+    sparklineData: [1, 2, 3],
+  }
+
+  // T-0009-121: happy path
+  it('T-0009-121: parses with value, label, sparklineData', () => {
+    expect(() => MetricTileSchema.parse(VALID_METRIC)).not.toThrow()
+  })
+
+  it('parses without optional fields', () => {
+    const {sparklineData: _s, ...rest} = VALID_METRIC
+    expect(() => MetricTileSchema.parse(rest)).not.toThrow()
+  })
+
+  it('accepts deltaTone values', () => {
+    for (const deltaTone of ['positive', 'negative', 'neutral'] as const) {
+      expect(() =>
+        MetricTileSchema.parse({...VALID_METRIC, deltaTone, delta: '+5'}),
+      ).not.toThrow()
+    }
+  })
+
+  it('accepts optional icon from the closed catalog', () => {
+    expect(() => MetricTileSchema.parse({...VALID_METRIC, icon: 'trending-up'})).not.toThrow()
+  })
+
+  it('rejects empty value', () => {
+    expect(() => MetricTileSchema.parse({...VALID_METRIC, value: ''})).toThrow()
+  })
+
+  it('rejects value over 40 chars', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, value: 'x'.repeat(41)}),
+    ).toThrow()
+  })
+
+  it('rejects invalid deltaTone', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, deltaTone: 'good'}),
+    ).toThrow()
+  })
+
+  // T-0009-236: sparklineData max 30 boundary
+  it('T-0009-236: accepts exactly 30 sparkline data points (max-inclusive)', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, sparklineData: Array(30).fill(1)}),
+    ).not.toThrow()
+  })
+
+  it('T-0009-236: rejects 31 sparkline data points (exceeds max)', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, sparklineData: Array(31).fill(1)}),
+    ).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, unit: 'tasks'}),
+    ).toThrow()
+  })
+})
+
+// ---- StepList (T-0009-125, T-0009-128) ----
+
+describe('StepListSchema (T-0009-125, T-0009-128)', () => {
+  const VALID_STEP_LIST = {
+    id: 'sl1',
+    type: 'StepList' as const,
+    steps: [{title: 'Preheat oven to 180°C'}],
+    style: 'numbered' as const,
+  }
+
+  // T-0009-125: happy path
+  it('T-0009-125: parses with steps and style "numbered"', () => {
+    expect(() => StepListSchema.parse(VALID_STEP_LIST)).not.toThrow()
+  })
+
+  it('parses checklist style', () => {
+    expect(() =>
+      StepListSchema.parse({...VALID_STEP_LIST, style: 'checklist'}),
+    ).not.toThrow()
+  })
+
+  it('parses without optional style (defaults to undefined, renderer fills numbered)', () => {
+    const {style: _s, ...rest} = VALID_STEP_LIST
+    expect(() => StepListSchema.parse(rest)).not.toThrow()
+  })
+
+  it('accepts step with body and done binding', () => {
+    expect(() =>
+      StepListSchema.parse({
+        ...VALID_STEP_LIST,
+        steps: [
+          {
+            title: 'Mix ingredients',
+            body: 'Combine flour and sugar in a bowl.',
+            done: {kind: 'state', slot: 'step1Done'},
+          },
+        ],
+      }),
+    ).not.toThrow()
+  })
+
+  it('accepts steps with diverse titles (i18n)', () => {
+    expect(() =>
+      StepListSchema.parse({
+        ...VALID_STEP_LIST,
+        steps: [
+          {title: 'José García cooks'},
+          {title: '第一步：准备'},
+          {title: "O'Brien's method"},
+        ],
+      }),
+    ).not.toThrow()
+  })
+
+  it('rejects step with body over 240 chars', () => {
+    expect(() =>
+      StepListSchema.parse({
+        ...VALID_STEP_LIST,
+        steps: [{title: 'Step', body: 'x'.repeat(241)}],
+      }),
+    ).toThrow()
+  })
+
+  it('rejects step with empty title', () => {
+    expect(() =>
+      StepListSchema.parse({...VALID_STEP_LIST, steps: [{title: ''}]}),
+    ).toThrow()
+  })
+
+  // T-0009-128: 21 steps rejects (max 20)
+  it('T-0009-128: rejects 21 steps (max 20)', () => {
+    const steps = Array.from({length: 21}, (_, i) => ({title: `Step ${i + 1}`}))
+    expect(() => StepListSchema.parse({...VALID_STEP_LIST, steps})).toThrow()
+  })
+
+  it('accepts exactly 20 steps (boundary)', () => {
+    const steps = Array.from({length: 20}, (_, i) => ({title: `Step ${i + 1}`}))
+    expect(() => StepListSchema.parse({...VALID_STEP_LIST, steps})).not.toThrow()
+  })
+
+  it('rejects 0 steps (min 1)', () => {
+    expect(() => StepListSchema.parse({...VALID_STEP_LIST, steps: []})).toThrow()
+  })
+
+  it('rejects invalid style', () => {
+    expect(() =>
+      StepListSchema.parse({...VALID_STEP_LIST, style: 'bulleted'}),
+    ).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      StepListSchema.parse({...VALID_STEP_LIST, ordered: true}),
     ).toThrow()
   })
 })

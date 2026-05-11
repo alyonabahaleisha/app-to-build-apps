@@ -1,0 +1,199 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransactionRowRenderer negative amount color (T-0009-113) T-0009-113: negative amount snapshot at productive×focus — locks fg (#14171A), not danger (#C03A2B) 1`] = `
+<View
+  accessibilityLabel="Acme Coffee, -$7.50, 2026-01-15"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "lineHeight": 24,
+        }
+      }
+    >
+      Acme Coffee
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18,
+        }
+      }
+    >
+      2026-01-15
+    </Text>
+  </View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#14171A",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
+        "marginLeft": 8,
+      }
+    }
+  >
+    -$7.50
+  </Text>
+</View>
+`;
+
+exports[`TransactionRowRenderer snapshot (T-0009-129) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Acme Coffee, $12.50, 2026-01-15"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "lineHeight": 26,
+        }
+      }
+    >
+      Acme Coffee
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+    >
+      2026-01-15
+    </Text>
+  </View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#4A7B45",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 26,
+        "marginLeft": 8,
+      }
+    }
+  >
+    $12.50
+  </Text>
+</View>
+`;
+
+exports[`TransactionRowRenderer snapshot (T-0009-129) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Acme Coffee, $12.50, 2026-01-15"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "lineHeight": 24,
+        }
+      }
+    >
+      Acme Coffee
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18,
+        }
+      }
+    >
+      2026-01-15
+    </Text>
+  </View>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#0E8345",
+        "fontSize": 16,
+        "fontWeight": "400",
+        "lineHeight": 24,
+        "marginLeft": 8,
+      }
+    }
+  >
+    $12.50
+  </Text>
+</View>
+`;

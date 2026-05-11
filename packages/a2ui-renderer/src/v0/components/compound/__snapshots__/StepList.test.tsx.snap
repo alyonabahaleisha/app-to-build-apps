@@ -1,0 +1,437 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StepListRenderer snapshot (T-0009-132) — expressive×health matches snapshot at expressive×health (checklist) 1`] = `
+<View
+  accessibilityLabel="Checklist, 3 items"
+  accessibilityRole="list"
+  style={
+    {
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Completed: Buy ingredients"
+    accessibilityRole="text"
+    style={
+      {
+        "alignItems": "flex-start",
+        "flexDirection": "row",
+        "marginBottom": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#4A7438",
+          "borderColor": "#4A7438",
+          "borderRadius": 14,
+          "borderWidth": 2,
+          "flexShrink": 0,
+          "height": 28,
+          "justifyContent": "center",
+          "marginRight": 8,
+          "width": 28,
+        }
+      }
+      testID="step-checkbox-0"
+    >
+      <Text
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 14,
+            "fontWeight": "700",
+            "lineHeight": 14,
+          }
+        }
+      >
+        ✓
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 26,
+            "textDecorationLine": "line-through",
+          }
+        }
+      >
+        Buy ingredients
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityLabel="Pending: Prepare workspace"
+    accessibilityRole="text"
+    style={
+      {
+        "alignItems": "flex-start",
+        "flexDirection": "row",
+        "marginBottom": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 14,
+          "borderWidth": 2,
+          "flexShrink": 0,
+          "height": 28,
+          "justifyContent": "center",
+          "marginRight": 8,
+          "width": 28,
+        }
+      }
+      testID="step-checkbox-1"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 26,
+            "textDecorationLine": "none",
+          }
+        }
+      >
+        Prepare workspace
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityLabel="Pending: Follow recipe"
+    accessibilityRole="text"
+    style={
+      {
+        "alignItems": "flex-start",
+        "flexDirection": "row",
+        "marginBottom": 8,
+      }
+    }
+  >
+    <View
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 14,
+          "borderWidth": 2,
+          "flexShrink": 0,
+          "height": 28,
+          "justifyContent": "center",
+          "marginRight": 8,
+          "width": 28,
+        }
+      }
+      testID="step-checkbox-2"
+    />
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 26,
+            "textDecorationLine": "none",
+          }
+        }
+      >
+        Follow recipe
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`StepListRenderer snapshot (T-0009-132) — productive×focus matches snapshot at productive×focus (numbered) 1`] = `
+<View
+  accessibilityLabel="Steps, 3 items"
+  accessibilityRole="list"
+  style={
+    {
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    accessibilityLabel="Step 1: Preheat oven to 180°C"
+    accessibilityRole="text"
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "width": 36,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4F46E5",
+            "borderRadius": 14,
+            "height": 28,
+            "justifyContent": "center",
+            "width": 28,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontSize": 13,
+              "fontWeight": "600",
+              "lineHeight": 13,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+      <View
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "backgroundColor": "#ECEEF1",
+            "flex": 1,
+            "marginTop": 2,
+            "width": 2,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+          "paddingBottom": 12,
+          "paddingLeft": 8,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 24,
+          }
+        }
+      >
+        Preheat oven to 180°C
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityLabel="Step 2: Mix flour and sugar. Use a large bowl for best results."
+    accessibilityRole="text"
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "width": 36,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4F46E5",
+            "borderRadius": 14,
+            "height": 28,
+            "justifyContent": "center",
+            "width": 28,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontSize": 13,
+              "fontWeight": "600",
+              "lineHeight": 13,
+            }
+          }
+        >
+          2
+        </Text>
+      </View>
+      <View
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "backgroundColor": "#ECEEF1",
+            "flex": 1,
+            "marginTop": 2,
+            "width": 2,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+          "paddingBottom": 12,
+          "paddingLeft": 8,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 24,
+          }
+        }
+      >
+        Mix flour and sugar
+      </Text>
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "lineHeight": 18,
+            "marginTop": 2,
+          }
+        }
+      >
+        Use a large bowl for best results.
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityLabel="Step 3: Bake for 25 minutes"
+    accessibilityRole="text"
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "width": 36,
+        }
+      }
+    >
+      <View
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4F46E5",
+            "borderRadius": 14,
+            "height": 28,
+            "justifyContent": "center",
+            "width": 28,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#FFFFFF",
+              "fontSize": 13,
+              "fontWeight": "600",
+              "lineHeight": 13,
+            }
+          }
+        >
+          3
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flex": 1,
+          "paddingBottom": 0,
+          "paddingLeft": 8,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "fontWeight": "400",
+            "lineHeight": 24,
+          }
+        }
+      >
+        Bake for 25 minutes
+      </Text>
+    </View>
+  </View>
+</View>
+`;

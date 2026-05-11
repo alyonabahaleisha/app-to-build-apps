@@ -2771,6 +2771,224 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "TransactionRow"
+                      },
+                      "date": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "merchant": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "amount": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "currency": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/14/properties/currency"
+                      },
+                      "categoryIcon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "date",
+                      "merchant",
+                      "amount"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Receipt"
+                      },
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "amount": {
+                              "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                            },
+                            "quantity": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "amount"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 50
+                      },
+                      "subtotal": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "tax": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "tip": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "total": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "currency": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/14/properties/currency"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "items",
+                      "subtotal",
+                      "total"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "MetricTile"
+                      },
+                      "value": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 40
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "delta": {
+                        "type": "string",
+                        "maxLength": 40
+                      },
+                      "deltaTone": {
+                        "type": "string",
+                        "enum": [
+                          "positive",
+                          "negative",
+                          "neutral"
+                        ]
+                      },
+                      "sparklineData": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "maxItems": 30
+                      },
+                      "icon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "value",
+                      "label"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "StepList"
+                      },
+                      "steps": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "title": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "body": {
+                              "type": "string",
+                              "maxLength": 240
+                            },
+                            "done": {
+                              "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/13/properties/valueBinding"
+                            }
+                          },
+                          "required": [
+                            "title"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 20
+                      },
+                      "style": {
+                        "type": "string",
+                        "enum": [
+                          "numbered",
+                          "checklist"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "steps"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Button"
                       },
                       "label": {

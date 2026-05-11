@@ -1,0 +1,413 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReceiptRenderer snapshot (T-0009-130) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Receipt with 2 items, total $8.00"
+  accessibilityRole="text"
+  style={
+    {
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "alignItems": "baseline",
+        "flexDirection": "row",
+        "marginBottom": 2,
+      }
+    }
+  >
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#1A1715",
+          "flexShrink": 1,
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      Cappuccino
+    </Text>
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#6B5F56",
+          "flex": 1,
+          "fontSize": 14,
+          "lineHeight": 20,
+          "marginHorizontal": 2,
+          "overflow": "hidden",
+        }
+      }
+    >
+      ...................................................................
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      $4.50
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "alignItems": "baseline",
+        "flexDirection": "row",
+        "marginBottom": 2,
+      }
+    }
+  >
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#1A1715",
+          "flexShrink": 1,
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      Muffin
+    </Text>
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#6B5F56",
+          "flex": 1,
+          "fontSize": 14,
+          "lineHeight": 20,
+          "marginHorizontal": 2,
+          "overflow": "hidden",
+        }
+      }
+    >
+      ...................................................................
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 14,
+          "lineHeight": 20,
+        }
+      }
+    >
+      $3.50
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "backgroundColor": "#EFE9DF",
+        "height": 1,
+        "marginVertical": 4,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "marginTop": 2,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+    >
+      Subtotal
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+    >
+      $8.00
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "backgroundColor": "#EFE9DF",
+        "height": 1,
+        "marginVertical": 4,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "marginTop": 4,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 26,
+        }
+      }
+    >
+      Total
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 26,
+        }
+      }
+    >
+      $8.00
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`ReceiptRenderer snapshot (T-0009-130) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Receipt with 2 items, total $8.00"
+  accessibilityRole="text"
+  style={
+    {
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "alignItems": "baseline",
+        "flexDirection": "row",
+        "marginBottom": 2,
+      }
+    }
+  >
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#14171A",
+          "flexShrink": 1,
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      Cappuccino
+    </Text>
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#5C6470",
+          "flex": 1,
+          "fontSize": 13,
+          "lineHeight": 18,
+          "marginHorizontal": 2,
+          "overflow": "hidden",
+        }
+      }
+    >
+      ...................................................................
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      $4.50
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "alignItems": "baseline",
+        "flexDirection": "row",
+        "marginBottom": 2,
+      }
+    }
+  >
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#14171A",
+          "flexShrink": 1,
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      Muffin
+    </Text>
+    <Text
+      numberOfLines={1}
+      style={
+        {
+          "color": "#5C6470",
+          "flex": 1,
+          "fontSize": 13,
+          "lineHeight": 18,
+          "marginHorizontal": 2,
+          "overflow": "hidden",
+        }
+      }
+    >
+      ...................................................................
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 13,
+          "lineHeight": 18,
+        }
+      }
+    >
+      $3.50
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "backgroundColor": "#ECEEF1",
+        "height": 1,
+        "marginVertical": 4,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "marginTop": 2,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18,
+        }
+      }
+    >
+      Subtotal
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "lineHeight": 18,
+        }
+      }
+    >
+      $8.00
+    </Text>
+  </View>
+  <View
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "backgroundColor": "#ECEEF1",
+        "height": 1,
+        "marginVertical": 4,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "marginTop": 4,
+      }
+    }
+  >
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 24,
+        }
+      }
+    >
+      Total
+    </Text>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 24,
+        }
+      }
+    >
+      $8.00
+    </Text>
+  </View>
+</View>
+`;

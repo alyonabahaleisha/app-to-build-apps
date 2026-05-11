@@ -62,12 +62,17 @@ import {
   CarouselSchema,
   TimelineSchema,
   ErrorStateSchema,
-  // Compound tier (4 → 5 with Image)
+  // Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5)
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
   ImageSchema,
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  TransactionRowSchema,
+  ReceiptSchema,
+  MetricTileSchema,
+  StepListSchema,
   // Actions tier (2 → 3 with IconButton)
   ButtonSchema,
   FabSchema,
@@ -184,6 +189,11 @@ export type Node =
   | z.infer<typeof MediaTraySchema>
   | z.infer<typeof ImagePickerSchema>
   | z.infer<typeof ImageSchema>
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  | z.infer<typeof TransactionRowSchema>
+  | z.infer<typeof ReceiptSchema>
+  | z.infer<typeof MetricTileSchema>
+  | z.infer<typeof StepListSchema>
   // Actions tier (2 → 3 with IconButton)
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
@@ -250,6 +260,11 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     ImagePickerSchema,
     // V1 Phase 1 Step 1 — Image
     ImageSchema,
+    // V1 Phase 1 Step 5 — Productivity domain compounds
+    TransactionRowSchema,
+    ReceiptSchema,
+    MetricTileSchema,
+    StepListSchema,
     // Actions tier
     ButtonSchema,
     FabSchema,

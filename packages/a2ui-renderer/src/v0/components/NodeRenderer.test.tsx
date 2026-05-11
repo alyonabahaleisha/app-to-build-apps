@@ -2,9 +2,10 @@
  * NodeRenderer tests
  * T-0006-062: NodeRenderer discriminates 5 layout types correctly
  *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8,
- *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4)
+ *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4, 47 in V1P1S5)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
  * T-0009-109: NodeRenderer 43-arm boundary test
+ * T-0009-133: NodeRenderer 47-arm boundary test
  */
 import React from 'react'
 import {render} from '@testing-library/react-native'
@@ -396,6 +397,39 @@ const SEARCH_BAR: Extract<Node, {type: 'SearchBar'}> = {
 }
 
 // ---------------------------------------------------------------------------
+// Minimal node fixtures — V1 Phase 1 Step 5 (TransactionRow, Receipt, MetricTile, StepList)
+// ---------------------------------------------------------------------------
+
+const TRANSACTION_ROW: Extract<Node, {type: 'TransactionRow'}> = {
+  id: 'txn1',
+  type: 'TransactionRow',
+  date: '2026-01-15',
+  merchant: 'Acme Coffee',
+  amount: {kind: 'literal', value: 1250},
+}
+
+const RECEIPT: Extract<Node, {type: 'Receipt'}> = {
+  id: 'rcp1',
+  type: 'Receipt',
+  items: [{label: 'Coffee', amount: {kind: 'literal', value: 450}}],
+  subtotal: {kind: 'literal', value: 450},
+  total: {kind: 'literal', value: 450},
+}
+
+const METRIC_TILE: Extract<Node, {type: 'MetricTile'}> = {
+  id: 'met1',
+  type: 'MetricTile',
+  value: '42',
+  label: 'Tasks',
+}
+
+const STEP_LIST: Extract<Node, {type: 'StepList'}> = {
+  id: 'sl1',
+  type: 'StepList',
+  steps: [{title: 'First step'}],
+}
+
+// ---------------------------------------------------------------------------
 // Minimal node fixtures — V1 Phase 1 Step 4 (GridList, Carousel, Timeline, ErrorState)
 // ---------------------------------------------------------------------------
 
@@ -425,11 +459,12 @@ const ERROR_STATE: Extract<Node, {type: 'ErrorState'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended V1 Phase 1 Step 4): NodeRenderer discriminates 43 types correctly
-// T-0009-109: 43-arm boundary test
+// T-0006-062 (extended V1 Phase 1 Step 5): NodeRenderer discriminates 47 types correctly
+// T-0009-109: 43-arm boundary test (retained for regression)
+// T-0009-133: 47-arm boundary test
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 4 extended to 43 arms, T-0009-109)', () => {
+describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 47 arms, T-0009-109, T-0009-133)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
@@ -481,12 +516,17 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 4 extended to 43 arms
     ['Carousel', CAROUSEL],
     ['Timeline', TIMELINE],
     ['ErrorState', ERROR_STATE],
-    // Compound tier (5)
+    // Compound tier (9)
     ['ConditionalSection', CONDITIONAL_SECTION],
     ['ListSummary', LIST_SUMMARY],
     ['MediaTray', MEDIA_TRAY],
     ['ImagePicker', IMAGE_PICKER],
     ['Image', IMAGE],
+    // Compound tier — V1 Phase 1 Step 5 (4)
+    ['TransactionRow', TRANSACTION_ROW],
+    ['Receipt', RECEIPT],
+    ['MetricTile', METRIC_TILE],
+    ['StepList', STEP_LIST],
     // Actions tier (3)
     ['Button', BUTTON],
     ['FAB', FAB],
@@ -505,8 +545,9 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 4 extended to 43 arms
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  // T-0009-109: 43-arm boundary test — all arms present, none call onUnknownNodeType
-  it('T-0009-109: does not call onUnknownNodeType for any of the 43 node types', () => {
+  // T-0009-109: 43-arm boundary test (retained for regression — now superseded by T-0009-133)
+  // T-0009-133: 47-arm boundary test — all arms present, none call onUnknownNodeType
+  it('T-0009-109 / T-0009-133: does not call onUnknownNodeType for any of the 47 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
       // Layout (6)
@@ -521,13 +562,14 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 4 extended to 43 arms
       // Lists (9)
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
       GRID_LIST, CAROUSEL, TIMELINE, ERROR_STATE,
-      // Compound (5)
+      // Compound (9)
       CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER, IMAGE,
+      TRANSACTION_ROW, RECEIPT, METRIC_TILE, STEP_LIST,
       // Actions (3)
       BUTTON, FAB, ICON_BUTTON,
     ]
-    // Total: 6 + 3 + 6 + 11 + 9 + 5 + 3 = 43
-    expect(allNodes.length).toBe(43)
+    // Total: 6 + 3 + 6 + 11 + 9 + 9 + 3 = 47
+    expect(allNodes.length).toBe(47)
 
     for (const node of allNodes) {
       renderNode(node, host)

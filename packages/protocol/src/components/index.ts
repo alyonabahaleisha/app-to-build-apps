@@ -58,15 +58,33 @@ export {
 } from './lists.js'
 export type {List, ListItem, SwipeableRow, EmptyState, LoadingState, GridList, Carousel, Timeline, ErrorState} from './lists.js'
 
-// Compound tier (4 → 5 with Image)
+// Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5)
 export {
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
   ImageSchema,
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  TransactionRowSchema,
+  ReceiptSchema,
+  MetricTileSchema,
+  StepListSchema,
 } from './compound.js'
-export type {ConditionalSection, ListSummary, MediaTray, ImagePicker, Image} from './compound.js'
+export type {
+  ConditionalSection,
+  ListSummary,
+  MediaTray,
+  ImagePicker,
+  Image,
+  // V1 Phase 1 Step 5
+  TransactionRow,
+  Receipt,
+  ReceiptItem,
+  MetricTile,
+  StepList,
+  Step,
+} from './compound.js'
 
 // Actions tier (2 → 3 with IconButton)
 export {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
@@ -122,15 +140,21 @@ import {
   MediaTraySchema,
   ImagePickerSchema,
   ImageSchema,
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  TransactionRowSchema,
+  ReceiptSchema,
+  MetricTileSchema,
+  StepListSchema,
 } from './compound.js'
 import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 43 component schemas in one array — used by the Step 5 discriminated union.
+// All 47 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
 // V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema (→33).
 // V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema (→35).
 // V1 Phase 1 Step 2 adds: MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar (→39).
 // V1 Phase 1 Step 4 adds: GridList, Carousel, Timeline, ErrorState (→43).
+// V1 Phase 1 Step 5 adds: TransactionRow, Receipt, MetricTile, StepList (→47).
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
@@ -176,6 +200,11 @@ export const ALL_COMPONENT_SCHEMAS = [
   MediaTraySchema,
   ImagePickerSchema,
   ImageSchema,
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  TransactionRowSchema,
+  ReceiptSchema,
+  MetricTileSchema,
+  StepListSchema,
   ButtonSchema,
   FabSchema,
   IconButtonSchema,
@@ -226,6 +255,11 @@ export type ComponentNode =
   | z.infer<typeof MediaTraySchema>
   | z.infer<typeof ImagePickerSchema>
   | z.infer<typeof ImageSchema>
+  // V1 Phase 1 Step 5 — Productivity domain compounds
+  | z.infer<typeof TransactionRowSchema>
+  | z.infer<typeof ReceiptSchema>
+  | z.infer<typeof MetricTileSchema>
+  | z.infer<typeof StepListSchema>
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
   | z.infer<typeof IconButtonSchema>
