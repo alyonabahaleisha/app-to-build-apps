@@ -6,6 +6,7 @@ import Fastify, {type FastifyInstance} from 'fastify'
 import {DEV_USER} from './lib/auth.js'
 import {env} from './lib/env.js'
 import {authRoutes} from './routes/auth.js'
+import {clonesRoutes} from './routes/clones.js'
 import {generateRoutes} from './routes/generate.js'
 import {healthRoutes} from './routes/health.js'
 import {libraryRoutes} from './routes/library.js'
@@ -13,6 +14,7 @@ import {marketplaceRoutes} from './routes/marketplace.js'
 import {outOfScopeRoutes} from './routes/outOfScope.js'
 import {meRoutes} from './routes/me.js'
 import {miniAppsRoutes} from './routes/miniApps.js'
+import {wellKnownRoutes} from './routes/wellKnown.js'
 
 export async function buildServer(): Promise<FastifyInstance> {
   const server = Fastify({
@@ -31,6 +33,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(helmet)
   await server.register(cors, {origin: true})
   await server.register(healthRoutes)
+  await server.register(wellKnownRoutes)
   await server.register(authRoutes, {prefix: '/auth'})
   await server.register(miniAppsRoutes)
   await server.register(meRoutes)
@@ -38,6 +41,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(outOfScopeRoutes)
   await server.register(marketplaceRoutes)
   await server.register(libraryRoutes)
+  await server.register(clonesRoutes)
 
   // Dev-only: ensure the bypass user exists so /generate's project insert
   // doesn't violate the owner_id FK. Idempotent.
