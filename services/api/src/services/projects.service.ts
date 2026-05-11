@@ -1,12 +1,11 @@
 /**
- * Projects service — ADR-0007 Step 4 V0 cutover.
+ * Projects service — ADR-0007 Step 6 deletion sweep.
  *
  * Three read operations + one write:
  *   - create({ownerId, spec, parentProjectId?, originalPrompt?, parentVersionId?}) → ProjectDetail
  *   - list(ownerId)                            → ProjectListItem[]   (specJson EXCLUDED)
  *   - get(ownerId, projectId)                  → ProjectDetail | null
  *   - getVersion(versionId)                    → ProjectVersion | null
- *   - applyEdit(...)                           → ProjectDetail  (preserved for Step 6 sweep)
  *
  * V0 changes vs M1:
  *   - `spec` type: A2UISpec → Spec (from @app-creator/protocol)
@@ -151,14 +150,6 @@ export interface ProjectsService {
   list: (ownerId: string) => Promise<ProjectListItem[]>
   get: (ownerId: string, projectId: string) => Promise<ProjectDetail | null>
   getVersion: (versionId: string) => Promise<ProjectVersion | null>
-  /**
-   * applyEdit is preserved for Step 6 deletion sweep. It is no longer called
-   * by the V0 generate route (re-prompt-to-edit goes through create() now).
-   */
-  applyEdit: (
-    projectId: string,
-    newSpec: Spec,
-  ) => Promise<ProjectDetail>
 }
 
 export function createProjectsService(db: Db): ProjectsService {
@@ -287,44 +278,6 @@ export function createProjectsService(db: Db): ProjectsService {
         .from(projectVersions)
         .where(eq(projectVersions.id, versionId))
       return rows[0] ?? null
-    },
-
-    /**
-     * applyEdit — preserved for Step 6 deletion sweep.
-     * V0 re-prompt-to-edit goes through create() with parentVersionId.
-     * plan parameter removed (ADR-0007 — planner deleted).
-     */
-    async applyEdit(
-      projectId: string,
-      newSpec: Spec,
-    ): Promise<ProjectDetail> {
-      const parsed = SpecSchema.parse(newSpec)
-      const hash = renderHash(parsed)
-
-      return await db.transaction(async tx => {
-        const [versionRow] = await tx
-          .insert(projectVersions)
-          .values({
-            projectId,
-            specJson: parsed,
-            renderHash: hash,
-            planJson: null,
-          })
-          .returning()
-        if (!versionRow) throw new Error('project_versions insert returned no row')
-
-        const [updatedProject] = await tx
-          .update(projects)
-          .set({currentVersionId: versionRow.id})
-          .where(eq(projects.id, projectId))
-          .returning()
-        if (!updatedProject) throw new Error('projects update returned no row')
-
-        return {
-          project: {...updatedProject, currentVersionId: versionRow.id},
-          currentVersion: versionRow,
-        }
-      })
     },
   }
 }

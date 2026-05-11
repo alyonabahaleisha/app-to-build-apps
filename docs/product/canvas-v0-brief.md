@@ -71,7 +71,7 @@ V0 ships creator-funded with hard-stop at limit. No friend-fallback payment in V
 PM owns the Reviewer Notes document containing:
 
 - Inventory of all 28 components with screenshots.
-- List of 13 action verbs with descriptions.
+- List of 12 action verbs with descriptions.
 - Statement: "All capabilities ship with this build. User prompts compose layouts from this fixed toolkit; they cannot introduce new code, components, or actions."
 - The single AI capability (summarize, on-device only) with example output.
 - Three example mini-app specs with screenshots of generated output.
@@ -157,14 +157,14 @@ This collapses the two-stage Plan + Build pipeline from the current implementati
 
 Every component is deeply variant'd, themed for 2 stances × light mode, accessibility-correct, RTL-deferred to V0.5.
 
-#### Registry 2: Action Verbs — 13
+#### Registry 2: Action Verbs — 12
 
 | Category | Verbs |
 |---|---|
 | State | set, update, reset |
 | Collections | addItem, removeItem, updateItem, clearCollection |
 | Navigation | navigate, back |
-| Device | capture, share |
+| Device | capture |
 | Feedback | toast |
 | AI | aiProcess (single verb dispatching summarize task only in V0) |
 
@@ -231,7 +231,7 @@ packages/a2ui-renderer/               ← rewritten, 28 components
     components/                       ← 28 implementations
     state/
       collections.ts                  ← typed store, 2 sync modes
-      actions.ts                      ← 13-verb dispatcher
+      actions.ts                      ← 12-verb dispatcher
     ai/
       summarize.ts                    ← Apple Foundation Models bridge
 
@@ -444,7 +444,7 @@ Disagreements escalate to a 30-minute three-person decision meeting; no async pi
 
 ## 6. The V0 Spine — One Sentence
 
-A native iOS host app — light mode, two tabs, 28 deeply-variant'd components, 13 action verbs, 4 archetypes, 2 visual stances, 6 accent palettes, declarative collections with seed data, one on-device AI summarize verb, single-call Sonnet pipeline producing structured specs in 7-9 seconds — shareable by Universal Link, no webview, no code over the network, all data interpreted by a pre-reviewed renderer using mandatory polish libraries; 6 weeks build, 1 day pre-launch polish review, App Review submission immediately after.
+A native iOS host app — light mode, two tabs, 28 deeply-variant'd components, 12 action verbs, 4 archetypes, 2 visual stances, 6 accent palettes, declarative collections with seed data, one on-device AI summarize verb, single-call Sonnet pipeline producing structured specs in 7-9 seconds — shareable by Universal Link, no webview, no code over the network, all data interpreted by a pre-reviewed renderer using mandatory polish libraries; 6 weeks build, 1 day pre-launch polish review, App Review submission immediately after.
 
 ---
 

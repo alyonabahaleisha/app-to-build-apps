@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`producePlan diagnostic turn message correctly cites the prior failure (snapshot) 1`] = `
-{
-  "content": "Your previous response failed validation: [{"path":"archetype","message":"Invalid enum value. Expected 'ListCRUD' | 'Tracker' | 'Calculator' | 'Journal' | 'Dashboard' | 'SocialFeed' | 'InfoDisplay' | 'SimpleGame' | 'unknown', received 'NotAnArchetype'","code":"invalid_enum_value"},{"path":"screens","message":"Array must contain at least 1 element(s)","code":"too_small"}]. Emit a corrected plan.",
-  "role": "user",
-}
-`;

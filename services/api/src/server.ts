@@ -6,7 +6,6 @@ import Fastify, {type FastifyInstance} from 'fastify'
 import {DEV_USER} from './lib/auth.js'
 import {env} from './lib/env.js'
 import {authRoutes} from './routes/auth.js'
-import {editRoutes} from './routes/edit.js'
 import {generateRoutes} from './routes/generate.js'
 import {healthRoutes} from './routes/health.js'
 import {libraryRoutes} from './routes/library.js'
@@ -34,7 +33,6 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(authRoutes, {prefix: '/auth'})
   await server.register(projectsRoutes)
   await server.register(generateRoutes)
-  await server.register(editRoutes)
   await server.register(outOfScopeRoutes)
   await server.register(marketplaceRoutes)
   await server.register(libraryRoutes)

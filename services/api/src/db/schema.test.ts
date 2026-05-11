@@ -26,12 +26,10 @@ import {join} from 'node:path'
 import {sql} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import {A2UISpecSchema} from '@app-creator/a2ui-schema'
 import {ConfigError, MigrationError, createDb, createPool} from './index.js'
 import {runMigrations} from './migrate.js'
 import {facts, memoryEmbeddings, projects, projectVersions, users} from './schema.js'
 import * as schema from './schema.js'
-import {deepValidateSpec} from '../services/specValidation.js'
 import {isReservedHandle, RESERVED_HANDLES} from '../lib/reservedHandles.js'
 import {userRow, validSpec} from '../../test/factories.js'
 import {
@@ -821,44 +819,6 @@ describe('ADR-0002 Step 2 seeds', () => {
       expect(row.visibility).toBe('public')
       expect(row.published_at).not.toBeNull()
       expect(row.owner_id).toBe(EXAMPLE_USER_ID)
-    }
-  })
-
-  // -------------------------------------------------------------------------
-  // T-0002-013 — Happy: each seed spec_json passes A2UISpecSchema.parse
-  // -------------------------------------------------------------------------
-  it('T-0002-013: each seed spec_json passes A2UISpecSchema.parse', async () => {
-    const pool = await getTestPool()
-    const result = await pool.query<{id: string; spec_json: unknown}>(
-      `SELECT pv.id, pv.spec_json
-       FROM project_versions pv
-       INNER JOIN projects p ON pv.id = p.current_version_id
-       WHERE p.owner_id = $1`,
-      [EXAMPLE_USER_ID],
-    )
-    expect(result.rows.length).toBeGreaterThanOrEqual(5)
-    for (const row of result.rows) {
-      // parse throws on invalid spec — Jest will catch it as a failure
-      expect(() => A2UISpecSchema.parse(row.spec_json)).not.toThrow()
-    }
-  })
-
-  // -------------------------------------------------------------------------
-  // T-0002-014 — Happy: each seed spec_json passes deepValidateSpec
-  // -------------------------------------------------------------------------
-  it('T-0002-014: each seed spec_json passes deepValidateSpec (depth ≤8, all action targets resolve, all view ids resolve)', async () => {
-    const pool = await getTestPool()
-    const result = await pool.query<{id: string; spec_json: unknown}>(
-      `SELECT pv.id, pv.spec_json
-       FROM project_versions pv
-       INNER JOIN projects p ON pv.id = p.current_version_id
-       WHERE p.owner_id = $1`,
-      [EXAMPLE_USER_ID],
-    )
-    expect(result.rows.length).toBeGreaterThanOrEqual(5)
-    for (const row of result.rows) {
-      const parsed = A2UISpecSchema.parse(row.spec_json)
-      expect(() => deepValidateSpec(parsed)).not.toThrow()
     }
   })
 

@@ -1,9 +1,10 @@
 /**
  * Telemetry — pipeline event writes to the `events` table.
  *
- * Extracted from pipeline.ts (ADR-0004 Step 8). Single responsibility:
+ * ADR-0007 Step 6: M1 event types removed. Only V0 event types remain.
+ * Single responsibility:
  *   1. Validate payload keys against per-event-type whitelist (throws synchronously).
- *   2. Short-circuit if PLAN_BUILD_EVAL_MODE=true (skip DB insert; validation still runs).
+ *   2. Short-circuit if EVAL_MODE=true (skip DB insert; validation still runs).
  *   3. Insert into `events` table; swallow DB errors (telemetry never blocks generation).
  *
  * The whitelist is exported so analytics consumers have a stable key contract
@@ -23,84 +24,21 @@ import {safeMessage} from '../lib/logger.js'
 const log = pino({level: env.LOG_LEVEL})
 
 // ---------------------------------------------------------------------------
-// Event type union.
-//
-// ADR-0004 event types are preserved for backward compatibility (not yet
-// removed — that is Step 6). ADR-0007 Step 5 adds out_of_scope_intent_captured.
-// ADR-0007 Step 6 will remove all ADR-0004 event types and add the remaining
-// V0 event types (generate.completed, generate.invalid_spec, generate.out_of_scope).
+// Event type union — V0 only (ADR-0007 Step 6: M1 plan.*, build.*, edit.* removed).
 // ---------------------------------------------------------------------------
 export type EventType =
-  | 'plan.completed'
-  | 'plan.timeout_fallback'
-  | 'plan.invalid_fallback'
-  | 'plan.unknown_fallback'
-  | 'plan.transport_fallback'
-  | 'build.completed'
-  | 'build.conformance_fallback'
-  | 'edit.completed'
-  | 'edit.patch_out_of_scope_fallback'
-  // ADR-0007 Step 5: out_of_scope_intent capture event.
-  | 'out_of_scope_intent_captured'
-  // ADR-0007 Step 3: V0 single-call pipeline events.
-  // These land in PR 2 (Steps 3+4 cutover). Step 6 will remove the ADR-0004
-  // event types above once the deletion sweep lands.
   | 'generate.completed'
   | 'generate.invalid_spec'
   | 'generate.out_of_scope'
+  | 'out_of_scope_intent_captured'
 
 // ---------------------------------------------------------------------------
-// Per-type payload whitelists.
+// Per-type payload whitelists — V0 event types only (ADR-0007 Step 6).
 //
-// Each allowed key list is determined by auditing every writeEvent call site
-// in pipeline.ts as of Step 8. The whitelist is the source of truth; future
-// call sites that need a new key must extend the relevant whitelist entry here.
-//
-// Divergences from Cal's starting list (adjusted to match actual call sites,
-// per the Step 8 brief: "adjust the whitelist, don't change the call"):
-//
-//   plan.timeout_fallback  — added 'error_code', 'mode' (actual call passes both)
-//   plan.invalid_fallback  — added 'mode' (actual call passes mode)
-//   plan.unknown_fallback  — added 'mode' (actual call passes mode: 'live')
-//   plan.transport_fallback — added 'mode' (actual call passes mode)
-//   edit.completed         — replaced 'version_id' with 'screens_count', 'navigation',
-//                            'build_duration_ms' (version_id was Cal's starting guess;
-//                            actual call writes screens_count/navigation/build_duration_ms)
-//   edit.patch_out_of_scope_fallback — added 'offendingOp' (actual call passes it)
+// The whitelist is the source of truth; future call sites that need a new key
+// must extend the relevant whitelist entry here.
 // ---------------------------------------------------------------------------
 export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> = {
-  'plan.completed': [
-    'generationId',
-    'archetype',
-    'screens_count',
-    'navigation',
-    'mode',
-    'plan_duration_ms',
-  ],
-  'plan.timeout_fallback': ['generationId', 'error_code', 'mode'],
-  'plan.invalid_fallback': ['generationId', 'error_code', 'mode'],
-  'plan.unknown_fallback': ['generationId', 'mode'],
-  'plan.transport_fallback': ['generationId', 'error_code', 'mode'],
-  'build.completed': [
-    'generationId',
-    'archetype',
-    'screens_count',
-    'navigation',
-    'build_duration_ms',
-  ],
-  'build.conformance_fallback': ['generationId', 'reason', 'archetype'],
-  'edit.completed': [
-    'generationId',
-    'archetype',
-    'screens_count',
-    'navigation',
-    'build_duration_ms',
-  ],
-  'edit.patch_out_of_scope_fallback': ['generationId', 'offendingOp', 'reason'],
-  // ADR-0007 Step 5 — out_of_scope_intent capture.
-  // has_email is boolean — presence of email in the captured row.
-  'out_of_scope_intent_captured': ['capability', 'has_email'],
-  // ADR-0007 Step 3 — V0 single-call pipeline events.
   'generate.completed': [
     'generationId',
     'archetype',
@@ -110,6 +48,8 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
   ],
   'generate.invalid_spec': ['generationId', 'error_kind', 'code_count'],
   'generate.out_of_scope': ['generationId', 'capability', 'reason_length'],
+  // has_email is boolean — presence of email in the captured row.
+  'out_of_scope_intent_captured': ['capability', 'has_email'],
 } as const
 
 // ---------------------------------------------------------------------------
@@ -154,7 +94,7 @@ export async function writeEvent(
   }
 
   // 2. Eval-mode short-circuit — validation ran above; DB insert skipped.
-  if (env.PLAN_BUILD_EVAL_MODE === 'true') {
+  if (env.EVAL_MODE === 'true') {
     return
   }
 

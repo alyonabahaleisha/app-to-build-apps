@@ -4,7 +4,7 @@ _Authored by Cal — 2026-05-05_
 
 ## Status
 
-**Accepted** — Sponsor (Alyona) signed off 2026-05-05. Roz test-spec review: rev-0 returned REVISE → rev-1 closed 9 of 11 findings → rev-2 sharpened T-0004-121 (schema-derived key walk) and T-0004-122 (explicit `for await` collection). **Roz APPROVED rev-2 on 2026-05-05.** Both gates closed. Ready for Colby to begin Step 1.
+**Superseded by ADR-0007** (2026-05-09) — The two-stage Plan → Build pipeline, planner, and `/edit` route are deleted. Telemetry whitelist (Step 8) and eval-mode short-circuit (Step 9) carry forward under V0 event types. `plan_json` column kept for legacy alpha reads only.
 
 ### Roz findings (rev-1) — closed by this revision
 

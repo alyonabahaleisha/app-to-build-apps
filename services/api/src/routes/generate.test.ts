@@ -292,7 +292,6 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
-      applyEdit: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -343,7 +342,6 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
-      applyEdit: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -387,7 +385,6 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
-      applyEdit: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -430,7 +427,6 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
-      applyEdit: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -533,7 +529,6 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
       list: jest.fn(),
       get: jest.fn(),
       getVersion: jest.fn(),
-      applyEdit: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
 
@@ -575,7 +570,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
         },
         currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), applyEdit: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(() => makeHappyGenerator())
 
@@ -604,7 +599,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   it('T-0007-087: error response does not contain raw prompt', async () => {
     const sensitivePrompt = 'unique-secret-prompt-' + randomUUID()
     const mockService = {
-      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), applyEdit: jest.fn(),
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -631,11 +626,70 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
   })
 
   // -------------------------------------------------------------------------
+  // T-0007-088: error response does NOT contain LLM-emitted strings
+  // (custom slot names, screen IDs, collection IDs)
+  //
+  // The implementation is correct — mapError() only passes err.detail.codes:
+  // string[] (closed-enum error codes). This test is the regression guard so
+  // a future mapError() change that accidentally echoes LLM-emitted strings
+  // is caught before it reaches production.
+  // -------------------------------------------------------------------------
+  it('T-0007-088: error response does not contain LLM-emitted strings (custom slot names, screen IDs)', async () => {
+    // Synthetic cross-ref error: the InvalidSpecDetail carries closed-enum
+    // codes ('unknown_slot_id'). The LLM slot name itself ('mySecretSlot')
+    // must NOT appear in the SSE error event JSON.
+    const llmEmittedSlotName = 'mySecretSlot'
+    const mockService = {
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
+    }
+    mockGenerateAppSpec.mockImplementation(async function* () {
+      yield {type: 'thinking_started'}
+      // Simulate what validateCrossRefs returns: closed-enum code only.
+      // The raw LLM-emitted slot name is NOT in codes — only the error code is.
+      throw new InvalidSpecError('invalid_spec', {
+        kind: 'cross_ref',
+        codes: ['unknown_slot_id'],
+      })
+    })
+
+    const loggerInstance = pino({level: 'silent'})
+    const server = Fastify({loggerInstance})
+    await server.register(generateRoutes, {service: mockService})
+
+    try {
+      const userId = randomUUID()
+      const res = await server.inject({
+        method: 'POST', url: '/generate',
+        headers: {...authHeader(userId, uniqueEmail()), 'content-type': 'application/json'},
+        payload: JSON.stringify({prompt: `Build me an app with slot ${llmEmittedSlotName}`}),
+      })
+
+      // The LLM-emitted slot name must NOT appear anywhere in the response
+      expect(res.body).not.toContain(llmEmittedSlotName)
+
+      // Verify the error event itself contains only closed-enum codes
+      const events = parseSSE(res.body)
+      const errorEvent = events.find(
+        (e): e is Record<string, unknown> => typeof e === 'object' && e['type'] === 'error',
+      )
+      expect(errorEvent).toBeDefined()
+      expect(errorEvent!['code']).toBe('invalid_spec')
+      const detail = errorEvent!['detail'] as {kind: string; codes: string[]}
+      expect(detail.kind).toBe('cross_ref')
+      // codes must contain only closed-enum strings, not LLM-emitted strings
+      expect(detail.codes).toEqual(['unknown_slot_id'])
+      expect(detail.codes).not.toContain(llmEmittedSlotName)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
   // T-0007-089: error response does NOT contain a stack trace
   // -------------------------------------------------------------------------
   it('T-0007-089: error response does not contain stack trace', async () => {
     const mockService = {
-      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), applyEdit: jest.fn(),
+      create: jest.fn(), list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}
@@ -676,7 +730,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
         },
         currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), applyEdit: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
     }
 
     const loggerInstance = pino({level: 'silent'})
@@ -713,7 +767,7 @@ describe('ADR-0007 Step 4 — POST /generate route (unit, no Docker)', () => {
         },
         currentVersion: {id: 'v', projectId: 'p', renderHash: 'h', specJson: MINIMAL_VALID_V0_SPEC, planJson: null, createdAt: new Date()},
       }),
-      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(), applyEdit: jest.fn(),
+      list: jest.fn(), get: jest.fn(), getVersion: jest.fn(),
     }
     mockGenerateAppSpec.mockImplementation(async function* () {
       yield {type: 'thinking_started'}

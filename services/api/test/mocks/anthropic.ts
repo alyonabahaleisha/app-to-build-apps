@@ -1,5 +1,5 @@
 /**
- * Anthropic mock helpers for unit tests.
+ * Anthropic mock helpers for unit tests — V0 surface only (ADR-0007 Step 6).
  *
  * Usage:
  *   jest.mock('@anthropic-ai/sdk')
@@ -58,20 +58,6 @@ export function mockAnthropicError(status: number, message = 'Anthropic API erro
 }
 
 /**
- * Minimal valid A2UI spec for use in happy-path tests.
- */
-export const MINIMAL_VALID_SPEC = {
-  version: 1 as const,
-  views: [
-    {
-      id: 'main',
-      root: {type: 'Heading' as const, text: 'Hello'},
-    },
-  ],
-  initialViewId: 'main',
-}
-
-/**
  * A minimal valid finalMessage payload wrapping the given input as a tool_use block.
  *
  * Uses `as Partial<Message>` because newer SDK versions add additional required
@@ -115,156 +101,5 @@ export function makeSuccessEvents(): MockStreamEvent[] {
     makeToolUseStartEvent(),
     {type: 'message_stop'},
   ]
-}
-
-// ---------------------------------------------------------------------------
-// Planner mock helpers
-// ---------------------------------------------------------------------------
-
-import type {Plan} from '@app-creator/a2ui-schema'
-
-/**
- * Build a mock messages.create() return value wrapping a Plan as a tool_use block.
- * Use as: jest.fn().mockResolvedValue(mockPlannerResponse(plan))
- */
-export function mockPlannerResponse(plan: Plan): Partial<Message> {
-  return {
-    id: 'msg_planner_test',
-    role: 'assistant',
-    stop_reason: 'tool_use',
-    stop_sequence: null,
-    type: 'message',
-    model: 'claude-haiku-4-5-20251001',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    content: [{type: 'tool_use', id: 'tu_plan_test', name: 'produce_plan', input: plan}] as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    usage: {input_tokens: 50, output_tokens: 100} as any,
-  }
-}
-
-/**
- * Build a mock messages.create() that rejects with an HTTP error.
- * Use as: jest.fn().mockRejectedValue(makePlannerError(429))
- */
-export function makePlannerError(status: number, message = 'Anthropic API error'): Error {
-  return Object.assign(new Error(message), {status})
-}
-
-/**
- * Build a mock messages.create() return value with a tool_use block containing
- * invalid plan data (will fail PlanSchema.parse).
- */
-export function mockPlannerZodInvalid(): Partial<Message> {
-  return {
-    id: 'msg_planner_invalid',
-    role: 'assistant',
-    stop_reason: 'tool_use',
-    stop_sequence: null,
-    type: 'message',
-    model: 'claude-haiku-4-5-20251001',
-    content: [
-      {
-        type: 'tool_use',
-        id: 'tu_plan_invalid',
-        name: 'produce_plan',
-        // Missing required fields: archetype enum is wrong, no screens
-        input: {version: 1, archetype: 'NotAnArchetype', screens: [], navigation: 'none'},
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any,
-    ],
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    usage: {input_tokens: 50, output_tokens: 80} as any,
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Builder patch mock helpers (Step 7)
-// ---------------------------------------------------------------------------
-
-import type {JsonPatch} from '@app-creator/a2ui-schema'
-
-/**
- * Build a mock messages.create() return value wrapping an RFC 6902 patch as a
- * produce_app_spec_patch tool_use block. Use as:
- *   jest.fn().mockResolvedValue(mockBuilderPatchResponse(patch))
- */
-export function mockBuilderPatchResponse(patch: JsonPatch): Partial<Message> {
-  return {
-    id: 'msg_patch_test',
-    role: 'assistant',
-    stop_reason: 'tool_use',
-    stop_sequence: null,
-    type: 'message',
-    model: 'claude-sonnet-4-6',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    content: [{type: 'tool_use', id: 'tu_patch_test', name: 'produce_app_spec_patch', input: patch}] as any,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    usage: {input_tokens: 100, output_tokens: 200} as any,
-  }
-}
-
-/**
- * Build a mock messages.create() return value for an out-of-scope patch.
- * The patch contains an op that touches a path outside target_paths.
- * `reason` is included for debugging.
- */
-export function mockBuilderPatchOutOfScope(reason = 'patch targets unintended path'): {
-  response: Partial<Message>
-  patch: JsonPatch
-} {
-  // A patch op that modifies /views/1/root — typically outside any
-  // single-screen edit_intent targeting /views/0/root/...
-  const patch: JsonPatch = [
-    {op: 'replace', path: '/views/1/root', value: {type: 'Heading', text: reason}},
-  ]
-  return {
-    patch,
-    response: {
-      id: 'msg_oos_test',
-      role: 'assistant',
-      stop_reason: 'tool_use',
-      stop_sequence: null,
-      type: 'message',
-      model: 'claude-sonnet-4-6',
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      content: [{type: 'tool_use', id: 'tu_oos_test', name: 'produce_app_spec_patch', input: patch}] as any,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      usage: {input_tokens: 100, output_tokens: 150} as any,
-    },
-  }
-}
-
-/** Minimal valid plan for use in planner tests. */
-export const MINIMAL_VALID_PLAN: Plan = {
-  version: 1,
-  archetype: 'Calculator',
-  screens: [
-    {
-      id: 'main',
-      role: 'home',
-      purpose: 'enter inputs and see result',
-      key_components: ['Form', 'Button', 'Text'],
-    },
-  ],
-  navigation: 'none',
-}
-
-// ---------------------------------------------------------------------------
-// Builder conformance mock helpers (Step 3 / T-0004-039 through T-0004-053)
-// ---------------------------------------------------------------------------
-
-/**
- * A spec that does NOT conform to MINIMAL_VALID_PLAN — view id is 'wrong_id'
- * instead of 'main', which triggers view_id_mismatch.
- */
-export const NON_CONFORMING_SPEC = {
-  version: 1 as const,
-  views: [
-    {
-      id: 'wrong_id',
-      root: {type: 'Heading' as const, text: 'Wrong'},
-    },
-  ],
-  initialViewId: 'wrong_id',
 }
 

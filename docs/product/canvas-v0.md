@@ -122,7 +122,7 @@ prioritization on real signal.
   generation**. PM owns review of every external string before
   submission. Violations are a P0 launch blocker.
 - **Closed registries are non-negotiable.** Components (28), action verbs
-  (13), AI tasks (1), stances (2), palettes (6), nav patterns (4), field
+  (12), AI tasks (1), stances (2), palettes (6), nav patterns (4), field
   types (6) are closed enums in the schema. The LLM cannot widen them.
   Adding a registry entry requires App Store update.
 - **Nine architectural invariants** (brief §2.1) are inviolable. Any
@@ -390,9 +390,9 @@ public-launch growth loop we don't have.
       props from the schema. Snapshot test per component per stance.
 - [ ] **AC-R3** Reopening a saved tool produces a render tree byte-equal
       to the first render — verified by snapshot test against `render_hash`.
-- [ ] **AC-R4** All 13 action verbs execute correctly via the renderer's
+- [ ] **AC-R4** All 12 action verbs execute correctly via the renderer's
       dispatcher: `set, update, reset, addItem, removeItem, updateItem,
-      clearCollection, navigate, back, capture, share, toast, aiProcess`.
+      clearCollection, navigate, back, capture, toast, aiProcess`.
 - [ ] **AC-R5** Polish-critical UI uses the mandatory libraries (Reanimated 4,
       Gorhom Bottom Sheet, native-stack, FlashList, Expo Image, Keyboard
       Controller). Lint rule blocks bare-RN `Animated`, `FlatList`, JS-driven sheets.
@@ -467,7 +467,7 @@ public-launch growth loop we don't have.
 - Settings sheet (sign-out, account info, V0.5 waitlist subscriptions)
 - Universal Link share — `clone` mode only
 - 28 components × 2 stances × 6 palettes (light mode only)
-- 13 action verbs (closed)
+- 12 action verbs (closed)
 - 4 internal nav patterns (closed)
 - Single-call Sonnet pipeline with tool-forced spec output
 - Out-of-scope detection (5 capabilities)
@@ -560,7 +560,7 @@ week 4) and bundled into App Store Connect submission notes at week 6.
 2. **Component inventory** — all 28 with screenshots from the design
    system. "Every UI element a user sees was reviewed and shipped with
    this build."
-3. **Action verb inventory** — 13 verbs, what they do, sample uses.
+3. **Action verb inventory** — 12 verbs, what they do, sample uses.
 4. **AI capability inventory** — single capability (`summarize`) on
    Apple Foundation Models on-device only. Sample input/output.
 5. **Capabilities-cannot-grow statement** — verbatim:
@@ -776,7 +776,7 @@ decides if a new tag needs adding for V0.5).
 | ---- | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | **0** | **§0 reconciliation + foundation**                                                          | Sponsor signs §0. Domain + AASA + Sign in with Apple + protocol package scaffold. PM curated prompts v1.0 + eval set re-authoring begins. |
 | **1** | Schema + design system + host shell                                                         | `spec.zod.ts` lands. UX design spec for 28 components. Library + Create + Run shells. Universal Links plumbing.                           |
-| **2–4** | Renderer + action dispatcher + collection store + Foundation Models bridge + generation | All 28 components implemented and reviewed. 13-verb dispatcher. End-to-end happy path on 1 archetype by week 3.                            |
+| **2–4** | Renderer + action dispatcher + collection store + Foundation Models bridge + generation | All 28 components implemented and reviewed. 12-verb dispatcher. End-to-end happy path on 1 archetype by week 3.                            |
 | **5** | E2E pipeline + out-of-scope detection + prompt iteration + UX rendering review              | All 4 archetypes generate at quality bar. Out-of-scope detection gates passing. UX validates 12 visual registers.                          |
 | **6** | Bug fix + polish review + App Store submission                                              | Crash-free ≥99.5% on TestFlight beta. 1-day polish review. Submission to App Store.                                                       |
 
@@ -825,7 +825,7 @@ decides if a new tag needs adding for V0.5).
   becomes `current_version_id`. Data migration is best-effort
   field-name + type matching server-side at version-flip time.
 - **Renderer is sandbox.** Pure function of `{node, state, dispatch}`. No
-  `useEffect`, no fetch, no eval. Actions limited to the 13 verbs.
+  `useEffect`, no fetch, no eval. Actions limited to the 12 verbs.
 - **render_hash** = sha256 of canonical spec JSON. Reused from M1.
 - **AI dispatcher** is one place. The `aiProcess` action verb dispatches
   to a closed task enum; in V0 only `summarize` exists; routing is

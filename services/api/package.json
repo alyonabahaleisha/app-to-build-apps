@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.92.0",
-    "@app-creator/a2ui-schema": "workspace:*",
     "@app-creator/protocol": "workspace:*",
     "@fastify/cors": "^10.0.1",
     "@fastify/helmet": "^12.0.1",
