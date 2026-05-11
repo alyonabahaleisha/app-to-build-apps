@@ -105,12 +105,13 @@ regression check.
 
 3. **Screenshot capture — manual via dev-only deep-link to a fixture
    spec, with automated batch capture as a Step 6 stretch goal owned by
-   ADR-0011.** ADR-0011 must expose a `canvas://eval-fixture/{prompt_id}`
-   dev-only deep link that mounts the named fixture spec in
-   `AppRunnerScreen`. Until that lands, grader uses the existing dev-only
-   demo picker (`DEMO_SPECS`) and a regenerate-from-prompt-id helper.
-   This is the **honest** version of the screenshot question — automation
-   doesn't gate the loop opening.
+   ADR-0011.** ADR-0011 must expose an `appcreator://devmenu/load-spec?fixture=<name>`
+   dev-only deep link that mounts the named fixture spec via the dev-menu's
+   `LoadSpecFromDevMenu` handler (per ADR-0011 Step 13), which mounts the
+   fixture in Run mode without DB persistence. Until that lands, grader
+   uses the existing dev-only demo picker (`DEMO_SPECS`) and a
+   regenerate-from-prompt-id helper. This is the **honest** version of
+   the screenshot question — automation doesn't gate the loop opening.
 
 4. **Per-PR regression gate.** `services/api/eval/baseline.json` records
    the current best overall + per-archetype pass rates. A CI script
@@ -343,7 +344,7 @@ use real H5 metrics as the grader.
 | `PROMPT_VERSION` bump requirement is a chore people forget | Low | CI enforcement (Step 5) catches it. The error message is helpful: "system.ts changed; bump PROMPT_VERSION." |
 | Cached-block token budget exhausted before V0 launch | Medium | v0.1.0 leaves ~2,400 chars of headroom; v0.2.0 expected to spend another ~1,000–1,500. Hard ceiling is T-0007-027 (25,000 chars). If we hit the wall, the trade-off is documented — cut a less-impactful section to make room. Don't raise the ceiling unilaterally; that's an ADR-0010 follow-up decision. |
 | Grading rubric is subjective; two graders score the same output differently | Low-Medium | The 5-point primary score is the only one that moves the baseline. Dimension tags are qualitative — divergence between graders on dimension tags is fine (more signal). Sable is the tiebreaker on primary scores. |
-| Screenshot capture path breaks (AppRunner changes) | Low | Manual fallback always works (open prompt in Create, hit submit, screenshot). Step 6 deep-link is the ergonomics layer, not the loop's critical path. |
+| Screenshot capture path breaks (dev-menu `LoadSpecFromDevMenu` changes) | Low | Manual fallback always works (open prompt in Create, hit submit, screenshot). Step 6 deep-link is the ergonomics layer, not the loop's critical path. |
 | Confusion between "passes eval" and "passes grading" | Medium | `docs/product/canvas-v0-prompt-quality-loop.md` documents both bars. AC-G9 (eval pass-rate) is necessary; weekly grading rubric ≥3.5 average is necessary. Both are required for V0 launch. PM signs off both. |
 
 ## Implementation Plan
@@ -937,19 +938,26 @@ no build metadata; we don't need a full semver library).
 
 **Files to modify (this ADR specifies; ADR-0011 implements):**
 
-- `apps/mobile/src/screens/AppRunner/index.tsx` — accept a fixture spec
-  via deep link param `?fixture={prompt_id}` (dev builds only); load
-  the spec from a bundled fixture map.
-- `apps/mobile/src/lib/routes/types.ts` — route param type.
-- `services/api/eval/fixtures/{prompt_id}.json` — the eval harness
-  writes one JSON file per successful generation in addition to the
-  aggregate results JSON (dev builds load from here).
+- The dev-menu's `LoadSpecFromDevMenu` handler (per ADR-0011 Step 13)
+  is the mount target — it loads a bundled fixture by name via the
+  URL-scheme entrypoint and mounts it in Run mode without DB
+  persistence. ADR-0010 does NOT modify any mobile-shell files
+  directly.
+- `apps/mobile/src/screens/Run/devMenu/__fixtures__/<name>.json` —
+  bundled per-fixture JSON (owned by ADR-0011 Step 13 surface; ADR-0010
+  may contribute the fixture content per archetype). The eval harness's
+  per-prompt fixture writes (below) are the source.
+- `services/api/eval/fixtures/<name>.json` — the eval harness writes
+  one JSON file per successful generation in addition to the aggregate
+  results JSON. Fixture name `<name>` corresponds to a prompt ID from
+  `ARCHETYPE_PROMPTS` (e.g., `lc-04`, `tr-12`, `jr-07`, `ca-22`).
 
 **Files in ADR-0011's scope (referenced here, owned there):**
 
-- The mobile-shell deep-link handler that recognizes `canvas://eval-fixture/{prompt_id}` or
-  `https://canvas.app/eval-fixture/{prompt_id}` (dev builds only) and
-  routes to AppRunner with the param.
+- The mobile-shell URL-scheme handler that recognizes
+  `appcreator://devmenu/load-spec?fixture=<name>` (dev builds only) and
+  routes to the dev-menu's `LoadSpecFromDevMenu` handler (per ADR-0011
+  Step 13), which mounts the fixture in Run mode without DB persistence.
 - The Sample-Spec Emulator hook: a way for `xcrun simctl openurl` to
   trigger the load.
 
@@ -957,8 +965,8 @@ no build metadata; we don't need a full semver library).
 
 - `services/api/scripts/capture-eval-screenshots.sh` — bash script that
   iterates a sampled list of prompt IDs and runs `xcrun simctl openurl
-  booted canvas://eval-fixture/{id}` + `xcrun simctl io booted
-  screenshot` per ID.
+  booted appcreator://devmenu/load-spec?fixture=<name>` + `xcrun simctl
+  io booted screenshot` per ID.
 - `services/api/eval/sample-grading-set.ts` — picks N random prompt IDs
   from `ARCHETYPE_PROMPTS`, balanced across archetypes, deterministic
   given a seed.
@@ -1302,7 +1310,7 @@ needs care to not contradict the existing bar.
 | T-0010-126 | CI/CD | `capture-eval-screenshots.sh` exists and is executable |
 | T-0010-127 | Happy | `capture-eval-screenshots.sh` defaults: `--seed=42 --n=40` |
 | T-0010-128 | Error handling | `capture-eval-screenshots.sh` exits 0 with warning when `xcrun simctl` is missing (skips gracefully on CI) |
-| T-0010-129 | N/A (per coordination) | The deep-link route handler in `apps/mobile/` is owned by ADR-0011 — tests of the route live there, not here. **Cross-ADR boundary grammar:** ADR-0011 must expose a dev-only deep link with the form `canvas://eval-fixture/{prompt_id}` (also acceptable: `https://canvas.app/eval-fixture/{prompt_id}` for universal-link variant), where `{prompt_id}` is one of the IDs in `ARCHETYPE_PROMPTS` (e.g., `lc-04`, `tr-12`, `jr-07`, `ca-22`). The handler routes to `AppRunnerScreen` with the param. ADR-0010 ships the harness-side per-prompt fixture JSON writes; ADR-0011 ships the deep-link consumer. Justification: avoids dual ownership of the route surface. |
+| T-0010-129 | N/A (per coordination) | The deep-link route handler in `apps/mobile/` is owned by ADR-0011 — tests of the route live there, not here. **Cross-ADR boundary grammar (authoritative declaration in ADR-0011 §Coordination → ADR-0010 subsection, R2):** ADR-0011 exposes a dev-only deep link with the form `appcreator://devmenu/load-spec?fixture=<name>`, where `<name>` is one of the prompt IDs in `ARCHETYPE_PROMPTS` (e.g., `lc-04`, `tr-12`, `jr-07`, `ca-22`). The handler routes to the dev-menu's `LoadSpecFromDevMenu` handler (per ADR-0011 Step 13), which mounts the fixture in Run mode without DB persistence. ADR-0010 ships the harness-side per-prompt fixture JSON writes; ADR-0011 ships the deep-link consumer. Justification: avoids dual ownership of the route surface. |
 
 #### Step 6 Test Summary
 
@@ -1477,7 +1485,7 @@ The eval workflow path filters
 | Grading template (NEW) | `docs/pipeline/prompt-grading-template.md` | New template for weekly sessions. |
 | ADR index | `.claude/references/adr-index.md` | **NOT modified by this ADR.** Ellis inserts the row post-commit. |
 | ADR-0007 | `docs/adrs/ADR-0007-llm-v0-cutover.md` | No change. ADR-0010 builds on Step 7's harness; references it but does not modify it. |
-| ADR-0011 (parallel) | `docs/adrs/ADR-0011-*.md` (TBD) | Receives a dependency: "expose dev-only `canvas://eval-fixture/{prompt_id}` deep link for the Sample-Spec Emulator (ADR-0010 Step 6)." Coordination note in this ADR's §Notes for Colby. |
+| ADR-0011 (parallel) | `docs/adrs/ADR-0011-*.md` | Receives a dependency: "expose dev-only `appcreator://devmenu/load-spec?fixture=<name>` deep link for the Sample-Spec Emulator (ADR-0010 Step 6), routed to `LoadSpecFromDevMenu` per ADR-0011 Step 13." Authoritative grammar is declared in ADR-0011 §Coordination → ADR-0010 subsection (R2). This ADR consumes; ADR-0011 owns the surface. Coordination note in this ADR's §Notes for Colby. |
 | CLAUDE.md | `CLAUDE.md` | No change. The patterns in §3 (LLM call pattern) and §8 (Testing patterns) remain authoritative; ADR-0010 builds on them. |
 | ARCHITECTURE.md | `ARCHITECTURE.md` | No change in this ADR (ARCHITECTURE.md is the binding spec; if anything in this ADR contradicts it, ARCHITECTURE.md wins per CLAUDE.md preamble). |
 
@@ -1490,8 +1498,11 @@ The eval workflow path filters
   at Step 6. ADR-0011 owns the mobile-shell deep-link surface; ADR-0010
   consumes it via the bash screenshot script. The dependency is
   one-directional: ADR-0010 ships without it (manual screenshot
-  fallback); ADR-0011 implementing the hook upgrades Step 6 from
-  stretch to checked-in.
+  fallback); ADR-0011 implementing the hook (Step 13 `LoadSpecFromDevMenu`
+  + URL scheme `appcreator://devmenu/load-spec?fixture=<name>`) upgrades
+  Step 6 from stretch to checked-in. Authoritative grammar is declared
+  in ADR-0011 §Coordination → ADR-0010 subsection (R2). This ADR
+  consumes; ADR-0011 owns the surface.
 - **Demo bugfixes already committed** (`2f25855`, `6d35755`) — none of
   this ADR's surface touches them.
 - **ADR-0007 PR 4 kill review** — independent. ADR-0010's regression
@@ -1579,11 +1590,14 @@ next session lands.
     triggers as expected.** This is the kind of script that's
     silently wrong until someone tries to bypass it.
 
-12. **Cross-ADR coordination note for ADR-0011 (when its ADR is
-    written):** the deep-link signature is
-    `canvas://eval-fixture/{prompt_id}` where `prompt_id` is
-    one of the IDs in `ARCHETYPE_PROMPTS` (e.g., `lc-04`, `tr-12`).
-    The fixture spec is loaded from a JSON file the eval harness
-    writes per-prompt during a `--mode=v0` run (see Step 6 files).
-    ADR-0010 ships the harness-side JSON writes; ADR-0011 ships the
-    deep-link consumer.
+12. **Cross-ADR coordination note for ADR-0011:** the deep-link signature
+    is `appcreator://devmenu/load-spec?fixture=<name>` (authoritative
+    grammar declared in ADR-0011 §Coordination → ADR-0010 subsection,
+    R2) where `<name>` is one of the prompt IDs in `ARCHETYPE_PROMPTS`
+    (e.g., `lc-04`, `tr-12`, `jr-07`, `ca-22`). The handler routes to the
+    dev-menu's `LoadSpecFromDevMenu` handler (per ADR-0011 Step 13),
+    which mounts the fixture in Run mode without DB persistence. The
+    fixture spec is loaded from a JSON file the eval harness writes
+    per-prompt during a `--mode=v0` run (see Step 6 files). ADR-0010
+    ships the harness-side JSON writes; ADR-0011 ships the deep-link
+    consumer.
