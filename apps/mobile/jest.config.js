@@ -33,5 +33,10 @@ module.exports = {
     // expo-linear-gradient uses native modules unavailable in Jest.
     // Stub renders a plain View so tests can assert on gradient props.
     '^expo-linear-gradient$': '<rootDir>/.stubs/expo-linear-gradient-stub.js',
+    // expo-apple-authentication requires a native iOS module unavailable in Jest.
+    // Every test importing siwaProvider (directly or transitively) receives this
+    // mock. Tests call jest.spyOn on signInAsync to control fixture data.
+    // Per ADR-0013 Step 2 AC item 10.
+    '^expo-apple-authentication$': '<rootDir>/src/testHelpers/mockExpoAppleAuthentication.ts',
   },
 }

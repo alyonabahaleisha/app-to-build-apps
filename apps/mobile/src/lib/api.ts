@@ -57,7 +57,7 @@ export class ApiError extends Error {
  * authenticated. The list is intentionally tiny — magic-link is the only
  * user-facing public endpoint and `/health` is for the harness.
  */
-const PUBLIC_PATH_PREFIXES = ['/health', '/auth/magic-link']
+const PUBLIC_PATH_PREFIXES = ['/health', '/auth/magic-link', '/auth/apple']
 
 const FALLBACK_API_URL = 'http://localhost:3000'
 
