@@ -399,9 +399,9 @@ describe('Home screen', () => {
         </AppShellThemeProvider>
       </SafeAreaProvider>,
     )
-    // SignIn screen is rendered (verified via its headline).
+    // SignIn screen is rendered (verified via its V0 wordmark).
     await waitFor(() => {
-      screen.getByText('Make the apps in your head.')
+      screen.getByText('Canvas')
     })
     // Home is NOT visible.
     expect(screen.queryByText(homeCopy.title)).toBeNull()
@@ -618,11 +618,13 @@ describe('Navigation: showExpiredBanner wire (Step 6 carry-forward)', () => {
     )
 
     // Wait for the redeem rejection to flow through Navigation's setState.
+    // V0 SignInScreen: expired banner rendered inside EmailEntrySheet (always visible
+    // via Gorhom mock); wordmark "Canvas" is the V0 screen anchor.
     await waitFor(() => {
       screen.getByText('That link expired. Send a new one?')
     })
-    // SignIn form is still visible underneath.
-    screen.getByText('Make the apps in your head.')
+    // V0 wordmark is visible (replaced M1 headline "Make the apps in your head.").
+    screen.getByText('Canvas')
   })
 })
 

@@ -1,0 +1,1315 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignInScreen T-0011-160: SignInScreen default state snapshot 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#FAFAF7",
+            "flex": 1,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 0,
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+            "justifyContent": "space-between",
+            "paddingHorizontal": 32,
+            "paddingVertical": 48,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "gap": 12,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            accessibilityRole="header"
+            style={
+              [
+                {
+                  "letterSpacing": -0.4,
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#14171A",
+                  "fontSize": 32,
+                  "fontWeight": "600",
+                  "lineHeight": 40,
+                },
+              ]
+            }
+            testID="sign-in-wordmark"
+          >
+            Canvas
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#5C6470",
+                  "fontSize": 16,
+                  "fontWeight": "400",
+                  "lineHeight": 24,
+                },
+              ]
+            }
+            testID="sign-in-tagline"
+          >
+            A personal canvas for your everyday tools.
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "gap": 16,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Sign in with email"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": false,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "height": 48,
+                  "justifyContent": "center",
+                  "width": "100%",
+                },
+                {
+                  "backgroundColor": "#4F46E5",
+                  "borderRadius": 12,
+                  "opacity": 1,
+                },
+              ]
+            }
+            testID="sign-in-button"
+          >
+            <Text
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontSize": 16,
+                    "fontWeight": "600",
+                    "lineHeight": 24,
+                  },
+                ]
+              }
+            >
+              Sign in with email
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexWrap": "wrap",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+              By signing in, you agree to our 
+            </Text>
+            <View
+              accessibilityLabel="Terms"
+              accessibilityRole="link"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 15,
+                  "left": 8,
+                  "right": 8,
+                  "top": 15,
+                }
+              }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              testID="sign-in-terms"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 11,
+                      "fontWeight": "500",
+                      "lineHeight": 14,
+                    },
+                    {},
+                    {
+                      "color": "#A2A8B2",
+                      "textDecorationLine": "underline",
+                    },
+                  ]
+                }
+              >
+                Terms
+              </Text>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+               and 
+            </Text>
+            <View
+              accessibilityLabel="Privacy Policy"
+              accessibilityRole="link"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 15,
+                  "left": 8,
+                  "right": 8,
+                  "top": 15,
+                }
+              }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              testID="sign-in-privacy"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 11,
+                      "fontWeight": "500",
+                      "lineHeight": 14,
+                    },
+                    {},
+                    {
+                      "color": "#A2A8B2",
+                      "textDecorationLine": "underline",
+                    },
+                  ]
+                }
+              >
+                Privacy Policy
+              </Text>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+              .
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        testID="bottom-sheet-modal"
+      >
+        <View
+          accessible={false}
+          contentContainerStyle={
+            {
+              "paddingBottom": 40,
+              "paddingHorizontal": 24,
+            }
+          }
+        >
+          <View
+            accessibilityViewIsModal={true}
+            style={
+              {
+                "gap": 16,
+              }
+            }
+          >
+            <Text
+              accessibilityRole="header"
+              style={
+                [
+                  {
+                    "marginTop": 8,
+                  },
+                  {
+                    "color": "#14171A",
+                    "fontSize": 18,
+                    "fontWeight": "600",
+                    "lineHeight": 24,
+                  },
+                ]
+              }
+            >
+              Enter your email
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 16,
+                    "fontWeight": "400",
+                    "lineHeight": 24,
+                  },
+                  {
+                    "color": "#5C6470",
+                  },
+                ]
+              }
+            >
+              We'll send you a sign-in link.
+            </Text>
+            <View
+              style={
+                {
+                  "gap": 8,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 13,
+                      "fontWeight": "400",
+                      "lineHeight": 18,
+                    },
+                    {
+                      "marginBottom": 2,
+                    },
+                    {
+                      "color": "#5C6470",
+                    },
+                  ]
+                }
+              >
+                Email
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "borderWidth": 1,
+                      "paddingHorizontal": 14,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#FAFAF7",
+                      "borderColor": "#ECEEF1",
+                      "borderRadius": 12,
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  accessibilityLabel="Email address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  editable={true}
+                  keyboardType="email-address"
+                  onChangeText={[Function]}
+                  placeholder="you@example.com"
+                  placeholderTextColor="#A2A8B2"
+                  style={
+                    [
+                      {
+                        "minHeight": 24,
+                        "padding": 0,
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                    ]
+                  }
+                  testID="email-sheet-input"
+                  value=""
+                />
+              </View>
+              <View
+                accessibilityLabel="Send magic link"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": true,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "minHeight": 44,
+                      "paddingHorizontal": 20,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "borderColor": "#4F46E5",
+                      "borderRadius": 12,
+                      "borderWidth": 0,
+                      "opacity": 0.5,
+                    },
+                    null,
+                    undefined,
+                  ]
+                }
+                testID="email-sheet-send"
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                      ]
+                    }
+                  >
+                    Send magic link
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              accessibilityLabel="Close"
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "paddingVertical": 12,
+                }
+              }
+              testID="email-sheet-cancel"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 13,
+                      "fontWeight": "400",
+                      "lineHeight": 18,
+                    },
+                    {
+                      "color": "#5C6470",
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Cancel
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`SignInScreen T-0011-161: SignInScreen with "link expired" banner (carryover from M1 prop) 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View>
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "#FAFAF7",
+            "flex": 1,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "paddingRight": 0,
+            "paddingTop": 0,
+          },
+          undefined,
+        ]
+      }
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+            "justifyContent": "space-between",
+            "paddingHorizontal": 32,
+            "paddingVertical": 48,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "gap": 12,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            accessibilityRole="header"
+            style={
+              [
+                {
+                  "letterSpacing": -0.4,
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#14171A",
+                  "fontSize": 32,
+                  "fontWeight": "600",
+                  "lineHeight": 40,
+                },
+              ]
+            }
+            testID="sign-in-wordmark"
+          >
+            Canvas
+          </Text>
+          <Text
+            style={
+              [
+                {
+                  "textAlign": "center",
+                },
+                {
+                  "color": "#5C6470",
+                  "fontSize": 16,
+                  "fontWeight": "400",
+                  "lineHeight": 24,
+                },
+              ]
+            }
+            testID="sign-in-tagline"
+          >
+            A personal canvas for your everyday tools.
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "gap": 16,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Sign in with email"
+            accessibilityRole="button"
+            accessibilityState={
+              {
+                "busy": false,
+                "checked": undefined,
+                "disabled": false,
+                "expanded": undefined,
+                "selected": undefined,
+              }
+            }
+            accessibilityValue={
+              {
+                "max": undefined,
+                "min": undefined,
+                "now": undefined,
+                "text": undefined,
+              }
+            }
+            accessible={true}
+            collapsable={false}
+            focusable={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onResponderGrant={[Function]}
+            onResponderMove={[Function]}
+            onResponderRelease={[Function]}
+            onResponderTerminate={[Function]}
+            onResponderTerminationRequest={[Function]}
+            onStartShouldSetResponder={[Function]}
+            style={
+              [
+                {
+                  "alignItems": "center",
+                  "height": 48,
+                  "justifyContent": "center",
+                  "width": "100%",
+                },
+                {
+                  "backgroundColor": "#4F46E5",
+                  "borderRadius": 12,
+                  "opacity": 1,
+                },
+              ]
+            }
+            testID="sign-in-button"
+          >
+            <Text
+              style={
+                [
+                  {
+                    "color": "#FFFFFF",
+                    "fontSize": 16,
+                    "fontWeight": "600",
+                    "lineHeight": 24,
+                  },
+                ]
+              }
+            >
+              Sign in with email
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexWrap": "wrap",
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+              By signing in, you agree to our 
+            </Text>
+            <View
+              accessibilityLabel="Terms"
+              accessibilityRole="link"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 15,
+                  "left": 8,
+                  "right": 8,
+                  "top": 15,
+                }
+              }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              testID="sign-in-terms"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 11,
+                      "fontWeight": "500",
+                      "lineHeight": 14,
+                    },
+                    {},
+                    {
+                      "color": "#A2A8B2",
+                      "textDecorationLine": "underline",
+                    },
+                  ]
+                }
+              >
+                Terms
+              </Text>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+               and 
+            </Text>
+            <View
+              accessibilityLabel="Privacy Policy"
+              accessibilityRole="link"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              hitSlop={
+                {
+                  "bottom": 15,
+                  "left": 8,
+                  "right": 8,
+                  "top": 15,
+                }
+              }
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              testID="sign-in-privacy"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 11,
+                      "fontWeight": "500",
+                      "lineHeight": 14,
+                    },
+                    {},
+                    {
+                      "color": "#A2A8B2",
+                      "textDecorationLine": "underline",
+                    },
+                  ]
+                }
+              >
+                Privacy Policy
+              </Text>
+            </View>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 11,
+                    "fontWeight": "500",
+                    "lineHeight": 14,
+                  },
+                  {
+                    "color": "#A2A8B2",
+                  },
+                ]
+              }
+            >
+              .
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        testID="bottom-sheet-modal"
+      >
+        <View
+          accessible={false}
+          contentContainerStyle={
+            {
+              "paddingBottom": 40,
+              "paddingHorizontal": 24,
+            }
+          }
+        >
+          <View
+            accessibilityViewIsModal={true}
+            style={
+              {
+                "gap": 16,
+              }
+            }
+          >
+            <View
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "borderWidth": 0.5,
+                    "flexDirection": "row",
+                    "justifyContent": "space-between",
+                    "padding": 12,
+                  },
+                  {
+                    "backgroundColor": "#FFFFFF",
+                    "borderColor": "#ECEEF1",
+                    "borderRadius": 12,
+                  },
+                ]
+              }
+            >
+              <Text
+                accessibilityLiveRegion="polite"
+                style={
+                  [
+                    {
+                      "flex": 1,
+                      "marginRight": 8,
+                    },
+                    {
+                      "fontSize": 16,
+                      "fontWeight": "400",
+                      "lineHeight": 24,
+                    },
+                    {
+                      "color": "#14171A",
+                    },
+                  ]
+                }
+              >
+                That link expired. Send a new one?
+              </Text>
+              <View
+                accessibilityLabel="Dismiss"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={8}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                testID="email-sheet-expired-dismiss"
+              >
+                <Text
+                  style={
+                    {
+                      "color": "#5C6470",
+                      "fontSize": 18,
+                    }
+                  }
+                >
+                  ×
+                </Text>
+              </View>
+            </View>
+            <Text
+              accessibilityRole="header"
+              style={
+                [
+                  {
+                    "marginTop": 8,
+                  },
+                  {
+                    "color": "#14171A",
+                    "fontSize": 18,
+                    "fontWeight": "600",
+                    "lineHeight": 24,
+                  },
+                ]
+              }
+            >
+              Enter your email
+            </Text>
+            <Text
+              style={
+                [
+                  {
+                    "fontSize": 16,
+                    "fontWeight": "400",
+                    "lineHeight": 24,
+                  },
+                  {
+                    "color": "#5C6470",
+                  },
+                ]
+              }
+            >
+              We'll send you a sign-in link.
+            </Text>
+            <View
+              style={
+                {
+                  "gap": 8,
+                }
+              }
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 13,
+                      "fontWeight": "400",
+                      "lineHeight": 18,
+                    },
+                    {
+                      "marginBottom": 2,
+                    },
+                    {
+                      "color": "#5C6470",
+                    },
+                  ]
+                }
+              >
+                Email
+              </Text>
+              <View
+                style={
+                  [
+                    {
+                      "borderWidth": 1,
+                      "paddingHorizontal": 14,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#FAFAF7",
+                      "borderColor": "#ECEEF1",
+                      "borderRadius": 12,
+                    },
+                  ]
+                }
+              >
+                <TextInput
+                  accessibilityLabel="Email address"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  editable={true}
+                  keyboardType="email-address"
+                  onChangeText={[Function]}
+                  placeholder="you@example.com"
+                  placeholderTextColor="#A2A8B2"
+                  style={
+                    [
+                      {
+                        "minHeight": 24,
+                        "padding": 0,
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                    ]
+                  }
+                  testID="email-sheet-input"
+                  value=""
+                />
+              </View>
+              <View
+                accessibilityLabel="Send magic link"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": false,
+                    "checked": undefined,
+                    "disabled": true,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "justifyContent": "center",
+                      "minHeight": 44,
+                      "paddingHorizontal": 20,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "borderColor": "#4F46E5",
+                      "borderRadius": 12,
+                      "borderWidth": 0,
+                      "opacity": 0.5,
+                    },
+                    null,
+                    undefined,
+                  ]
+                }
+                testID="email-sheet-send"
+              >
+                <View
+                  style={
+                    {
+                      "alignItems": "center",
+                      "flexDirection": "row",
+                    }
+                  }
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                      ]
+                    }
+                  >
+                    Send magic link
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              accessibilityLabel="Close"
+              accessibilityRole="button"
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
+              focusable={true}
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              style={
+                {
+                  "alignItems": "center",
+                  "paddingVertical": 12,
+                }
+              }
+              testID="email-sheet-cancel"
+            >
+              <Text
+                style={
+                  [
+                    {
+                      "fontSize": 13,
+                      "fontWeight": "400",
+                      "lineHeight": 18,
+                    },
+                    {
+                      "color": "#5C6470",
+                      "textAlign": "center",
+                    },
+                  ]
+                }
+              >
+                Cancel
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;

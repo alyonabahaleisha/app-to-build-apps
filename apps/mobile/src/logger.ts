@@ -14,19 +14,38 @@ export function safeMessage(err: unknown): string {
   return 'unknown_error'
 }
 
+/**
+ * Structured log call — two call signatures:
+ *   logger.warn('message', context?)         — positional (legacy)
+ *   logger.warn({event: ..., ...}, 'message') — pino-style structured (ADR-0013+)
+ *
+ * Both produce the same underlying output. The pino-style form is used by
+ * auth modules per ADR-0013 §Decision 6 / T-0011-158.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type LogContext = Record<string, any>
+type LogArgs = [message: string, context?: LogContext] | [context: LogContext, message: string]
+
+function resolveLogArgs(args: LogArgs): {message: string; context: LogContext | undefined} {
+  if (typeof args[0] === 'string') {
+    return {message: args[0], context: args[1] as LogContext | undefined}
+  }
+  return {message: args[1] as string, context: args[0] as LogContext}
+}
+
 export const logger = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  info: (message: string, context?: Record<string, any>): void => {
+  info: (...args: LogArgs): void => {
     if (__DEV__) {
+      const {message, context} = resolveLogArgs(args)
       console.warn(`[info] ${message}`, context ?? '')
     }
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  warn: (message: string, context?: Record<string, any>): void => {
+  warn: (...args: LogArgs): void => {
+    const {message, context} = resolveLogArgs(args)
     console.warn(`[warn] ${message}`, context ?? '')
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error: (message: string, context?: Record<string, any>): void => {
+  error: (...args: LogArgs): void => {
+    const {message, context} = resolveLogArgs(args)
     console.error(`[error] ${message}`, context ?? '')
   },
 }
