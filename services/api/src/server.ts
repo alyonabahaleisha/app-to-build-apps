@@ -11,7 +11,7 @@ import {healthRoutes} from './routes/health.js'
 import {libraryRoutes} from './routes/library.js'
 import {marketplaceRoutes} from './routes/marketplace.js'
 import {outOfScopeRoutes} from './routes/outOfScope.js'
-import {projectsRoutes} from './routes/projects.js'
+import {miniAppsRoutes} from './routes/miniApps.js'
 
 export async function buildServer(): Promise<FastifyInstance> {
   const server = Fastify({
@@ -31,7 +31,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(cors, {origin: true})
   await server.register(healthRoutes)
   await server.register(authRoutes, {prefix: '/auth'})
-  await server.register(projectsRoutes)
+  await server.register(miniAppsRoutes)
   await server.register(generateRoutes)
   await server.register(outOfScopeRoutes)
   await server.register(marketplaceRoutes)

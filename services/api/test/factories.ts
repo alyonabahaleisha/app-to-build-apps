@@ -25,7 +25,7 @@ import {randomUUID} from 'node:crypto'
 import type {Spec} from '@app-creator/protocol'
 import jwt from 'jsonwebtoken'
 
-import type {NewProject, NewUser} from '../src/db/schema.js'
+import type {NewMiniApp, NewUser} from '../src/db/schema.js'
 
 let counter = 0
 
@@ -42,14 +42,24 @@ export function userRow(overrides: Partial<NewUser> = {}): NewUser {
   }
 }
 
-export function projectRow(input: {ownerId: string} & Partial<NewProject>): NewProject {
+export function miniAppRow(input: {ownerId: string} & Partial<NewMiniApp>): NewMiniApp {
   return {
     id: input.id ?? randomUUID(),
-    title: input.title ?? 'Test project',
+    title: input.title ?? 'Test mini-app',
     currentVersionId: input.currentVersionId ?? null,
-    parentProjectId: input.parentProjectId ?? null,
+    parentMiniAppId: input.parentMiniAppId ?? null,
+    stance: input.stance ?? 'productive',
+    accentPalette: input.accentPalette ?? 'neutral',
+    coverArtSeed: input.coverArtSeed ?? randomUUID(),
+    archetype: input.archetype ?? 'unknown',
+    syncMode: input.syncMode ?? 'cloud-private',
     ...input,
   }
+}
+
+/** @deprecated Use miniAppRow — kept for backcompat with old test files during migration. */
+export function projectRow(input: {ownerId: string} & Partial<NewMiniApp>): NewMiniApp {
+  return miniAppRow(input)
 }
 
 // ---------------------------------------------------------------------------

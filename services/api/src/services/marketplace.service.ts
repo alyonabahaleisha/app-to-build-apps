@@ -25,7 +25,13 @@ import {eq, and, isNull} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
 import * as schema from '../db/schema.js'
-import {projects, projectVersions, users} from '../db/schema.js'
+import {miniApps, miniAppVersions, users} from '../db/schema.js'
+
+// Type aliases for public-facing return fields that still use project semantics
+// (the marketplace API surface is unchanged for Phase 1; ADR-0011 Step 3 keeps
+// these endpoint paths as-is; the field name change is deferred until the
+// mobile state-queries rename in Step 4).
+
 import {isReservedHandle} from '../lib/reservedHandles.js'
 
 type Db = NodePgDatabase<typeof schema>
@@ -210,12 +216,12 @@ export function createMarketplaceService(db: Db) {
     }): Promise<PublishResult> {
       // 1. Fetch project + owner check in one query (WHERE id AND owner_id).
       //    Zero rows = not found OR not owner; we return the same 404 shape.
-      const projectRows = await db
+      const miniAppRows = await db
         .select()
-        .from(projects)
-        .where(and(eq(projects.id, input.projectId), eq(projects.ownerId, input.userId)))
+        .from(miniApps)
+        .where(and(eq(miniApps.id, input.projectId), eq(miniApps.ownerId, input.userId)))
 
-      const project = projectRows[0]
+      const project = miniAppRows[0]
       if (!project) throw new NotFoundError()
 
       // 2. Zombie guard — current_version_id should always be set after create().
@@ -238,11 +244,11 @@ export function createMarketplaceService(db: Db) {
 
       // 5. Idempotent: already public → return current state without UPDATE.
       if (project.visibility === 'public') {
-        // Fetch the render_hash from the current project version.
+        // Fetch the render_hash from the current mini-app version.
         const versionRows = await db
-          .select({renderHash: projectVersions.renderHash})
-          .from(projectVersions)
-          .where(eq(projectVersions.id, project.currentVersionId))
+          .select({renderHash: miniAppVersions.renderHash})
+          .from(miniAppVersions)
+          .where(eq(miniAppVersions.id, project.currentVersionId))
         const version = versionRows[0]
         if (!version) throw new InvalidStateError()
 
@@ -256,13 +262,13 @@ export function createMarketplaceService(db: Db) {
             // the UPDATE below on first publish).
             published_at: project.publishedAt as Date,
             author_handle: authorHandle,
-            parent_project_id: project.parentProjectId,
+            parent_project_id: project.parentMiniAppId,
             render_hash: version.renderHash,
           },
         }
       }
 
-      // 6. Transaction: update handle (if needed) + flip project visibility.
+      // 6. Transaction: update handle (if needed) + flip mini-app visibility.
       const authorHandle = await db.transaction(async tx => {
         // Set handle if the user doesn't have one yet and a new one is provided.
         let finalHandle: string
@@ -285,30 +291,28 @@ export function createMarketplaceService(db: Db) {
           finalHandle = user.handle as string
         }
 
-        // Flip visibility to 'public'. WHERE guard: only update if still private
-        // (handles concurrent same-user same-project publish: idempotent once
-        // committed; per ADR "Concurrent same-user same-project publish" note).
+        // Flip visibility to 'public'. WHERE guard: only update if still private.
         await tx
-          .update(projects)
+          .update(miniApps)
           .set({
             visibility: 'public',
             publishedAt: new Date(),
           })
-          .where(and(eq(projects.id, input.projectId), eq(projects.visibility, 'private')))
+          .where(and(eq(miniApps.id, input.projectId), eq(miniApps.visibility, 'private')))
 
         return finalHandle
       })
 
-      // Fetch version for render_hash (outside transaction — project is now public).
+      // Fetch version for render_hash (outside transaction — mini-app is now public).
       const versionRows = await db
-        .select({renderHash: projectVersions.renderHash})
-        .from(projectVersions)
-        .where(eq(projectVersions.id, project.currentVersionId))
+        .select({renderHash: miniAppVersions.renderHash})
+        .from(miniAppVersions)
+        .where(eq(miniAppVersions.id, project.currentVersionId))
       const version = versionRows[0]
       if (!version) throw new InvalidStateError()
 
-      // Re-fetch project to get the fresh published_at value.
-      const updatedRows = await db.select().from(projects).where(eq(projects.id, input.projectId))
+      // Re-fetch to get the fresh published_at value.
+      const updatedRows = await db.select().from(miniApps).where(eq(miniApps.id, input.projectId))
       const updatedProject = updatedRows[0]
       if (!updatedProject) throw new NotFoundError()
 
@@ -319,23 +323,23 @@ export function createMarketplaceService(db: Db) {
           visibility: 'public',
           published_at: updatedProject.publishedAt as Date,
           author_handle: authorHandle,
-          parent_project_id: updatedProject.parentProjectId,
+          parent_project_id: updatedProject.parentMiniAppId,
           render_hash: version.renderHash,
         },
       }
     },
 
     /**
-     * Unpublish a project. Idempotent — unpublishing an already-private project
+     * Unpublish a mini-app. Idempotent — unpublishing an already-private mini-app
      * returns current state with no UPDATE.
      */
     async unpublish(input: {userId: string; projectId: string}): Promise<UnpublishResult> {
-      const projectRows = await db
+      const miniAppRows = await db
         .select()
-        .from(projects)
-        .where(and(eq(projects.id, input.projectId), eq(projects.ownerId, input.userId)))
+        .from(miniApps)
+        .where(and(eq(miniApps.id, input.projectId), eq(miniApps.ownerId, input.userId)))
 
-      const project = projectRows[0]
+      const project = miniAppRows[0]
       if (!project) throw new NotFoundError()
 
       // Idempotent: already private → return current state.
@@ -346,16 +350,16 @@ export function createMarketplaceService(db: Db) {
             title: project.title,
             visibility: 'private',
             published_at: null,
-            parent_project_id: project.parentProjectId,
+            parent_project_id: project.parentMiniAppId,
           },
         }
       }
 
       // Flip back to private.
       await db
-        .update(projects)
+        .update(miniApps)
         .set({visibility: 'private', publishedAt: null})
-        .where(and(eq(projects.id, input.projectId), eq(projects.visibility, 'public')))
+        .where(and(eq(miniApps.id, input.projectId), eq(miniApps.visibility, 'public')))
 
       return {
         project: {
@@ -363,7 +367,7 @@ export function createMarketplaceService(db: Db) {
           title: project.title,
           visibility: 'private',
           published_at: null,
-          parent_project_id: project.parentProjectId,
+          parent_project_id: project.parentMiniAppId,
         },
       }
     },

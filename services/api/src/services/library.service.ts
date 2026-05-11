@@ -213,18 +213,19 @@ export function createLibraryService(db: Db) {
             parent.id       AS parent_id,
             parent.title    AS parent_title,
             pau.handle      AS parent_author_handle
-          FROM projects p
+          FROM mini_apps p
           INNER JOIN users au
             ON au.id = p.owner_id
            AND au.handle IS NOT NULL
-          INNER JOIN project_versions pv
+          INNER JOIN mini_app_versions pv
             ON pv.id = p.current_version_id
-          LEFT JOIN projects parent
-            ON parent.id = p.parent_project_id
+          LEFT JOIN mini_apps parent
+            ON parent.id = p.parent_mini_app_id
           LEFT JOIN users pau
             ON pau.id = parent.owner_id
            AND pau.handle IS NOT NULL
           WHERE p.visibility = 'public'
+            AND p.deleted_at IS NULL
             AND (p.published_at, p.id) < (${decoded.published_at.toISOString()}::timestamptz, ${decoded.project_id}::uuid)
           ORDER BY p.published_at DESC, p.id DESC
           LIMIT ${limit + 1}
@@ -241,18 +242,19 @@ export function createLibraryService(db: Db) {
             parent.id       AS parent_id,
             parent.title    AS parent_title,
             pau.handle      AS parent_author_handle
-          FROM projects p
+          FROM mini_apps p
           INNER JOIN users au
             ON au.id = p.owner_id
            AND au.handle IS NOT NULL
-          INNER JOIN project_versions pv
+          INNER JOIN mini_app_versions pv
             ON pv.id = p.current_version_id
-          LEFT JOIN projects parent
-            ON parent.id = p.parent_project_id
+          LEFT JOIN mini_apps parent
+            ON parent.id = p.parent_mini_app_id
           LEFT JOIN users pau
             ON pau.id = parent.owner_id
            AND pau.handle IS NOT NULL
           WHERE p.visibility = 'public'
+            AND p.deleted_at IS NULL
           ORDER BY p.published_at DESC, p.id DESC
           LIMIT ${limit + 1}
         `)
@@ -320,19 +322,20 @@ export function createLibraryService(db: Db) {
           parent.id       AS parent_id,
           parent.title    AS parent_title,
           pau.handle      AS parent_author_handle
-        FROM projects p
+        FROM mini_apps p
         INNER JOIN users au
           ON au.id = p.owner_id
          AND au.handle IS NOT NULL
-        INNER JOIN project_versions pv
+        INNER JOIN mini_app_versions pv
           ON pv.id = p.current_version_id
-        LEFT JOIN projects parent
-          ON parent.id = p.parent_project_id
+        LEFT JOIN mini_apps parent
+          ON parent.id = p.parent_mini_app_id
         LEFT JOIN users pau
           ON pau.id = parent.owner_id
          AND pau.handle IS NOT NULL
         WHERE p.id = ${projectId}
           AND p.visibility = 'public'
+          AND p.deleted_at IS NULL
       `)
 
       const rows: DetailRow[] = result.rows as DetailRow[]

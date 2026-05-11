@@ -33,14 +33,14 @@ import {z} from 'zod'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
 import * as schema from '../db/schema.js'
-import {projects} from '../db/schema.js'
+import {miniApps} from '../db/schema.js'
 import {eq} from 'drizzle-orm'
 import {requireAuth, type AuthenticatedRequest} from '../lib/auth.js'
 import {safeMessage} from '../lib/logger.js'
 import {rateLimit} from '../lib/rateLimit.js'
 import {generateAppSpec} from '../llm/generate.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from '../llm/errors.js'
-import {createProjectsService, type ProjectsService} from '../services/projects.service.js'
+import {createMiniAppsService, type MiniAppsService} from '../services/miniApps.service.js'
 
 type Db = NodePgDatabase<typeof schema>
 
@@ -111,14 +111,14 @@ export interface GenerateRoutesOptions {
   /** Injected by tests; production uses the singleton from db/index.ts. */
   db?: Db
   /** Override service (test-only — e.g. DB-down simulation). */
-  service?: ProjectsService
+  service?: MiniAppsService
 }
 
-async function resolveService(opts: GenerateRoutesOptions): Promise<ProjectsService> {
+async function resolveService(opts: GenerateRoutesOptions): Promise<MiniAppsService> {
   if (opts.service) return opts.service
-  if (opts.db) return createProjectsService(opts.db)
+  if (opts.db) return createMiniAppsService(opts.db)
   const mod = await import('../db/index.js')
-  return createProjectsService(mod.getDb())
+  return createMiniAppsService(mod.getDb())
 }
 
 // ---------------------------------------------------------------------------
@@ -129,7 +129,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
   fastify: FastifyInstance,
   opts: GenerateRoutesOptions,
 ) => {
-  const projectsService = await resolveService(opts)
+  const miniAppsService = await resolveService(opts)
   const resolvedDb: Db = opts.db ?? (await import('../db/index.js').then(m => m.getDb()))
 
   fastify.post('/generate', {preHandler: [requireAuth]}, async (req, reply) => {
@@ -163,8 +163,8 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
     if (body.parent_project_id) {
       const parentRows = await resolvedDb
         .select()
-        .from(projects)
-        .where(eq(projects.id, body.parent_project_id))
+        .from(miniApps)
+        .where(eq(miniApps.id, body.parent_project_id))
       const parent = parentRows[0]
       if (!parent || (parent.visibility !== 'public' && parent.ownerId !== userId)) {
         return reply.code(404).send({error: 'not_found'})
@@ -250,23 +250,27 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
         throw new Error('generator completed without done or out_of_scope event')
       }
 
-      const detail = await projectsService.create({
+      const detail = await miniAppsService.create({
         ownerId: userId,
         spec: doneSpec,
         originalPrompt: body.prompt,
-        parentProjectId: body.parent_project_id,
+        parentMiniAppId: body.parent_project_id,
       })
 
       const doneEventPayload = {
         type: 'done',
         generationId,
-        project: {
-          id: detail.project.id,
-          title: detail.project.title,
-          visibility: detail.project.visibility,
-          parent_project_id: detail.project.parentProjectId,
-          original_prompt: detail.project.originalPrompt,
-          created_at: detail.project.createdAt.toISOString(),
+        miniApp: {
+          id: detail.miniApp.id,
+          title: detail.miniApp.title,
+          visibility: detail.miniApp.visibility,
+          // SSE wire field name remains `parent_project_id` until ADR-0011
+          // Step 4 (mobile state-queries rename). Internal Drizzle property is
+          // `parentMiniAppId` (correct post-schema-rename); only the JSON key
+          // ships unchanged to avoid breaking mobile clients mid-Phase-1.
+          parent_project_id: detail.miniApp.parentMiniAppId,
+          original_prompt: detail.miniApp.originalPrompt,
+          created_at: detail.miniApp.createdAt.toISOString(),
         },
         spec: doneSpec,
         render_hash: detail.currentVersion.renderHash,
@@ -280,7 +284,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
         req.log.info(
           {
             userId,
-            projectId: detail.project.id,
+            miniAppId: detail.miniApp.id,
             action: 'client_disconnect_during_generate',
           },
           'client_disconnect_during_generate',
