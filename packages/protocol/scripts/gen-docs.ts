@@ -1,7 +1,7 @@
 /**
  * gen-docs.ts — Generates packages/protocol/generated/docs.md
  *
- * One section per: 13 token types, 33 component schemas, 12 action verbs,
+ * One section per: 13 token types, 39 component schemas, 12 action verbs,
  * 5 binding types, plus top-level Spec / SpecScreen / Collection schemas.
  * ADR-0007's prompt builder concatenates this into the cacheable catalog block.
  *
@@ -10,14 +10,15 @@
  *      RadiusToken, SpaceToken, TypeRole — 7 token-name types; plus Archetype,
  *      BindingKind, Palette, SlotKind, Stance, Tone — 6 behavioral enums = 13 total)
  *   2. Component schemas (tier order: layout, typography, inputs, display,
- *      lists, compound, actions — 33 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
- *      V1 Phase 1 Step 3 adds AvatarGroup + Callout)
+ *      lists, compound, actions — 39 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
+ *      V1 Phase 1 Step 3 adds AvatarGroup + Callout,
+ *      V1 Phase 1 Step 2 adds MoneyField + TimeField + MultiPicker + Slider + RatingInput + SearchBar)
  *   3. Action verbs (schema-declaration order, matching actions.ts — 12 total)
  *   4. Binding types (StringBinding, NumberBinding, BooleanBinding, DateBinding,
  *      ImageBinding — 5 total)
  *   5. Top-level schemas (Collection, Spec, SpecScreen — 3 total)
  *
- * Total: 13 + 33 + 12 + 5 + 3 = 66 sections (≥60 per ADR AC).
+ * Total: 13 + 39 + 12 + 5 + 3 = 72 sections (≥60 per ADR AC).
  *
  * T-0005-183a guard: every component section must have a non-empty body
  * paragraph. Static description map ensures this — no silent-empty-doc.
@@ -74,6 +75,14 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   DateField: 'A date or time picker bound to a DateBinding slot. The `mode` prop selects between date-only, time-only, or combined datetime entry. Values are ISO 8601 strings at the protocol level.',
   Picker: 'A closed-list selection control bound to a StringBinding slot. The `options` array enumerates all allowed values. Renders as a native picker or segmented control depending on the host renderer.',
   Switch: 'A binary toggle bound to a BooleanBinding slot. Use for settings and feature flags that the user can enable or disable. The renderer displays a native iOS toggle switch.',
+
+  // V1 Phase 1 Step 2 — inputs tier expansion
+  MoneyField: 'A currency input bound to a NumberBinding slot that stores the value as integer cents (zero-decimal for JPY). The `currency` prop selects the currency code (USD default). Values are stored as integers to avoid floating-point arithmetic errors. `min` and `max` are in cents. The renderer shows a leading currency symbol and formats the display value per locale.',
+  TimeField: 'A time picker bound to a StringBinding slot that stores HH:MM values in 24-hour format. The `mode` prop selects between `time` (HH:MM) and `time-with-seconds` (HH:MM:SS). Optional `min` and `max` constrain the allowed time range. Renders a native time picker sheet.',
+  MultiPicker: 'A multi-select picker bound to a StringBinding slot that stores selected values as a comma-separated string. Each option has a `value` (no commas allowed) and a `label`. Optional `min` / `max` constrain the number of selections. Selected values appear as removable chips in the trigger.',
+  Slider: 'A continuous range input bound to a NumberBinding slot. The `min` and `max` props define the range; `step` constrains snap points. `format` controls display: `integer`, `decimal` (2dp), or `percent`. `showValue` renders the current value in a badge above the thumb. VoiceOver increment / decrement adjustments move by one step.',
+  RatingInput: 'A star-glyph rating input bound to a NumberBinding slot. `scale` is 5 (default) or 10 glyphs. `glyph` selects the symbol: star (default), heart, flame, or circle. `allowHalf` enables half-point VoiceOver increment. Tapping the current value resets to 0 (clear). Productive stance renders 24pt glyphs; expressive renders 28pt.',
+  SearchBar: 'A search text input bound to a StringBinding slot. When `boundCollectionId` is set, the query is written to SearchFilterContext so List components for that collection filter rows by case-insensitive substring match in real time. The optional `voiceMic` shows a mic icon when the field is empty (V0.5 placeholder — tap shows a coming-soon toast). A clear button appears when the query is non-empty.',
 
   // Display tier
   Stat: 'A key-value display component for prominent numeric or textual metrics. The `label` names the metric; `valueBinding` supplies the current value. Optional `unit` appends a suffix (e.g. "kg", "steps") and `trend` shows a directional arrow.',
@@ -162,7 +171,7 @@ for (const name of Object.keys(TOKEN_DESCRIPTIONS).sort()) {
   }
 }
 
-// 2. Component schemas (tier order — 33 sections)
+// 2. Component schemas (tier order — 39 sections)
 sections.push(`---\n\n## Component Schemas\n`)
 // Tier order matches components/index.ts: layout, typography, inputs, display, lists, compound, actions
 const COMPONENT_ORDER = [
@@ -172,8 +181,10 @@ const COMPONENT_ORDER = [
   'Divider',
   // Typography tier (3)
   'Heading', 'Body', 'Caption',
-  // Inputs tier (5)
+  // Inputs tier (5 → 11 with V1 Phase 1 Step 2)
   'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
+  // V1 Phase 1 Step 2 — inputs tier expansion
+  'MoneyField', 'TimeField', 'MultiPicker', 'Slider', 'RatingInput', 'SearchBar',
   // Display tier (4 → 6 with AvatarGroup + Callout)
   'Stat', 'Badge', 'Chip', 'Avatar',
   // V1 Phase 1 Step 3 — display tier additions

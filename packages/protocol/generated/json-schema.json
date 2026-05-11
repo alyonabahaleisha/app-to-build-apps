@@ -1059,6 +1059,322 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "MoneyField"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "currency": {
+                        "type": "string",
+                        "enum": [
+                          "USD",
+                          "EUR",
+                          "GBP",
+                          "JPY",
+                          "CAD",
+                          "AUD",
+                          "INR"
+                        ]
+                      },
+                      "min": {
+                        "type": "integer"
+                      },
+                      "max": {
+                        "type": "integer"
+                      },
+                      "placeholder": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "optional": {
+                        "type": "boolean"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "TimeField"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "enum": [
+                          "time",
+                          "time-with-seconds"
+                        ]
+                      },
+                      "min": {
+                        "type": "string",
+                        "maxLength": 5
+                      },
+                      "max": {
+                        "type": "string",
+                        "maxLength": 5
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "MultiPicker"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "value": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[^,]+$"
+                            },
+                            "label": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "icon": {
+                              "$ref": "#/definitions/Spec/properties/coverIcon"
+                            }
+                          },
+                          "required": [
+                            "value",
+                            "label"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 16
+                      },
+                      "min": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "max": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0
+                      },
+                      "placeholder": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding",
+                      "options"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Slider"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "min": {
+                        "type": "number"
+                      },
+                      "max": {
+                        "type": "number"
+                      },
+                      "step": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      "showValue": {
+                        "type": "boolean"
+                      },
+                      "format": {
+                        "type": "string",
+                        "enum": [
+                          "integer",
+                          "decimal",
+                          "percent"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding",
+                      "min",
+                      "max"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "RatingInput"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "scale": {
+                        "type": "number",
+                        "enum": [
+                          5,
+                          10
+                        ]
+                      },
+                      "glyph": {
+                        "type": "string",
+                        "enum": [
+                          "star",
+                          "heart",
+                          "flame",
+                          "circle"
+                        ]
+                      },
+                      "allowHalf": {
+                        "type": "boolean"
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "SearchBar"
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                      },
+                      "placeholder": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "voiceMic": {
+                        "type": "boolean"
+                      },
+                      "boundCollectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "valueBinding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Stat"
                       },
                       "value": {
@@ -1207,7 +1523,7 @@
                               "patch": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1251,7 +1567,7 @@
                               "item": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1303,7 +1619,7 @@
                               "patch": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1601,7 +1917,7 @@
                             "maxLength": 40
                           },
                           "action": {
-                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                           }
                         },
                         "required": [
@@ -1816,10 +2132,10 @@
                         ]
                       },
                       "trailing": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/27/properties/leading"
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -1853,16 +2169,16 @@
                         "maxLength": 200
                       },
                       "leading": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/27/properties/leading"
                       },
                       "trailing": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/27/properties/leading"
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "leadingAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "leadingActionIcon": {
                         "$ref": "#/definitions/Spec/properties/coverIcon"
@@ -1876,7 +2192,7 @@
                         ]
                       },
                       "trailingAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "trailingActionIcon": {
                         "$ref": "#/definitions/Spec/properties/coverIcon"
@@ -1927,7 +2243,7 @@
                         "maxLength": 80
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -2079,7 +2395,7 @@
                         ]
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -2204,7 +2520,7 @@
                         "const": "Image"
                       },
                       "source": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/28/properties/valueBinding"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/34/properties/valueBinding"
                       },
                       "aspectRatio": {
                         "type": "string",
@@ -2294,7 +2610,7 @@
                         ]
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "disabled": {
                         "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/13/properties/valueBinding"
@@ -2329,7 +2645,7 @@
                         "$ref": "#/definitions/Spec/properties/coverIcon"
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string",
@@ -2360,7 +2676,7 @@
                         "$ref": "#/definitions/Spec/properties/coverIcon"
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
                       },
                       "variant": {
                         "type": "string",
@@ -2577,7 +2893,7 @@
         "initialState": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
+            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action/anyOf/0/properties/value"
           },
           "propertyNames": {
             "minLength": 1,

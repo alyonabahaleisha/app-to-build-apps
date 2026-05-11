@@ -41,6 +41,8 @@ import {NoNav} from './nav/NoNav.js'
 import {StackNav} from './nav/StackNav.js'
 import {TabsNav} from './nav/TabsNav.js'
 import {ModalOverlayNav} from './nav/ModalOverlayNav.js'
+// V1 Phase 1 Step 2 — SearchFilterContext scoped at Renderer root (ADR-0009 §E)
+import {SearchFilterProvider} from './state/SearchFilterContext.js'
 
 export type RendererProps = {
   spec: Spec
@@ -132,11 +134,16 @@ function RendererInner({spec, host}: RendererProps) {
 
   return (
     <RendererStateContext.Provider value={{state, dispatch}}>
-      <NavRouter
-        spec={spec}
-        onPrimitiveReady={onPrimitiveReady}
-        onNavigationError={host.onNavigationError}
-      />
+      {/* V1 Phase 1 Step 2 — SearchFilterProvider scoped per Renderer instance.
+          Each Renderer tree gets its own Map; cross-instance pollution is impossible.
+          SearchBar renderers write queries; List/GridList renderers read via useSearchFilter. */}
+      <SearchFilterProvider>
+        <NavRouter
+          spec={spec}
+          onPrimitiveReady={onPrimitiveReady}
+          onNavigationError={host.onNavigationError}
+        />
+      </SearchFilterProvider>
     </RendererStateContext.Provider>
   )
 }

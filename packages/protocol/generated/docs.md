@@ -120,6 +120,30 @@ A closed-list selection control bound to a StringBinding slot. The `options` arr
 
 A binary toggle bound to a BooleanBinding slot. Use for settings and feature flags that the user can enable or disable. The renderer displays a native iOS toggle switch.
 
+## MoneyField
+
+A currency input bound to a NumberBinding slot that stores the value as integer cents (zero-decimal for JPY). The `currency` prop selects the currency code (USD default). Values are stored as integers to avoid floating-point arithmetic errors. `min` and `max` are in cents. The renderer shows a leading currency symbol and formats the display value per locale.
+
+## TimeField
+
+A time picker bound to a StringBinding slot that stores HH:MM values in 24-hour format. The `mode` prop selects between `time` (HH:MM) and `time-with-seconds` (HH:MM:SS). Optional `min` and `max` constrain the allowed time range. Renders a native time picker sheet.
+
+## MultiPicker
+
+A multi-select picker bound to a StringBinding slot that stores selected values as a comma-separated string. Each option has a `value` (no commas allowed) and a `label`. Optional `min` / `max` constrain the number of selections. Selected values appear as removable chips in the trigger.
+
+## Slider
+
+A continuous range input bound to a NumberBinding slot. The `min` and `max` props define the range; `step` constrains snap points. `format` controls display: `integer`, `decimal` (2dp), or `percent`. `showValue` renders the current value in a badge above the thumb. VoiceOver increment / decrement adjustments move by one step.
+
+## RatingInput
+
+A star-glyph rating input bound to a NumberBinding slot. `scale` is 5 (default) or 10 glyphs. `glyph` selects the symbol: star (default), heart, flame, or circle. `allowHalf` enables half-point VoiceOver increment. Tapping the current value resets to 0 (clear). Productive stance renders 24pt glyphs; expressive renders 28pt.
+
+## SearchBar
+
+A search text input bound to a StringBinding slot. When `boundCollectionId` is set, the query is written to SearchFilterContext so List components for that collection filter rows by case-insensitive substring match in real time. The optional `voiceMic` shows a mic icon when the field is empty (V0.5 placeholder — tap shows a coming-soon toast). A clear button appears when the query is non-empty.
+
 ## Stat
 
 A key-value display component for prominent numeric or textual metrics. The `label` names the metric; `valueBinding` supplies the current value. Optional `unit` appends a suffix (e.g. "kg", "steps") and `trend` shows a directional arrow.

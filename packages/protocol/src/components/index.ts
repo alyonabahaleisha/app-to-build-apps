@@ -8,15 +8,35 @@ export type {Screen, Section, Stack, Row, Card, Divider} from './layout.js'
 export {HeadingSchema, BodySchema, CaptionSchema} from './typography.js'
 export type {Heading, Body, Caption} from './typography.js'
 
-// Inputs tier (5)
+// Inputs tier (5 → 11 with V1 Phase 1 Step 2 additions)
 export {
   TextFieldSchema,
   NumberFieldSchema,
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
+  // V1 Phase 1 Step 2
+  MoneyFieldSchema,
+  TimeFieldSchema,
+  MultiPickerSchema,
+  SliderSchema,
+  RatingInputSchema,
+  SearchBarSchema,
 } from './inputs.js'
-export type {TextField, NumberField, DateField, Picker, Switch} from './inputs.js'
+export type {
+  TextField,
+  NumberField,
+  DateField,
+  Picker,
+  Switch,
+  // V1 Phase 1 Step 2
+  MoneyField,
+  TimeField,
+  MultiPicker,
+  Slider,
+  RatingInput,
+  SearchBar,
+} from './inputs.js'
 
 // Display tier (4 → 6 with AvatarGroup + Callout)
 export {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
@@ -70,6 +90,12 @@ import {
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
+  MoneyFieldSchema,
+  TimeFieldSchema,
+  MultiPickerSchema,
+  SliderSchema,
+  RatingInputSchema,
+  SearchBarSchema,
 } from './inputs.js'
 import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 import {
@@ -88,10 +114,11 @@ import {
 } from './compound.js'
 import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 33 component schemas in one array — used by the Step 5 discriminated union.
+// All 39 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
-// V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema.
-// V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema.
+// V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema (→33).
+// V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema (→35).
+// V1 Phase 1 Step 2 adds: MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar (→39).
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
@@ -107,6 +134,13 @@ export const ALL_COMPONENT_SCHEMAS = [
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
+  // V1 Phase 1 Step 2 — inputs tier expansion
+  MoneyFieldSchema,
+  TimeFieldSchema,
+  MultiPickerSchema,
+  SliderSchema,
+  RatingInputSchema,
+  SearchBarSchema,
   StatSchema,
   BadgeSchema,
   ChipSchema,
@@ -128,7 +162,7 @@ export const ALL_COMPONENT_SCHEMAS = [
   IconButtonSchema,
 ] as const
 
-// ComponentNode — union type of all 33 component inferred types.
+// ComponentNode — union type of all 39 component inferred types.
 // Recursive children are typed as ComponentNode[] (z.lazy() in Step 5 resolves this).
 export type ComponentNode =
   | z.infer<typeof ScreenSchema>
@@ -145,6 +179,13 @@ export type ComponentNode =
   | z.infer<typeof DateFieldSchema>
   | z.infer<typeof PickerSchema>
   | z.infer<typeof SwitchSchema>
+  // V1 Phase 1 Step 2 — inputs tier expansion
+  | z.infer<typeof MoneyFieldSchema>
+  | z.infer<typeof TimeFieldSchema>
+  | z.infer<typeof MultiPickerSchema>
+  | z.infer<typeof SliderSchema>
+  | z.infer<typeof RatingInputSchema>
+  | z.infer<typeof SearchBarSchema>
   | z.infer<typeof StatSchema>
   | z.infer<typeof BadgeSchema>
   | z.infer<typeof ChipSchema>

@@ -38,6 +38,13 @@
  * T-0006-126: 50 rows render without issues
  * T-0006-127: 100 concurrent addItem dispatches result in correct row counts
  * T-0006-128: item identity preserved across re-renders (keyExtractor)
+ *
+ * V1 Phase 1 Step 2 — SearchBar integration (ADR-0009 §E):
+ *   When a SearchBar with boundCollectionId === node.collectionId is mounted,
+ *   ListRenderer reads the query from SearchFilterContext and filters rows
+ *   by case-insensitive substring match across all string-valued fields.
+ *   T-0009-053: case-insensitive substring filter
+ *   T-0009-066: empty query → no filtering (all rows shown)
  */
 import React from 'react'
 import {Text, View} from 'react-native'
@@ -51,6 +58,8 @@ import {useReducedMotion} from '../../a11y/useReducedMotion.js'
 import {NodeRenderer} from '../NodeRenderer.js'
 import {ITEM_LAYOUT_HEIGHT} from './defaults.js'
 import type {Row, RowId} from '../../state/types.js'
+// V1 Phase 1 Step 2: SearchBar integration
+import {useSearchFilter} from '../../state/SearchFilterContext.js'
 
 type ListNode = Extract<Node, {type: 'List'}>
 
@@ -149,6 +158,20 @@ export function buildAnimationProps(reducedMotion: boolean) {
   }
 }
 
+/**
+ * Returns true if the row has at least one string field that contains `query`
+ * as a case-insensitive substring.
+ * `query` must already be lowercased (SearchFilterContext stores it lowercased).
+ */
+function rowMatchesQuery(row: Row, query: string): boolean {
+  for (const value of Object.values(row)) {
+    if (typeof value === 'string' && value.toLowerCase().includes(query)) {
+      return true
+    }
+  }
+  return false
+}
+
 export function ListRenderer({node}: {node: ListNode}) {
   const theme = useTheme()
   const {state} = useRendererStateContext()
@@ -156,6 +179,10 @@ export function ListRenderer({node}: {node: ListNode}) {
   const collection = state.collections.get(node.collectionId)
   const itemLayout = node.itemLayout ?? 'standard'
   const estimatedItemSize = ITEM_LAYOUT_HEIGHT[itemLayout]
+
+  // V1 Phase 1 Step 2: read search filter for this collection (null = no filter active).
+  // SearchFilterContext stores the query lowercased, so comparison is already normalized.
+  const searchQuery = useSearchFilter(node.collectionId)
 
   // Animation builders — disabled when useReducedMotion() is true.
   const {enteringAnim, exitingAnim, layoutAnim} = buildAnimationProps(reducedMotion)
@@ -176,13 +203,20 @@ export function ListRenderer({node}: {node: ListNode}) {
   }
 
   // Build ordered row entries for FlashList data array.
-  const rowEntries: RowEntry[] = collection.rowOrder
+  const allRowEntries: RowEntry[] = collection.rowOrder
     .map((rowId, index) => {
       const row = collection.rows.get(rowId)
       if (!row) return null
       return {rowId, row, index}
     })
     .filter((entry): entry is RowEntry => entry !== null)
+
+  // Apply search filter: when a non-empty query is active, keep only matching rows.
+  // Empty string or null → show all rows (T-0009-066).
+  const rowEntries =
+    searchQuery && searchQuery.length > 0
+      ? allRowEntries.filter(({row}) => rowMatchesQuery(row, searchQuery))
+      : allRowEntries
 
   // Empty state — render node.emptyState if provided, otherwise default view.
   if (rowEntries.length === 0) {

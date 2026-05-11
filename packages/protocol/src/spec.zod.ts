@@ -3,7 +3,7 @@
  *
  * Section order per ADR-0005 §B:
  *   1. Node type alias (manual, for z.ZodType<Node> — resolves F-7)
- *   2. NodeSchema (z.lazy discriminated union over all 28 components)
+ *   2. NodeSchema (z.lazy discriminated union over all 39 components)
  *   3. SpecScreenSchema (top-level screen wrapper — renamed from ScreenSchema to
  *      avoid collision with the layout-component ScreenSchema in components/layout.ts)
  *   4. SpecSchema (top-level spec with .superRefine for initialScreenId cross-ref)
@@ -29,12 +29,18 @@ import {
   HeadingSchema,
   BodySchema,
   CaptionSchema,
-  // Inputs tier (5)
+  // Inputs tier (5 → 11 with V1 Phase 1 Step 2)
   TextFieldSchema,
   NumberFieldSchema,
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
+  MoneyFieldSchema,
+  TimeFieldSchema,
+  MultiPickerSchema,
+  SliderSchema,
+  RatingInputSchema,
+  SearchBarSchema,
   // Display tier (4 → 6 with AvatarGroup + Callout)
   StatSchema,
   BadgeSchema,
@@ -132,6 +138,13 @@ export type Node =
   | z.infer<typeof DateFieldSchema>
   | z.infer<typeof PickerSchema>
   | z.infer<typeof SwitchSchema>
+  // Inputs tier — V1 Phase 1 Step 2 (6 new inputs)
+  | z.infer<typeof MoneyFieldSchema>
+  | z.infer<typeof TimeFieldSchema>
+  | z.infer<typeof MultiPickerSchema>
+  | z.infer<typeof SliderSchema>
+  | z.infer<typeof RatingInputSchema>
+  | z.infer<typeof SearchBarSchema>
   // Display tier (V1 Phase 1 Step 3 adds AvatarGroup + Callout)
   | z.infer<typeof StatSchema>
   | z.infer<typeof BadgeSchema>
@@ -191,6 +204,13 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     DateFieldSchema,
     PickerSchema,
     SwitchSchema,
+    // Inputs tier — V1 Phase 1 Step 2 (6 new inputs)
+    MoneyFieldSchema,
+    TimeFieldSchema,
+    MultiPickerSchema,
+    SliderSchema,
+    RatingInputSchema,
+    SearchBarSchema,
     // Display tier (V1 Phase 1 Step 3 adds AvatarGroup + Callout)
     StatSchema,
     BadgeSchema,

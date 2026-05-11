@@ -91,6 +91,19 @@ export {DateFieldRenderer} from './components/inputs/DateField.js'
 export {PickerRenderer} from './components/inputs/Picker.js'
 export {SwitchRenderer} from './components/inputs/Switch.js'
 export {INPUT_DEFAULTS} from './components/inputs/defaults.js'
+// V1 Phase 1 Step 2 — inputs tier expansion + SearchFilterContext
+export {MoneyFieldRenderer, parseAndCanonicalize, centsToDollarString} from './components/inputs/MoneyField.js'
+export {TimeFieldRenderer, formatTimeForDisplay, dateToHHMM} from './components/inputs/TimeField.js'
+export {MultiPickerRenderer, parseCSV, joinCSV} from './components/inputs/MultiPicker.js'
+export {SliderRenderer, formatSliderValue} from './components/inputs/Slider.js'
+export {RatingInputRenderer} from './components/inputs/RatingInput.js'
+export {SearchBarRenderer} from './components/inputs/SearchBar.js'
+export {
+  SearchFilterProvider,
+  useSearchFilter,
+  useSearchFilterControls,
+} from './state/SearchFilterContext.js'
+export type {SearchFilterMap, SearchFilterControls, SearchFilterProviderProps} from './state/SearchFilterContext.js'
 
 // Step 7: Lists tier
 export {ListRenderer, buildAnimationProps} from './components/lists/List.js'

@@ -60,3 +60,10 @@ export type SlotKind = z.infer<typeof SlotKindSchema>
 // NavPattern — internal navigation pattern picked per mini-app by the generator.
 export const NavPatternSchema = z.enum(['none', 'stack', 'tabs', 'modal-overlay'])
 export type NavPattern = z.infer<typeof NavPatternSchema>
+
+// CurrencySchema — closed 7-value enum for V1 Phase 1 input components.
+// Adding currencies is a closed-registry expansion requiring an App Store update
+// (invariant 9). The 7 values are the highest-volume markets in pre-launch analytics.
+// V1 Phase 1 Step 2 — ADR-0009 §I.
+export const CurrencySchema = z.enum(['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'INR'])
+export type Currency = z.infer<typeof CurrencySchema>

@@ -20,6 +20,8 @@ export {
   BindingKindSchema,
   SlotKindSchema,
   NavPatternSchema,
+  // V1 Phase 1 Step 2
+  CurrencySchema,
 } from './enums.js'
 export type {
   Stance,
@@ -31,6 +33,8 @@ export type {
   BindingKind,
   SlotKind,
   NavPattern,
+  // V1 Phase 1 Step 2
+  Currency,
 } from './enums.js'
 
 // Canonicalization — verbatim copy from a2ui-schema; do not re-export from legacy package
@@ -93,12 +97,19 @@ export {
   HeadingSchema,
   BodySchema,
   CaptionSchema,
-  // Inputs tier
+  // Inputs tier (V0)
   TextFieldSchema,
   NumberFieldSchema,
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
+  // Inputs tier — V1 Phase 1 Step 2
+  MoneyFieldSchema,
+  TimeFieldSchema,
+  MultiPickerSchema,
+  SliderSchema,
+  RatingInputSchema,
+  SearchBarSchema,
   // Display tier
   StatSchema,
   BadgeSchema,
@@ -138,6 +149,13 @@ export type {
   DateField,
   Picker,
   Switch,
+  // V1 Phase 1 Step 2
+  MoneyField,
+  TimeField,
+  MultiPicker,
+  Slider,
+  RatingInput,
+  SearchBar,
   Stat,
   Badge,
   Chip,

@@ -139,7 +139,7 @@ describe('T-0005-182: generated/types.ts exports required type declarations', ()
   it('exports all closed enum types', () => {
     const content = fs.readFileSync(TYPES_PATH, 'utf8')
     const enumTypes = [
-      'Archetype', 'BindingKind', 'ColorToken', 'Elevation', 'MotionCurve',
+      'Archetype', 'BindingKind', 'ColorToken', 'Currency', 'Elevation', 'MotionCurve',
       'NavPattern', 'Palette', 'RadiusToken', 'SlotKind', 'SpaceToken',
       'Stance', 'Tone', 'TypeRole',
     ]
@@ -163,11 +163,11 @@ describe('T-0005-183: generated/docs.md has ≥60 sections', () => {
 // ---------------------------------------------------------------------------
 // T-0005-183a — Failure (F-07): gen-docs.ts emits non-empty paragraph per component
 //
-// Parameterized over 33 component names. For each component, the docs.md
+// Parameterized over 39 component names. For each component, the docs.md
 // section (## ComponentName) must exist AND have at least one non-empty body
 // paragraph. Guards the silent-empty-doc failure mode.
 // ---------------------------------------------------------------------------
-describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 33 components (V1 Phase 1 Step 3)', () => {
+describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 39 components (V1 Phase 1 Step 2)', () => {
   const COMPONENT_NAMES = [
     // Layout tier (5 → 6 with Divider)
     'Screen', 'Section', 'Stack', 'Row', 'Card',
@@ -175,8 +175,10 @@ describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 
     'Divider',
     // Typography tier (3)
     'Heading', 'Body', 'Caption',
-    // Inputs tier (5)
+    // Inputs tier (5 → 11 with V1 Phase 1 Step 2)
     'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
+    // V1 Phase 1 Step 2 — inputs tier expansion
+    'MoneyField', 'TimeField', 'MultiPicker', 'Slider', 'RatingInput', 'SearchBar',
     // Display tier (4 → 6 with AvatarGroup + Callout)
     'Stat', 'Badge', 'Chip', 'Avatar',
     // V1 Phase 1 Step 3 — display tier additions
@@ -521,8 +523,8 @@ describe('T-0005-187b (F-13): action verb union has exactly 12 members', () => {
 // Additive cardinality tripwires (following Step 1 precedent)
 // ---------------------------------------------------------------------------
 
-describe('Additive: 33 component schemas present in NodeSchema union (V1 Phase 1 Step 3)', () => {
-  it('NodeSchema anyOf union in json-schema.json has exactly 33 members (all component types)', () => {
+describe('Additive: 39 component schemas present in NodeSchema union (V1 Phase 1 Step 2)', () => {
+  it('NodeSchema anyOf union in json-schema.json has exactly 39 members (all component types)', () => {
     const schema = JSON.parse(fs.readFileSync(JSON_SCHEMA_PATH, 'utf8')) as unknown
 
     const COMPONENT_NAMES = new Set([
@@ -531,6 +533,8 @@ describe('Additive: 33 component schemas present in NodeSchema union (V1 Phase 1
       'Divider',
       'Heading', 'Body', 'Caption',
       'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
+      // V1 Phase 1 Step 2 — inputs tier expansion
+      'MoneyField', 'TimeField', 'MultiPicker', 'Slider', 'RatingInput', 'SearchBar',
       'Stat', 'Badge', 'Chip', 'Avatar',
       // V1 Phase 1 Step 3 — display tier additions
       'AvatarGroup', 'Callout',
@@ -576,14 +580,14 @@ describe('Additive: 33 component schemas present in NodeSchema union (V1 Phase 1
     }
 
     const unions = findComponentUnion(schema)
-    // The top-level NodeSchema union should have 33 members (28 V0 + 3 V1 Phase 1 Step 1 + 2 V1 Phase 1 Step 3)
-    const fullUnions = unions.filter(u => u.length === 33)
+    // The top-level NodeSchema union should have 39 members (28 V0 + 3 V1P1S1 + 2 V1P1S3 + 6 V1P1S2)
+    const fullUnions = unions.filter(u => u.length === 39)
     expect(fullUnions.length).toBeGreaterThanOrEqual(1)
   })
 })
 
-describe('Additive: docs.md section count — exactly 66 named sections (V1 Phase 1 Step 3)', () => {
-  it('docs.md has exactly 66 named ## sections (13 token + 33 component + 12 verb + 5 binding + 3 top-level)', () => {
+describe('Additive: docs.md section count — exactly 72 named sections (V1 Phase 1 Step 2)', () => {
+  it('docs.md has exactly 72 named ## sections (13 token + 39 component + 12 verb + 5 binding + 3 top-level)', () => {
     const content = fs.readFileSync(DOCS_PATH, 'utf8')
     // Named sections are ## headers that are NOT group headers
     const GROUP_HEADERS = new Set([
@@ -596,6 +600,6 @@ describe('Additive: docs.md section count — exactly 66 named sections (V1 Phas
     ])
     const allHeaders = content.split('\n').filter(l => l.startsWith('## ')).map(l => l.slice(3).trim())
     const namedHeaders = allHeaders.filter(h => !GROUP_HEADERS.has(h))
-    expect(namedHeaders.length).toBe(66)
+    expect(namedHeaders.length).toBe(72)
   })
 })

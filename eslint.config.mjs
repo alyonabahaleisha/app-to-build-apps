@@ -52,6 +52,8 @@ export default [
   //   2. src/v0/a11y/     — useReducedMotion OS preference query + subscription
   //   3. src/v0/state/useRendererState.ts — ref-update infrastructure, not app logic
   //   4. __demo__/, __test-utils__/, *.test.{ts,tsx} — test/demo code may use useEffect
+  //   5. components/inputs/SearchBar.tsx — ADR-0009 §E: useEffect required for
+  //      SearchFilterContext cleanup on unmount (same lifecycle justification as nav/).
   // -------------------------------------------------------------------------
   {
     files: ['packages/a2ui-renderer/src/v0/**/*.{ts,tsx}'],
@@ -62,6 +64,9 @@ export default [
       // useEffect is needed for NavigationPrimitive cleanup on unmount (Step 10).
       'packages/a2ui-renderer/src/v0/nav/**',
       'packages/a2ui-renderer/src/v0/state/useRendererState.ts',
+      // SearchBar — ADR-0009 §E: SearchFilterContext write + cleanup on unmount.
+      // useEffect is the only correct way to clear the Map entry on unmount.
+      'packages/a2ui-renderer/src/v0/components/inputs/SearchBar.tsx',
       'packages/a2ui-renderer/src/v0/__demo__/**',
       'packages/a2ui-renderer/src/v0/__test-utils__/**',
       'packages/a2ui-renderer/src/v0/**/*.test.ts',

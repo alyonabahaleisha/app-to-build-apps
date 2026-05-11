@@ -1,0 +1,287 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MultiPickerRenderer snapshot (T-0009-059) — expressive×health matches snapshot at expressive×health 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#6B5F56",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "letterSpacing": 0,
+          "lineHeight": 20,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Categories
+    </Text>
+    <View
+      accessibilityLabel="Categories, 1 selected: Work"
+      accessibilityRole="combobox"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": false,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#EFE9DF",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+          "gap": 4,
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="multipicker-trigger-mp2"
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4A743822",
+            "borderRadius": 6,
+            "flexDirection": "row",
+            "paddingHorizontal": 4,
+            "paddingVertical": 2,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#4A7438",
+              "fontSize": 11,
+            }
+          }
+          testID="multipicker-chip-label-work"
+        >
+          Work
+        </Text>
+        <View
+          accessibilityLabel="Remove Work"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={8}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          testID="multipicker-chip-remove-work"
+        >
+          <Text
+            style={
+              {
+                "color": "#4A7438",
+                "fontSize": 12,
+                "marginLeft": 4,
+              }
+            }
+          >
+            ×
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`MultiPickerRenderer snapshot (T-0009-059) — productive×focus matches snapshot at productive×focus 1`] = `
+<View>
+  <View>
+    <Text
+      accessibilityElementsHidden={true}
+      style={
+        {
+          "color": "#5C6470",
+          "fontSize": 13,
+          "fontWeight": "400",
+          "letterSpacing": 0.1,
+          "lineHeight": 18,
+          "marginBottom": 4,
+        }
+      }
+    >
+      Categories
+    </Text>
+    <View
+      accessibilityLabel="Categories, 1 selected: Work"
+      accessibilityRole="combobox"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": false,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FFFFFF",
+          "borderColor": "#ECEEF1",
+          "borderRadius": 12,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+          "gap": 4,
+          "minHeight": 44,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+      testID="multipicker-trigger-mp2"
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#4F46E522",
+            "borderRadius": 6,
+            "flexDirection": "row",
+            "paddingHorizontal": 4,
+            "paddingVertical": 2,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "color": "#4F46E5",
+              "fontSize": 11,
+            }
+          }
+          testID="multipicker-chip-label-work"
+        >
+          Work
+        </Text>
+        <View
+          accessibilityLabel="Remove Work"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          hitSlop={8}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          testID="multipicker-chip-remove-work"
+        >
+          <Text
+            style={
+              {
+                "color": "#4F46E5",
+                "fontSize": 12,
+                "marginLeft": 4,
+              }
+            }
+          >
+            ×
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

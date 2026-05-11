@@ -37,6 +37,21 @@ jest.mock('react-native-safe-area-context', () => ({
   SafeAreaInsetsContext: {Consumer: ({children}) => children({top: 0, bottom: 0, left: 0, right: 0})},
 }))
 
+// Mock react-native's ScrollView to avoid pulling in the Flow-typed
+// AnimatedObject.js (RN 0.76) which uses `value is T` type predicate syntax
+// that @babel/preset-flow at this version cannot parse.
+// MultiPicker uses ScrollView directly for its options list.
+jest.mock('react-native/Libraries/Components/ScrollView/ScrollView', () => {
+  const React = require('react')
+  const {View} = require('react-native')
+  function ScrollView({children, style, testID}) {
+    return React.createElement(View, {style, testID}, children)
+  }
+  // react-native exports ScrollView as a class; mock must be the component directly,
+  // not an ES module object, so that react-native/index.js re-exports it correctly.
+  return ScrollView
+})
+
 // Mock @shopify/flash-list — FlashList is a native-backed component; in tests
 // we render as a simple View-based container that iterates over data and
 // renders each item via renderItem. Uses only View (not ScrollView) to avoid

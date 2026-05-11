@@ -41,6 +41,10 @@ module.exports = {
     // files that Babel cannot parse. Use a fully self-contained manual mock instead.
     '^react-native-reanimated$':
       '<rootDir>/src/__mocks__/ReactNativeReanimatedMock.js',
+    // AnimatedObject (RN 0.76): uses Flow `value is T` return-type predicate syntax
+    // that @babel/preset-flow cannot parse. Transitively imported by ScrollView.
+    '^react-native/Libraries/Animated/nodes/AnimatedObject$':
+      '<rootDir>/src/__mocks__/AnimatedObjectMock.js',
   },
   transformIgnorePatterns: [
     'node_modules/(?!(\\.pnpm/(@?(jest-)?react-native|@react-native(-community)?|@react-native\\+[^/]+|expo(nent)?|@expo(nent)?\\+[^/]+|react-navigation|@react-navigation\\+[^/]+|@testing-library\\+[^/]+|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)|((jest-)?react-native|@react-native(-community)?|@react-native/.*|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@testing-library/.*|react-native-safe-area-context|react-native-reanimated|react-native-gesture-handler|@shopify/flash-list|@gorhom/bottom-sheet)))',

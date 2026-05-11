@@ -44,6 +44,8 @@ export type Archetype = 'ListCRUD' | 'Tracker' | 'Journal' | 'Calculator' | 'unk
 
 export type BindingKind = 'literal' | 'state' | 'collectionField'
 
+export type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'CAD' | 'AUD' | 'INR'
+
 export type ColorToken =
   | 'bg'
   | 'bg-elevated'
@@ -214,6 +216,13 @@ export type Node =
   | {id: string; type: 'DateField'; label: string; valueBinding: DateBinding; mode?: 'date' | 'time' | 'datetime'; optional?: boolean; accessibilityLabel?: string}
   | {id: string; type: 'Picker'; label: string; valueBinding: StringBinding; options: string[]; optional?: boolean; accessibilityLabel?: string}
   | {id: string; type: 'Switch'; label: string; valueBinding: BooleanBinding; accessibilityLabel?: string}
+  // Inputs tier — V1 Phase 1 Step 2 additions
+  | {id: string; type: 'MoneyField'; label: string; valueBinding: NumberBinding; currency?: Currency; min?: number; max?: number; placeholder?: string; optional?: boolean; accessibilityLabel?: string}
+  | {id: string; type: 'TimeField'; label: string; valueBinding: StringBinding; mode?: 'time' | 'time-with-seconds'; min?: string; max?: string; accessibilityLabel?: string}
+  | {id: string; type: 'MultiPicker'; label: string; valueBinding: StringBinding; options: Array<{value: string; label: string; icon?: string}>; min?: number; max?: number; placeholder?: string; accessibilityLabel?: string}
+  | {id: string; type: 'Slider'; label: string; valueBinding: NumberBinding; min: number; max: number; step?: number; showValue?: boolean; format?: 'integer' | 'decimal' | 'percent'; accessibilityLabel?: string}
+  | {id: string; type: 'RatingInput'; label: string; valueBinding: NumberBinding; scale?: 5 | 10; glyph?: 'star' | 'heart' | 'flame' | 'circle'; allowHalf?: boolean; accessibilityLabel?: string}
+  | {id: string; type: 'SearchBar'; valueBinding: StringBinding; placeholder?: string; voiceMic?: boolean; boundCollectionId?: string; accessibilityLabel?: string}
   // Display tier
   | {id: string; type: 'Stat'; label: string; valueBinding: StringBinding | NumberBinding; unit?: string; trend?: 'up' | 'down' | 'neutral'; accessibilityLabel?: string}
   | {id: string; type: 'Badge'; label: string; tone?: Tone; accessibilityLabel?: string}

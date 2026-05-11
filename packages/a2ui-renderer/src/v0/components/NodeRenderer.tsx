@@ -16,6 +16,8 @@
  *         = 31 arms total.
  * V1 Phase 1 Step 3: +2 display (AvatarGroup, Callout)
  *         = 33 arms total.
+ * V1 Phase 1 Step 2: +6 inputs (MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar)
+ *         = 39 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -47,6 +49,13 @@ import {NumberFieldRenderer} from './inputs/NumberField.js'
 import {DateFieldRenderer} from './inputs/DateField.js'
 import {PickerRenderer} from './inputs/Picker.js'
 import {SwitchRenderer} from './inputs/Switch.js'
+// V1 Phase 1 Step 2 — inputs tier expansion
+import {MoneyFieldRenderer} from './inputs/MoneyField.js'
+import {TimeFieldRenderer} from './inputs/TimeField.js'
+import {MultiPickerRenderer} from './inputs/MultiPicker.js'
+import {SliderRenderer} from './inputs/Slider.js'
+import {RatingInputRenderer} from './inputs/RatingInput.js'
+import {SearchBarRenderer} from './inputs/SearchBar.js'
 import {ListRenderer} from './lists/List.js'
 import {ListItemRenderer} from './lists/ListItem.js'
 import {SwipeableRowRenderer} from './lists/SwipeableRow.js'
@@ -111,6 +120,19 @@ export function NodeRenderer({node}: {node: Node}) {
       return <PickerRenderer node={node} />
     case 'Switch':
       return <SwitchRenderer node={node} />
+    // Inputs tier — V1 Phase 1 Step 2
+    case 'MoneyField':
+      return <MoneyFieldRenderer node={node} />
+    case 'TimeField':
+      return <TimeFieldRenderer node={node} />
+    case 'MultiPicker':
+      return <MultiPickerRenderer node={node} />
+    case 'Slider':
+      return <SliderRenderer node={node} />
+    case 'RatingInput':
+      return <RatingInputRenderer node={node} />
+    case 'SearchBar':
+      return <SearchBarRenderer node={node} />
     // Lists tier (Step 7)
     case 'List':
       return <ListRenderer node={node} />
