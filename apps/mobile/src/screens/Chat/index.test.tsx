@@ -162,7 +162,7 @@ function renderChat(opts: HarnessOptions = {}) {
               <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
                 <Stack.Screen name="AppRunner" component={() => null} />
-                <Stack.Screen name="Home" component={() => null} />
+                <Stack.Screen name="Library" component={() => null} />
                 <Stack.Screen name="SignIn" component={() => null} />
               </Stack.Navigator>
             </NavigationContainer>

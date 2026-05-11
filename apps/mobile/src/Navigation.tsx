@@ -1,14 +1,20 @@
 /**
- * Navigation — root stack. Gates Home behind authenticated session per
- * ADR-0001 Step 6/7 acceptance criteria. Loading state renders the
- * hydration splash; unauthenticated → SignIn; authenticated → Home + the
- * stub Chat / AppRunner screens for the Step 7 wire.
+ * Navigation — root stack. Gates Library behind authenticated session per
+ * ADR-0011 Step 8.
  *
  * The auth deep-link handler (`useAuthDeepLink`) lives at the navigator
  * level so it sees URLs regardless of which screen is mounted. When a
  * redeem attempt fails (token expired/used/malformed), we flip
- * `linkExpired` so the SignIn screen renders its "That link expired"
- * banner — the Step 6 prop is wired here in Step 7.
+ * `linkExpired` so the SignIn screen renders its "That link expired" banner.
+ *
+ * ADR-0011 Step 8: LibraryScreen is the authenticated root. HomeScreen
+ * deleted. Chat and AppRunner kept until Step 11 deletes them.
+ *
+ * Step 11 will finalize this to the full V0 shape:
+ *   SignInScreen ↔ ShellLayout (LibraryStack + CreateStack).
+ * Until that step lands, we use a flat stack with LibraryScreen as root.
+ *
+ * T-0011-290, T-0011-295.
  */
 import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
@@ -19,7 +25,7 @@ import {SafeContainer} from '#/components/SafeContainer'
 import {useAuthDeepLink} from '#/lib/deepLink'
 import {AppRunnerScreen} from '#/screens/AppRunner'
 import {ChatScreen} from '#/screens/Chat'
-import {HomeScreen} from '#/screens/Home'
+import {LibraryScreen} from '#/screens/Library/LibraryScreen'
 import {SignInScreen as SignIn} from '#/screens/SignIn/SignInScreen'
 import {signInCopy} from '#/screens/SignIn/copy'
 import {useSession} from '#/state/session/useSession'
@@ -56,7 +62,9 @@ export function Navigation() {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {session.status === 'authenticated' ? (
           <>
-            <Stack.Screen name="Home" component={HomeScreen} />
+            {/* V0 screens — LibraryScreen is the authenticated root (ADR-0011 Step 8) */}
+            <Stack.Screen name="Library" component={LibraryScreen} />
+            {/* Run + Create wired in Steps 9-10; Chat + AppRunner kept until Step 11 */}
             <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen name="AppRunner" component={AppRunnerScreen} />
           </>
