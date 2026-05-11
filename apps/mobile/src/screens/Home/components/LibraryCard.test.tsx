@@ -27,6 +27,7 @@ jest.mock('@expo/vector-icons', () => {
   return {__esModule: true, Feather: Icon}
 })
 
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {LibraryCard} from './LibraryCard'
 import {homeCopy} from '../copy'
 
@@ -38,7 +39,9 @@ function wrap(node: React.ReactElement) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      {node}
+      <AppShellThemeProvider>
+        {node}
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 }

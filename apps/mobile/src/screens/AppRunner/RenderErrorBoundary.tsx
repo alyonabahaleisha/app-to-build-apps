@@ -22,7 +22,7 @@ import React from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {logger} from '#/logger'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 // -- Types --------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ interface State {
 // -- Inner fallback (function component — uses theme tokens) -----------------
 
 function RenderErrorFallback({onBack}: {onBack: () => void}): React.ReactElement {
-  const t = useTheme()
+  const t = useAppShellTheme()
   return (
     <View style={styles.container} testID="render-error-fallback">
       {/* Icon placeholder — at M1 we use a text stand-in */}
@@ -49,20 +49,20 @@ function RenderErrorFallback({onBack}: {onBack: () => void}): React.ReactElement
         ⚠️
       </Text>
 
-      <Text style={[styles.heading, {color: t.palette.text.primary}]} accessibilityRole="header">
+      <Text style={[styles.heading, {color: t.fg}]} accessibilityRole="header">
         This app didn't render correctly.
       </Text>
 
-      <Text style={[styles.body, {color: t.palette.text.muted}]}>Try recreating it.</Text>
+      <Text style={[styles.body, {color: t['fg-muted']}]}>Try recreating it.</Text>
 
       <Pressable
         onPress={onBack}
-        style={[styles.button, {backgroundColor: t.palette.primary}]}
+        style={[styles.button, {backgroundColor: t.accent}]}
         accessibilityRole="button"
         accessibilityLabel="Back to library"
         testID="render-error-back-button"
       >
-        <Text style={[styles.buttonText, {color: t.palette.primaryFg}]}>Back to library</Text>
+        <Text style={[styles.buttonText, {color: t['accent-fg']}]}>Back to library</Text>
       </Pressable>
     </View>
   )

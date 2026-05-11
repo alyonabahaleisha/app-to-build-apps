@@ -6,6 +6,7 @@
 import {fireEvent, render} from '@testing-library/react-native'
 import React from 'react'
 
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {RenderErrorBoundary} from './RenderErrorBoundary'
 
 // -- Mocks -------------------------------------------------------------------
@@ -49,9 +50,11 @@ function renderBoundary(opts: {
   const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
 
   const utils = render(
-    <RenderErrorBoundary projectId={projectId} renderHash={renderHash} mode="owner" onBack={onBack}>
-      <Bomb shouldThrow={shouldThrow} />
-    </RenderErrorBoundary>,
+    <AppShellThemeProvider>
+      <RenderErrorBoundary projectId={projectId} renderHash={renderHash} mode="owner" onBack={onBack}>
+        <Bomb shouldThrow={shouldThrow} />
+      </RenderErrorBoundary>
+    </AppShellThemeProvider>,
   )
 
   consoleSpy.mockRestore()

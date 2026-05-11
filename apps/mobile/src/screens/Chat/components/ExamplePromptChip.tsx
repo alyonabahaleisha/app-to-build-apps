@@ -4,7 +4,7 @@
  */
 import {Pressable, StyleSheet, Text} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 interface Props {
   label: string
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function ExamplePromptChip({label, onPress}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
 
   return (
     <Pressable
@@ -22,14 +22,25 @@ export function ExamplePromptChip({label, onPress}: Props) {
       style={[
         styles.chip,
         {
-          backgroundColor: theme.palette.bg.subtle,
-          borderColor: theme.palette.border.subtle,
-          borderRadius: theme.radius.full,
+          backgroundColor: theme['bg-elevated'],
+          borderColor: theme.divider,
+          borderRadius: theme.radii['radius-full'],
         },
       ]}
       testID="example-chip"
     >
-      <Text style={[theme.typography.caption, {color: theme.palette.text.primary}]}>{label}</Text>
+      <Text
+        style={[
+          {
+            fontSize: theme.type.caption.size,
+            fontWeight: String(theme.type.caption.weight) as '400',
+            lineHeight: theme.type.caption.lineHeight,
+            color: theme.fg,
+          },
+        ]}
+      >
+        {label}
+      </Text>
     </Pressable>
   )
 }

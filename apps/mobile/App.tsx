@@ -6,6 +6,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {ToastProvider} from '#/components/ToastProvider'
 import {Navigation} from '#/Navigation'
 import {SessionProvider} from '#/state/session/SessionProvider'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 
 const queryClient = new QueryClient({
   defaultOptions: {queries: {retry: 1, refetchOnWindowFocus: false}},
@@ -18,12 +19,14 @@ export default function App() {
     <GestureHandlerRootView style={{flex: 1}}>
       <QueryClientProvider client={queryClient}>
         <SafeAreaProvider>
-          <SessionProvider>
-            <ToastProvider>
-              <Navigation />
-              <StatusBar style="auto" />
-            </ToastProvider>
-          </SessionProvider>
+          <AppShellThemeProvider>
+            <SessionProvider>
+              <ToastProvider>
+                <Navigation />
+                <StatusBar style="auto" />
+              </ToastProvider>
+            </SessionProvider>
+          </AppShellThemeProvider>
         </SafeAreaProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

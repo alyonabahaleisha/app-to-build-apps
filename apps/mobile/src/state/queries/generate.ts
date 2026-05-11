@@ -26,18 +26,20 @@ import {fetch} from 'expo/fetch'
 
 import {getCurrentSession, getApiUrl} from '#/lib/api'
 import {logger} from '#/logger'
-import {projectsKeys} from '#/state/queries/projects'
+import {miniAppsKeys} from '#/state/queries/miniApps'
 
 // -- Public types ------------------------------------------------------------
 
 export type GeneratePhase = 'idle' | 'thinking' | 'building' | 'stalled' | 'done' | 'out_of_scope' | 'error'
 
 export interface GenerateResult {
-  project: {
+  miniApp: {
     id: string
     title: string
     visibility: 'private'
+    parent_project_id: string | null
     original_prompt: string
+    created_at: string
   }
   spec: unknown
   render_hash: string
@@ -241,7 +243,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
               // A new project was just persisted server-side. Drop the Home
               // list cache so the next visit refetches; without this the
               // 5-min staleTime hides the new row until cache expires.
-              void qc.invalidateQueries({queryKey: projectsKeys.list()})
+              void qc.invalidateQueries({queryKey: miniAppsKeys.list()})
             } else if (type === 'out_of_scope') {
               // Out-of-scope detection: surface to UI for "notify me" form.
               // No project was persisted on the server.

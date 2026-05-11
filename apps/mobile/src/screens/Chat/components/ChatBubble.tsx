@@ -8,7 +8,7 @@
  */
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 export type ChatBubbleVariant = 'user' | 'assistant' | 'error'
 
@@ -19,22 +19,22 @@ interface Props {
 }
 
 export function ChatBubble({variant, text, testID}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
 
   const isUser = variant === 'user'
   const isError = variant === 'error'
 
   const bgColor = isUser
-    ? theme.palette.primary
+    ? theme.accent
     : isError
-      ? theme.palette.destructive
-      : theme.palette.bg.subtle
+      ? theme.danger
+      : theme['bg-elevated']
 
   const textColor = isUser
-    ? theme.palette.primaryFg
+    ? theme['accent-fg']
     : isError
-      ? theme.palette.destructiveFg
-      : theme.palette.text.primary
+      ? theme['bg-elevated']
+      : theme.fg
 
   return (
     <View
@@ -42,7 +42,7 @@ export function ChatBubble({variant, text, testID}: Props) {
         styles.bubble,
         {
           backgroundColor: bgColor,
-          borderRadius: theme.radius.md,
+          borderRadius: theme.radii['radius-md'],
           alignSelf: isUser ? 'flex-end' : 'flex-start',
         },
       ]}
@@ -50,7 +50,18 @@ export function ChatBubble({variant, text, testID}: Props) {
       accessibilityRole="text"
       accessibilityLabel={isError ? `Error: ${text}` : text}
     >
-      <Text style={[theme.typography.body, {color: textColor}]}>{text}</Text>
+      <Text
+        style={[
+          {
+            fontSize: theme.type.body.size,
+            fontWeight: String(theme.type.body.weight) as '400',
+            lineHeight: theme.type.body.lineHeight,
+          },
+          {color: textColor},
+        ]}
+      >
+        {text}
+      </Text>
     </View>
   )
 }

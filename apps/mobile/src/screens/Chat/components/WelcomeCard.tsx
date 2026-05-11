@@ -4,7 +4,7 @@
  */
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 import {chatCopy} from '#/screens/Chat/copy'
 
 import {ExamplePromptChip} from './ExamplePromptChip'
@@ -14,14 +14,20 @@ interface Props {
 }
 
 export function WelcomeCard({onSelectExample}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
 
   return (
     <View style={styles.container} testID="chat-welcome-card">
       <Text
         style={[
-          theme.typography.heading1,
-          {color: theme.palette.text.primary, textAlign: 'center', marginBottom: theme.spacing.sm},
+          {
+            fontSize: theme.type.h1.size,
+            fontWeight: String(theme.type.h1.weight) as '600',
+            lineHeight: theme.type.h1.lineHeight,
+            color: theme.fg,
+            textAlign: 'center',
+            marginBottom: theme.spacing['space-sm'],
+          },
         ]}
         accessibilityRole="header"
       >
@@ -29,11 +35,13 @@ export function WelcomeCard({onSelectExample}: Props) {
       </Text>
       <Text
         style={[
-          theme.typography.body,
           {
-            color: theme.palette.text.muted,
+            fontSize: theme.type.body.size,
+            fontWeight: String(theme.type.body.weight) as '400',
+            lineHeight: theme.type.body.lineHeight,
+            color: theme['fg-muted'],
             textAlign: 'center',
-            marginBottom: theme.spacing.lg,
+            marginBottom: theme.spacing['space-lg'],
           },
         ]}
       >

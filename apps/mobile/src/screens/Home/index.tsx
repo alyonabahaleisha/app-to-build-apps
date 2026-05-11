@@ -15,14 +15,14 @@
  * width). Tapping shows a "coming soon" toast — no Settings screen at M1.
  *
  * Data layer:
- *   - `useProjectsListQuery()` — TanStack Query, validated shape, sorted by
+ *   - `useMiniAppsListQuery()` — TanStack Query, validated shape, sorted by
  *     server. Errors (HTTP, parse, network) all surface to the same error
  *     branch.
  *   - 401 mid-session: handled at the `apiFetch` layer / SessionProvider —
  *     the query throws, the auth state transitions, Navigation re-renders
  *     and Home unmounts. T-0001-129 verifies this end-to-end.
  *   - Cross-user (T-0001-127): when the session changes user, the Navigation
- *     parent invalidates the projects-list cache so the new user can never
+ *     parent invalidates the miniApps-list cache so the new user can never
  *     see User A's titles. The cross-user wire lives in SessionProvider /
  *     Navigation; the screen just renders what the query returns.
  */
@@ -42,8 +42,8 @@ import {Button} from '#/components/Button'
 import {SafeContainer} from '#/components/SafeContainer'
 import {Skeleton} from '#/components/Skeleton'
 import {useToast} from '#/components/ToastProvider'
-import {useProjectsListQuery, type Project} from '#/state/queries/projects'
-import {useTheme} from '#/theme'
+import {useMiniAppsListQuery, type MiniApp} from '#/state/queries/miniApps'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {EmptyLibrary} from './components/EmptyLibrary'
 import {LibraryCard} from './components/LibraryCard'
@@ -57,9 +57,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>
 const SKELETON_COUNT = 3
 
 export function HomeScreen({navigation}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const toast = useToast()
-  const query = useProjectsListQuery()
+  const query = useMiniAppsListQuery()
 
   const handleCreate = useCallback(() => {
     navigation.navigate('Chat')
@@ -81,7 +81,7 @@ export function HomeScreen({navigation}: Props) {
   }, [query])
 
   const renderCard = useCallback(
-    ({item}: ListRenderItemInfo<Project>) => (
+    ({item}: ListRenderItemInfo<MiniApp>) => (
       <LibraryCard
         projectId={item.id}
         title={item.title}
@@ -92,13 +92,20 @@ export function HomeScreen({navigation}: Props) {
     [handleOpenProject],
   )
 
-  const keyExtractor = useCallback((item: Project) => item.id, [])
+  const keyExtractor = useCallback((item: MiniApp) => item.id, [])
 
   return (
     <SafeContainer>
       <View style={styles.topBar}>
         <Text
-          style={[theme.typography.heading2, {color: theme.palette.text.primary}]}
+          style={[
+            {
+              fontSize: theme.type.h2.size,
+              fontWeight: String(theme.type.h2.weight) as '600',
+              lineHeight: theme.type.h2.lineHeight,
+              color: theme.fg,
+            },
+          ]}
           accessibilityRole="header"
         >
           {homeCopy.title}
@@ -111,7 +118,7 @@ export function HomeScreen({navigation}: Props) {
           style={styles.settingsBtn}
           testID="home-settings"
         >
-          <Feather name="settings" size={24} color={theme.palette.text.primary} />
+          <Feather name="settings" size={24} color={theme.fg} />
         </Pressable>
       </View>
 
@@ -166,9 +173,9 @@ function LoadingBody() {
 }
 
 interface PopulatedBodyProps {
-  data: Project[]
-  renderCard: (info: ListRenderItemInfo<Project>) => JSX.Element
-  keyExtractor: (item: Project) => string
+  data: MiniApp[]
+  renderCard: (info: ListRenderItemInfo<MiniApp>) => JSX.Element
+  keyExtractor: (item: MiniApp) => string
   refreshing: boolean
   onRefresh: () => void
 }
@@ -180,7 +187,7 @@ function PopulatedBody({
   refreshing,
   onRefresh,
 }: PopulatedBodyProps) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <FlatList
       data={data}
@@ -197,7 +204,7 @@ function PopulatedBody({
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor={theme.palette.text.muted}
+          tintColor={theme['fg-muted']}
         />
       }
       testID="library-list"
@@ -211,7 +218,7 @@ interface RefreshableBodyProps {
 }
 
 function EmptyBody({refreshing, onRefresh}: RefreshableBodyProps) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <FlatList
       data={[null]}
@@ -222,7 +229,7 @@ function EmptyBody({refreshing, onRefresh}: RefreshableBodyProps) {
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor={theme.palette.text.muted}
+          tintColor={theme['fg-muted']}
         />
       }
     />
@@ -234,7 +241,7 @@ interface ErrorBodyProps {
 }
 
 function ErrorBody({onRetry}: ErrorBodyProps) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <FlatList
       data={[null]}
@@ -245,31 +252,43 @@ function ErrorBody({onRetry}: ErrorBodyProps) {
             style={[
               styles.errorIconWrap,
               {
-                backgroundColor: theme.palette.bg.subtle,
-                borderRadius: theme.radius.full,
+                backgroundColor: theme['bg-elevated'],
+                borderRadius: theme.radii['radius-full'],
               },
             ]}
           >
             <Feather
               name="alert-triangle"
               size={28}
-              color={theme.palette.text.muted}
+              color={theme['fg-muted']}
               accessibilityElementsHidden
               importantForAccessibility="no"
             />
           </View>
           <Text
             style={[
-              theme.typography.heading3,
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: '600' as const,
+                lineHeight: theme.type.body.lineHeight,
+              },
               styles.errorHeadline,
-              {color: theme.palette.text.primary},
+              {color: theme.fg},
             ]}
             accessibilityRole="header"
           >
             {homeCopy.errorHeadline}
           </Text>
           <Text
-            style={[theme.typography.body, styles.errorSubhead, {color: theme.palette.text.muted}]}
+            style={[
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: String(theme.type.body.weight) as '400',
+                lineHeight: theme.type.body.lineHeight,
+              },
+              styles.errorSubhead,
+              {color: theme['fg-muted']},
+            ]}
           >
             {homeCopy.errorSubhead}
           </Text>
@@ -291,7 +310,7 @@ function ErrorBody({onRetry}: ErrorBodyProps) {
           // the parent owns that.
           refreshing={false}
           onRefresh={onRetry}
-          tintColor={theme.palette.text.muted}
+          tintColor={theme['fg-muted']}
         />
       }
     />
@@ -301,10 +320,18 @@ function ErrorBody({onRetry}: ErrorBodyProps) {
 // -- Bits & pieces ---------------------------------------------------------
 
 function SectionDivider() {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <Text
-      style={[styles.sectionDivider, theme.typography.caption, {color: theme.palette.text.muted}]}
+      style={[
+        styles.sectionDivider,
+        {
+          fontSize: theme.type.caption.size,
+          fontWeight: String(theme.type.caption.weight) as '400',
+          lineHeight: theme.type.caption.lineHeight,
+          color: theme['fg-muted'],
+        },
+      ]}
     >
       {homeCopy.recentSection}
     </Text>

@@ -1,15 +1,12 @@
 /**
  * BackButton — standard ← chevron, hit target 44pt.
  *
- * Icon source: `@expo/vector-icons` Feather set. Picked over
- * `lucide-react-native` per Sable's "Notes for Cal" #6 — vector-icons
- * already ships with Expo (no extra dep), and the Feather glyph matches
- * the Lucide outline aesthetic Sable specified.
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {Feather} from '@expo/vector-icons'
 import {Pressable, StyleSheet} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 interface Props {
   onPress: () => void
@@ -18,7 +15,7 @@ interface Props {
 }
 
 export function BackButton({onPress, accessibilityLabel = 'Back', testID}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <Pressable
       onPress={onPress}
@@ -28,7 +25,7 @@ export function BackButton({onPress, accessibilityLabel = 'Back', testID}: Props
       hitSlop={8}
       testID={testID}
     >
-      <Feather name="chevron-left" size={28} color={theme.palette.text.primary} />
+      <Feather name="chevron-left" size={28} color={theme.fg} />
     </Pressable>
   )
 }

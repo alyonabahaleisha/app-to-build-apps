@@ -9,7 +9,7 @@
  */
 import {ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 import {chatCopy} from '#/screens/Chat/copy'
 
 const MAX_CHARS = chatCopy.characterLimit
@@ -23,20 +23,30 @@ interface Props {
 }
 
 export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const charCount = value.length
   const isOverLimit = charCount > MAX_CHARS
   const canSend = charCount >= 1 && charCount <= MAX_CHARS && !isLoading
 
-  const counterColor = isOverLimit ? theme.palette.text.destructive : theme.palette.text.muted
+  const counterColor = isOverLimit ? theme.danger : theme['fg-muted']
+  const bodyStyle = {
+    fontSize: theme.type.body.size,
+    fontWeight: String(theme.type.body.weight) as '400',
+    lineHeight: theme.type.body.lineHeight,
+  }
+  const captionStyle = {
+    fontSize: theme.type.caption.size,
+    fontWeight: String(theme.type.caption.weight) as '400',
+    lineHeight: theme.type.caption.lineHeight,
+  }
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: theme.palette.bg.surface,
-          borderTopColor: theme.palette.border.subtle,
+          backgroundColor: theme.bg,
+          borderTopColor: theme.divider,
           borderTopWidth: StyleSheet.hairlineWidth,
         },
       ]}
@@ -46,18 +56,18 @@ export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}:
         <TextInput
           style={[
             styles.input,
-            theme.typography.body,
+            bodyStyle,
             {
-              color: theme.palette.text.primary,
-              backgroundColor: theme.palette.bg.subtle,
-              borderRadius: theme.radius.md,
-              borderColor: theme.palette.border.subtle,
+              color: theme.fg,
+              backgroundColor: theme['bg-elevated'],
+              borderRadius: theme.radii['radius-md'],
+              borderColor: theme.divider,
             },
           ]}
           value={value}
           onChangeText={onChangeText}
           placeholder={chatCopy.inputPlaceholder}
-          placeholderTextColor={theme.palette.text.muted}
+          placeholderTextColor={theme['fg-muted']}
           multiline
           maxLength={MAX_CHARS + 1} // Allow typing 1 over so we show the error.
           editable={!isLoading}
@@ -68,7 +78,7 @@ export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}:
         {isLoading ? (
           <ActivityIndicator
             size="small"
-            color={theme.palette.primary}
+            color={theme.accent}
             style={styles.sendArea}
             testID="send-loading-indicator"
           />
@@ -83,16 +93,20 @@ export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}:
               styles.sendArea,
               styles.sendButton,
               {
-                backgroundColor: canSend ? theme.palette.primary : theme.palette.bg.subtle,
-                borderRadius: theme.radius.md,
+                backgroundColor: canSend ? theme.accent : theme['bg-elevated'],
+                borderRadius: theme.radii['radius-md'],
               },
             ]}
             testID="send-button"
           >
             <Text
               style={[
-                theme.typography.bodyStrong,
-                {color: canSend ? theme.palette.primaryFg : theme.palette.text.muted},
+                {
+                  fontSize: theme.type.body.size,
+                  fontWeight: '600' as const,
+                  lineHeight: theme.type.body.lineHeight,
+                },
+                {color: canSend ? theme['accent-fg'] : theme['fg-muted']},
               ]}
             >
               {chatCopy.sendButtonLabel}
@@ -103,7 +117,7 @@ export function PromptInputBar({value, onChangeText, onSend, isLoading, testID}:
       {charCount > 0 && (
         <Text
           style={[
-            theme.typography.caption,
+            captionStyle,
             {color: counterColor, alignSelf: 'flex-end', marginRight: 4},
           ]}
           testID="char-counter"

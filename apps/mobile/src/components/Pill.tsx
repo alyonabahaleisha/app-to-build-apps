@@ -4,12 +4,12 @@
  * Used for "Featured", "Published", and status indicators.
  * Variants: muted / primary / destructive.
  *
- * Per Sable's UX doc §Library Tile: text_xs (12pt) / font_semibold /
- * padding `2xs` `xs`, radius `sm`.
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import type {ResolvedTheme} from '@app-creator/design-system'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 export type PillVariant = 'muted' | 'primary' | 'destructive'
 
@@ -20,8 +20,7 @@ interface Props {
 }
 
 export function Pill({label, variant = 'muted', testID}: Props) {
-  const theme = useTheme()
-
+  const theme = useAppShellTheme()
   const {bg, fg} = colorsFor(variant, theme)
 
   return (
@@ -30,9 +29,9 @@ export function Pill({label, variant = 'muted', testID}: Props) {
         styles.base,
         {
           backgroundColor: bg,
-          borderRadius: theme.radius.sm,
-          paddingVertical: theme.spacing['2xs'],
-          paddingHorizontal: theme.spacing.xs,
+          borderRadius: theme.radii['radius-sm'],
+          paddingVertical: theme.spacing['space-xs'],
+          paddingHorizontal: theme.spacing['space-xs'],
         },
       ]}
       testID={testID}
@@ -53,18 +52,15 @@ export function Pill({label, variant = 'muted', testID}: Props) {
   )
 }
 
-function colorsFor(
-  variant: PillVariant,
-  theme: ReturnType<typeof useTheme>,
-): {bg: string; fg: string} {
+function colorsFor(variant: PillVariant, t: ResolvedTheme): {bg: string; fg: string} {
   switch (variant) {
     case 'primary':
-      return {bg: theme.palette.primary, fg: theme.palette.primaryFg}
+      return {bg: t.accent, fg: t['accent-fg']}
     case 'destructive':
-      return {bg: theme.palette.destructive, fg: theme.palette.destructiveFg}
+      return {bg: t.danger, fg: t['bg-elevated']}
     case 'muted':
     default:
-      return {bg: theme.palette.bg.subtle, fg: theme.palette.text.muted}
+      return {bg: t['bg-elevated'], fg: t['fg-muted']}
   }
 }
 

@@ -10,6 +10,7 @@ import {AccessibilityInfo} from 'react-native'
 import {render, act} from '@testing-library/react-native'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {LoadingBubble, copyForPhase} from './LoadingBubble'
 import {chatCopy} from '#/screens/Chat/copy'
 
@@ -37,7 +38,9 @@ function renderBubble(phase: 'thinking' | 'building' | 'stalled') {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <LoadingBubble phase={phase} />
+      <AppShellThemeProvider>
+        <LoadingBubble phase={phase} />
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 }

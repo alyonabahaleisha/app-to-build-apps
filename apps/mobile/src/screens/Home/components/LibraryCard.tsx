@@ -26,7 +26,7 @@ import {StyleSheet, Text, View} from 'react-native'
 
 import {Card} from '#/components/Card'
 import {timeAgo} from '#/lib/timeAgo'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {homeCopy} from '../copy'
 
@@ -66,7 +66,7 @@ interface Props {
 }
 
 export function LibraryCard({projectId, title, createdAt, onPress, stance, now}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const safeTitle = title.trim() === '' ? homeCopy.cardUntitled : title
   const subtitle = `${homeCopy.cardCreatedPrefix}${timeAgo(createdAt, now)}`
   const a11yLabel = `Open ${safeTitle}, ${subtitle.toLowerCase()}`
@@ -98,13 +98,28 @@ export function LibraryCard({projectId, title, createdAt, onPress, stance, now}:
           <Text
             numberOfLines={1}
             ellipsizeMode="tail"
-            style={[theme.typography.heading3, {color: theme.palette.text.primary}]}
+            style={[
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: '600' as const,
+                lineHeight: theme.type.body.lineHeight,
+                color: theme.fg,
+              },
+            ]}
           >
             {safeTitle}
           </Text>
           <Text
             numberOfLines={1}
-            style={[styles.subtitle, theme.typography.caption, {color: theme.palette.text.muted}]}
+            style={[
+              styles.subtitle,
+              {
+                fontSize: theme.type.caption.size,
+                fontWeight: String(theme.type.caption.weight) as '400',
+                lineHeight: theme.type.caption.lineHeight,
+                color: theme['fg-muted'],
+              },
+            ]}
           >
             {subtitle}
           </Text>
@@ -112,7 +127,7 @@ export function LibraryCard({projectId, title, createdAt, onPress, stance, now}:
         <Feather
           name="chevron-right"
           size={20}
-          color={theme.palette.text.muted}
+          color={theme['fg-muted']}
           accessibilityElementsHidden
           importantForAccessibility="no"
         />

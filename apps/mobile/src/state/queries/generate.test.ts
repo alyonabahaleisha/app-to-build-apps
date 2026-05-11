@@ -61,11 +61,13 @@ function sseDone(): string {
 }
 
 const RESULT_PAYLOAD = {
-  project: {
+  miniApp: {
     id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     title: 'Tip Calculator',
     visibility: 'private',
+    parent_project_id: null,
     original_prompt: 'A tip calculator',
+    created_at: '2026-05-10T00:00:00.000Z',
   },
   spec: {},
   render_hash: 'hash123',
@@ -191,7 +193,7 @@ it('T-0002-133: done SSE event sets phase="done" and populates result', async ()
   })
 
   expect(result.current.phase).toBe('done')
-  expect(result.current.result?.project.id).toBe('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
+  expect(result.current.result?.miniApp.id).toBe('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
   expect(result.current.result?.render_hash).toBe('hash123')
 })
 

@@ -13,7 +13,8 @@ import * as Haptics from 'expo-haptics'
 import {useCallback} from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, Text, View, type ViewStyle} from 'react-native'
 
-import {useTheme, type Palette} from '#/theme'
+import type {ResolvedTheme} from '@app-creator/design-system'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'destructive'
 
@@ -40,7 +41,7 @@ export function Button({
   style,
   testID,
 }: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const isDisabled = disabled || loading
 
   const handlePress = useCallback(async () => {
@@ -52,7 +53,7 @@ export function Button({
     await onPress()
   }, [onPress])
 
-  const colors = colorsFor(variant, theme.palette)
+  const colors = colorsFor(variant, theme)
 
   return (
     <Pressable
@@ -69,7 +70,7 @@ export function Button({
           borderColor: colors.border,
           borderWidth: variant === 'secondary' ? StyleSheet.hairlineWidth : 0,
           opacity: isDisabled ? 0.5 : 1,
-          borderRadius: theme.radius.md,
+          borderRadius: theme.radii['radius-md'],
         },
         pressed && !isDisabled ? {backgroundColor: colors.bgPressed} : null,
         style,
@@ -77,7 +78,7 @@ export function Button({
     >
       <View style={styles.content}>
         {loading ? <ActivityIndicator color={colors.fg} style={styles.spinner} /> : null}
-        <Text style={[styles.label, theme.typography.bodyStrong, {color: colors.fg}]}>{label}</Text>
+        <Text style={[styles.label, {fontSize: theme.type.body.size, fontWeight: String(theme.type.body.weight) as '400', lineHeight: theme.type.body.lineHeight, color: colors.fg}]}>{label}</Text>
       </View>
     </Pressable>
   )
@@ -90,29 +91,29 @@ interface VariantColors {
   border: string
 }
 
-function colorsFor(variant: ButtonVariant, p: Palette): VariantColors {
+function colorsFor(variant: ButtonVariant, t: ResolvedTheme): VariantColors {
   switch (variant) {
     case 'secondary':
       return {
-        bg: p.bg.subtle,
-        bgPressed: p.border.subtle,
-        fg: p.text.primary,
-        border: p.border.subtle,
+        bg: t['bg-elevated'],
+        bgPressed: t.divider,
+        fg: t.fg,
+        border: t.divider,
       }
     case 'destructive':
       return {
-        bg: p.destructive,
+        bg: t.danger,
         bgPressed: '#a31616',
-        fg: p.destructiveFg,
-        border: p.destructive,
+        fg: t['bg-elevated'],
+        border: t.danger,
       }
     case 'primary':
     default:
       return {
-        bg: p.primary,
-        bgPressed: p.primaryHover,
-        fg: p.primaryFg,
-        border: p.primary,
+        bg: t.accent,
+        bgPressed: t.accent,
+        fg: t['accent-fg'],
+        border: t.accent,
       }
   }
 }

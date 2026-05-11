@@ -22,6 +22,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import {ToastProvider} from '#/components/ToastProvider'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import type {RootStackParamList} from '#/lib/routes/types'
@@ -79,11 +80,13 @@ function sseDone(): string {
 }
 
 const RESULT_PAYLOAD = {
-  project: {
+  miniApp: {
     id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
     title: 'Tip Calculator',
     visibility: 'private',
+    parent_project_id: null,
     original_prompt: 'A tip calculator',
+    created_at: '2026-05-10T00:00:00.000Z',
   },
   spec: {},
   render_hash: 'hash123',
@@ -152,18 +155,20 @@ function renderChat(opts: HarnessOptions = {}) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <QueryClientProvider client={qc}>
-        <ToastProvider>
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
-              <Stack.Screen name="AppRunner" component={() => null} />
-              <Stack.Screen name="Home" component={() => null} />
-              <Stack.Screen name="SignIn" component={() => null} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ToastProvider>
-      </QueryClientProvider>
+      <AppShellThemeProvider>
+        <QueryClientProvider client={qc}>
+          <ToastProvider>
+            <NavigationContainer>
+              <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={opts.routeParams} />
+                <Stack.Screen name="AppRunner" component={() => null} />
+                <Stack.Screen name="Home" component={() => null} />
+                <Stack.Screen name="SignIn" component={() => null} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ToastProvider>
+        </QueryClientProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 

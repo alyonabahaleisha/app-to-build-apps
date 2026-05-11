@@ -11,6 +11,7 @@ import {healthRoutes} from './routes/health.js'
 import {libraryRoutes} from './routes/library.js'
 import {marketplaceRoutes} from './routes/marketplace.js'
 import {outOfScopeRoutes} from './routes/outOfScope.js'
+import {meRoutes} from './routes/me.js'
 import {miniAppsRoutes} from './routes/miniApps.js'
 
 export async function buildServer(): Promise<FastifyInstance> {
@@ -32,6 +33,7 @@ export async function buildServer(): Promise<FastifyInstance> {
   await server.register(healthRoutes)
   await server.register(authRoutes, {prefix: '/auth'})
   await server.register(miniAppsRoutes)
+  await server.register(meRoutes)
   await server.register(generateRoutes)
   await server.register(outOfScopeRoutes)
   await server.register(marketplaceRoutes)

@@ -97,9 +97,10 @@ jest.mock('#/state/session/useSession', () => ({
 import {HomeScreen} from './index'
 import {homeCopy} from './copy'
 import {ToastProvider} from '#/components/ToastProvider'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {Navigation} from '#/Navigation'
 import {resetApiForTests, setCurrentSession} from '#/lib/api'
-import type {Project} from '#/state/queries/projects'
+import type {MiniApp} from '#/state/queries/miniApps'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import type {RootStackParamList} from '#/lib/routes/types'
@@ -108,9 +109,9 @@ import type {RootStackParamList} from '#/lib/routes/types'
 
 const mockFetch = jest.fn()
 
-type ProjectFixture = Omit<Project, 'updatedAt'> & {updatedAt: string}
+type MiniAppFixture = Omit<MiniApp, 'updatedAt'> & {updatedAt: string}
 
-function makeProject(overrides: Partial<Project> = {}, idx = 0): ProjectFixture {
+function makeMiniApp(overrides: Partial<MiniApp> = {}, idx = 0): MiniAppFixture {
   const id = overrides.id ?? `00000000-0000-0000-0000-${String(idx).padStart(12, '0')}`
   return {
     id,
@@ -119,15 +120,20 @@ function makeProject(overrides: Partial<Project> = {}, idx = 0): ProjectFixture 
     updatedAt: overrides.updatedAt ?? `2026-05-${String(28 - idx).padStart(2, '0')}T12:00:00.000Z`,
     currentVersionId:
       overrides.currentVersionId ?? `99999999-9999-9999-9999-${String(idx).padStart(12, '0')}`,
-    parentProjectId: overrides.parentProjectId ?? null,
+    parentMiniAppId: overrides.parentMiniAppId ?? null,
+    stance: overrides.stance ?? 'productive',
+    accentPalette: overrides.accentPalette ?? 'focus',
+    coverArtSeed: overrides.coverArtSeed ?? 'seed-abc',
+    archetype: overrides.archetype ?? 'unknown',
+    syncMode: overrides.syncMode ?? 'cloud-private',
   }
 }
 
-function mockListOk(projects: ProjectFixture[]) {
+function mockListOk(miniApps: MiniAppFixture[]) {
   mockFetch.mockResolvedValueOnce({
     ok: true,
     status: 200,
-    json: async () => ({projects}),
+    json: async () => ({miniApps}),
   })
 }
 
@@ -154,20 +160,24 @@ function mockListOffline() {
 }
 
 function mockListShapeMismatch() {
-  // Server returned an array directly (not wrapped in `{projects}`), or
-  // missing `currentVersionId`. We use the latter — closer to a realistic
-  // server-side bug.
+  // Server returned a row missing `stance` — parser must reject.
   mockFetch.mockResolvedValueOnce({
     ok: true,
     status: 200,
     json: async () => ({
-      projects: [
+      miniApps: [
         {
           id: '11111111-1111-1111-1111-111111111111',
           title: 'Bad row',
           updatedAt: '2026-05-01T12:00:00Z',
           createdAt: '2026-05-01T12:00:00Z',
-          // currentVersionId missing — parser must reject.
+          currentVersionId: '99999999-9999-9999-9999-000000000000',
+          parentMiniAppId: null,
+          // stance missing — parser must reject.
+          accentPalette: 'focus',
+          coverArtSeed: 'seed',
+          archetype: 'unknown',
+          syncMode: 'cloud-private',
         },
       ],
     }),
@@ -242,20 +252,22 @@ function renderHome(opts: HarnessOptions = {}) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <QueryClientProvider client={qc}>
-        <ToastProvider>
-          <NavigationContainer>
-            <Stack.Navigator
-              initialRouteName={opts.initialRoute ?? 'Home'}
-              screenOptions={{headerShown: false}}
-            >
-              <Stack.Screen name="Home" component={HomeWithSpy} />
-              <Stack.Screen name="Chat" component={StubScreen} />
-              <Stack.Screen name="AppRunner" component={StubScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ToastProvider>
-      </QueryClientProvider>
+      <AppShellThemeProvider>
+        <QueryClientProvider client={qc}>
+          <ToastProvider>
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName={opts.initialRoute ?? 'Home'}
+                screenOptions={{headerShown: false}}
+              >
+                <Stack.Screen name="Home" component={HomeWithSpy} />
+                <Stack.Screen name="Chat" component={StubScreen} />
+                <Stack.Screen name="AppRunner" component={StubScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ToastProvider>
+        </QueryClientProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 
@@ -280,10 +292,10 @@ describe('Home screen', () => {
   })
 
   it('T-0001-104: 3 projects → 3 cards in server order with derived titles', async () => {
-    const projects: ProjectFixture[] = [
-      makeProject({title: 'Newest', updatedAt: '2026-05-30T12:00:00.000Z'}, 0),
-      makeProject({title: 'Middle', updatedAt: '2026-05-15T12:00:00.000Z'}, 1),
-      makeProject({title: 'Oldest', updatedAt: '2026-05-01T12:00:00.000Z'}, 2),
+    const projects: MiniAppFixture[] = [
+      makeMiniApp({title: 'Newest', updatedAt: '2026-05-30T12:00:00.000Z'}, 0),
+      makeMiniApp({title: 'Middle', updatedAt: '2026-05-15T12:00:00.000Z'}, 1),
+      makeMiniApp({title: 'Oldest', updatedAt: '2026-05-01T12:00:00.000Z'}, 2),
     ]
     mockListOk(projects)
     const screen = renderHome()
@@ -320,7 +332,7 @@ describe('Home screen', () => {
       resolve?.({
         ok: true,
         status: 200,
-        json: async () => ({projects: []}),
+        json: async () => ({miniApps: []}),
       })
     })
   })
@@ -337,7 +349,7 @@ describe('Home screen', () => {
   })
 
   it('T-0001-107: tap library card → navigates to AppRunner with projectId', async () => {
-    const project = makeProject({
+    const project = makeMiniApp({
       id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
       title: 'Tip Splitter',
     })
@@ -372,17 +384,19 @@ describe('Home screen', () => {
           insets: {top: 0, bottom: 0, left: 0, right: 0},
         }}
       >
-        <QueryClientProvider
-          client={
-            new QueryClient({
-              defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
-            })
-          }
-        >
-          <ToastProvider>
-            <Navigation />
-          </ToastProvider>
-        </QueryClientProvider>
+        <AppShellThemeProvider>
+          <QueryClientProvider
+            client={
+              new QueryClient({
+                defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
+              })
+            }
+          >
+            <ToastProvider>
+              <Navigation />
+            </ToastProvider>
+          </QueryClientProvider>
+        </AppShellThemeProvider>
       </SafeAreaProvider>,
     )
     // SignIn screen is rendered (verified via its headline).
@@ -433,8 +447,8 @@ describe('Home screen', () => {
   })
 
   it('T-0001-110: 100 projects → all rendered (count via testID)', async () => {
-    const many: ProjectFixture[] = Array.from({length: 100}, (_, i) =>
-      makeProject({title: `Project ${i}`}, i),
+    const many: MiniAppFixture[] = Array.from({length: 100}, (_, i) =>
+      makeMiniApp({title: `Project ${i}`}, i),
     )
     mockListOk(many)
     const screen = renderHome()
@@ -469,10 +483,10 @@ describe('Home screen', () => {
 
   it("T-0001-127 (security): cross-user — User A's titles never leak into User B's view", async () => {
     // User A has 3 projects.
-    const userAProjects: ProjectFixture[] = [
-      makeProject({title: 'A-Newest'}, 0),
-      makeProject({title: 'A-Middle'}, 1),
-      makeProject({title: 'A-Oldest'}, 2),
+    const userAProjects: MiniAppFixture[] = [
+      makeMiniApp({title: 'A-Newest'}, 0),
+      makeMiniApp({title: 'A-Middle'}, 1),
+      makeMiniApp({title: 'A-Oldest'}, 2),
     ]
     mockListOk(userAProjects)
     const screen = renderHome()
@@ -487,11 +501,11 @@ describe('Home screen', () => {
     // entry, mirroring what SessionProvider would do on a real swap.
     mockUserId = '22222222-2222-2222-2222-222222222222'
     setCurrentSession({accessToken: 'user.b.jwt', userId: mockUserId})
-    const userBProjects: ProjectFixture[] = [makeProject({title: 'B-Only'}, 0)]
+    const userBProjects: MiniAppFixture[] = [makeMiniApp({title: 'B-Only'}, 0)]
     mockListOk(userBProjects)
 
     await act(async () => {
-      await screen.queryClient.invalidateQueries({queryKey: ['projects', 'list']})
+      await screen.queryClient.invalidateQueries({queryKey: ['miniApps', 'list']})
     })
 
     await waitFor(() => {
@@ -533,7 +547,7 @@ describe('Home screen', () => {
       resolve?.({
         ok: true,
         status: 200,
-        json: async () => ({projects: []}),
+        json: async () => ({miniApps: []}),
       })
     })
     await waitFor(() => screen.getByTestId('library-empty'))
@@ -542,37 +556,21 @@ describe('Home screen', () => {
     expect(mockFetch).toHaveBeenCalledTimes(1)
   })
 
-  it('T-0001-114 (regression): theme switch → cards re-render with correct token contrast', async () => {
-    const projects: ProjectFixture[] = [makeProject({title: 'Theme test'}, 0)]
+  it('T-0001-114 (regression): theme tokens applied — title has a defined color string', async () => {
+    // ADR-0011: AppShellThemeProvider resolves a fixed productive/focus theme;
+    // it does not respond to OS color-scheme changes. The regression guard now
+    // verifies that theme tokens are applied (color is a string) rather than
+    // that light/dark produces distinct colors.
+    const projects: MiniAppFixture[] = [makeMiniApp({title: 'Theme test'}, 0)]
     mockListOk(projects)
-    mockColorScheme = 'light'
     const screen = renderHome()
     await waitFor(() => screen.getByTestId('library-card'))
 
-    // Pull the title text element and capture its color in light mode.
-    const lightTitleNode = screen.getByText('Theme test')
-    const lightStyle = flattenStyle(lightTitleNode.props.style)
-    const lightColor = lightStyle.color as string
-    expect(typeof lightColor).toBe('string')
-
-    // Flip to dark and re-render.
-    mockColorScheme = 'dark'
-    mockListOk(projects)
-    await act(async () => {
-      await screen.queryClient.invalidateQueries({queryKey: ['projects', 'list']})
-    })
-    await waitFor(() => screen.getByText('Theme test'))
-
-    const darkTitleNode = screen.getByText('Theme test')
-    const darkStyle = flattenStyle(darkTitleNode.props.style)
-    const darkColor = darkStyle.color as string
-
-    // Distinct colors — the theme tokens flipped. (We don't assert WCAG
-    // contrast ratios numerically here; that's verified at the token-table
-    // level. What we DO verify: the screen actually consumed the new
-    // theme rather than caching a stale color.)
-    expect(darkColor).toBeDefined()
-    expect(darkColor).not.toBe(lightColor)
+    const titleNode = screen.getByText('Theme test')
+    const style = flattenStyle(titleNode.props.style)
+    const color = style.color as string
+    expect(typeof color).toBe('string')
+    expect(color.length).toBeGreaterThan(0)
   })
 
   it('Settings tap → coming-soon toast', async () => {
@@ -609,11 +607,13 @@ describe('Navigation: showExpiredBanner wire (Step 6 carry-forward)', () => {
           insets: {top: 0, bottom: 0, left: 0, right: 0},
         }}
       >
-        <QueryClientProvider client={qc}>
-          <ToastProvider>
-            <Navigation />
-          </ToastProvider>
-        </QueryClientProvider>
+        <AppShellThemeProvider>
+          <QueryClientProvider client={qc}>
+            <ToastProvider>
+              <Navigation />
+            </ToastProvider>
+          </QueryClientProvider>
+        </AppShellThemeProvider>
       </SafeAreaProvider>,
     )
 

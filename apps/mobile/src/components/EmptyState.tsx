@@ -1,15 +1,15 @@
 /**
  * EmptyState — generic illustration + headline + subhead + optional CTA.
  *
- * Drives Sable's Home empty state (§Screen 2 state matrix) and is reused by
- * the error state (different icon + copy). App-shell only per ARCHITECTURE
- * §6.
+ * App-shell only per ARCHITECTURE §6.
+ *
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {Feather} from '@expo/vector-icons'
 import {StyleSheet, Text, View} from 'react-native'
 
 import {Button} from '#/components/Button'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import type {ComponentProps} from 'react'
 
@@ -34,31 +34,39 @@ export function EmptyState({
   onCtaPress,
   testID,
 }: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <View style={styles.container} testID={testID}>
       <View
         style={[
           styles.iconWrap,
-          {backgroundColor: theme.palette.bg.subtle, borderRadius: theme.radius.full},
+          {backgroundColor: theme['bg-elevated'], borderRadius: theme.radii['radius-full']},
         ]}
       >
         <Feather
           name={iconName}
           size={36}
-          color={theme.palette.text.muted}
+          color={theme['fg-muted']}
           accessibilityElementsHidden
           importantForAccessibility="no"
         />
       </View>
       <Text
-        style={[styles.headline, theme.typography.heading2, {color: theme.palette.text.primary}]}
+        style={[
+          styles.headline,
+          {fontSize: theme.type.h2.size, fontWeight: String(theme.type.h2.weight) as '600', lineHeight: theme.type.h2.lineHeight, color: theme.fg},
+        ]}
         accessibilityRole="header"
       >
         {headline}
       </Text>
       {subhead ? (
-        <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
+        <Text
+          style={[
+            styles.subhead,
+            {fontSize: theme.type.body.size, fontWeight: String(theme.type.body.weight) as '400', lineHeight: theme.type.body.lineHeight, color: theme['fg-muted']},
+          ]}
+        >
           {subhead}
         </Text>
       ) : null}

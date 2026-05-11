@@ -27,7 +27,7 @@ import {SafeContainer} from '#/components/SafeContainer'
 import {useToast} from '#/components/ToastProvider'
 import {classifyMagicLinkError, useMagicLinkMutation} from '#/state/queries/auth'
 import {useSession} from '#/state/session/useSession'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {EmailInput} from './components/EmailInput'
 import {signInCopy} from './copy'
@@ -49,7 +49,7 @@ interface PublicProps extends Partial<Props> {
 }
 
 export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: PublicProps = {}) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const toast = useToast()
   const session = useSession()
   const mutation = useMagicLinkMutation()
@@ -151,8 +151,13 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
         <View style={styles.verifyingContainer}>
           <Text
             style={[
-              theme.typography.heading2,
-              {color: theme.palette.text.primary, textAlign: 'center'},
+              {
+                fontSize: theme.type.h2.size,
+                fontWeight: String(theme.type.h2.weight) as '600',
+                lineHeight: theme.type.h2.lineHeight,
+                color: theme.fg,
+                textAlign: 'center',
+              },
             ]}
             accessibilityRole="header"
           >
@@ -172,7 +177,7 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
             <Feather
               name="check-circle"
               size={48}
-              color={theme.palette.primary}
+              color={theme.accent}
               accessibilityElementsHidden
               importantForAccessibility="no"
             />
@@ -180,16 +185,35 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
           <Text
             style={[
               styles.headline,
-              theme.typography.heading1,
-              {color: theme.palette.text.primary},
+              {
+                fontSize: theme.type.h1.size,
+                fontWeight: String(theme.type.h1.weight) as '600',
+                lineHeight: theme.type.h1.lineHeight,
+                color: theme.fg,
+              },
             ]}
             accessibilityRole="header"
           >
             {signInCopy.sentHeadlinePrefix}
           </Text>
-          <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
+          <Text
+            style={[
+              styles.subhead,
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: String(theme.type.body.weight) as '400',
+                lineHeight: theme.type.body.lineHeight,
+                color: theme['fg-muted'],
+              },
+            ]}
+          >
             {signInCopy.sentSubheadPrefix}
-            <Text style={[theme.typography.bodyStrong, {color: theme.palette.text.primary}]}>
+            <Text
+              style={{
+                fontWeight: '600' as const,
+                color: theme.fg,
+              }}
+            >
               {sentToEmail}
             </Text>
             {signInCopy.sentSubheadSuffix}
@@ -203,7 +227,15 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
             testID="sign-in-resend"
           />
           <Text
-            style={[styles.footer, theme.typography.caption, {color: theme.palette.text.muted}]}
+            style={[
+              styles.footer,
+              {
+                fontSize: theme.type.caption.size,
+                fontWeight: String(theme.type.caption.weight) as '400',
+                lineHeight: theme.type.caption.lineHeight,
+                color: theme['fg-muted'],
+              },
+            ]}
           >
             {signInCopy.footer}
           </Text>
@@ -225,17 +257,21 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
             style={[
               styles.banner,
               {
-                backgroundColor: theme.palette.bg.subtle,
-                borderColor: theme.palette.border.subtle,
-                borderRadius: theme.radius.md,
+                backgroundColor: theme['bg-elevated'],
+                borderColor: theme.divider,
+                borderRadius: theme.radii['radius-md'],
               },
             ]}
           >
             <Text
               style={[
                 styles.bannerText,
-                theme.typography.body,
-                {color: theme.palette.text.primary},
+                {
+                  fontSize: theme.type.body.size,
+                  fontWeight: String(theme.type.body.weight) as '400',
+                  lineHeight: theme.type.body.lineHeight,
+                  color: theme.fg,
+                },
               ]}
               accessibilityLiveRegion="polite"
             >
@@ -248,17 +284,35 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
               hitSlop={8}
               testID="sign-in-expired-dismiss"
             >
-              <Feather name="x" size={20} color={theme.palette.text.muted} />
+              <Feather name="x" size={20} color={theme['fg-muted']} />
             </Pressable>
           </View>
         ) : null}
         <Text
-          style={[styles.headline, theme.typography.heading1, {color: theme.palette.text.primary}]}
+          style={[
+            styles.headline,
+            {
+              fontSize: theme.type.h1.size,
+              fontWeight: String(theme.type.h1.weight) as '600',
+              lineHeight: theme.type.h1.lineHeight,
+              color: theme.fg,
+            },
+          ]}
           accessibilityRole="header"
         >
           {signInCopy.headline}
         </Text>
-        <Text style={[styles.subhead, theme.typography.body, {color: theme.palette.text.muted}]}>
+        <Text
+          style={[
+            styles.subhead,
+            {
+              fontSize: theme.type.body.size,
+              fontWeight: String(theme.type.body.weight) as '400',
+              lineHeight: theme.type.body.lineHeight,
+              color: theme['fg-muted'],
+            },
+          ]}
+        >
           {signInCopy.subhead}
         </Text>
         <EmailInput
@@ -285,12 +339,30 @@ export function SignIn({showExpiredBanner = false, onDismissExpiredBanner}: Publ
           testID="sign-in-skip"
         >
           <Text
-            style={[theme.typography.body, {color: theme.palette.text.muted, textAlign: 'center'}]}
+            style={[
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: String(theme.type.body.weight) as '400',
+                lineHeight: theme.type.body.lineHeight,
+                color: theme['fg-muted'],
+                textAlign: 'center',
+              },
+            ]}
           >
             {signInCopy.skipAuth}
           </Text>
         </Pressable>
-        <Text style={[styles.footer, theme.typography.caption, {color: theme.palette.text.muted}]}>
+        <Text
+          style={[
+            styles.footer,
+            {
+              fontSize: theme.type.caption.size,
+              fontWeight: String(theme.type.caption.weight) as '400',
+              lineHeight: theme.type.caption.lineHeight,
+              color: theme['fg-muted'],
+            },
+          ]}
+        >
           {signInCopy.footer}
         </Text>
       </View>

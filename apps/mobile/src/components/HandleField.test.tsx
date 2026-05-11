@@ -6,16 +6,18 @@
 import {render, fireEvent} from '@testing-library/react-native'
 import React from 'react'
 
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {HandleField} from './HandleField'
 
-// Minimal theme stub so the component renders without a real provider.
-// `useTheme` reads from `useColorScheme` which is auto-mocked by jest-expo.
+function renderWithTheme(ui: React.ReactElement) {
+  return render(<AppShellThemeProvider>{ui}</AppShellThemeProvider>)
+}
 
 describe('HandleField', () => {
   // T-0002-154: inline indicators ✓/✗
   describe('validation state indicators', () => {
     it('shows "✓ Available" helper text when validationState is available', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="alice" onChange={jest.fn()} validationState="available" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -23,7 +25,7 @@ describe('HandleField', () => {
     })
 
     it('shows "✗ Handle taken" helper text when validationState is taken', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="alice" onChange={jest.fn()} validationState="taken" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -31,7 +33,7 @@ describe('HandleField', () => {
     })
 
     it('shows "✗ Handle reserved" helper text when validationState is reserved', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="admin" onChange={jest.fn()} validationState="reserved" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -39,7 +41,7 @@ describe('HandleField', () => {
     })
 
     it('shows regex-fail copy when validationState is invalid', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="x" onChange={jest.fn()} validationState="invalid" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -47,7 +49,7 @@ describe('HandleField', () => {
     })
 
     it('shows "Checking…" when validationState is checking', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="alice" onChange={jest.fn()} validationState="checking" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -55,7 +57,7 @@ describe('HandleField', () => {
     })
 
     it('shows default helper text when validationState is idle', () => {
-      const {getByTestId} = render(
+      const {getByTestId} = renderWithTheme(
         <HandleField value="" onChange={jest.fn()} validationState="idle" />,
       )
       const helper = getByTestId('handle-field-helper')
@@ -65,7 +67,7 @@ describe('HandleField', () => {
 
   // T-0002-154: errorMessage prop overrides default helper
   it('shows errorMessage prop over default helper text', () => {
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField
         value="alice"
         onChange={jest.fn()}
@@ -79,7 +81,7 @@ describe('HandleField', () => {
 
   // T-0002-162: a11y hint describes immutability
   it('has accessibilityHint describing immutability on the text input', () => {
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField value="alice" onChange={jest.fn()} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
@@ -88,7 +90,7 @@ describe('HandleField', () => {
 
   // T-0002-162: a11y label present
   it('has accessibilityLabel "Your handle" on the text input', () => {
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField value="" onChange={jest.fn()} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
@@ -97,7 +99,7 @@ describe('HandleField', () => {
 
   // T-0002-159: accessibilityLiveRegion on helper
   it('has accessibilityLiveRegion="polite" on the helper text', () => {
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField value="alice" onChange={jest.fn()} validationState="available" />,
     )
     const helper = getByTestId('handle-field-helper')
@@ -107,7 +109,7 @@ describe('HandleField', () => {
   // T-0002-153: onChange fires on text change
   it('calls onChange with the new value', () => {
     const onChange = jest.fn()
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField value="" onChange={onChange} validationState="idle" />,
     )
     const input = getByTestId('handle-field-input')
@@ -117,7 +119,7 @@ describe('HandleField', () => {
 
   // Custom testID propagation
   it('respects testID prop for the text input', () => {
-    const {getByTestId} = render(
+    const {getByTestId} = renderWithTheme(
       <HandleField
         value=""
         onChange={jest.fn()}

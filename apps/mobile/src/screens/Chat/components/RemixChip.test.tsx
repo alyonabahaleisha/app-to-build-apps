@@ -12,6 +12,7 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import {ToastProvider} from '#/components/ToastProvider'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {ChatScreen} from '#/screens/Chat/index'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -77,16 +78,18 @@ function renderChatWithRemix(params: NonNullable<RootStackParamList['Chat']>) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <ToastProvider>
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={params} />
-            <Stack.Screen name="AppRunner" component={() => null} />
-            <Stack.Screen name="Home" component={() => null} />
-            <Stack.Screen name="SignIn" component={() => null} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ToastProvider>
+      <AppShellThemeProvider>
+        <ToastProvider>
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen name="Chat" component={ChatWithSpies} initialParams={params} />
+              <Stack.Screen name="AppRunner" component={() => null} />
+              <Stack.Screen name="Home" component={() => null} />
+              <Stack.Screen name="SignIn" component={() => null} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ToastProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 

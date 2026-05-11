@@ -29,6 +29,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import React from 'react'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {AppRunnerScreen, copyShareLink} from './index'
 
 // -- Mocks -------------------------------------------------------------------
@@ -121,14 +122,16 @@ function renderScreen(projectId = PROJECT_ID) {
   const nav = makeNavigation()
   const utils = render(
     <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
-      <QueryClientProvider client={qc}>
-        <AppRunnerScreen
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          route={makeRoute(projectId) as any}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          navigation={nav as any}
-        />
-      </QueryClientProvider>
+      <AppShellThemeProvider>
+        <QueryClientProvider client={qc}>
+          <AppRunnerScreen
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            route={makeRoute(projectId) as any}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            navigation={nav as any}
+          />
+        </QueryClientProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
   return {...utils, nav}
@@ -296,9 +299,11 @@ describe('T-0006-177 (Step 13 — M1 spec → schema reject → error boundary)'
     }
 
     const {getByText, queryByTestId} = render(
-      <RenderErrorBoundary projectId="proj-m1-test" renderHash="hash-m1" mode="owner" onBack={onBack}>
-        <ThrowOnMount />
-      </RenderErrorBoundary>,
+      <AppShellThemeProvider>
+        <RenderErrorBoundary projectId="proj-m1-test" renderHash="hash-m1" mode="owner" onBack={onBack}>
+          <ThrowOnMount />
+        </RenderErrorBoundary>
+      </AppShellThemeProvider>,
     )
 
     // Fallback must render with the exact strings per Sable UX line 307 (T-0003-110).

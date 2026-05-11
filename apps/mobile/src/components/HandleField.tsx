@@ -13,7 +13,8 @@
  */
 import {StyleSheet, Text, TextInput, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import type {ResolvedTheme} from '@app-creator/design-system'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 export type HandleValidationState =
   | 'idle'
@@ -40,9 +41,20 @@ export function HandleField({
   autoFocus = false,
   testID,
 }: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
 
   const borderColor = getBorderColor(validationState, theme)
+
+  const bodyStyle = {
+    fontSize: theme.type.body.size,
+    fontWeight: String(theme.type.body.weight) as '400',
+    lineHeight: theme.type.body.lineHeight,
+  }
+  const captionStyle = {
+    fontSize: theme.type.caption.size,
+    fontWeight: String(theme.type.caption.weight) as '400',
+    lineHeight: theme.type.caption.lineHeight,
+  }
 
   return (
     <View style={styles.root}>
@@ -52,13 +64,13 @@ export function HandleField({
           styles.inputRow,
           {
             borderColor,
-            borderRadius: theme.radius.md,
-            backgroundColor: theme.palette.bg.surface,
+            borderRadius: theme.radii['radius-md'],
+            backgroundColor: theme.bg,
           },
         ]}
       >
         <Text
-          style={[styles.prefix, theme.typography.body, {color: theme.palette.text.muted}]}
+          style={[styles.prefix, bodyStyle, {color: theme['fg-muted']}]}
           accessibilityElementsHidden
           importantForAccessibility="no"
         >
@@ -74,9 +86,9 @@ export function HandleField({
           keyboardType="default"
           accessibilityLabel="Your handle"
           accessibilityHint="3 to 20 lowercase letters, numbers, or dashes. You can't change this later."
-          style={[styles.input, theme.typography.body, {color: theme.palette.text.primary}]}
+          style={[styles.input, bodyStyle, {color: theme.fg}]}
           testID={testID ?? 'handle-field-input'}
-          placeholderTextColor={theme.palette.text.muted}
+          placeholderTextColor={theme['fg-muted']}
           placeholder="yourhandle"
         />
       </View>
@@ -85,7 +97,7 @@ export function HandleField({
       <Text
         style={[
           styles.helper,
-          theme.typography.caption,
+          captionStyle,
           {color: getHelperColor(validationState, theme)},
         ]}
         accessibilityLiveRegion="polite"
@@ -97,29 +109,29 @@ export function HandleField({
   )
 }
 
-function getBorderColor(state: HandleValidationState, theme: ReturnType<typeof useTheme>): string {
+function getBorderColor(state: HandleValidationState, theme: ResolvedTheme): string {
   switch (state) {
     case 'available':
       return '#16a34a' // green — not a theme token, Sable-spec for valid
     case 'invalid':
     case 'reserved':
     case 'taken':
-      return theme.palette.destructive
+      return theme.danger
     default:
-      return theme.palette.border.subtle
+      return theme.divider
   }
 }
 
-function getHelperColor(state: HandleValidationState, theme: ReturnType<typeof useTheme>): string {
+function getHelperColor(state: HandleValidationState, theme: ResolvedTheme): string {
   switch (state) {
     case 'available':
       return '#16a34a'
     case 'invalid':
     case 'reserved':
     case 'taken':
-      return theme.palette.text.destructive
+      return theme.danger
     default:
-      return theme.palette.text.muted
+      return theme['fg-muted']
   }
 }
 

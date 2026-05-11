@@ -7,7 +7,7 @@
 import {Feather} from '@expo/vector-icons'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 import {chatCopy} from '#/screens/Chat/copy'
 
 interface Props {
@@ -16,29 +16,35 @@ interface Props {
 }
 
 export function RemixChip({authorHandle, onClear}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
+
+  const captionStyle = {
+    fontSize: theme.type.caption.size,
+    fontWeight: String(theme.type.caption.weight) as '400',
+    lineHeight: theme.type.caption.lineHeight,
+  }
 
   return (
     <View
       style={[
         styles.chip,
         {
-          backgroundColor: theme.palette.bg.subtle,
-          borderRadius: theme.radius.full,
-          marginHorizontal: theme.spacing.md,
-          marginBottom: theme.spacing.xs,
+          backgroundColor: theme['bg-elevated'],
+          borderRadius: theme.radii['radius-full'],
+          marginHorizontal: theme.spacing['space-md'],
+          marginBottom: theme.spacing['space-xs'],
         },
       ]}
       accessibilityRole="button"
       accessibilityLabel={chatCopy.remixChipAccessibilityLabel(authorHandle)}
     >
-      <Feather name="git-branch" size={16} color={theme.palette.text.muted} />
+      <Feather name="git-branch" size={16} color={theme['fg-muted']} />
       <Text
-        style={[theme.typography.caption, {color: theme.palette.text.muted, flex: 1}]}
+        style={[captionStyle, {color: theme['fg-muted'], flex: 1}]}
         numberOfLines={1}
       >
         {chatCopy.remixChipPrefix}
-        <Text style={{color: theme.palette.text.primary}}>@{authorHandle}</Text>
+        <Text style={{color: theme.fg}}>@{authorHandle}</Text>
       </Text>
       <Pressable
         onPress={onClear}
@@ -47,7 +53,7 @@ export function RemixChip({authorHandle, onClear}: Props) {
         hitSlop={12}
         testID="remix-chip-clear"
       >
-        <Feather name="x" size={14} color={theme.palette.text.muted} />
+        <Feather name="x" size={14} color={theme['fg-muted']} />
       </Pressable>
     </View>
   )

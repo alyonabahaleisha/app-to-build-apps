@@ -14,7 +14,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {AccessibilityInfo, Animated, StyleSheet, Text, View} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 import {chatCopy} from '#/screens/Chat/copy'
 // Re-export so callers don't need two imports.
 export {isActivePhase} from '#/state/queries/generate'
@@ -43,7 +43,7 @@ const DOT_DELAY_MS = 200
 const DOT_ANIM_MS = 400
 
 export function LoadingBubble({phase}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const [reduced, setReduced] = useState(false)
   const opacity = useRef(new Animated.Value(1)).current
   const prevPhaseRef = useRef<ActivePhase>(phase)
@@ -85,12 +85,19 @@ export function LoadingBubble({phase}: Props) {
     <View
       style={[
         styles.bubble,
-        {backgroundColor: theme.palette.bg.subtle, borderRadius: theme.radius.md},
+        {backgroundColor: theme['bg-elevated'], borderRadius: theme.radii['radius-md']},
       ]}
     >
       <Animated.View style={{opacity, flexDirection: 'row', alignItems: 'center', gap: 8}}>
         <Text
-          style={[theme.typography.body, {color: theme.palette.text.primary}]}
+          style={[
+            {
+              fontSize: theme.type.body.size,
+              fontWeight: String(theme.type.body.weight) as '400',
+              lineHeight: theme.type.body.lineHeight,
+              color: theme.fg,
+            },
+          ]}
           accessibilityLiveRegion={
             // Announce thinking + building; not stall.
             announcementForPhase(phase) !== null ? 'polite' : 'none'
@@ -106,7 +113,7 @@ export function LoadingBubble({phase}: Props) {
 }
 
 function PulseDots({reduced}: {reduced: boolean}) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const dot1 = useRef(new Animated.Value(0.3)).current
   const dot2 = useRef(new Animated.Value(0.3)).current
   const dot3 = useRef(new Animated.Value(0.3)).current
@@ -156,7 +163,7 @@ function PulseDots({reduced}: {reduced: boolean}) {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: theme.palette.text.muted,
+    backgroundColor: theme['fg-muted'],
     marginHorizontal: 1,
   } as const
 

@@ -75,6 +75,7 @@ function setReducedMotion(v: boolean) {
 // Imports MUST follow the mocks.
 import {SignIn} from './index'
 import {ToastProvider} from '#/components/ToastProvider'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {ApiError, resetApiForTests} from '#/lib/api'
 import {signInCopy} from './copy'
 
@@ -95,11 +96,13 @@ function renderSignIn(opts: {showExpiredBanner?: boolean} = {}) {
         insets: {top: 0, bottom: 0, left: 0, right: 0},
       }}
     >
-      <QueryClientProvider client={qc}>
-        <ToastProvider>
-          <SignIn showExpiredBanner={opts.showExpiredBanner} />
-        </ToastProvider>
-      </QueryClientProvider>
+      <AppShellThemeProvider>
+        <QueryClientProvider client={qc}>
+          <ToastProvider>
+            <SignIn showExpiredBanner={opts.showExpiredBanner} />
+          </ToastProvider>
+        </QueryClientProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
 }

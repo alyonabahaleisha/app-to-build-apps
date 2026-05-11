@@ -34,7 +34,7 @@ import {BackButton} from '#/components/BackButton'
 import {SafeContainer} from '#/components/SafeContainer'
 import {useToast} from '#/components/ToastProvider'
 import {logger} from '#/logger'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {RenderErrorBoundary} from './RenderErrorBoundary'
 
@@ -191,7 +191,7 @@ const devStyles = StyleSheet.create({
 
 export function AppRunnerScreen({route, navigation}: Props) {
   const {projectId} = route.params
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const toast = useToast()
 
   // Dev-mode demo spec selection — defaults to ListCRUD (the Milestone B spec).
@@ -223,7 +223,15 @@ export function AppRunnerScreen({route, navigation}: Props) {
 
         {/* Project title — placeholder until ADR-0007 wires real project data */}
         <Text
-          style={[styles.title, theme.typography.heading3, {color: theme.palette.text.primary}]}
+          style={[
+            styles.title,
+            {
+              fontSize: theme.type.body.size,
+              fontWeight: '600' as const,
+              lineHeight: theme.type.body.lineHeight,
+              color: theme.fg,
+            },
+          ]}
           numberOfLines={1}
           accessibilityRole="header"
           testID="app-runner-title"
@@ -242,8 +250,11 @@ export function AppRunnerScreen({route, navigation}: Props) {
         >
           <Text
             style={[
-              theme.typography.bodyStrong,
-              {color: theme.palette.primary, fontSize: 14},
+              {
+                fontSize: 14,
+                fontWeight: '600' as const,
+                color: theme.accent,
+              },
             ]}
           >
             Share

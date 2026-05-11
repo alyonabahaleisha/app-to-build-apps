@@ -4,12 +4,14 @@
  * §12 + UX doc §Animation).
  *
  * Owned by `ToastProvider`; not used directly by screens.
+ *
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {useEffect, useRef, useState} from 'react'
 import {AccessibilityInfo, Animated, Easing, Pressable, StyleSheet, Text} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 export type ToastVariant = 'default' | 'error'
 
@@ -23,13 +25,10 @@ const SLIDE_DISTANCE = 16
 const ANIMATION_MS = 250
 
 export function Toast({message, variant, onDismiss}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const insets = useSafeAreaInsets()
   const [reduced, setReduced] = useState(false)
 
-  // Resolve the user's reduced-motion preference once on mount. The
-  // Animation itself fans out from `reduced`; if it changes mid-toast we
-  // accept whichever animation we started — the toast is short-lived.
   useEffect(() => {
     let mounted = true
     AccessibilityInfo.isReduceMotionEnabled()
@@ -76,10 +75,9 @@ export function Toast({message, variant, onDismiss}: Props) {
     Animated.parallel(anims).start()
   }, [opacity, translateY, reduced])
 
-  const palette = theme.palette
-  const bg = variant === 'error' ? palette.destructive : palette.bg.elevated
-  const fg = variant === 'error' ? palette.destructiveFg : palette.text.primary
-  const borderColor = variant === 'error' ? palette.destructive : palette.border.subtle
+  const bg = variant === 'error' ? theme.danger : theme['bg-elevated']
+  const fg = variant === 'error' ? theme['accent-fg'] : theme.fg
+  const borderColor = variant === 'error' ? theme.danger : theme.divider
 
   return (
     <Animated.View pointerEvents="box-none" style={[styles.host, {paddingTop: insets.top + 8}]}>
@@ -94,12 +92,24 @@ export function Toast({message, variant, onDismiss}: Props) {
             {
               backgroundColor: bg,
               borderColor,
-              borderRadius: theme.radius.md,
+              borderRadius: theme.radii['radius-md'],
             },
           ]}
           testID="toast"
         >
-          <Text style={[styles.text, theme.typography.bodyStrong, {color: fg}]}>{message}</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: theme.type.body.size,
+                fontWeight: String(theme.type.body.weight) as '400',
+                lineHeight: theme.type.body.lineHeight,
+                color: fg,
+              },
+            ]}
+          >
+            {message}
+          </Text>
         </Pressable>
       </Animated.View>
     </Animated.View>

@@ -12,7 +12,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {apiFetch, ApiError} from '#/lib/api'
 import {createQueryKey, STALE} from '#/state/queries/util'
-import {projectsKeys} from '#/state/queries/projects'
+import {miniAppsKeys} from '#/state/queries/miniApps'
 
 // -- Error class -------------------------------------------------------------
 
@@ -150,8 +150,8 @@ export function usePublishMutation() {
       }
     },
     onSuccess: (_data, vars) => {
-      void qc.invalidateQueries({queryKey: projectsKeys.detail(vars.projectId)})
-      void qc.invalidateQueries({queryKey: projectsKeys.list()})
+      void qc.invalidateQueries({queryKey: miniAppsKeys.detail(vars.projectId)})
+      void qc.invalidateQueries({queryKey: miniAppsKeys.list()})
     },
     retry: false,
   })
@@ -176,8 +176,8 @@ export function useUnpublishMutation() {
       }
     },
     onSuccess: (_data, vars) => {
-      void qc.invalidateQueries({queryKey: projectsKeys.detail(vars.projectId)})
-      void qc.invalidateQueries({queryKey: projectsKeys.list()})
+      void qc.invalidateQueries({queryKey: miniAppsKeys.detail(vars.projectId)})
+      void qc.invalidateQueries({queryKey: miniAppsKeys.list()})
     },
     retry: false,
   })

@@ -36,7 +36,7 @@ import {BackButton} from '#/components/BackButton'
 import {SafeContainer} from '#/components/SafeContainer'
 import {useToast} from '#/components/ToastProvider'
 import {useGenerateMutation, isActivePhase} from '#/state/queries/generate'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import type {RootStackParamList} from '#/lib/routes/types'
@@ -57,7 +57,7 @@ interface Message {
 }
 
 export function ChatScreen({route, navigation}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const toast = useToast()
   const {phase, result, error, generate, reset} = useGenerateMutation()
 
@@ -90,7 +90,7 @@ export function ChatScreen({route, navigation}: Props) {
 
   useEffect(() => {
     if (phase === 'done' && result) {
-      navigation.replace('AppRunner', {projectId: result.project.id})
+      navigation.replace('AppRunner', {projectId: result.miniApp.id})
     }
   }, [phase, result, navigation])
 
@@ -191,7 +191,14 @@ export function ChatScreen({route, navigation}: Props) {
           testID="chat-back-button"
         />
         <Text
-          style={[theme.typography.heading2, {color: theme.palette.text.primary}]}
+          style={[
+            {
+              fontSize: theme.type.h2.size,
+              fontWeight: String(theme.type.h2.weight) as '600',
+              lineHeight: theme.type.h2.lineHeight,
+              color: theme.fg,
+            },
+          ]}
           accessibilityRole="header"
         >
           {chatCopy.topBarTitle}

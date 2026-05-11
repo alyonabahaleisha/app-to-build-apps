@@ -17,6 +17,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import type {BottomSheetModal} from '@gorhom/bottom-sheet'
 
 import {apiFetch, ApiError} from '#/lib/api'
+import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {PublishSheet} from './PublishSheet'
 
 // -- Mocks -------------------------------------------------------------------
@@ -65,14 +66,16 @@ function renderSheet(opts: RenderOptions = {}) {
 
   const utils = render(
     <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
-      <QueryClientProvider client={qc}>
-        <PublishSheet
-          ref={ref}
-          projectId={projectId}
-          firstPublish={firstPublish}
-          currentHandle={currentHandle}
-        />
-      </QueryClientProvider>
+      <AppShellThemeProvider>
+        <QueryClientProvider client={qc}>
+          <PublishSheet
+            ref={ref}
+            projectId={projectId}
+            firstPublish={firstPublish}
+            currentHandle={currentHandle}
+          />
+        </QueryClientProvider>
+      </AppShellThemeProvider>
     </SafeAreaProvider>,
   )
   return {...utils, ref, qc}

@@ -5,10 +5,12 @@
  *
  * App-shell only (per ARCHITECTURE.md §6) — distinct from any A2UI catalog
  * component.
+ *
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {Pressable, StyleSheet, View, type ViewStyle} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import type {ReactNode} from 'react'
 
@@ -21,7 +23,7 @@ interface Props {
   /** Apply a soft drop-shadow. Default off — the empty state and library
    * dividers carry the surface flatly. The hero CTA opts in. */
   elevated?: boolean
-  /** Override default padding (md). */
+  /** Override default padding (space-md). */
   padding?: number
   style?: ViewStyle
   testID?: string
@@ -37,13 +39,13 @@ export function Card({
   style,
   testID,
 }: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const baseStyle: ViewStyle = {
-    backgroundColor: theme.palette.bg.elevated,
-    borderRadius: theme.radius.lg,
+    backgroundColor: theme['bg-elevated'],
+    borderRadius: theme.radii['radius-lg'],
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.palette.border.subtle,
-    padding: padding ?? theme.spacing.md,
+    borderColor: theme.divider,
+    padding: padding ?? theme.spacing['space-md'],
     ...(elevated ? styles.shadow : null),
   }
 
@@ -56,7 +58,7 @@ export function Card({
         testID={testID}
         style={({pressed}) => [
           baseStyle,
-          pressed ? {backgroundColor: theme.palette.bg.subtle} : null,
+          pressed ? {backgroundColor: theme.bg} : null,
           style,
         ]}
       >

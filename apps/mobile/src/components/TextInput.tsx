@@ -2,10 +2,7 @@
  * TextInput — app-shell variant. Distinct from the A2UI catalog `TextInput`
  * (which lives in `packages/a2ui-renderer/`). Per ARCHITECTURE.md §6.
  *
- * Visual treatment per Sable's UX doc §A2UI Catalog Visual Treatment:
- * radius `md`, border.subtle, padding 12pt vertical / 14pt horizontal.
- * Focus state: border becomes primary, focus.ring outer glow. Multi-line
- * variant for chat-style inputs (5-line max).
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {useState} from 'react'
 import {
@@ -17,7 +14,7 @@ import {
   type TextInputProps as RNTextInputProps,
 } from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 interface Props {
   label: string
@@ -48,30 +45,39 @@ export function TextInput({
   editable = true,
   testID,
 }: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const [focused, setFocused] = useState(false)
   const showError = !!error
 
   const borderColor = showError
-    ? theme.palette.destructive
+    ? theme.danger
     : focused
-      ? theme.palette.primary
-      : theme.palette.border.subtle
+      ? theme.accent
+      : theme.divider
+
+  const bodyStyle = {
+    fontSize: theme.type.body.size,
+    fontWeight: String(theme.type.body.weight) as '400',
+    lineHeight: theme.type.body.lineHeight,
+  }
+  const captionStyle = {
+    fontSize: theme.type.caption.size,
+    fontWeight: String(theme.type.caption.weight) as '400',
+    lineHeight: theme.type.caption.lineHeight,
+  }
 
   return (
     <View style={styles.root}>
-      <Text style={[styles.label, theme.typography.caption, {color: theme.palette.text.muted}]}>
-        {label}
-      </Text>
+      <Text style={[styles.label, captionStyle, {color: theme['fg-muted']}]}>{label}</Text>
       <View
         style={[
           styles.inputWrap,
           {
             borderColor,
-            borderRadius: theme.radius.md,
-            backgroundColor: theme.palette.bg.surface,
+            borderRadius: theme.radii['radius-md'],
+            backgroundColor: theme.bg,
           },
-          focused && !showError ? {shadowColor: theme.palette.focusRing} : null,
+          focused && !showError ? {shadowColor: theme.accent} : null,
           focused && !showError ? styles.focusGlow : null,
         ]}
       >
@@ -80,7 +86,7 @@ export function TextInput({
           onChangeText={onChangeText}
           accessibilityLabel={accessibilityLabel}
           placeholder={placeholder}
-          placeholderTextColor={theme.palette.text.muted}
+          placeholderTextColor={theme['fg-muted']}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
@@ -88,18 +94,13 @@ export function TextInput({
           editable={editable}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          style={[
-            styles.input,
-            theme.typography.body,
-            {color: theme.palette.text.primary},
-            multiline ? styles.multiline : null,
-          ]}
+          style={[styles.input, bodyStyle, {color: theme.fg}, multiline ? styles.multiline : null]}
           testID={testID}
         />
       </View>
       {showError ? (
         <Text
-          style={[styles.error, theme.typography.caption, {color: theme.palette.text.destructive}]}
+          style={[styles.error, captionStyle, {color: theme.danger}]}
           accessibilityLiveRegion="polite"
         >
           {error}
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
   },
   input: {
     minHeight: 24,
-    padding: 0, // RN's default top/bottom padding fights the wrap.
+    padding: 0,
   },
   multiline: {minHeight: 24 * 3, textAlignVertical: 'top'},
   error: {marginTop: 4},

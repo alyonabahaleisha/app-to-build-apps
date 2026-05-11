@@ -5,29 +5,26 @@
  * collapses to a static muted grey block (per ARCHITECTURE.md §12).
  *
  * App-shell only (§6). The animation is implemented with the RN-Animated
- * driver running native — keeps the JS bridge cool. We deliberately don't
- * pull in `react-native-reanimated` for one shimmer; the Animated module
- * already ships with RN. (Sable's UX doc §Notes for Colby #4 suggested
- * Reanimated; for a single shimmer the dep cost isn't justified — Animated
- * handles this fine and Reanimated would land in M1 vertical-slice if we
- * need it for something heavier later.)
+ * driver running native — keeps the JS bridge cool.
+ *
+ * ADR-0011 Step 5: migrated from M1 useTheme() → useAppShellTheme().
  */
 import {useEffect, useRef, useState} from 'react'
 import {AccessibilityInfo, Animated, StyleSheet, type ViewStyle} from 'react-native'
 
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 interface Props {
   width: number | `${number}%`
   height: number
-  /** Optional border radius — defaults to theme.radius.md. */
+  /** Optional border radius — defaults to theme.radii['radius-md']. */
   radius?: number
   style?: ViewStyle
   testID?: string
 }
 
 export function Skeleton({width, height, radius, style, testID}: Props) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const [reducedMotion, setReducedMotion] = useState<boolean>(false)
   const opacity = useRef(new Animated.Value(0.4)).current
 
@@ -71,20 +68,15 @@ export function Skeleton({width, height, radius, style, testID}: Props) {
   return (
     <Animated.View
       testID={testID}
-      // Skeleton is a decorative shimmer — exclude from screen-reader focus
-      // but DO NOT use `accessibilityElementsHidden` because RN Testing
-      // Library's `getAllByTestId` skips elements with that flag by default,
-      // which makes the loading-state tests (T-0001-128, 113) noisier than
-      // they need to be. `accessible={false}` is sufficient to keep the
-      // screen reader from announcing the shimmer.
+      // Skeleton is decorative — exclude from screen-reader focus.
       accessible={false}
       style={[
         styles.base,
         {
           width,
           height,
-          backgroundColor: theme.palette.bg.subtle,
-          borderRadius: radius ?? theme.radius.md,
+          backgroundColor: theme['fg-faint'],
+          borderRadius: radius ?? theme.radii['radius-md'],
           opacity: reducedMotion ? 0.7 : opacity,
         },
         style,

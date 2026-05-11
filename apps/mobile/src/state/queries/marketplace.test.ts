@@ -20,7 +20,7 @@ import {
   useHandleSuggestQuery,
   useSetHandleMutation,
 } from '#/state/queries/marketplace'
-import {projectsKeys} from '#/state/queries/projects'
+import {miniAppsKeys} from '#/state/queries/miniApps'
 
 // -- Mock apiFetch -----------------------------------------------------------
 
@@ -126,10 +126,10 @@ describe('usePublishMutation', () => {
     })
 
     expect(invalidate).toHaveBeenCalledWith({
-      queryKey: projectsKeys.detail('proj-3'),
+      queryKey: miniAppsKeys.detail('proj-3'),
     })
     expect(invalidate).toHaveBeenCalledWith({
-      queryKey: projectsKeys.list(),
+      queryKey: miniAppsKeys.list(),
     })
   })
 
@@ -213,10 +213,10 @@ describe('useUnpublishMutation', () => {
     })
 
     expect(invalidate).toHaveBeenCalledWith({
-      queryKey: projectsKeys.detail('proj-2'),
+      queryKey: miniAppsKeys.detail('proj-2'),
     })
     expect(invalidate).toHaveBeenCalledWith({
-      queryKey: projectsKeys.list(),
+      queryKey: miniAppsKeys.list(),
     })
   })
 })

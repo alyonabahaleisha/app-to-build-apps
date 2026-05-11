@@ -30,7 +30,8 @@ import {
   useHandleSuggestQuery,
   usePublishMutation,
 } from '#/state/queries/marketplace'
-import {useTheme} from '#/theme'
+import type {ResolvedTheme} from '@app-creator/design-system'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 // Handle regex: 3–20 lowercase letters, numbers, dashes; can't start/end with dash.
 const HANDLE_RE = /^[a-z0-9][a-z0-9-]{1,18}[a-z0-9]$|^[a-z0-9]{3,20}$/
@@ -61,7 +62,7 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
   {projectId, firstPublish, currentHandle, onPublishSuccess},
   ref,
 ) {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   const toast = useToast()
   const publishMutation = usePublishMutation()
 
@@ -232,14 +233,14 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
     onPublishSuccess,
   ])
 
-  const sheetBg = theme.palette.bg.surface
+  const sheetBg = theme.bg
 
   return (
     <BottomSheetModal
       ref={ref}
       snapPoints={snapPoints}
       backgroundStyle={{backgroundColor: sheetBg}}
-      handleIndicatorStyle={{backgroundColor: theme.palette.border.subtle}}
+      handleIndicatorStyle={{backgroundColor: theme.divider}}
       animateOnMount={!reduced}
       enableDismissOnClose
       enablePanDownToClose
@@ -254,7 +255,15 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
         <View accessibilityViewIsModal style={styles.modalWrapper}>
           {/* Heading */}
           <Text
-            style={[styles.heading, theme.typography.heading2, {color: theme.palette.text.primary}]}
+            style={[
+              styles.heading,
+              {
+                fontSize: theme.type.h2.size,
+                fontWeight: String(theme.type.h2.weight) as '600',
+                lineHeight: theme.type.h2.lineHeight,
+                color: theme.fg,
+              },
+            ]}
             accessibilityRole="header"
             testID="publish-sheet-heading"
           >
@@ -281,8 +290,12 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
           <Text
             style={[
               styles.warningCopy,
-              theme.typography.caption,
-              {color: theme.palette.text.muted},
+              {
+                fontSize: theme.type.caption.size,
+                fontWeight: String(theme.type.caption.weight) as '400',
+                lineHeight: theme.type.caption.lineHeight,
+                color: theme['fg-muted'],
+              },
             ]}
           >
             Publishing exposes the words you typed.
@@ -293,8 +306,12 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
             <Text
               style={[
                 styles.inlineError,
-                theme.typography.caption,
-                {color: theme.palette.text.destructive},
+                {
+                  fontSize: theme.type.caption.size,
+                  fontWeight: String(theme.type.caption.weight) as '400',
+                  lineHeight: theme.type.caption.lineHeight,
+                  color: theme.danger,
+                },
               ]}
               accessibilityLiveRegion="polite"
               testID="publish-sheet-inline-error"
@@ -309,9 +326,16 @@ export const PublishSheet = forwardRef<BottomSheetModal, Props>(function Publish
               onPress={handleDismiss}
               accessibilityRole="button"
               accessibilityLabel="Cancel — close without publishing"
-              style={[styles.cancelButton, {borderColor: theme.palette.border.subtle}]}
+              style={[styles.cancelButton, {borderColor: theme.divider}]}
             >
-              <Text style={[theme.typography.bodyStrong, {color: theme.palette.text.primary}]}>
+              <Text
+                style={{
+                  fontSize: theme.type.body.size,
+                  fontWeight: '600' as const,
+                  lineHeight: theme.type.body.lineHeight,
+                  color: theme.fg,
+                }}
+              >
                 Cancel
               </Text>
             </Pressable>
@@ -340,7 +364,7 @@ interface FirstTimeProps {
   onChange: (v: string) => void
   validationState: HandleValidationState
   inlineError: string | null
-  theme: ReturnType<typeof useTheme>
+  theme: ResolvedTheme
 }
 
 function FirstTimeContent({
@@ -352,7 +376,17 @@ function FirstTimeContent({
 }: FirstTimeProps) {
   return (
     <>
-      <Text style={[styles.bodyText, theme.typography.body, {color: theme.palette.text.muted}]}>
+      <Text
+        style={[
+          styles.bodyText,
+          {
+            fontSize: theme.type.body.size,
+            fontWeight: String(theme.type.body.weight) as '400',
+            lineHeight: theme.type.body.lineHeight,
+            color: theme['fg-muted'],
+          },
+        ]}
+      >
         Pick a handle other makers will see.
       </Text>
 
@@ -366,7 +400,17 @@ function FirstTimeContent({
         testID="publish-sheet-handle-input"
       />
 
-      <Text style={[styles.lockCopy, theme.typography.caption, {color: theme.palette.text.muted}]}>
+      <Text
+        style={[
+          styles.lockCopy,
+          {
+            fontSize: theme.type.caption.size,
+            fontWeight: String(theme.type.caption.weight) as '400',
+            lineHeight: theme.type.caption.lineHeight,
+            color: theme['fg-muted'],
+          },
+        ]}
+      >
         You can't change this later.
       </Text>
     </>
@@ -376,14 +420,22 @@ function FirstTimeContent({
 interface SubsequentProps {
   currentHandle: string | null
   inlineError: string | null
-  theme: ReturnType<typeof useTheme>
+  theme: ResolvedTheme
 }
 
 function SubsequentContent({currentHandle, inlineError: _inlineError, theme}: SubsequentProps) {
   return (
     <>
       <Text
-        style={[styles.bodyText, theme.typography.body, {color: theme.palette.text.muted}]}
+        style={[
+          styles.bodyText,
+          {
+            fontSize: theme.type.body.size,
+            fontWeight: String(theme.type.body.weight) as '400',
+            lineHeight: theme.type.body.lineHeight,
+            color: theme['fg-muted'],
+          },
+        ]}
         testID="publish-sheet-subsequent-copy"
       >
         {currentHandle

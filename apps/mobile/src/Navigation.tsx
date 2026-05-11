@@ -23,7 +23,7 @@ import {HomeScreen} from '#/screens/Home'
 import {SignIn} from '#/screens/SignIn'
 import {signInCopy} from '#/screens/SignIn/copy'
 import {useSession} from '#/state/session/useSession'
-import {useTheme} from '#/theme'
+import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import type {RootStackParamList} from '#/lib/routes/types'
 
@@ -73,13 +73,21 @@ export function Navigation() {
 }
 
 function HydrationSplash() {
-  const theme = useTheme()
+  const theme = useAppShellTheme()
   return (
     <SafeContainer>
       <View style={styles.splash}>
-        <ActivityIndicator size="large" color={theme.palette.primary} />
+        <ActivityIndicator size="large" color={theme.accent} />
         <Text
-          style={[styles.splashText, theme.typography.body, {color: theme.palette.text.muted}]}
+          style={[
+            styles.splashText,
+            {
+              fontSize: theme.type.body.size,
+              fontWeight: String(theme.type.body.weight) as '400',
+              lineHeight: theme.type.body.lineHeight,
+              color: theme['fg-muted'],
+            },
+          ]}
           accessibilityRole="header"
         >
           {signInCopy.verifyingHeadline}
