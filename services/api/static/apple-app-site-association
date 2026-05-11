@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": ["TEAMID_PLACEHOLDER.com.appcreator.mvp"],
+        "paths": ["/m/*"]
+      }
+    ]
+  }
+}

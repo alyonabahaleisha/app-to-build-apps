@@ -73,6 +73,8 @@ const BASE_PROD: NodeJS.ProcessEnv = {
   APPLE_SIWA_TEAM_ID: 'TEAMID12',
   APPLE_SIWA_KEY_ID: 'KID1234567',
   APPLE_SIWA_PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----',
+  // ADR-0008 Step 2: required in production — 10-char uppercase TEAMID + bundleID.
+  APPLE_APP_ID_PREFIX: 'TEAMID12AB.com.appcreator.mvp',
 }
 
 describe('loadEnv — APPLE_SIWA_* config exhaustion (ADR-0013)', () => {

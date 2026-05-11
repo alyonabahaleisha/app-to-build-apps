@@ -103,9 +103,11 @@ describe('T-0007-140: whitelist does NOT contain M1 plan.*/build.*/edit.* keys',
 
 // ---------------------------------------------------------------------------
 // T-0007-141: EVENT_PAYLOAD_WHITELIST contains all 4 V0 event types
+// (ADR-0008 adds 3 more: share_link.created, share_link.clone_accepted,
+//  share_link.reserved_mode_viewed — total is now 7)
 // ---------------------------------------------------------------------------
 
-describe('T-0007-141: whitelist contains all 4 V0 event types', () => {
+describe('T-0007-141: whitelist contains all 4 original V0 event types + 3 ADR-0008 additions', () => {
   const V0_EVENT_TYPES: EventType[] = [
     'generate.completed',
     'generate.invalid_spec',
@@ -113,16 +115,24 @@ describe('T-0007-141: whitelist contains all 4 V0 event types', () => {
     'out_of_scope_intent_captured',
   ]
 
-  it('EVENT_PAYLOAD_WHITELIST has exactly the 4 V0 event types', () => {
+  const ADR_0008_EVENT_TYPES: EventType[] = [
+    'share_link.created',
+    'share_link.clone_accepted',
+    'share_link.reserved_mode_viewed',
+  ]
+
+  const ALL_EVENT_TYPES = [...V0_EVENT_TYPES, ...ADR_0008_EVENT_TYPES]
+
+  it('EVENT_PAYLOAD_WHITELIST has exactly the 7 event types (4 V0 + 3 ADR-0008)', () => {
     const keys = Object.keys(EVENT_PAYLOAD_WHITELIST)
-    for (const eventType of V0_EVENT_TYPES) {
+    for (const eventType of ALL_EVENT_TYPES) {
       expect(keys).toContain(eventType)
     }
     // No extra keys
-    expect(keys).toHaveLength(V0_EVENT_TYPES.length)
+    expect(keys).toHaveLength(ALL_EVENT_TYPES.length)
   })
 
-  for (const eventType of V0_EVENT_TYPES) {
+  for (const eventType of ALL_EVENT_TYPES) {
     it(`${eventType} whitelist is a non-empty array`, () => {
       expect(Array.isArray(EVENT_PAYLOAD_WHITELIST[eventType])).toBe(true)
       expect((EVENT_PAYLOAD_WHITELIST[eventType] as ReadonlyArray<string>).length).toBeGreaterThan(0)
@@ -134,17 +144,20 @@ describe('T-0007-141: whitelist contains all 4 V0 event types', () => {
 // T-0007-142: each V0 event type rejects unknown keys (whitelist enforcement)
 // ---------------------------------------------------------------------------
 
-describe('T-0007-142: per-V0-event-type whitelist rejects unknown keys', () => {
+describe('T-0007-142: per-event-type whitelist rejects unknown keys (V0 + ADR-0008)', () => {
   const BAD_KEY = '__not_allowed_key__'
 
-  const V0_EVENT_TYPES: EventType[] = [
+  const ALL_EVENT_TYPES: EventType[] = [
     'generate.completed',
     'generate.invalid_spec',
     'generate.out_of_scope',
     'out_of_scope_intent_captured',
+    'share_link.created',
+    'share_link.clone_accepted',
+    'share_link.reserved_mode_viewed',
   ]
 
-  for (const eventType of V0_EVENT_TYPES) {
+  for (const eventType of ALL_EVENT_TYPES) {
     it(`${eventType}: passing '${BAD_KEY}' throws EventPayloadValidationError before DB call`, async () => {
       await expect(
         writeEvent(eventType, {[BAD_KEY]: 'x'}),

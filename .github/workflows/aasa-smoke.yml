@@ -1,0 +1,84 @@
+# ADR-0008 Step 2: AASA smoke test
+#
+# Verifies that the deployed /.well-known/apple-app-site-association endpoint:
+#   1. Returns HTTP 200.
+#   2. Returns Content-Type: application/json (exact match — Apple rejects any other type).
+#   3. Body's applinks.details[0].appIDs[0] matches the APPLE_APP_ID_PREFIX secret.
+#
+# Eva owns final production verification. This workflow runs in CI after each
+# API deploy to staging/production.
+#
+# The APPLE_APP_ID_PREFIX secret must be set in the GitHub repo / environment
+# secrets and match the APPLE_APP_ID_PREFIX env var configured in the deploy.
+
+name: AASA Smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: 'Base URL of the deployed API (e.g. https://api.canvas.app)'
+        required: true
+        type: string
+  # Can be triggered from a deploy workflow via `uses:` or `workflow_call`.
+  # Direct POST-deploy trigger is wired in the deploy workflow.
+
+jobs:
+  aasa-smoke:
+    name: Verify AASA endpoint
+    runs-on: ubuntu-latest
+    env:
+      AASA_URL: '${{ github.event.inputs.api_url }}/.well-known/apple-app-site-association'
+
+    steps:
+      - name: Fetch AASA endpoint
+        id: fetch
+        run: |
+          HTTP_CODE=$(curl -s -o /tmp/aasa_body.json -w "%{http_code}" \
+            -H "Accept: application/json" \
+            "$AASA_URL")
+          echo "http_code=$HTTP_CODE" >> "$GITHUB_OUTPUT"
+          echo "HTTP status: $HTTP_CODE"
+          cat /tmp/aasa_body.json
+
+      - name: Assert HTTP 200
+        run: |
+          if [ "${{ steps.fetch.outputs.http_code }}" != "200" ]; then
+            echo "FAIL: expected HTTP 200, got ${{ steps.fetch.outputs.http_code }}"
+            exit 1
+          fi
+          echo "PASS: HTTP 200"
+
+      - name: Assert Content-Type is application/json
+        run: |
+          CT=$(curl -s -I "$AASA_URL" | grep -i '^content-type:' | tr -d '\r')
+          echo "Content-Type header: $CT"
+          if ! echo "$CT" | grep -qi 'application/json'; then
+            echo "FAIL: Content-Type is not application/json. Got: $CT"
+            exit 1
+          fi
+          echo "PASS: Content-Type is application/json"
+
+      - name: Assert appID matches APPLE_APP_ID_PREFIX
+        env:
+          EXPECTED_APP_ID: '${{ secrets.APPLE_APP_ID_PREFIX }}'
+        run: |
+          # Extract the first appID from applinks.details[0].appIDs[0]
+          ACTUAL_APP_ID=$(jq -r '.applinks.details[0].appIDs[0]' /tmp/aasa_body.json)
+          echo "Expected appID: $EXPECTED_APP_ID"
+          echo "Actual appID:   $ACTUAL_APP_ID"
+          if [ "$ACTUAL_APP_ID" != "$EXPECTED_APP_ID" ]; then
+            echo "FAIL: appID mismatch"
+            exit 1
+          fi
+          echo "PASS: appID matches APPLE_APP_ID_PREFIX"
+
+      - name: Assert paths contains /m/*
+        run: |
+          PATHS=$(jq -r '.applinks.details[0].paths[]' /tmp/aasa_body.json)
+          echo "Paths: $PATHS"
+          if ! echo "$PATHS" | grep -q '/m/\*'; then
+            echo "FAIL: paths does not contain /m/*"
+            exit 1
+          fi
+          echo "PASS: paths contains /m/*"

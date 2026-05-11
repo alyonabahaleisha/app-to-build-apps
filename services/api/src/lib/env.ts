@@ -74,6 +74,28 @@ function buildSchema(nodeEnv: string) {
     // values this way). T-0013-076 covers the multiline parse path.
     APPLE_SIWA_PRIVATE_KEY:
       nodeEnv === 'test' ? optionalNonEmpty : requiredString('APPLE_SIWA_PRIVATE_KEY'),
+
+    // ADR-0008 Step 2 — Apple App ID prefix for the AASA file.
+    // Format: <TEAMID>.<bundleID> — e.g. 'TEAMID12AB.com.appcreator.mvp'.
+    // TEAMID is 10 uppercase alphanumeric chars; bundleID is case-preserved.
+    // Required in non-test environments; optional in test.
+    // T-0008-030..035 cover the config-exhaustion cases.
+    APPLE_APP_ID_PREFIX:
+      nodeEnv === 'test'
+        ? z
+            .string()
+            .regex(
+              /^[A-Z0-9]{10}\.[a-zA-Z0-9.\-]+$/,
+              'APPLE_APP_ID_PREFIX must be <10-char TEAMID>.<bundleID>',
+            )
+            .optional()
+        : requiredString('APPLE_APP_ID_PREFIX').refine(
+            v => /^[A-Z0-9]{10}\.[a-zA-Z0-9.\-]+$/.test(v),
+            {
+              message:
+                'APPLE_APP_ID_PREFIX must match ^[A-Z0-9]{10}.[a-zA-Z0-9.-]+$ (e.g. TEAMID12AB.com.appcreator.mvp)',
+            },
+          ),
   })
 }
 

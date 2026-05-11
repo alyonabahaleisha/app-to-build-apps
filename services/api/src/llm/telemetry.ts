@@ -25,12 +25,19 @@ const log = pino({level: env.LOG_LEVEL})
 
 // ---------------------------------------------------------------------------
 // Event type union — V0 only (ADR-0007 Step 6: M1 plan.*, build.*, edit.* removed).
+// ADR-0008 Step 3: share_link.* server-side events added.
 // ---------------------------------------------------------------------------
 export type EventType =
   | 'generate.completed'
   | 'generate.invalid_spec'
   | 'generate.out_of_scope'
   | 'out_of_scope_intent_captured'
+  // ADR-0008 Step 3: share-link data-state events (server-side only).
+  // Client-side UX events (share_link_copied, link_clone_opened) live in
+  // apps/mobile/src/lib/telemetry.ts and have their own separate whitelist.
+  | 'share_link.created'
+  | 'share_link.clone_accepted'
+  | 'share_link.reserved_mode_viewed'
 
 // ---------------------------------------------------------------------------
 // Per-type payload whitelists — V0 event types only (ADR-0007 Step 6).
@@ -50,6 +57,16 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
   'generate.out_of_scope': ['generationId', 'capability', 'reason_length'],
   // has_email is boolean — presence of email in the captured row.
   'out_of_scope_intent_captured': ['capability', 'has_email'],
+
+  // ADR-0008 Step 3 — share-link server-side events.
+  // share_id_prefix: first 4 chars of the ksuid — time-series bucket for analytics.
+  //   Full share_id is the URL token and is NOT stored in telemetry (privacy).
+  // source_archetype: derived from the version's spec_json archetype field.
+  // idempotent_hit: boolean — true when the clone already existed (re-clone).
+  // mode: 'view' | 'remix' — which reserved mode was viewed.
+  'share_link.created': ['share_id_prefix', 'source_archetype'],
+  'share_link.clone_accepted': ['share_id_prefix', 'idempotent_hit', 'source_archetype'],
+  'share_link.reserved_mode_viewed': ['share_id_prefix', 'mode'],
 } as const
 
 // ---------------------------------------------------------------------------
@@ -85,6 +102,17 @@ export async function writeEvent(
   payload: Record<string, unknown>,
   ctx?: {miniAppId?: string; userId?: string},
 ): Promise<void> {
+  // 0. Runtime event-type guard — TypeScript's EventType union is compile-time
+  //    only. An out-of-union string arrives here as `unknown` at runtime and
+  //    would silently look up `undefined` in the whitelist, causing empty-key
+  //    iteration with no validation. Throw eagerly so callers get a clear error
+  //    rather than a swallowed DB failure. (T-0008-149)
+  if (!(eventType in EVENT_PAYLOAD_WHITELIST)) {
+    throw new Error(
+      `telemetry: unknown event type '${eventType}'. Allowed: ${Object.keys(EVENT_PAYLOAD_WHITELIST).join(', ')}`,
+    )
+  }
+
   // 1. Whitelist validation — synchronous, throws before any I/O.
   const allowed = EVENT_PAYLOAD_WHITELIST[eventType]
   for (const key of Object.keys(payload)) {

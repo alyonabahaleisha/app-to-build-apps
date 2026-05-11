@@ -47,6 +47,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   vector,
 } from 'drizzle-orm/pg-core'
@@ -285,6 +286,68 @@ export const outOfScopeIntent = pgTable(
 )
 
 // ---------------------------------------------------------------------------
+// share_links — one row per share action. share_id is a 24-char base62 opaque
+// string used as the Universal Link token. FK to mini_app_versions (immutable
+// source — share freezes the version at share time). ADR-0008 Step 1.
+// ---------------------------------------------------------------------------
+export const shareLinks = pgTable(
+  'share_links',
+  {
+    // 24-char base62 string, generated server-side. PRIMARY KEY = public URL token.
+    shareId: text('share_id').primaryKey(),
+    // Immutable source — share_link points at the version current at share time.
+    miniAppVersionId: uuid('mini_app_version_id')
+      .notNull()
+      .references(() => miniAppVersions.id, {onDelete: 'cascade'}),
+    // Owner — for V0.5 owner-only revoke without extra JOIN.
+    ownerUserId: uuid('owner_user_id')
+      .notNull()
+      .references(() => users.id, {onDelete: 'cascade'}),
+    // Cover-art identity frozen at first share — ADR-0005 §K.
+    coverStance: text('cover_stance').notNull(),
+    coverPalette: text('cover_palette').notNull(),
+    coverIcon: text('cover_icon').notNull(),
+    coverArtSeed: text('cover_art_seed').notNull(),
+    createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
+    // V0.5 revocation: nullable; never written in V0. Column present for no-migration revoke.
+    revokedAt: timestamp('revoked_at', {withTimezone: true}),
+  },
+  t => ({
+    ownerIdx: index('share_links_owner_idx').on(t.ownerUserId),
+    versionIdx: index('share_links_version_idx').on(t.miniAppVersionId),
+  }),
+)
+
+// ---------------------------------------------------------------------------
+// share_link_clones — idempotency guard. One row per (share_link_id, cloner_user_id).
+// UNIQUE constraint is the DB-level idempotency guarantee (T-0008-011, T-0008-013).
+// ON CONFLICT DO NOTHING in acceptCloneIntent's transaction handles concurrent taps.
+// ADR-0008 Step 1.
+// ---------------------------------------------------------------------------
+export const shareLinkClones = pgTable(
+  'share_link_clones',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    shareLinkId: text('share_link_id')
+      .notNull()
+      .references(() => shareLinks.shareId, {onDelete: 'cascade'}),
+    clonerUserId: uuid('cloner_user_id')
+      .notNull()
+      .references(() => users.id, {onDelete: 'cascade'}),
+    // FK to the clone the user created. ON DELETE CASCADE handles
+    // a user deleting their clone — the lookup row goes too.
+    clonedMiniAppId: uuid('cloned_mini_app_id')
+      .notNull()
+      .references(() => miniApps.id, {onDelete: 'cascade'}),
+    clonedAt: timestamp('cloned_at', {withTimezone: true}).notNull().defaultNow(),
+  },
+  t => ({
+    // Idempotency guard — one clone per (link, user). T-0008-011, T-0008-013.
+    uniqueClone: uniqueIndex('share_link_clones_unique_idx').on(t.shareLinkId, t.clonerUserId),
+  }),
+)
+
+// ---------------------------------------------------------------------------
 // Type exports — used by services for typed inserts/selects.
 // Old Project* / ProjectVersion* names are DELETED (not aliased) per
 // ADR-0011 Cal hard-cutover directive. TypeCheck fails on any caller that
@@ -308,6 +371,10 @@ export type OutOfScopeIntent = typeof outOfScopeIntent.$inferSelect
 export type NewOutOfScopeIntent = typeof outOfScopeIntent.$inferInsert
 export type AppleRefreshToken = typeof appleRefreshTokens.$inferSelect
 export type NewAppleRefreshToken = typeof appleRefreshTokens.$inferInsert
+export type ShareLink = typeof shareLinks.$inferSelect
+export type NewShareLink = typeof shareLinks.$inferInsert
+export type ShareLinkClone = typeof shareLinkClones.$inferSelect
+export type NewShareLinkClone = typeof shareLinkClones.$inferInsert
 
 // ---------------------------------------------------------------------------
 // T-0013-133: Compile-time assertion — Drizzle $inferSelect shape includes
@@ -334,3 +401,33 @@ const _assertAppleRefreshTokensShape: typeof appleRefreshTokens.$inferSelect ext
   ? true
   : never = true
 void _assertAppleRefreshTokensShape
+
+// ---------------------------------------------------------------------------
+// T-0008-001 / T-0008-002: Compile-time assertion — Drizzle $inferSelect shapes
+// include all ADR-0008 columns. Fails typecheck if column omitted / mistyped.
+// ---------------------------------------------------------------------------
+const _assertShareLinksShape: typeof shareLinks.$inferSelect extends {
+  shareId: string
+  miniAppVersionId: string
+  ownerUserId: string
+  coverStance: string
+  coverPalette: string
+  coverIcon: string
+  coverArtSeed: string
+  createdAt: Date
+  revokedAt: Date | null
+}
+  ? true
+  : never = true
+void _assertShareLinksShape
+
+const _assertShareLinkClonesShape: typeof shareLinkClones.$inferSelect extends {
+  id: string
+  shareLinkId: string
+  clonerUserId: string
+  clonedMiniAppId: string
+  clonedAt: Date
+}
+  ? true
+  : never = true
+void _assertShareLinkClonesShape
