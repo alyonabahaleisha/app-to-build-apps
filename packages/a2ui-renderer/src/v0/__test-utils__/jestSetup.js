@@ -231,8 +231,13 @@ jest.mock('@react-navigation/native', () => {
     return React.createElement(View, {testID: 'navigation-container'}, props.children)
   })
 
+  function NavigationIndependentTree({children}) {
+    return React.createElement(React.Fragment, null, children)
+  }
+
   return {
     NavigationContainer: NavigationContainerWithRef,
+    NavigationIndependentTree,
     createNavigationContainerRef,
   }
 })

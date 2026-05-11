@@ -23,7 +23,11 @@
  */
 import React, {useEffect, useRef} from 'react'
 import {View} from 'react-native'
-import {NavigationContainer, createNavigationContainerRef} from '@react-navigation/native'
+import {
+  NavigationContainer,
+  NavigationIndependentTree,
+  createNavigationContainerRef,
+} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import type {Spec} from '@app-creator/protocol'
 import type {NavigationPrimitive} from '../state/middleware/navigation.js'
@@ -83,34 +87,40 @@ export function StackNav({spec, onPrimitiveReady}: StackNavProps) {
     }
   }, [onPrimitiveReady])
 
+  // The host app already mounts a root NavigationContainer for the app shell.
+  // NavigationIndependentTree opts the generated mini-app's nav stack into a
+  // disconnected tree so the two containers don't conflict (React Navigation 7
+  // requirement — silent runtime error otherwise).
   return (
-    <NavigationContainer ref={navRef} onReady={handleReady}>
-      <Stack.Navigator
-        initialRouteName={spec.initialScreenId}
-        screenOptions={{
-          // 32pt header height per UX doc. Uses the native stack header.
-          headerShown: true,
-          headerStyle: {backgroundColor: 'transparent'},
-          headerShadowVisible: false,
-          headerBackTitle: 'Back',
-          // Title from screen.title or screen id
-          headerTitleStyle: {fontWeight: '600', fontSize: 15},
-        }}
-      >
-        {spec.screens.map(screen => (
-          <Stack.Screen
-            key={screen.id}
-            name={screen.id}
-            options={{
-              title: screen.title ?? screen.id,
-              // Root screen (initialScreenId) hides header; detail screens show it.
-              headerShown: screen.id !== spec.initialScreenId,
-            }}
-          >
-            {() => <StackScreenContent specScreenId={screen.id} spec={spec} />}
-          </Stack.Screen>
-        ))}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <NavigationIndependentTree>
+      <NavigationContainer ref={navRef} onReady={handleReady}>
+        <Stack.Navigator
+          initialRouteName={spec.initialScreenId}
+          screenOptions={{
+            // 32pt header height per UX doc. Uses the native stack header.
+            headerShown: true,
+            headerStyle: {backgroundColor: 'transparent'},
+            headerShadowVisible: false,
+            headerBackTitle: 'Back',
+            // Title from screen.title or screen id
+            headerTitleStyle: {fontWeight: '600', fontSize: 15},
+          }}
+        >
+          {spec.screens.map(screen => (
+            <Stack.Screen
+              key={screen.id}
+              name={screen.id}
+              options={{
+                title: screen.title ?? screen.id,
+                // Root screen (initialScreenId) hides header; detail screens show it.
+                headerShown: screen.id !== spec.initialScreenId,
+              }}
+            >
+              {() => <StackScreenContent specScreenId={screen.id} spec={spec} />}
+            </Stack.Screen>
+          ))}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </NavigationIndependentTree>
   )
 }

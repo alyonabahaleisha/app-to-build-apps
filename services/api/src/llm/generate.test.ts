@@ -440,7 +440,7 @@ describe('generateAppSpec — ADR-0007 Step 3 (V0 single-call pipeline)', () => 
   // -------------------------------------------------------------------------
   // T-0007-046: tool_choice is 'auto' (not forced to a single tool)
   // -------------------------------------------------------------------------
-  it('T-0007-046: SDK call uses tool_choice: "auto"', async () => {
+  it('T-0007-046: SDK call uses tool_choice: {type: "auto"}', async () => {
     const streamMock = getStreamMock()
     streamMock.mockImplementation(
       mockAnthropicStream(makeSuccessEvents(), makeV0ToolUseMessage('produce_app_spec', MINIMAL_VALID_V0_SPEC)),
@@ -451,7 +451,7 @@ describe('generateAppSpec — ADR-0007 Step 3 (V0 single-call pipeline)', () => 
     await collectEvents(generateAppSpec(OPTS))
 
     const call = capturedStreamCall(streamMock)
-    expect(call['tool_choice']).toBe('auto')
+    expect(call['tool_choice']).toEqual({type: 'auto'})
   })
 
   // -------------------------------------------------------------------------

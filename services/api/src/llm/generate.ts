@@ -135,8 +135,7 @@ export async function* generateAppSpec(opts: {
         ],
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         tools: [produceAppSpecTool, outOfScopeTool] as any,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        tool_choice: 'auto' as any,
+        tool_choice: {type: 'auto'},
         messages: buildMessages(opts),
       })
 
