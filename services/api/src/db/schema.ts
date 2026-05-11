@@ -164,6 +164,11 @@ export const miniAppVersions = pgTable(
     // ADR-0004 Step 4: nullable plan artifact. NULL = M1 fallback path.
     // V0: always NULL (plan concept removed per ADR-0007 §G).
     planJson: jsonb('plan_json'),
+    // ADR-0010 Step 4: prompt version at the time this version was generated.
+    // Nullable — rows inserted before migration 0012 have null; analytics
+    // queries use COALESCE(prompt_version, 'pre-v0.1.0'). Written at insert
+    // time from the PROMPT_VERSION const; never derived from user input.
+    promptVersion: text('prompt_version'),
   },
   t => ({
     miniAppIdx: index('mini_app_versions_mini_app_idx').on(t.miniAppId),
@@ -406,6 +411,17 @@ void _assertAppleRefreshTokensShape
 // T-0008-001 / T-0008-002: Compile-time assertion — Drizzle $inferSelect shapes
 // include all ADR-0008 columns. Fails typecheck if column omitted / mistyped.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// T-0010-089 / T-0010-090: Compile-time assertion — miniAppVersions includes
+// the ADR-0010 Step 4 prompt_version column (nullable text).
+// ---------------------------------------------------------------------------
+const _assertMiniAppVersionsPromptVersionShape: typeof miniAppVersions.$inferSelect extends {
+  promptVersion: string | null
+}
+  ? true
+  : never = true
+void _assertMiniAppVersionsPromptVersionShape
+
 const _assertShareLinksShape: typeof shareLinks.$inferSelect extends {
   shareId: string
   miniAppVersionId: string

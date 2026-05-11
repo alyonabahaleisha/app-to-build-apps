@@ -979,4 +979,43 @@ describe('generateAppSpec — ADR-0007 Step 3 (V0 single-call pipeline)', () => 
     expect(types[2]).toBe('out_of_scope')
     expect(types).toHaveLength(3)
   })
+
+  // -------------------------------------------------------------------------
+  // ADR-0010 Step 4 — T-0010-082, T-0010-083: generate.completed includes
+  // prompt_version and its value matches the PROMPT_VERSION const.
+  // -------------------------------------------------------------------------
+  it('T-0010-082: generate.completed event payload includes prompt_version', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeV0ToolUseMessage('produce_app_spec', MINIMAL_VALID_V0_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    await collectEvents(generateAppSpec(OPTS))
+
+    const completedCall = mockWriteEvent.mock.calls.find(c => c[0] === 'generate.completed')
+    expect(completedCall).toBeDefined()
+    const payload = completedCall![1] as Record<string, unknown>
+    expect(typeof payload['prompt_version']).toBe('string')
+    expect((payload['prompt_version'] as string).length).toBeGreaterThan(0)
+  })
+
+  it('T-0010-083: prompt_version in generate.completed matches the imported PROMPT_VERSION const (regression-safe)', async () => {
+    const streamMock = getStreamMock()
+    streamMock.mockImplementation(
+      mockAnthropicStream(makeSuccessEvents(), makeV0ToolUseMessage('produce_app_spec', MINIMAL_VALID_V0_SPEC)),
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {generateAppSpec} = require('./generate.js')
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const {PROMPT_VERSION} = require('./prompts/system.js')
+    await collectEvents(generateAppSpec(OPTS))
+
+    const completedCall = mockWriteEvent.mock.calls.find(c => c[0] === 'generate.completed')
+    const payload = completedCall![1] as Record<string, unknown>
+    // The value must equal the const — never hardcoded in generate.ts.
+    expect(payload['prompt_version']).toBe(PROMPT_VERSION)
+  })
 })

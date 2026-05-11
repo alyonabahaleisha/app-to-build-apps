@@ -28,6 +28,10 @@ import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
 import {SpecSchema, validateCrossRefs, renderHash, type Spec} from '@app-creator/protocol'
 
+// ADR-0010 Step 4: PROMPT_VERSION written on every mini_app_versions insert
+// so analytics can join by prompt version post-launch.
+import {PROMPT_VERSION} from '../llm/prompts/system.js'
+
 import * as schema from '../db/schema.js'
 import {
   miniApps,
@@ -241,6 +245,14 @@ export function createMiniAppsService(db: Db): MiniAppsService {
       const hash = renderHash(parsed)
       const seed = coverArtSeed ?? crypto.randomUUID()
 
+      // ADR-0010 Step 4 / T-0010-157: PROMPT_VERSION must be a non-empty string
+      // at write time. The const is always populated from the module import; an
+      // empty value would indicate a broken build rather than a missing migration,
+      // and silent-null in the analytics join would corrupt the data from day one.
+      if (!PROMPT_VERSION || PROMPT_VERSION.trim() === '') {
+        throw new Error('PROMPT_VERSION is not set — cannot insert mini_app_versions row')
+      }
+
       // 6. Transactional write — mini_app row + mini_app_versions row.
       //    If the version insert fails after mini_app insert, the transaction
       //    rolls back and neither row survives (T-0011-023a).
@@ -270,6 +282,11 @@ export function createMiniAppsService(db: Db): MiniAppsService {
             renderHash: hash,
             // V0: plan_json is always NULL (ADR-0007 §G: plan column deprecated).
             planJson: null,
+            // ADR-0010 Step 4: stamp every new version with the prompt version
+            // that generated it. Value taken from the imported const — never from
+            // user input (T-0010-094). Drizzle will error if migration 0012 has
+            // not been applied (T-0010-157: loud failure, not silent null).
+            promptVersion: PROMPT_VERSION,
           })
           .returning()
         if (!versionRow) throw new Error('mini_app_versions insert returned no row')

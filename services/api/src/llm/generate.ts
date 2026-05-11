@@ -26,7 +26,7 @@ import {SpecSchema, validateCrossRefs, type Spec} from '@app-creator/protocol'
 import {anthropic} from './anthropic.js'
 import {produceAppSpecTool} from './tools/produceAppSpec.js'
 import {outOfScopeTool, OutOfScopeInputSchema, type OutOfScopeInput} from './tools/outOfScope.js'
-import {SYSTEM_PROMPT_STATIC, SYSTEM_PROMPT_CATALOG} from './prompts/system.js'
+import {SYSTEM_PROMPT_STATIC, SYSTEM_PROMPT_CATALOG, PROMPT_VERSION} from './prompts/system.js'
 import {InvalidSpecError, RateLimitedError, AnthropicTransportError} from './errors.js'
 import {safeMessage} from '../lib/logger.js'
 import {hashUserId, flattenZodIssues, sleep, sha256Hex} from './util.js'
@@ -239,6 +239,9 @@ export async function* generateAppSpec(opts: {
           screens_count: parsed.screens.length,
           navigation: parsed.navigation,
           generation_duration_ms: Date.now() - phase2Start,
+          // ADR-0010 Step 4: value taken from the imported const, never
+          // hardcoded — regression-safe against future PROMPT_VERSION bumps.
+          prompt_version: PROMPT_VERSION,
         })
 
         yield {

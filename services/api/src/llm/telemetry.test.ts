@@ -193,6 +193,70 @@ describe('T-0007-142: per-event-type whitelist rejects unknown keys (V0 + ADR-00
 })
 
 // ---------------------------------------------------------------------------
+// ADR-0010 Step 4: T-0010-081 through T-0010-088 — prompt_version whitelist
+// ---------------------------------------------------------------------------
+
+describe("T-0010-081: EVENT_PAYLOAD_WHITELIST['generate.completed'] includes 'prompt_version'", () => {
+  it("generate.completed whitelist contains 'prompt_version'", () => {
+    const allowed = EVENT_PAYLOAD_WHITELIST['generate.completed'] as ReadonlyArray<string>
+    expect(allowed).toContain('prompt_version')
+  })
+})
+
+describe("T-0010-084: writeEvent('generate.completed', {prompt_version: 'unknown', ...validKeys}) succeeds", () => {
+  it("prompt_version: 'unknown' is accepted — whitelist is key-based, not value-based", async () => {
+    await expect(
+      writeEvent('generate.completed', {
+        generationId: 'test-gen',
+        archetype: 'Calculator',
+        screens_count: 1,
+        navigation: 'none',
+        generation_duration_ms: 100,
+        prompt_version: 'unknown',
+      }),
+    ).resolves.toBeUndefined()
+  })
+})
+
+describe("T-0010-085: EVENT_PAYLOAD_WHITELIST['generate.out_of_scope'] does NOT include 'prompt_version'", () => {
+  it("generate.out_of_scope whitelist intentionally excludes prompt_version (V0 scope tightness)", () => {
+    const allowed = EVENT_PAYLOAD_WHITELIST['generate.out_of_scope'] as ReadonlyArray<string>
+    expect(allowed).not.toContain('prompt_version')
+  })
+})
+
+describe("T-0010-086: EVENT_PAYLOAD_WHITELIST['generate.invalid_spec'] does NOT include 'prompt_version'", () => {
+  it("generate.invalid_spec whitelist intentionally excludes prompt_version (V0 scope tightness)", () => {
+    const allowed = EVENT_PAYLOAD_WHITELIST['generate.invalid_spec'] as ReadonlyArray<string>
+    expect(allowed).not.toContain('prompt_version')
+  })
+})
+
+describe("T-0010-087: EVENT_PAYLOAD_WHITELIST['out_of_scope_intent_captured'] does NOT include 'prompt_version'", () => {
+  it("out_of_scope_intent_captured whitelist intentionally excludes prompt_version (V0 scope tightness)", () => {
+    const allowed = EVENT_PAYLOAD_WHITELIST['out_of_scope_intent_captured'] as ReadonlyArray<string>
+    expect(allowed).not.toContain('prompt_version')
+  })
+})
+
+describe('T-0010-088: generate.completed whitelist retains its original 5 keys unchanged', () => {
+  const EXPECTED_ORIGINAL_KEYS = [
+    'generationId',
+    'archetype',
+    'screens_count',
+    'navigation',
+    'generation_duration_ms',
+  ]
+
+  for (const key of EXPECTED_ORIGINAL_KEYS) {
+    it(`generate.completed whitelist still contains '${key}'`, () => {
+      const allowed = EVENT_PAYLOAD_WHITELIST['generate.completed'] as ReadonlyArray<string>
+      expect(allowed).toContain(key)
+    })
+  }
+})
+
+// ---------------------------------------------------------------------------
 // T-0007-145: EVAL_MODE='true' → DB insert skipped; whitelist still runs
 // ---------------------------------------------------------------------------
 

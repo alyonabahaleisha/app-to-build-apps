@@ -52,6 +52,10 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
     'screens_count',
     'navigation',
     'generation_duration_ms',
+    // ADR-0010 Step 4: prompt version at generation time. Only whitelisted on
+    // generate.completed — not on generate.invalid_spec or generate.out_of_scope
+    // (intentional V0 scope tightness: failures are not joined to version analytics).
+    'prompt_version',
   ],
   'generate.invalid_spec': ['generationId', 'error_kind', 'code_count'],
   'generate.out_of_scope': ['generationId', 'capability', 'reason_length'],
