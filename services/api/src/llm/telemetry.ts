@@ -17,6 +17,7 @@ import {env} from '../lib/env.js'
 import {db} from '../db/index.js'
 import {schema} from '../db/index.js'
 import {safeMessage} from '../lib/logger.js'
+import type {AppleIdentityErrorCode} from '../lib/appleIdentity.js'
 
 // ---------------------------------------------------------------------------
 // Module-level logger — same pattern as pipeline.ts.
@@ -38,6 +39,11 @@ export type EventType =
   | 'share_link.created'
   | 'share_link.clone_accepted'
   | 'share_link.reserved_mode_viewed'
+  // ADR-0013 Step 5: SIWA auth observability events.
+  // No email, sub, or token plaintext — asserted in T-0013-125..127.
+  | 'auth.siwa_sign_in_succeeded'
+  | 'auth.siwa_sign_in_failed'
+  | 'auth.siwa_token_validation_failed'
 
 // ---------------------------------------------------------------------------
 // Per-type payload whitelists — V0 event types only (ADR-0007 Step 6).
@@ -71,7 +77,73 @@ export const EVENT_PAYLOAD_WHITELIST: Record<EventType, ReadonlyArray<string>> =
   'share_link.created': ['share_id_prefix', 'source_archetype'],
   'share_link.clone_accepted': ['share_id_prefix', 'idempotent_hit', 'source_archetype'],
   'share_link.reserved_mode_viewed': ['share_id_prefix', 'mode'],
+
+  // ADR-0013 Step 5 — SIWA auth observability events.
+  //
+  // Allowed keys: provider (required) + failure_code (optional).
+  // INTENTIONAL OMISSIONS: email, sub, identity_token are NOT whitelisted here —
+  // they are PII / credential material and must never appear in telemetry payloads
+  // (T-0013-125..127). failure_code is constrained to AppleIdentityErrorCode values
+  // when present (T-0013-141); see PAYLOAD_VALUE_VALIDATORS below.
+  'auth.siwa_sign_in_succeeded': ['provider'],
+  'auth.siwa_sign_in_failed': ['provider', 'failure_code'],
+  'auth.siwa_token_validation_failed': ['provider', 'failure_code'],
 } as const
+
+// ---------------------------------------------------------------------------
+// Per-field value validators — key-based whitelist (above) allows the key;
+// these validators enforce permitted VALUES for sensitive fields.
+//
+// Only `failure_code` on SIWA failure events needs value-validation — the
+// field is optional (T-0013-141) but when present must be one of the 8
+// AppleIdentityErrorCode union values. This keeps the key whitelist
+// key-based (ADR-0007 pattern) while closing the value-injection surface.
+// ---------------------------------------------------------------------------
+
+const APPLE_IDENTITY_ERROR_CODES: ReadonlyArray<AppleIdentityErrorCode> = [
+  'malformed',
+  'signature_invalid',
+  'kid_unknown',
+  'expired',
+  'issuer_mismatch',
+  'audience_mismatch',
+  'jwks_unreachable',
+  'missing_claim',
+]
+
+// Map of eventType → Map of fieldName → validation function.
+// The validation function receives the value and throws EventPayloadValidationError
+// if it violates the constraint.
+type ValueValidator = (
+  value: unknown,
+  eventType: EventType,
+  key: string,
+) => void
+
+const PAYLOAD_VALUE_VALIDATORS: Partial<Record<EventType, Partial<Record<string, ValueValidator>>>> = {
+  'auth.siwa_sign_in_failed': {
+    failure_code: (value, eventType, key) => {
+      if (!(APPLE_IDENTITY_ERROR_CODES as ReadonlyArray<unknown>).includes(value)) {
+        throw new EventPayloadValidationError(
+          eventType,
+          // Reuse EventPayloadValidationError but surface the value constraint
+          // in the message by appending via overriding the key string.
+          `${key} (value '${String(value)}' not in AppleIdentityErrorCode union)`,
+        )
+      }
+    },
+  },
+  'auth.siwa_token_validation_failed': {
+    failure_code: (value, eventType, key) => {
+      if (!(APPLE_IDENTITY_ERROR_CODES as ReadonlyArray<unknown>).includes(value)) {
+        throw new EventPayloadValidationError(
+          eventType,
+          `${key} (value '${String(value)}' not in AppleIdentityErrorCode union)`,
+        )
+      }
+    },
+  },
+}
 
 // ---------------------------------------------------------------------------
 // EventPayloadValidationError — thrown synchronously by writeEvent on whitelist
@@ -122,6 +194,17 @@ export async function writeEvent(
   for (const key of Object.keys(payload)) {
     if (!(allowed as ReadonlyArray<string>).includes(key)) {
       throw new EventPayloadValidationError(eventType, key)
+    }
+  }
+
+  // 1b. Value validation — runs after key whitelist for fields that require
+  //     constrained values (e.g. failure_code on SIWA events, T-0013-141).
+  const valueValidators = PAYLOAD_VALUE_VALIDATORS[eventType]
+  if (valueValidators) {
+    for (const [key, validate] of Object.entries(valueValidators)) {
+      if (key in payload && validate) {
+        validate(payload[key], eventType, key)
+      }
     }
   }
 

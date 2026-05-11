@@ -59,12 +59,20 @@ jest.mock('../lib/env.js', () => ({
 // ---------------------------------------------------------------------------
 // Imports — after mocks
 // ---------------------------------------------------------------------------
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+
 import {
   writeEvent,
   EventPayloadValidationError,
   EVENT_PAYLOAD_WHITELIST,
   type EventType,
 } from './telemetry.js'
+
+// ---------------------------------------------------------------------------
+// ADR-0013 Step 5 — SIWA telemetry event tests
+// T-0013-122..129, T-0013-141
+// ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
 // Setup
@@ -107,7 +115,7 @@ describe('T-0007-140: whitelist does NOT contain M1 plan.*/build.*/edit.* keys',
 //  share_link.reserved_mode_viewed — total is now 7)
 // ---------------------------------------------------------------------------
 
-describe('T-0007-141: whitelist contains all 4 original V0 event types + 3 ADR-0008 additions', () => {
+describe('T-0007-141: whitelist contains all 4 original V0 event types + 3 ADR-0008 + 3 ADR-0013 additions', () => {
   const V0_EVENT_TYPES: EventType[] = [
     'generate.completed',
     'generate.invalid_spec',
@@ -121,9 +129,15 @@ describe('T-0007-141: whitelist contains all 4 original V0 event types + 3 ADR-0
     'share_link.reserved_mode_viewed',
   ]
 
-  const ALL_EVENT_TYPES = [...V0_EVENT_TYPES, ...ADR_0008_EVENT_TYPES]
+  const ADR_0013_EVENT_TYPES: EventType[] = [
+    'auth.siwa_sign_in_succeeded',
+    'auth.siwa_sign_in_failed',
+    'auth.siwa_token_validation_failed',
+  ]
 
-  it('EVENT_PAYLOAD_WHITELIST has exactly the 7 event types (4 V0 + 3 ADR-0008)', () => {
+  const ALL_EVENT_TYPES = [...V0_EVENT_TYPES, ...ADR_0008_EVENT_TYPES, ...ADR_0013_EVENT_TYPES]
+
+  it('EVENT_PAYLOAD_WHITELIST has exactly the 10 event types (4 V0 + 3 ADR-0008 + 3 ADR-0013)', () => {
     const keys = Object.keys(EVENT_PAYLOAD_WHITELIST)
     for (const eventType of ALL_EVENT_TYPES) {
       expect(keys).toContain(eventType)
@@ -155,6 +169,9 @@ describe('T-0007-142: per-event-type whitelist rejects unknown keys (V0 + ADR-00
     'share_link.created',
     'share_link.clone_accepted',
     'share_link.reserved_mode_viewed',
+    'auth.siwa_sign_in_succeeded',
+    'auth.siwa_sign_in_failed',
+    'auth.siwa_token_validation_failed',
   ]
 
   for (const eventType of ALL_EVENT_TYPES) {
@@ -311,5 +328,169 @@ describe('Regression: DB insert throws → logged ERROR, not re-thrown', () => {
       expect.objectContaining({eventType: 'generate.completed'}),
       expect.stringContaining('writeEvent failed'),
     )
+  })
+})
+
+// ---------------------------------------------------------------------------
+// ADR-0013 Step 5 — SIWA telemetry event tests (T-0013-122..129, T-0013-141)
+// ---------------------------------------------------------------------------
+
+// T-0013-122: Happy — auth.siwa_sign_in_succeeded with {provider: 'apple'} accepted
+describe('T-0013-122: auth.siwa_sign_in_succeeded — happy path accepted', () => {
+  it("writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple'}) resolves without throwing", async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).toHaveBeenCalled()
+  })
+})
+
+// T-0013-123: Happy — auth.siwa_sign_in_failed with provider + valid failure_code accepted
+describe('T-0013-123: auth.siwa_sign_in_failed — happy path with failure_code accepted', () => {
+  it("writeEvent('auth.siwa_sign_in_failed', {provider: 'apple', failure_code: 'audience_mismatch'}) resolves", async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_failed', {provider: 'apple', failure_code: 'audience_mismatch'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).toHaveBeenCalled()
+  })
+})
+
+// T-0013-124: Happy — auth.siwa_token_validation_failed with provider + valid failure_code accepted
+describe('T-0013-124: auth.siwa_token_validation_failed — happy path with failure_code accepted', () => {
+  it("writeEvent('auth.siwa_token_validation_failed', {provider: 'apple', failure_code: 'kid_unknown'}) resolves", async () => {
+    await expect(
+      writeEvent('auth.siwa_token_validation_failed', {provider: 'apple', failure_code: 'kid_unknown'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).toHaveBeenCalled()
+  })
+})
+
+// T-0013-125: Negative — email key rejected on auth.siwa_sign_in_succeeded
+describe('T-0013-125: auth.siwa_sign_in_succeeded — email key REJECTED (leak vector)', () => {
+  it('payload with email key throws EventPayloadValidationError; DB not called', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple', email: 'leak@example.com'}),
+    ).rejects.toThrow(EventPayloadValidationError)
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+})
+
+// T-0013-126: Negative — sub key rejected on auth.siwa_sign_in_succeeded
+describe('T-0013-126: auth.siwa_sign_in_succeeded — sub key REJECTED (leak vector)', () => {
+  it('payload with sub key throws EventPayloadValidationError; DB not called', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple', sub: 'apple-sub'}),
+    ).rejects.toThrow(EventPayloadValidationError)
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+})
+
+// T-0013-127: Negative — identity_token key rejected on auth.siwa_sign_in_succeeded
+describe('T-0013-127: auth.siwa_sign_in_succeeded — identity_token key REJECTED (leak vector)', () => {
+  it('payload with identity_token key throws EventPayloadValidationError; DB not called', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple', identity_token: 'eyJ...'}),
+    ).rejects.toThrow(EventPayloadValidationError)
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+})
+
+// T-0013-128: Regression — EVAL_MODE=true: validation runs, DB insert skipped for SIWA events
+describe('T-0013-128: EVAL_MODE=true — SIWA events validate but skip DB insert', () => {
+  beforeEach(() => {
+    mockEnvValues.EVAL_MODE = 'true'
+  })
+
+  it('auth.siwa_sign_in_succeeded: resolves without DB insert in eval mode', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+
+  it('auth.siwa_sign_in_failed: resolves without DB insert in eval mode', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_failed', {provider: 'apple', failure_code: 'expired'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+
+  it('auth.siwa_token_validation_failed: resolves without DB insert in eval mode', async () => {
+    await expect(
+      writeEvent('auth.siwa_token_validation_failed', {provider: 'apple'}),
+    ).resolves.toBeUndefined()
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+
+  it('auth.siwa_sign_in_succeeded: email key still throws EventPayloadValidationError in eval mode', async () => {
+    await expect(
+      writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple', email: 'leak@example.com'}),
+    ).rejects.toThrow(EventPayloadValidationError)
+    expect(mockDbInsert).not.toHaveBeenCalled()
+  })
+})
+
+// T-0013-129: Docs-lint — reviewer notes contain 'Sign in with Apple' substring
+describe('T-0013-129: docs-lint — canvas-v0-reviewer-notes.md contains "Sign in with Apple"', () => {
+  it('canvas-v0-reviewer-notes.md exists and contains the required auth model substring', () => {
+    // ts-jest runs in CJS mode — __dirname is the compiled output directory,
+    // which mirrors src/ under services/api. Navigate up 4 levels to repo root.
+    const notesPath = path.resolve(__dirname, '../../../../docs/product/canvas-v0-reviewer-notes.md')
+    const content = fs.readFileSync(notesPath, 'utf-8')
+    expect(content).toContain('Sign in with Apple')
+  })
+})
+
+// T-0013-141: failure_code is optional; when present, must be in AppleIdentityErrorCode union
+describe('T-0013-141: failure_code — optional field, union-constrained when present', () => {
+  describe('auth.siwa_sign_in_failed', () => {
+    it('Sub-case A: no failure_code (omitted) → accepted (optional field)', async () => {
+      await expect(
+        writeEvent('auth.siwa_sign_in_failed', {provider: 'apple'}),
+      ).resolves.toBeUndefined()
+    })
+
+    it('Sub-case B: failure_code: "made_up_code" → REJECTED (not in union)', async () => {
+      await expect(
+        writeEvent('auth.siwa_sign_in_failed', {provider: 'apple', failure_code: 'made_up_code'}),
+      ).rejects.toThrow(EventPayloadValidationError)
+      expect(mockDbInsert).not.toHaveBeenCalled()
+    })
+
+    it('all 8 AppleIdentityErrorCode union values are accepted', async () => {
+      const validCodes = [
+        'malformed',
+        'signature_invalid',
+        'kid_unknown',
+        'expired',
+        'issuer_mismatch',
+        'audience_mismatch',
+        'jwks_unreachable',
+        'missing_claim',
+      ]
+      for (const code of validCodes) {
+        jest.clearAllMocks()
+        mockDbInsert.mockReturnValue({values: mockInsertValues})
+        mockInsertValues.mockResolvedValue(undefined)
+        await expect(
+          writeEvent('auth.siwa_sign_in_failed', {provider: 'apple', failure_code: code}),
+        ).resolves.toBeUndefined()
+      }
+    })
+  })
+
+  describe('auth.siwa_token_validation_failed', () => {
+    it('Sub-case A: no failure_code (omitted) → accepted (optional field)', async () => {
+      await expect(
+        writeEvent('auth.siwa_token_validation_failed', {provider: 'apple'}),
+      ).resolves.toBeUndefined()
+    })
+
+    it('Sub-case B: failure_code: "made_up_code" → REJECTED (not in union)', async () => {
+      await expect(
+        writeEvent('auth.siwa_token_validation_failed', {provider: 'apple', failure_code: 'made_up_code'}),
+      ).rejects.toThrow(EventPayloadValidationError)
+      expect(mockDbInsert).not.toHaveBeenCalled()
+    })
   })
 })

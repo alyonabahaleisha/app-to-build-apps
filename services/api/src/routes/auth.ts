@@ -25,11 +25,12 @@ import {z} from 'zod'
 
 import * as schema from '../db/schema.js'
 import {requireAuth, type AuthenticatedRequest} from '../lib/auth.js'
-import {verifyAppleIdentityToken, AppleIdentityError} from '../lib/appleIdentity.js'
+import {verifyAppleIdentityToken, AppleIdentityError, type AppleIdentityErrorCode} from '../lib/appleIdentity.js'
 import {safeMessage} from '../lib/logger.js'
 import {rateLimit} from '../lib/rateLimit.js'
 import {issueMagicLink, issueLocalJwtForUser} from '../services/auth.service.js'
 import {findOrCreate, findOrCreateByAppleSub} from '../services/users.service.js'
+import {writeEvent} from '../llm/telemetry.js'
 
 type Db = NodePgDatabase<typeof schema>
 
@@ -161,6 +162,21 @@ export const authRoutes: FastifyPluginAsync<AuthRoutesOptions> = async (
       claims = await verifyAppleIdentityToken(body.identityToken)
     } catch (err) {
       if (err instanceof AppleIdentityError) {
+        // Emit token-validation-failed telemetry. Telemetry failures must not
+        // kill the auth-error response — wrap in try/catch per ADR-0013 Step 5.
+        void (async () => {
+          try {
+            // failure_code is optional (T-0013-141); only include when the code
+            // is a known AppleIdentityErrorCode (it always is for AppleIdentityError).
+            await writeEvent('auth.siwa_token_validation_failed', {
+              provider: 'apple',
+              failure_code: err.code as AppleIdentityErrorCode,
+            })
+          } catch (telErr) {
+            req.log.warn({err: safeMessage(telErr)}, 'siwa_telemetry_write_failed')
+          }
+        })()
+
         if (err.code === 'jwks_unreachable') {
           req.log.error({err: safeMessage(err)}, 'siwa_jwks_unreachable')
           return reply.code(503).send({error: 'internal'})
@@ -171,6 +187,14 @@ export const authRoutes: FastifyPluginAsync<AuthRoutesOptions> = async (
         // All other codes: don't leak which check failed (T-0013-061).
         return reply.code(401).send({error: 'unauthorized'})
       }
+      // Unknown error — no recognized code, emit without failure_code (T-0013-141).
+      void (async () => {
+        try {
+          await writeEvent('auth.siwa_token_validation_failed', {provider: 'apple'})
+        } catch (telErr) {
+          req.log.warn({err: safeMessage(telErr)}, 'siwa_telemetry_write_failed')
+        }
+      })()
       req.log.error({err: safeMessage(err)}, 'siwa_token_verify_unexpected')
       return reply.code(401).send({error: 'unauthorized'})
     }
@@ -183,6 +207,14 @@ export const authRoutes: FastifyPluginAsync<AuthRoutesOptions> = async (
       user = await findOrCreateByAppleSub(db, claims.sub, claims.email, body.displayName)
     } catch (err) {
       req.log.error({err: safeMessage(err)}, 'siwa_find_or_create_failed')
+      // Emit sign-in-failed telemetry — no failure_code (unknown cause, T-0013-141).
+      void (async () => {
+        try {
+          await writeEvent('auth.siwa_sign_in_failed', {provider: 'apple'})
+        } catch (telErr) {
+          req.log.warn({err: safeMessage(telErr)}, 'siwa_telemetry_write_failed')
+        }
+      })()
       return reply.code(500).send({error: 'internal'})
     }
 
@@ -193,11 +225,20 @@ export const authRoutes: FastifyPluginAsync<AuthRoutesOptions> = async (
       tokens = await issueLocalJwtForUser(db, user)
     } catch (err) {
       req.log.error({err: safeMessage(err)}, 'siwa_jwt_issue_failed')
+      // Emit sign-in-failed telemetry — no failure_code (unknown cause, T-0013-141).
+      void (async () => {
+        try {
+          await writeEvent('auth.siwa_sign_in_failed', {provider: 'apple'})
+        } catch (telErr) {
+          req.log.warn({err: safeMessage(telErr)}, 'siwa_telemetry_write_failed')
+        }
+      })()
       return reply.code(500).send({error: 'internal'})
     }
 
-    // Response: email intentionally excluded (P0-1). Only {id, display_name}.
-    return reply.code(200).send({
+    // Prepare response. Telemetry fires after reply is ready so a telemetry
+    // failure cannot affect the auth response (ADR-0013 Step 5 AC).
+    const responsePayload = {
       access_token: tokens.accessToken,
       refresh_token: tokens.refreshToken,
       expires_in: tokens.expiresIn,
@@ -205,13 +246,38 @@ export const authRoutes: FastifyPluginAsync<AuthRoutesOptions> = async (
         id: user.id,
         display_name: user.displayName,
       },
-    })
+    }
+
+    // Emit success telemetry — fire-and-forget, errors logged as warn only.
+    void (async () => {
+      try {
+        await writeEvent('auth.siwa_sign_in_succeeded', {provider: 'apple'})
+      } catch (telErr) {
+        req.log.warn({err: safeMessage(telErr)}, 'siwa_telemetry_write_failed')
+      }
+    })()
+
+    // Response: email intentionally excluded (P0-1). Only {id, display_name}.
+    return reply.code(200).send(responsePayload)
   })
 
   // -------------------------------------------------------------------------
   // POST /auth/magic-link  (public)
+  //
+  // @deprecated — ADR-0013 Step 4. SIWA is the V0 default after the env-flag
+  // flip (PR 3). Magic-link stays live for one release as a safety net.
+  // Removed in ADR-0013 PR 5 or ADR-0013.1 (V0.5 cleanup).
+  //
+  // Deprecation tap fires BEFORE Zod parse (T-0013-139): every request is
+  // counted regardless of body validity.
   // -------------------------------------------------------------------------
   fastify.post('/magic-link', async (req: FastifyRequest, reply: FastifyReply) => {
+    // Deprecation tap — fires on EVERY request, before validation (T-0013-139).
+    req.log.warn(
+      {event: 'magic_link_deprecated_route_hit', provider: 'magic-link'},
+      'Magic-link route hit post-SIWA cutover',
+    )
+
     const parsed = magicLinkBody.safeParse(req.body)
     if (!parsed.success) {
       return reply.code(400).send({error: 'invalid_input', detail: 'email format'})
