@@ -20,7 +20,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       ITSAppUsesNonExemptEncryption: false,
     },
   },
-  plugins: ['expo-secure-store'],
+  plugins: ['expo-secure-store', 'expo-apple-authentication'],
   extra: {
     apiUrl: process.env.EXPO_PUBLIC_API_URL,
     sentryDsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
