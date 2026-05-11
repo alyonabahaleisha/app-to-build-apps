@@ -1,0 +1,2483 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CreateScreen T-0011-237: snapshot — default state: create-default 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View>
+            <View
+              style={
+                [
+                  {
+                    "backgroundColor": "#FAFAF7",
+                    "flex": 1,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="create-screen-root"
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderBottomWidth": 0.5,
+                        "flexDirection": "row",
+                        "height": 44,
+                        "justifyContent": "space-between",
+                        "paddingHorizontal": 16,
+                      },
+                      {
+                        "borderBottomColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "color": "#14171A",
+                          "fontSize": 24,
+                          "fontWeight": "600",
+                          "lineHeight": 30,
+                        },
+                      ]
+                    }
+                    testID="create-header-title"
+                  >
+                    Create
+                  </Text>
+                  <View
+                    accessibilityLabel="Open settings"
+                    accessibilityRole="button"
+                    accessibilityState={
+                      {
+                        "busy": undefined,
+                        "checked": undefined,
+                        "disabled": undefined,
+                        "expanded": undefined,
+                        "selected": undefined,
+                      }
+                    }
+                    accessibilityValue={
+                      {
+                        "max": undefined,
+                        "min": undefined,
+                        "now": undefined,
+                        "text": undefined,
+                      }
+                    }
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      {
+                        "bottom": 15,
+                        "left": 15,
+                        "right": 15,
+                        "top": 15,
+                      }
+                    }
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      [
+                        {
+                          "borderRadius": 16,
+                          "borderWidth": 0.5,
+                          "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="create-avatar"
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "paddingHorizontal": 16,
+                      "paddingTop": 20,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "gap": 4,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        [
+                          {
+                            "alignItems": "flex-start",
+                            "borderWidth": 0.5,
+                            "flexDirection": "row",
+                            "gap": 8,
+                            "padding": 12,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                          },
+                        ]
+                      }
+                    >
+                      <TextInput
+                        accessibilityLabel="Prompt input"
+                        editable={true}
+                        maxLength={2001}
+                        multiline={true}
+                        numberOfLines={5}
+                        onChangeText={[Function]}
+                        placeholder="Describe a tool you want."
+                        placeholderTextColor="#5C6470"
+                        scrollEnabled={true}
+                        style={
+                          [
+                            {
+                              "flex": 1,
+                              "maxHeight": 120,
+                              "minHeight": 100,
+                              "padding": 0,
+                              "textAlignVertical": "top",
+                            },
+                            {
+                              "color": "#14171A",
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                        testID="prompt-input"
+                        value=""
+                      />
+                      <View
+                        accessibilityHint="Opens waitlist sign-up"
+                        accessibilityLabel="Voice input — coming soon"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        hitSlop={
+                          {
+                            "bottom": 10,
+                            "left": 10,
+                            "right": 10,
+                            "top": 10,
+                          }
+                        }
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          {
+                            "marginTop": 4,
+                          }
+                        }
+                        testID="prompt-mic-button"
+                      >
+                        <View
+                          style={
+                            [
+                              {
+                                "alignItems": "center",
+                                "height": 24,
+                                "justifyContent": "center",
+                                "width": 24,
+                              },
+                              {
+                                "borderColor": "#5C6470",
+                              },
+                            ]
+                          }
+                          testID="icon-mic"
+                        >
+                          <Text
+                            accessibilityElementsHidden={true}
+                            style={
+                              {
+                                "color": "#5C6470",
+                                "fontSize": 16,
+                              }
+                            }
+                          >
+                            🎤
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "marginTop": 16,
+                      }
+                    }
+                    testID="suggested-prompt-chips"
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "marginBottom": 8,
+                            "paddingHorizontal": 4,
+                          },
+                          {
+                            "color": "#5C6470",
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                        ]
+                      }
+                    >
+                      Or try one of these
+                    </Text>
+                    <View
+                      style={
+                        {
+                          "flexDirection": "row",
+                          "flexWrap": "wrap",
+                          "gap": 8,
+                        }
+                      }
+                    >
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="📓 Daily mood journal"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Daily mood journal"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          📓
+                           
+                          Daily mood journal
+                        </Text>
+                      </View>
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="🥗 Weekly grocery list"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Weekly grocery list"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          🥗
+                           
+                          Weekly grocery list
+                        </Text>
+                      </View>
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="🏃 Track my workouts"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Track my workouts"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          🏃
+                           
+                          Track my workouts
+                        </Text>
+                      </View>
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="🧮 Simple expense tracker"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Simple expense tracker"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          🧮
+                           
+                          Simple expense tracker
+                        </Text>
+                      </View>
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="📚 Books I want to read"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Books I want to read"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          📚
+                           
+                          Books I want to read
+                        </Text>
+                      </View>
+                      <View
+                        accessibilityHint="Pre-fills the prompt."
+                        accessibilityLabel="💊 Medication reminder log"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          [
+                            {
+                              "borderWidth": 0.5,
+                              "flexBasis": "48%",
+                              "flexGrow": 1,
+                              "justifyContent": "center",
+                              "minHeight": 44,
+                              "paddingHorizontal": 14,
+                              "paddingVertical": 10,
+                            },
+                            {
+                              "backgroundColor": "#FFFFFF",
+                              "borderColor": "#ECEEF1",
+                              "borderRadius": 9999,
+                            },
+                          ]
+                        }
+                        testID="chip-Medication reminder log"
+                      >
+                        <Text
+                          numberOfLines={1}
+                          style={
+                            [
+                              {
+                                "color": "#14171A",
+                                "fontSize": 13,
+                                "fontWeight": "400",
+                                "lineHeight": 18,
+                              },
+                            ]
+                          }
+                        >
+                          💊
+                           
+                          Medication reminder log
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View
+                accessibilityLabel="Generate tool"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": true,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 28,
+                      "bottom": 32,
+                      "elevation": 8,
+                      "height": 56,
+                      "justifyContent": "center",
+                      "position": "absolute",
+                      "right": 20,
+                      "shadowColor": "#0F1216",
+                      "shadowOffset": {
+                        "height": 8,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.1,
+                      "shadowRadius": 24,
+                      "width": 56,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "opacity": 0.5,
+                    },
+                  ]
+                }
+                testID="create-fab"
+              >
+                <Text
+                  accessibilityElementsHidden={true}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 24,
+                    }
+                  }
+                >
+                  ↑
+                </Text>
+              </View>
+              <View
+                testID="bottom-sheet-modal"
+              >
+                <View>
+                  <Text
+                    style={
+                      [
+                        {
+                          "marginBottom": 16,
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                  >
+                    Voice input is coming soon — want to be notified?
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Create"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`CreateScreen T-0011-238: snapshot — typing state with chips collapsed: create-typing 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View>
+            <View
+              style={
+                [
+                  {
+                    "backgroundColor": "#FAFAF7",
+                    "flex": 1,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="create-screen-root"
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderBottomWidth": 0.5,
+                        "flexDirection": "row",
+                        "height": 44,
+                        "justifyContent": "space-between",
+                        "paddingHorizontal": 16,
+                      },
+                      {
+                        "borderBottomColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "color": "#14171A",
+                          "fontSize": 24,
+                          "fontWeight": "600",
+                          "lineHeight": 30,
+                        },
+                      ]
+                    }
+                    testID="create-header-title"
+                  >
+                    Create
+                  </Text>
+                  <View
+                    accessibilityLabel="Open settings"
+                    accessibilityRole="button"
+                    accessibilityState={
+                      {
+                        "busy": undefined,
+                        "checked": undefined,
+                        "disabled": undefined,
+                        "expanded": undefined,
+                        "selected": undefined,
+                      }
+                    }
+                    accessibilityValue={
+                      {
+                        "max": undefined,
+                        "min": undefined,
+                        "now": undefined,
+                        "text": undefined,
+                      }
+                    }
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      {
+                        "bottom": 15,
+                        "left": 15,
+                        "right": 15,
+                        "top": 15,
+                      }
+                    }
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      [
+                        {
+                          "borderRadius": 16,
+                          "borderWidth": 0.5,
+                          "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="create-avatar"
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "paddingHorizontal": 16,
+                      "paddingTop": 20,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "gap": 4,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        [
+                          {
+                            "alignItems": "flex-start",
+                            "borderWidth": 0.5,
+                            "flexDirection": "row",
+                            "gap": 8,
+                            "padding": 12,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                          },
+                        ]
+                      }
+                    >
+                      <TextInput
+                        accessibilityLabel="Prompt input"
+                        editable={true}
+                        maxLength={2001}
+                        multiline={true}
+                        numberOfLines={5}
+                        onChangeText={[Function]}
+                        placeholder="Describe a tool you want."
+                        placeholderTextColor="#5C6470"
+                        scrollEnabled={true}
+                        style={
+                          [
+                            {
+                              "flex": 1,
+                              "maxHeight": 120,
+                              "minHeight": 100,
+                              "padding": 0,
+                              "textAlignVertical": "top",
+                            },
+                            {
+                              "color": "#14171A",
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                        testID="prompt-input"
+                        value="My tool idea"
+                      />
+                      <View
+                        accessibilityHint="Opens waitlist sign-up"
+                        accessibilityLabel="Voice input — coming soon"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        hitSlop={
+                          {
+                            "bottom": 10,
+                            "left": 10,
+                            "right": 10,
+                            "top": 10,
+                          }
+                        }
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          {
+                            "marginTop": 4,
+                          }
+                        }
+                        testID="prompt-mic-button"
+                      >
+                        <View
+                          style={
+                            [
+                              {
+                                "alignItems": "center",
+                                "height": 24,
+                                "justifyContent": "center",
+                                "width": 24,
+                              },
+                              {
+                                "borderColor": "#5C6470",
+                              },
+                            ]
+                          }
+                          testID="icon-mic"
+                        >
+                          <Text
+                            accessibilityElementsHidden={true}
+                            style={
+                              {
+                                "color": "#5C6470",
+                                "fontSize": 16,
+                              }
+                            }
+                          >
+                            🎤
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View
+                accessibilityLabel="Generate tool"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 28,
+                      "bottom": 32,
+                      "elevation": 8,
+                      "height": 56,
+                      "justifyContent": "center",
+                      "position": "absolute",
+                      "right": 20,
+                      "shadowColor": "#0F1216",
+                      "shadowOffset": {
+                        "height": 8,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.1,
+                      "shadowRadius": 24,
+                      "width": 56,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "opacity": 1,
+                    },
+                  ]
+                }
+                testID="create-fab"
+              >
+                <Text
+                  accessibilityElementsHidden={true}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 24,
+                    }
+                  }
+                >
+                  ↑
+                </Text>
+              </View>
+              <View
+                testID="bottom-sheet-modal"
+              >
+                <View>
+                  <Text
+                    style={
+                      [
+                        {
+                          "marginBottom": 16,
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                  >
+                    Voice input is coming soon — want to be notified?
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Create"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`CreateScreen T-0011-239: snapshot — with editing pill: create-editing-pill 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View>
+            <View
+              style={
+                [
+                  {
+                    "backgroundColor": "#FAFAF7",
+                    "flex": 1,
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                  },
+                  undefined,
+                ]
+              }
+            >
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="create-screen-root"
+              >
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderBottomWidth": 0.5,
+                        "flexDirection": "row",
+                        "height": 44,
+                        "justifyContent": "space-between",
+                        "paddingHorizontal": 16,
+                      },
+                      {
+                        "borderBottomColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                >
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "color": "#14171A",
+                          "fontSize": 24,
+                          "fontWeight": "600",
+                          "lineHeight": 30,
+                        },
+                      ]
+                    }
+                    testID="create-header-title"
+                  >
+                    Create
+                  </Text>
+                  <View
+                    accessibilityLabel="Open settings"
+                    accessibilityRole="button"
+                    accessibilityState={
+                      {
+                        "busy": undefined,
+                        "checked": undefined,
+                        "disabled": undefined,
+                        "expanded": undefined,
+                        "selected": undefined,
+                      }
+                    }
+                    accessibilityValue={
+                      {
+                        "max": undefined,
+                        "min": undefined,
+                        "now": undefined,
+                        "text": undefined,
+                      }
+                    }
+                    accessible={true}
+                    collapsable={false}
+                    focusable={true}
+                    hitSlop={
+                      {
+                        "bottom": 15,
+                        "left": 15,
+                        "right": 15,
+                        "top": 15,
+                      }
+                    }
+                    onBlur={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    onResponderGrant={[Function]}
+                    onResponderMove={[Function]}
+                    onResponderRelease={[Function]}
+                    onResponderTerminate={[Function]}
+                    onResponderTerminationRequest={[Function]}
+                    onStartShouldSetResponder={[Function]}
+                    style={
+                      [
+                        {
+                          "borderRadius": 16,
+                          "borderWidth": 0.5,
+                          "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="create-avatar"
+                  />
+                </View>
+                <View
+                  style={
+                    {
+                      "flex": 1,
+                      "paddingHorizontal": 16,
+                      "paddingTop": 20,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      [
+                        {
+                          "alignItems": "center",
+                          "alignSelf": "flex-start",
+                          "borderWidth": 0.5,
+                          "flexDirection": "row",
+                          "gap": 6,
+                          "marginBottom": 8,
+                          "paddingHorizontal": 12,
+                          "paddingVertical": 4,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                          "borderRadius": 9999,
+                        },
+                      ]
+                    }
+                    testID="editing-pill"
+                  >
+                    <Text
+                      numberOfLines={1}
+                      style={
+                        [
+                          {
+                            "flexShrink": 1,
+                          },
+                          {
+                            "color": "#14171A",
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                        ]
+                      }
+                    >
+                      Editing '
+                      My workout app
+                      '
+                    </Text>
+                    <View
+                      accessibilityLabel="Dismiss editing context"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      hitSlop={
+                        {
+                          "bottom": 10,
+                          "left": 10,
+                          "right": 10,
+                          "top": 10,
+                        }
+                      }
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "paddingLeft": 2,
+                        }
+                      }
+                      testID="editing-pill-dismiss"
+                    >
+                      <Text
+                        style={
+                          {
+                            "color": "#5C6470",
+                            "fontSize": 13,
+                            "lineHeight": 18,
+                          }
+                        }
+                      >
+                        ×
+                      </Text>
+                    </View>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "gap": 4,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        [
+                          {
+                            "alignItems": "flex-start",
+                            "borderWidth": 0.5,
+                            "flexDirection": "row",
+                            "gap": 8,
+                            "padding": 12,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                          },
+                        ]
+                      }
+                    >
+                      <TextInput
+                        accessibilityLabel="Prompt input"
+                        editable={true}
+                        maxLength={2001}
+                        multiline={true}
+                        numberOfLines={5}
+                        onChangeText={[Function]}
+                        placeholder="Describe a tool you want."
+                        placeholderTextColor="#5C6470"
+                        scrollEnabled={true}
+                        style={
+                          [
+                            {
+                              "flex": 1,
+                              "maxHeight": 120,
+                              "minHeight": 100,
+                              "padding": 0,
+                              "textAlignVertical": "top",
+                            },
+                            {
+                              "color": "#14171A",
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                          ]
+                        }
+                        testID="prompt-input"
+                        value="My workout app"
+                      />
+                      <View
+                        accessibilityHint="Opens waitlist sign-up"
+                        accessibilityLabel="Voice input — coming soon"
+                        accessibilityRole="button"
+                        accessibilityState={
+                          {
+                            "busy": undefined,
+                            "checked": undefined,
+                            "disabled": undefined,
+                            "expanded": undefined,
+                            "selected": undefined,
+                          }
+                        }
+                        accessibilityValue={
+                          {
+                            "max": undefined,
+                            "min": undefined,
+                            "now": undefined,
+                            "text": undefined,
+                          }
+                        }
+                        accessible={true}
+                        collapsable={false}
+                        focusable={true}
+                        hitSlop={
+                          {
+                            "bottom": 10,
+                            "left": 10,
+                            "right": 10,
+                            "top": 10,
+                          }
+                        }
+                        onBlur={[Function]}
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onResponderGrant={[Function]}
+                        onResponderMove={[Function]}
+                        onResponderRelease={[Function]}
+                        onResponderTerminate={[Function]}
+                        onResponderTerminationRequest={[Function]}
+                        onStartShouldSetResponder={[Function]}
+                        style={
+                          {
+                            "marginTop": 4,
+                          }
+                        }
+                        testID="prompt-mic-button"
+                      >
+                        <View
+                          style={
+                            [
+                              {
+                                "alignItems": "center",
+                                "height": 24,
+                                "justifyContent": "center",
+                                "width": 24,
+                              },
+                              {
+                                "borderColor": "#5C6470",
+                              },
+                            ]
+                          }
+                          testID="icon-mic"
+                        >
+                          <Text
+                            accessibilityElementsHidden={true}
+                            style={
+                              {
+                                "color": "#5C6470",
+                                "fontSize": 16,
+                              }
+                            }
+                          >
+                            🎤
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View
+                accessibilityLabel="Generate tool"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "top": 0,
+                  }
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 28,
+                      "bottom": 32,
+                      "elevation": 8,
+                      "height": 56,
+                      "justifyContent": "center",
+                      "position": "absolute",
+                      "right": 20,
+                      "shadowColor": "#0F1216",
+                      "shadowOffset": {
+                        "height": 8,
+                        "width": 0,
+                      },
+                      "shadowOpacity": 0.1,
+                      "shadowRadius": 24,
+                      "width": 56,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "opacity": 1,
+                    },
+                  ]
+                }
+                testID="create-fab"
+              >
+                <Text
+                  accessibilityElementsHidden={true}
+                  style={
+                    {
+                      "color": "#FFFFFF",
+                      "fontSize": 24,
+                    }
+                  }
+                >
+                  ↑
+                </Text>
+              </View>
+              <View
+                testID="bottom-sheet-modal"
+              >
+                <View>
+                  <Text
+                    style={
+                      [
+                        {
+                          "marginBottom": 16,
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                  >
+                    Voice input is coming soon — want to be notified?
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="voice-waitlist-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Create"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;

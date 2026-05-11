@@ -2,8 +2,9 @@
  * Stack param lists for all navigators.
  *
  * ADR-0011 Step 8: added 'Library', 'Run', 'Create' screen names.
+ * ADR-0011 Step 9: added 'Generating', 'OutOfScope', 'QuotaExhausted'.
  * Removed 'Home' (M1 screen deleted in Step 8).
- * 'Chat' and 'AppRunner' remain until Step 11 deletes them.
+ * 'Chat' and 'AppRunner' removed in Step 9 (M1 → V0 cutover).
  *
  * The full LibraryStackParamList + CreateStackParamList will be introduced
  * in Step 11 when Navigation.tsx is finalized to the full V0 shape.
@@ -32,22 +33,43 @@ export type RootStackParamList = {
   Run: {miniAppId: string}
 
   /**
-   * Create — prompt input screen. `prefilledPrompt` is set when arriving
-   * from a Library empty-state chip (T-0011-165) or "Make changes" action.
+   * Create — prompt input screen.
+   * `prefilledPrompt`: set when arriving from a Library empty-state chip
+   *   (T-0011-165) or "Make changes" action.
+   * `editingMiniAppId`: present when arriving from RunScreen "Make changes"
+   *   action (T-0011-202, T-0011-252). Dismissed pill → next submit creates
+   *   a new mini-app (no editingMiniAppId sent to /generate).
    */
-  Create: {prefilledPrompt?: string} | undefined
+  Create: {prefilledPrompt?: string; editingMiniAppId?: string} | undefined
+
+  /**
+   * Generating — full-screen modal pushed from CreateScreen FAB tap.
+   * Consumes SSE from POST /generate; manages client-paced progress bar.
+   * `prompt`: the user-entered prompt forwarded to /generate.
+   * `editingMiniAppId`: forwarded to /generate when editing an existing app.
+   */
+  Generating: {prompt: string; editingMiniAppId?: string}
+
+  /**
+   * OutOfScope — full-screen takeover from GeneratingScreen when the
+   * SSE stream emits an out_of_scope event.
+   * T-0011-213..222, T-0011-231b.
+   */
+  OutOfScope: {
+    capability: 'image_gen' | 'vision' | 'chat' | 'transcription' | 'classification' | 'unknown'
+    reason: string
+    promptHash: string
+    originalPrompt: string
+  }
+
+  /**
+   * QuotaExhausted — full-screen takeover when the server returns
+   * HTTP 429 with error=quota_exhausted.
+   * T-0011-223..226.
+   */
+  QuotaExhausted: {resetAt: string}
 
   // ---------- M1 screens kept until Step 11 deletion ----------
-  /**
-   * @deprecated Replaced by 'Create' — will be deleted in Step 11.
-   */
-  Chat:
-    | {
-        parentProjectId: string
-        prefilledPrompt: string
-        parentAuthorHandle: string
-      }
-    | undefined
   /**
    * @deprecated Replaced by 'Run' — will be deleted in Step 11.
    */

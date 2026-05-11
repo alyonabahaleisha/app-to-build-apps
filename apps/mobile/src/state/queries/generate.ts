@@ -17,7 +17,7 @@
  * In-flight guard (T-0002-146): second `generate()` call while first is
  * active throws `{error: 'in_flight'}`.
  */
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {useQueryClient} from '@tanstack/react-query'
 import {createParser, type EventSourceMessage} from 'eventsource-parser'
 // expo/fetch has streaming response-body support; React Native's global
@@ -30,7 +30,7 @@ import {miniAppsKeys} from '#/state/queries/miniApps'
 
 // -- Public types ------------------------------------------------------------
 
-export type GeneratePhase = 'idle' | 'thinking' | 'building' | 'stalled' | 'done' | 'out_of_scope' | 'error'
+export type GeneratePhase = 'idle' | 'thinking' | 'building' | 'stalled' | 'done' | 'out_of_scope' | 'quota_exhausted' | 'error'
 
 export interface GenerateResult {
   miniApp: {
@@ -62,6 +62,10 @@ export interface GenerateError {
     | 'internal'
     | 'connection_lost'
   detail?: unknown
+}
+
+export interface QuotaExhaustedResult {
+  resetAt: string // ISO 8601
 }
 
 export interface GenerateOutOfScopeEvent {
@@ -96,6 +100,7 @@ export interface UseGenerateMutationResult {
   phase: GeneratePhase
   result: GenerateResult | null
   outOfScope: OutOfScopeResult | null
+  quotaExhausted: QuotaExhaustedResult | null
   error: GenerateError | null
   generate: (input: GenerateInput) => Promise<void>
   reset: () => void
@@ -112,6 +117,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
   const [phase, setPhase] = useState<GeneratePhase>('idle')
   const [result, setResult] = useState<GenerateResult | null>(null)
   const [outOfScope, setOutOfScope] = useState<OutOfScopeResult | null>(null)
+  const [quotaExhausted, setQuotaExhausted] = useState<QuotaExhaustedResult | null>(null)
   const [error, setError] = useState<GenerateError | null>(null)
 
   // Refs for cross-render state that doesn't drive UI directly.
@@ -148,6 +154,7 @@ export function useGenerateMutation(): UseGenerateMutationResult {
     setPhase('idle')
     setResult(null)
     setOutOfScope(null)
+    setQuotaExhausted(null)
     setError(null)
   }, [clearStall])
 
@@ -191,19 +198,28 @@ export function useGenerateMutation(): UseGenerateMutationResult {
         if (!res.ok) {
           // 4xx/5xx response before SSE established — read JSON body.
           let code: GenerateError['code'] = 'internal'
+          let bodyJson: {error?: string; reset_at?: string} = {}
           try {
-            const body = (await res.json()) as {error?: string}
-            const reported = body.error
-            if (
-              reported === 'invalid_input' ||
-              reported === 'invalid_spec' ||
-              reported === 'prompt_too_large' ||
-              reported === 'rate_limited'
-            ) {
-              code = reported
-            }
+            bodyJson = (await res.json()) as {error?: string; reset_at?: string}
           } catch {
             // Body wasn't JSON — stay with 'internal'.
+          }
+          // HTTP 429 with quota_exhausted is a special path — not a generic error.
+          if (res.status === 429 && bodyJson.error === 'quota_exhausted') {
+            clearStall()
+            phaseRef.current = 'quota_exhausted'
+            setPhase('quota_exhausted')
+            setQuotaExhausted({resetAt: bodyJson.reset_at ?? new Date().toISOString()})
+            return
+          }
+          const reported = bodyJson.error
+          if (
+            reported === 'invalid_input' ||
+            reported === 'invalid_spec' ||
+            reported === 'prompt_too_large' ||
+            reported === 'rate_limited'
+          ) {
+            code = reported
           }
           clearStall()
           phaseRef.current = 'error'
@@ -292,5 +308,16 @@ export function useGenerateMutation(): UseGenerateMutationResult {
     [armStall, clearStall],
   )
 
-  return {phase, result, outOfScope, error, generate, reset}
+  // Cleanup on unmount: clear the stall timer and abort any in-flight SSE
+  // stream. Without this, a 30s stall timer armed at screen entry can fire
+  // after GeneratingScreen has navigated away, and Jest reports a worker
+  // forced-exit warning due to active timers (F3/F10 in Roz QA).
+  useEffect(() => {
+    return () => {
+      clearStall()
+      abortRef.current?.abort()
+    }
+  }, [clearStall])
+
+  return {phase, result, outOfScope, quotaExhausted, error, generate, reset}
 }

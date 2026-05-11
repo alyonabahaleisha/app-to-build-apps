@@ -7,14 +7,15 @@
  * redeem attempt fails (token expired/used/malformed), we flip
  * `linkExpired` so the SignIn screen renders its "That link expired" banner.
  *
- * ADR-0011 Step 8: LibraryScreen is the authenticated root. HomeScreen
- * deleted. Chat and AppRunner kept until Step 11 deletes them.
+ * ADR-0011 Step 9: CreateScreen, GeneratingScreen, OutOfScopeScreen, and
+ * QuotaExhaustedScreen wired. ChatScreen deleted. AppRunnerScreen kept
+ * until Step 11 finalizes the full V0 navigator shape.
  *
  * Step 11 will finalize this to the full V0 shape:
  *   SignInScreen ↔ ShellLayout (LibraryStack + CreateStack).
  * Until that step lands, we use a flat stack with LibraryScreen as root.
  *
- * T-0011-290, T-0011-295.
+ * T-0011-290, T-0011-291, T-0011-293, T-0011-295.
  */
 import {NavigationContainer} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
@@ -24,8 +25,11 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 import {SafeContainer} from '#/components/SafeContainer'
 import {useAuthDeepLink} from '#/lib/deepLink'
 import {AppRunnerScreen} from '#/screens/AppRunner'
-import {ChatScreen} from '#/screens/Chat'
+import {CreateScreen} from '#/screens/Create/CreateScreen'
+import {GeneratingScreen} from '#/screens/Generating/GeneratingScreen'
 import {LibraryScreen} from '#/screens/Library/LibraryScreen'
+import {OutOfScopeScreen} from '#/screens/OutOfScope/OutOfScopeScreen'
+import {QuotaExhaustedScreen} from '#/screens/QuotaExhausted/QuotaExhaustedScreen'
 import {SignInScreen as SignIn} from '#/screens/SignIn/SignInScreen'
 import {signInCopy} from '#/screens/SignIn/copy'
 import {useSession} from '#/state/session/useSession'
@@ -62,10 +66,19 @@ export function Navigation() {
       <Stack.Navigator screenOptions={{headerShown: false}}>
         {session.status === 'authenticated' ? (
           <>
-            {/* V0 screens — LibraryScreen is the authenticated root (ADR-0011 Step 8) */}
+            {/* V0 authenticated screens — LibraryScreen is the root (ADR-0011 Step 8) */}
             <Stack.Screen name="Library" component={LibraryScreen} />
-            {/* Run + Create wired in Steps 9-10; Chat + AppRunner kept until Step 11 */}
-            <Stack.Screen name="Chat" component={ChatScreen} />
+            {/* Create flow — Step 9 */}
+            <Stack.Screen name="Create" component={CreateScreen} />
+            <Stack.Screen
+              name="Generating"
+              component={GeneratingScreen}
+              options={{presentation: 'fullScreenModal'}}
+            />
+            <Stack.Screen name="OutOfScope" component={OutOfScopeScreen} />
+            <Stack.Screen name="QuotaExhausted" component={QuotaExhaustedScreen} />
+            {/* Run screen — Step 10 will replace AppRunner with RunScreen */}
+            {/* AppRunner kept until Step 11 deletion */}
             <Stack.Screen name="AppRunner" component={AppRunnerScreen} />
           </>
         ) : (

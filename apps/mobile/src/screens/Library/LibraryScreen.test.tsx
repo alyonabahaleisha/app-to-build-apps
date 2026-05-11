@@ -199,7 +199,9 @@ function renderLibrary(opts: HarnessOptions = {}) {
                 <Stack.Screen name="Library" component={LibraryWithSpy} />
                 <Stack.Screen name="Run" component={StubScreen} />
                 <Stack.Screen name="Create" component={StubScreen} />
-                <Stack.Screen name="Chat" component={StubScreen} />
+                <Stack.Screen name="Generating" component={StubScreen} />
+                <Stack.Screen name="OutOfScope" component={StubScreen} />
+                <Stack.Screen name="QuotaExhausted" component={StubScreen} />
                 <Stack.Screen name="AppRunner" component={StubScreen} />
                 <Stack.Screen name="SignIn" component={StubScreen} />
               </Stack.Navigator>

@@ -1,0 +1,334 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuotaExhaustedScreen T-0011-242: snapshot: quota-exhausted 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flex": 1,
+                  "gap": 24,
+                  "justifyContent": "center",
+                  "paddingHorizontal": 32,
+                }
+              }
+              testID="quota-exhausted-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderRadius": 60,
+                      "height": 120,
+                      "justifyContent": "center",
+                      "width": 120,
+                    },
+                    {
+                      "backgroundColor": "#B8580C33",
+                    },
+                  ]
+                }
+                testID="quota-exhausted-icon"
+              >
+                <Text
+                  style={
+                    {
+                      "fontSize": 64,
+                    }
+                  }
+                >
+                  ⏳
+                </Text>
+              </View>
+              <View
+                accessibilityLiveRegion="polite"
+                style={
+                  {
+                    "alignItems": "center",
+                    "gap": 8,
+                  }
+                }
+              >
+                <Text
+                  accessibilityRole="header"
+                  style={
+                    [
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                      {
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#14171A",
+                        "fontWeight": "600",
+                      },
+                    ]
+                  }
+                  testID="quota-exhausted-headline"
+                >
+                  You've hit the daily limit
+                </Text>
+                <Text
+                  style={
+                    [
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                      {
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#5C6470",
+                      },
+                    ]
+                  }
+                  testID="quota-exhausted-reset-time"
+                >
+                  Your limit resets shortly
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Got it"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                hitSlop={
+                  {
+                    "bottom": 8,
+                    "left": 8,
+                    "right": 8,
+                    "top": 8,
+                  }
+                }
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "height": 48,
+                      "justifyContent": "center",
+                      "marginTop": 8,
+                      "minWidth": 160,
+                      "paddingHorizontal": 32,
+                    },
+                    {
+                      "backgroundColor": "#4F46E5",
+                      "borderRadius": 12,
+                    },
+                  ]
+                }
+                testID="quota-exhausted-got-it"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                      {
+                        "color": "#FFFFFF",
+                        "fontWeight": "600",
+                      },
+                    ]
+                  }
+                >
+                  Got it
+                </Text>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="QuotaExhausted"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;

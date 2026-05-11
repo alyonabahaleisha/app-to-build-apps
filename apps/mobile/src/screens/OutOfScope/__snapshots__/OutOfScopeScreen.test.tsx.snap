@@ -1,0 +1,2623 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OutOfScopeScreen T-0011-241: snapshot for unknown capability: out-of-scope-unknown 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-unknown"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    This capability is coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="This capability is coming. We're working on new features."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`OutOfScopeScreen T-0011-241: snapshots for each capability: out-of-scope-chat 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-chat"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    Conversational AI is coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="Conversational AI is coming. Build tools with back-and-forth AI conversations."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`OutOfScopeScreen T-0011-241: snapshots for each capability: out-of-scope-classification 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-classification"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    AI classification is coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="AI classification is coming. Automatically sort and categorize content."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`OutOfScopeScreen T-0011-241: snapshots for each capability: out-of-scope-image_gen 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-image_gen"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    Image generation is coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="Image generation is coming. Generate and display images from text prompts."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`OutOfScopeScreen T-0011-241: snapshots for each capability: out-of-scope-transcription 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-transcription"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    Voice notes are coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="Voice transcription is coming. Record and transcribe speech to text."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`OutOfScopeScreen T-0011-241: snapshots for each capability: out-of-scope-vision 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                [
+                  {
+                    "flex": 1,
+                  },
+                  {
+                    "paddingBottom": 0,
+                  },
+                ]
+              }
+            >
+              <RCTScrollView
+                contentContainerStyle={
+                  {
+                    "flexGrow": 1,
+                    "gap": 16,
+                    "paddingHorizontal": 24,
+                    "paddingVertical": 32,
+                  }
+                }
+                keyboardShouldPersistTaps="handled"
+              >
+                <View>
+                  <View
+                    style={
+                      [
+                        {
+                          "alignSelf": "center",
+                          "borderRadius": 100,
+                          "borderWidth": 0.5,
+                          "height": 200,
+                          "marginBottom": 8,
+                          "width": 200,
+                        },
+                        {
+                          "backgroundColor": "#FFFFFF",
+                          "borderColor": "#ECEEF1",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-illustration-vision"
+                  />
+                  <Text
+                    accessibilityRole="header"
+                    style={
+                      [
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "fontSize": 16,
+                          "fontWeight": "400",
+                          "lineHeight": 24,
+                        },
+                        {
+                          "color": "#14171A",
+                          "fontWeight": "600",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-headline"
+                  >
+                    Vision analysis is coming…
+                  </Text>
+                  <Text
+                    accessibilityLabel="Vision analysis is coming. Analyze photos and images with AI."
+                    style={
+                      [
+                        {
+                          "fontSize": 13,
+                          "fontWeight": "400",
+                          "lineHeight": 18,
+                        },
+                        {
+                          "textAlign": "center",
+                        },
+                        {
+                          "color": "#5C6470",
+                        },
+                      ]
+                    }
+                    testID="out-of-scope-body"
+                  >
+                    Image generation required
+                  </Text>
+                  <View
+                    style={
+                      {
+                        "gap": 8,
+                        "marginTop": 8,
+                      }
+                    }
+                  >
+                    <Text
+                      style={
+                        [
+                          {
+                            "fontSize": 13,
+                            "fontWeight": "400",
+                            "lineHeight": 18,
+                          },
+                          {
+                            "color": "#5C6470",
+                          },
+                        ]
+                      }
+                    >
+                      Email
+                    </Text>
+                    <TextInput
+                      accessibilityLabel="Email"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      keyboardType="email-address"
+                      onChangeText={[Function]}
+                      placeholder="your@email.com"
+                      placeholderTextColor="#5C6470"
+                      style={
+                        [
+                          {
+                            "borderWidth": 1,
+                            "minHeight": 48,
+                            "paddingHorizontal": 14,
+                            "paddingVertical": 12,
+                          },
+                          {
+                            "fontSize": 16,
+                            "fontWeight": "400",
+                            "lineHeight": 24,
+                          },
+                          {
+                            "backgroundColor": "#FFFFFF",
+                            "borderColor": "#ECEEF1",
+                            "borderRadius": 12,
+                            "color": "#14171A",
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-email-input"
+                      value="user@example.com"
+                    />
+                    <View
+                      accessibilityLabel="Notify me when this lands"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": false,
+                          "checked": undefined,
+                          "disabled": false,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        [
+                          {
+                            "alignItems": "center",
+                            "height": 48,
+                            "justifyContent": "center",
+                            "marginTop": 8,
+                          },
+                          {
+                            "backgroundColor": "#4F46E5",
+                            "borderRadius": 12,
+                            "opacity": 1,
+                          },
+                        ]
+                      }
+                      testID="out-of-scope-submit"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#FFFFFF",
+                              "fontWeight": "600",
+                            },
+                          ]
+                        }
+                      >
+                        Notify me when this lands
+                      </Text>
+                    </View>
+                    <View
+                      accessibilityLabel="Try a different idea"
+                      accessibilityRole="button"
+                      accessibilityState={
+                        {
+                          "busy": undefined,
+                          "checked": undefined,
+                          "disabled": undefined,
+                          "expanded": undefined,
+                          "selected": undefined,
+                        }
+                      }
+                      accessibilityValue={
+                        {
+                          "max": undefined,
+                          "min": undefined,
+                          "now": undefined,
+                          "text": undefined,
+                        }
+                      }
+                      accessible={true}
+                      collapsable={false}
+                      focusable={true}
+                      onBlur={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onResponderGrant={[Function]}
+                      onResponderMove={[Function]}
+                      onResponderRelease={[Function]}
+                      onResponderTerminate={[Function]}
+                      onResponderTerminationRequest={[Function]}
+                      onStartShouldSetResponder={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "height": 44,
+                          "justifyContent": "center",
+                        }
+                      }
+                      testID="out-of-scope-try-different"
+                    >
+                      <Text
+                        style={
+                          [
+                            {
+                              "fontSize": 16,
+                              "fontWeight": "400",
+                              "lineHeight": 24,
+                            },
+                            {
+                              "color": "#14171A",
+                            },
+                          ]
+                        }
+                      >
+                        Try a different idea
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </RCTScrollView>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="OutOfScope"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
