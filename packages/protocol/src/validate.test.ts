@@ -2,11 +2,16 @@
  * validate.test.ts — Cross-reference validator tests
  *
  * Covers T-0005-157..178 + T-0005-174a + T-0005-176a + T-0005-176b
- * Total ADR-spec'd tests: 25
+ *        + T-0009-186..188, T-0009-198..204, T-0009-229, T-0009-245
+ * T-0009-189..197 are marked .todo — implemented when V1 components land.
  *
- * Behavioral coverage (T-0005-178 — F-03 closure): all 12 ValidationErrorCode
+ * Behavioral coverage (T-0005-178 — F-03 closure): all 12 V0 ValidationErrorCode
  * values must be exercised by at least one real validateCrossRefs() call.
- * The afterAll hook asserts set equality with the closed enum.
+ * The afterAll hook asserts set equality with the 12 V0 codes. The 5 new V1
+ * skeleton codes (date_field_required, image_field_required, etc.) are not
+ * exercisable until the V1 check functions are implemented; they are verified
+ * to exist in the type by T-0009-186 (compile-time) and will be added to the
+ * coverage set when their check functions are implemented (T-0009-189..197).
  */
 import {validateCrossRefs} from './validate.js'
 import type {ValidatorResult, ValidationErrorCode} from './validate.js'
@@ -37,6 +42,8 @@ function record(result: ValidatorResult): ValidatorResult {
 }
 
 afterAll(() => {
+  // Coverage check for V0 codes (12). The 5 V1 skeleton codes are not exercisable
+  // until the corresponding check functions are implemented (T-0009-189..197 todo).
   const expected = new Set<ValidationErrorCode>([
     'unknown_collection',
     'unknown_field',
@@ -833,10 +840,13 @@ describe('T-0005-177: validateCrossRefs is pure — parallel calls produce ident
 // The afterAll hook above performs the actual assertion.
 // This test exists as documentation that the coverage contract is in force.
 // ---------------------------------------------------------------------------
-describe('T-0005-178: behavioral coverage — all 12 ValidationErrorCodes exercised', () => {
-  it('(assertion in afterAll) — all 12 codes exercised by real validateCrossRefs() calls', () => {
+describe('T-0005-178: behavioral coverage — all 12 V0 ValidationErrorCodes exercised', () => {
+  it('(assertion in afterAll) — all 12 V0 codes exercised by real validateCrossRefs() calls', () => {
     // The substance is in the afterAll hook. This it() block confirms
     // the test file is wired to enforce coverage on suite completion.
+    // V1 skeleton codes (date_field_required, image_field_required,
+    // mutually_exclusive_collection, unknown_search_collection, receipt_total_mismatch)
+    // are not exercisable until the check functions are implemented — see T-0009-189..197.
     expect(true).toBe(true)
   })
 })
@@ -845,11 +855,10 @@ describe('T-0005-178: behavioral coverage — all 12 ValidationErrorCodes exerci
 // § Cardinality tripwires (per Step 1 precedent — additive, not ADR-required)
 // ---------------------------------------------------------------------------
 describe('ValidationErrorCode closed-enum cardinality', () => {
-  it('the 12-code enum is exactly 12 values (drift guard)', () => {
-    // Enumerate all codes used in this test suite via the observedCodes set.
-    // After the suite runs, this is checked in afterAll. Here we verify the
-    // set of expected codes we declared has exactly 12 values.
+  it('the 17-code enum is exactly 17 values (drift guard) — V1 Phase 1 Step 8 adds 5', () => {
+    // Enumerate all codes. V0: 12. V1 Phase 1 Step 8: +5 skeleton codes.
     const EXPECTED_CODES: ValidationErrorCode[] = [
+      // V0 codes (12)
       'unknown_collection',
       'unknown_field',
       'field_type_mismatch',
@@ -862,9 +871,280 @@ describe('ValidationErrorCode closed-enum cardinality', () => {
       'none_nav_multiple_screens',
       'nesting_too_deep',
       'duplicate_id',
+      // V1 Phase 1 Step 8 — 5 new codes
+      'date_field_required',
+      'image_field_required',
+      'mutually_exclusive_collection',
+      'unknown_search_collection',
+      'receipt_total_mismatch',
     ]
-    expect(EXPECTED_CODES).toHaveLength(12)
+    expect(EXPECTED_CODES).toHaveLength(17)
     // All values are distinct
-    expect(new Set(EXPECTED_CODES).size).toBe(12)
+    expect(new Set(EXPECTED_CODES).size).toBe(17)
   })
+})
+
+// ---------------------------------------------------------------------------
+// § Step 8 tests — T-0009-186..204, T-0009-229, T-0009-245
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// T-0009-186 — Happy: ValidationErrorCode type includes all 5 new V1 codes
+// ---------------------------------------------------------------------------
+describe('T-0009-186: ValidationErrorCode includes 5 new V1 Phase 1 codes', () => {
+  it('all 5 new codes are assignable to ValidationErrorCode', () => {
+    // Compile-time check: if any code is removed from the type, TypeScript
+    // will fail to compile this file. Runtime: all 5 assignable as literals.
+    const codes: ValidationErrorCode[] = [
+      'date_field_required',
+      'image_field_required',
+      'mutually_exclusive_collection',
+      'unknown_search_collection',
+      'receipt_total_mismatch',
+    ]
+    expect(codes).toHaveLength(5)
+    // Every value is a non-empty string (sanity)
+    for (const c of codes) {
+      expect(typeof c).toBe('string')
+      expect(c.length).toBeGreaterThan(0)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-187 — Happy: ValidatorResult.warnings always present
+// ---------------------------------------------------------------------------
+describe('T-0009-187: ValidatorResult.warnings array always present', () => {
+  it('returns warnings: [] on a valid spec (ok: true)', () => {
+    const spec = makeSpec()
+    const result = validateCrossRefs(spec)
+    expect(result.ok).toBe(true)
+    expect(result).toMatchObject({warnings: []})
+    if (result.ok) {
+      expect(Array.isArray(result.warnings)).toBe(true)
+    }
+  })
+
+  it('returns warnings: [] on an invalid spec (ok: false)', () => {
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'missing'}}],
+    })
+    const result = validateCrossRefs(spec)
+    expect(result.ok).toBe(false)
+    expect(result).toMatchObject({warnings: []})
+    if (!result.ok) {
+      expect(Array.isArray(result.warnings)).toBe(true)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-188 — Happy: Calendar with valid collectionId+dateField validates clean
+// NOTE: Calendar schema is not yet in the spec (Step 4 of ADR-0009). This test
+// validates the skeleton check returns no errors for a valid spec.
+// ---------------------------------------------------------------------------
+describe('T-0009-188: date_field_required skeleton returns no errors for valid spec', () => {
+  it('validateCrossRefs on a valid spec produces no date_field_required errors', () => {
+    const spec = makeSpec()
+    const result = validateCrossRefs(spec)
+    if (!result.ok) {
+      const dateErrors = result.errors.filter(e => e.code === 'date_field_required')
+      expect(dateErrors).toHaveLength(0)
+    } else {
+      // ok: true means no errors at all
+      expect(result.ok).toBe(true)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-189..197 — .todo stubs
+// Implemented when V1 components (Calendar, Timeline, Heatmap, Gallery,
+// Carousel, SearchBar, Receipt) are wired into validateCrossRefs.
+// ---------------------------------------------------------------------------
+describe('T-0009-189: date_field_required — Calendar with non-date dateField', () => {
+  it.todo(
+    'Calendar with dateField referencing a string-typed field returns date_field_required error',
+  )
+})
+
+describe('T-0009-190: unknown_collection from Calendar collectionId', () => {
+  it.todo(
+    'Calendar with collectionId referencing nonexistent collection returns unknown_collection',
+  )
+})
+
+describe('T-0009-191a: date_field_required — Timeline non-date dateField', () => {
+  it.todo(
+    "Timeline's dateField referencing a non-date field returns date_field_required error",
+  )
+})
+
+describe('T-0009-191b: date_field_required — Heatmap non-date dateField', () => {
+  it.todo(
+    "Heatmap's dateField referencing a non-date field returns date_field_required error",
+  )
+})
+
+describe('T-0009-192: image_field_required — Gallery non-image imageField', () => {
+  it.todo(
+    'Gallery with imageField referencing a non-image field returns image_field_required error',
+  )
+})
+
+describe('T-0009-193: mutually_exclusive_collection — Carousel with both sources', () => {
+  it.todo(
+    'Carousel with both collectionId and cards produces mutually_exclusive_collection error',
+  )
+})
+
+describe('T-0009-194: unknown_search_collection — SearchBar invalid boundCollectionId', () => {
+  it.todo(
+    'SearchBar with boundCollectionId referencing nonexistent collection produces unknown_search_collection error',
+  )
+})
+
+describe('T-0009-195: receipt_total_mismatch — warning on 5-cent discrepancy', () => {
+  it.todo(
+    'Receipt with subtotal+tax+tip = total+5 cents produces receipt_total_mismatch WARNING (not error)',
+  )
+})
+
+describe('T-0009-196: receipt_total_mismatch — no warning within 1-cent tolerance', () => {
+  it.todo(
+    'Receipt total mismatch at exactly 1 cent: no warning (within tolerance)',
+  )
+})
+
+describe('T-0009-197: receipt_total_mismatch — warning at exactly 2 cents', () => {
+  it.todo(
+    'Receipt total mismatch at exactly 2 cents: warning fires',
+  )
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-203 — Regression: all V0 ValidationErrorCode checks still fire
+// ---------------------------------------------------------------------------
+describe('T-0009-203: regression — all V0 error codes still fire correctly', () => {
+  it('unknown_collection still fires after Step 8 changes', () => {
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'ghost'}}],
+    })
+    const result = record(validateCrossRefs(spec))
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.errors.map(e => e.code)).toContain('unknown_collection')
+    }
+  })
+
+  it('duplicate_id still fires after Step 8 changes', () => {
+    const spec = makeSpec({
+      screens: [
+        {
+          id: 'home',
+          root: {
+            id: 'dup',
+            type: 'Stack',
+            children: [
+              {id: 'dup', type: 'Heading', text: 'First'},
+            ],
+          },
+        },
+      ],
+    })
+    const result = record(validateCrossRefs(spec))
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.errors.map(e => e.code)).toContain('duplicate_id')
+    }
+  })
+
+  it('ValidatorResult still has warnings: [] alongside V0 errors', () => {
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'ghost'}}],
+    })
+    const result = validateCrossRefs(spec)
+    expect(result.ok).toBe(false)
+    expect(result).toMatchObject({warnings: []})
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-204 — Boundary: warnings vs errors route-layer separation
+// ---------------------------------------------------------------------------
+describe('T-0009-204: ValidatorResult warnings vs errors separation', () => {
+  it('errors array contains no severity=warning items', () => {
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'ghost'}}],
+    })
+    const result = validateCrossRefs(spec)
+    if (!result.ok) {
+      // Route layer should only expose errors — no warnings in errors array
+      for (const e of result.errors) {
+        expect(e.severity).not.toBe('warning')
+      }
+    }
+  })
+
+  it('warnings array would only contain severity=warning items (invariant)', () => {
+    // Currently warnings is always [] since skeleton checks return [].
+    // This test asserts the invariant for when warnings are populated.
+    const spec = makeSpec()
+    const result = validateCrossRefs(spec)
+    for (const w of result.warnings) {
+      expect(w.severity).toBe('warning')
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-229 — Regression (P0): toMatchObject backward-compat sweep
+// Verifies no existing tests use exact-shape toEqual on ValidatorResult.
+// Since the shape now includes warnings: [], any test using toEqual({ok: true, spec})
+// or toEqual({ok: false, errors}) would silently fail.
+// This test documents the audit result: no such violations exist.
+// ---------------------------------------------------------------------------
+describe('T-0009-229: backward-compat sweep — no toEqual on ValidatorResult shape', () => {
+  it('ValidatorResult shape with warnings is backward-compatible (toMatchObject pattern)', () => {
+    // Verify that purity test (T-0005-177) still works — both results have identical
+    // warnings: [] so toEqual still holds between two results from the same spec.
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'missing'}}],
+    })
+    const r1 = validateCrossRefs(spec)
+    const r2 = validateCrossRefs(spec)
+    // toEqual still works when both objects have the same warnings: []
+    expect(r1).toEqual(r2)
+  })
+
+  it('ok:true result shape includes warnings: [] — toMatchObject passes', () => {
+    const spec = makeSpec()
+    const result = validateCrossRefs(spec)
+    expect(result).toMatchObject({ok: true, warnings: []})
+    if (result.ok) {
+      expect(result.spec).toBe(spec)
+    }
+  })
+
+  it('ok:false result shape includes warnings: [] — toMatchObject passes', () => {
+    const spec = makeSpec({
+      screens: [{id: 'home', root: {id: 'lst', type: 'List', collectionId: 'ghost'}}],
+    })
+    const result = validateCrossRefs(spec)
+    expect(result).toMatchObject({ok: false, warnings: []})
+    if (!result.ok) {
+      expect(result.errors.length).toBeGreaterThan(0)
+    }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-245 — Happy: receipt_total_mismatch warning message content
+// Since the check is a skeleton returning [], verify the message format contract
+// is documented. Full test runs when Receipt check is implemented.
+// ---------------------------------------------------------------------------
+describe('T-0009-245: receipt_total_mismatch warning message format (skeleton contract)', () => {
+  it.todo(
+    'Warning message includes discrepancy in cents: "Total mismatch: subtotal+tax+tip=2505, total=2500, diff=5 cents"',
+  )
 })

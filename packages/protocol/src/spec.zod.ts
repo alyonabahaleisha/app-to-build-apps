@@ -18,12 +18,13 @@
 import {z} from 'zod'
 
 import {
-  // Layout tier (5)
+  // Layout tier (5 → 6 with Divider)
   ScreenSchema,
   SectionSchema,
   StackSchema,
   RowSchema,
   CardSchema,
+  DividerSchema,
   // Typography tier (3)
   HeadingSchema,
   BodySchema,
@@ -34,25 +35,29 @@ import {
   DateFieldSchema,
   PickerSchema,
   SwitchSchema,
-  // Display tier (4)
+  // Display tier (4 → 6 with AvatarGroup + Callout)
   StatSchema,
   BadgeSchema,
   ChipSchema,
   AvatarSchema,
+  AvatarGroupSchema,
+  CalloutSchema,
   // Lists tier (5)
   ListSchema,
   ListItemSchema,
   SwipeableRowSchema,
   EmptyStateSchema,
   LoadingStateSchema,
-  // Compound tier (4)
+  // Compound tier (4 → 5 with Image)
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
-  // Actions tier (2)
+  ImageSchema,
+  // Actions tier (2 → 3 with IconButton)
   ButtonSchema,
   FabSchema,
+  IconButtonSchema,
 } from './components/index.js'
 
 import {ArchetypeSchema, StanceSchema, PaletteSchema, NavPatternSchema} from './enums.js'
@@ -71,7 +76,7 @@ import {canonicalize} from './canonical.js'
 // Keep this in sync with the NodeSchema discriminated union below.
 // ---------------------------------------------------------------------------
 export type Node =
-  // Layout tier
+  // Layout tier (5 → 6 with Divider)
   | {
       id: string
       type: 'Screen'
@@ -116,6 +121,7 @@ export type Node =
       children: Node[]
       accessibilityLabel?: string
     }
+  | z.infer<typeof DividerSchema>
   // Typography tier
   | z.infer<typeof HeadingSchema>
   | z.infer<typeof BodySchema>
@@ -126,11 +132,13 @@ export type Node =
   | z.infer<typeof DateFieldSchema>
   | z.infer<typeof PickerSchema>
   | z.infer<typeof SwitchSchema>
-  // Display tier
+  // Display tier (V1 Phase 1 Step 3 adds AvatarGroup + Callout)
   | z.infer<typeof StatSchema>
   | z.infer<typeof BadgeSchema>
   | z.infer<typeof ChipSchema>
   | z.infer<typeof AvatarSchema>
+  | z.infer<typeof AvatarGroupSchema>
+  | z.infer<typeof CalloutSchema>
   // Lists tier
   | z.infer<typeof ListSchema>
   | z.infer<typeof ListItemSchema>
@@ -149,9 +157,11 @@ export type Node =
   | z.infer<typeof ListSummarySchema>
   | z.infer<typeof MediaTraySchema>
   | z.infer<typeof ImagePickerSchema>
-  // Actions tier
+  | z.infer<typeof ImageSchema>
+  // Actions tier (2 → 3 with IconButton)
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
+  | z.infer<typeof IconButtonSchema>
 
 // ---------------------------------------------------------------------------
 // § NodeSchema — recursive discriminated union via z.lazy (resolves F-7)
@@ -169,6 +179,8 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     StackSchema.extend({children: z.array(NodeSchema)}),
     RowSchema.extend({children: z.array(NodeSchema)}),
     CardSchema.extend({children: z.array(NodeSchema)}),
+    // V1 Phase 1 Step 1 — Divider (no children)
+    DividerSchema,
     // Typography tier
     HeadingSchema,
     BodySchema,
@@ -179,11 +191,13 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     DateFieldSchema,
     PickerSchema,
     SwitchSchema,
-    // Display tier
+    // Display tier (V1 Phase 1 Step 3 adds AvatarGroup + Callout)
     StatSchema,
     BadgeSchema,
     ChipSchema,
     AvatarSchema,
+    AvatarGroupSchema,
+    CalloutSchema,
     // Lists tier
     ListSchema,
     ListItemSchema,
@@ -195,9 +209,13 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     ListSummarySchema,
     MediaTraySchema,
     ImagePickerSchema,
+    // V1 Phase 1 Step 1 — Image
+    ImageSchema,
     // Actions tier
     ButtonSchema,
     FabSchema,
+    // V1 Phase 1 Step 1 — IconButton
+    IconButtonSchema,
   ]),
 )
 

@@ -1,7 +1,8 @@
 // ADR-0005 Step 8 token tests: T-0005-213..218
+// V1 Phase 1 Step 3: T-0009-068..073, T-0009-240 (tintColor)
 // Tests for concrete token values in tokens.ts.
 
-import {SPACING, RADII, TYPE_BY_STANCE, ELEVATION, MOTION} from './tokens.js'
+import {SPACING, RADII, TYPE_BY_STANCE, ELEVATION, MOTION, tintColor} from './tokens.js'
 
 // ---------------------------------------------------------------------------
 // Cardinality tripwires — catch accidental addition/removal of token entries.
@@ -291,5 +292,67 @@ describe('T-0005-218 — tokens.ts export surface', () => {
     expect(exportedKeys).not.toContain('Palette')
     expect(exportedKeys).not.toContain('StanceSchema')
     expect(exportedKeys).not.toContain('PaletteSchema')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// tintColor — V1 Phase 1 Step 3 (T-0009-068..073, T-0009-240)
+// ---------------------------------------------------------------------------
+
+describe('tintColor (T-0009-068..073, T-0009-240)', () => {
+  // T-0009-068: focus palette indigo → correct rgba
+  it('T-0009-068: tintColor("#4F46E5", 0.06) returns "rgba(79, 70, 229, 0.06)"', () => {
+    expect(tintColor('#4F46E5', 0.06)).toBe('rgba(79, 70, 229, 0.06)')
+  })
+
+  // T-0009-069: black at full opacity
+  it('T-0009-069: tintColor("#000000", 1) returns "rgba(0, 0, 0, 1)"', () => {
+    expect(tintColor('#000000', 1)).toBe('rgba(0, 0, 0, 1)')
+  })
+
+  // T-0009-070: non-hex input throws
+  it('T-0009-070: tintColor("not-a-hex", 0.5) throws', () => {
+    expect(() => tintColor('not-a-hex', 0.5)).toThrow()
+  })
+
+  // T-0009-071: alpha < 0 throws
+  it('T-0009-071: tintColor("#FF0000", -0.1) throws (alpha out of range)', () => {
+    expect(() => tintColor('#FF0000', -0.1)).toThrow()
+  })
+
+  // T-0009-072: alpha > 1 throws
+  it('T-0009-072: tintColor("#FF0000", 1.5) throws (alpha out of range)', () => {
+    expect(() => tintColor('#FF0000', 1.5)).toThrow()
+  })
+
+  // T-0009-073: white at zero opacity (boundary)
+  it('T-0009-073: tintColor("#FFFFFF", 0) returns "rgba(255, 255, 255, 0)"', () => {
+    expect(tintColor('#FFFFFF', 0)).toBe('rgba(255, 255, 255, 0)')
+  })
+
+  // T-0009-240: short-hex rejection — "#FFF" (3-char), "#FFFF" (4-char), etc.
+  it('T-0009-240: tintColor("#FFF", 0.5) throws (short hex)', () => {
+    expect(() => tintColor('#FFF', 0.5)).toThrow()
+  })
+
+  it('T-0009-240: tintColor("#FFFF", 0.5) throws (4-char hex)', () => {
+    expect(() => tintColor('#FFFF', 0.5)).toThrow()
+  })
+
+  it('T-0009-240: tintColor("#FFFFF", 0.5) throws (5-char hex)', () => {
+    expect(() => tintColor('#FFFFF', 0.5)).toThrow()
+  })
+
+  it('T-0009-240: tintColor("#FFFFFFFF", 0.5) throws (8-char hex)', () => {
+    expect(() => tintColor('#FFFFFFFF', 0.5)).toThrow()
+  })
+
+  it('accepts alpha at exactly 0 and 1 (boundaries)', () => {
+    expect(() => tintColor('#4F46E5', 0)).not.toThrow()
+    expect(() => tintColor('#4F46E5', 1)).not.toThrow()
+  })
+
+  it('returns correct rgba for red at 20% (TransactionRow use case)', () => {
+    expect(tintColor('#FF0000', 0.2)).toBe('rgba(255, 0, 0, 0.2)')
   })
 })

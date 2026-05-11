@@ -2,6 +2,7 @@ import {z} from 'zod'
 import {COMPONENT_ID_REGEX} from './layout.js'
 import {ActionSchema} from '../actions.js'
 import {ImageBindingSchema} from '../binding.js'
+import {IconNameSchema} from './slot.js'
 
 // ConditionalSection — renders children only if predicate matches.
 // The entire conditional surface in V0 (brief §2.4 Registry 5): no expression DSL.
@@ -49,6 +50,29 @@ export const MediaTraySchema = z
   })
   .strict()
 export type MediaTray = z.infer<typeof MediaTraySchema>
+
+// ---------------------------------------------------------------------------
+// Image — single image display (V1 Phase 1, Step 1)
+//
+// `alt` is REQUIRED (min 1 char) — accessibility critical.
+// Schema rejects empty alt; renderer also throws defensively (defense-in-depth).
+//
+// source: ImageBinding (literal URI, state slot, or collectionField).
+// fallbackIcon: optional icon name shown when source fails to load.
+// ---------------------------------------------------------------------------
+export const ImageSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('Image'),
+    source: ImageBindingSchema,
+    aspectRatio: z.enum(['1:1', '4:5', '16:9', '3:4', '21:9']).optional(),
+    fit: z.enum(['cover', 'contain']).optional(),
+    radius: z.enum(['radius-none', 'radius-sm', 'radius-md', 'radius-lg', 'radius-full']).optional(),
+    alt: z.string().min(1).max(200), // REQUIRED for accessibility — schema rejects empty
+    fallbackIcon: IconNameSchema.optional(),
+  })
+  .strict()
+export type Image = z.infer<typeof ImageSchema>
 
 // ImagePicker — tappable image picker backed by expo-image-picker.
 // F-9 (closed): valueBinding uses ImageBinding (not a plain value: string).

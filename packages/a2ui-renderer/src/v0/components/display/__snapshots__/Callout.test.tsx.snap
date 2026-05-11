@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CalloutRenderer snapshot (T-0009-087) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="warning: Watch out"
+  accessibilityRole="alert"
+  style={
+    {
+      "alignItems": "flex-start",
+      "backgroundColor": "rgba(196, 106, 42, 0.06)",
+      "borderLeftColor": "#C46A2A",
+      "borderLeftWidth": 4,
+      "borderRadius": 12,
+      "flexDirection": "row",
+      "overflow": "hidden",
+      "padding": 20,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginRight": 8,
+        "paddingTop": 2,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#C46A2A"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={20}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4291062314,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 9v4"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 17h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4291062314,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      numberOfLines={2}
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "letterSpacing": 0,
+          "lineHeight": 26,
+        }
+      }
+    >
+      Watch out
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`CalloutRenderer snapshot (T-0009-087) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="info: Information for you"
+  accessibilityRole="text"
+  style={
+    {
+      "alignItems": "flex-start",
+      "backgroundColor": "rgba(79, 70, 229, 0.06)",
+      "borderLeftColor": "#4F46E5",
+      "borderLeftWidth": 1,
+      "borderRadius": 12,
+      "flexDirection": "row",
+      "overflow": "hidden",
+      "padding": 12,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "marginRight": 8,
+        "paddingTop": 2,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={20}
+      bbWidth={20}
+      fill="none"
+      focusable={false}
+      height={20}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="#4F46E5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+      width={20}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+            "strokeLinejoin",
+          ]
+        }
+        stroke={
+          {
+            "payload": 4283385573,
+            "type": 0,
+          }
+        }
+        strokeLinecap={1}
+        strokeLinejoin={1}
+        strokeWidth={2}
+      >
+        <RNSVGCircle
+          cx="12"
+          cy="12"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          r="10"
+          stroke={
+            {
+              "payload": 4283385573,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 16v-4"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4283385573,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+        <RNSVGPath
+          d="M12 8h.01"
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4283385573,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <Text
+      numberOfLines={2}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "letterSpacing": 0,
+          "lineHeight": 24,
+        }
+      }
+    >
+      Information for you
+    </Text>
+  </View>
+</View>
+`;

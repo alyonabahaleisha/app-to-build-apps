@@ -1,7 +1,7 @@
 /**
  * gen-docs.ts — Generates packages/protocol/generated/docs.md
  *
- * One section per: 12 token types, 28 component schemas, 12 action verbs,
+ * One section per: 13 token types, 33 component schemas, 12 action verbs,
  * 5 binding types, plus top-level Spec / SpecScreen / Collection schemas.
  * ADR-0007's prompt builder concatenates this into the cacheable catalog block.
  *
@@ -10,13 +10,14 @@
  *      RadiusToken, SpaceToken, TypeRole — 7 token-name types; plus Archetype,
  *      BindingKind, Palette, SlotKind, Stance, Tone — 6 behavioral enums = 13 total)
  *   2. Component schemas (tier order: layout, typography, inputs, display,
- *      lists, compound, actions — 28 total)
+ *      lists, compound, actions — 33 total, V1 Phase 1 Step 1 adds Divider + Image + IconButton,
+ *      V1 Phase 1 Step 3 adds AvatarGroup + Callout)
  *   3. Action verbs (schema-declaration order, matching actions.ts — 12 total)
  *   4. Binding types (StringBinding, NumberBinding, BooleanBinding, DateBinding,
  *      ImageBinding — 5 total)
  *   5. Top-level schemas (Collection, Spec, SpecScreen — 3 total)
  *
- * Total: 13 + 28 + 12 + 5 + 3 = 61 sections (≥60 per ADR AC).
+ * Total: 13 + 33 + 12 + 5 + 3 = 66 sections (≥60 per ADR AC).
  *
  * T-0005-183a guard: every component section must have a non-empty body
  * paragraph. Static description map ensures this — no silent-empty-doc.
@@ -80,6 +81,10 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   Chip: 'An interactive pill label that can carry an optional action and a selected state binding. Use for filter chips, tag selectors, and compact toggles within a Row.',
   Avatar: 'A circular image component that displays a user or item photo from an ImageBinding. Falls back to `fallbackText` (initials or an emoji) when the image is unavailable. The `size` prop is a SpaceToken.',
 
+  // V1 Phase 1 Step 3 — display tier additions
+  AvatarGroup: 'A horizontal row of overlapping Avatar circles for displaying a group of up to 5 people. When more avatars exist than `maxShown`, a "+N" overflow chip is appended. The `overlap` prop selects tight (−25% diameter) or spread (−10% diameter) stacking. An auto-generated `accessibilityLabel` lists all names with an "and N others" suffix when truncated.',
+  Callout: 'An inline contextual notice with a semantic `variant` (info, success, warning, tip, danger) that drives icon and background tint. Warning and danger variants use `accessibilityRole="alert"`. An optional trailing `action` renders a compact button. The `tip` variant uses `bg-elevated` with no color tint; all other variants apply a 6% tint of the variant color.',
+
   // Lists tier
   List: 'A vertically-scrolling collection view that renders one instance of `itemTemplate` per row in the named collection. An optional `emptyState` node is shown when the collection has no rows.',
   ListItem: 'A standard list row with a title, optional subtitle, and polymorphic leading/trailing slots. The `tapAction` fires when the user taps the row. Use inside a List\'s `itemTemplate`.',
@@ -96,6 +101,11 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   // Actions tier
   Button: 'A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.',
   Fab: 'A Floating Action Button that anchors to the bottom-right corner of its containing screen. Displays a named icon and fires an action on tap. Use for the single primary creation or navigation action on a screen.',
+
+  // V1 Phase 1 Step 1 additions
+  Divider: 'A horizontal hairline separator for visual breathing room between sections. The optional `label` renders centered text on the line. `inset` controls left/both-side indentation (16pt). `weight` selects hairline (1pt) or thick (2pt). Stance-driven vertical margin: tight for productive, breathing for expressive.',
+  Image: 'A single image display component backed by an ImageBinding source. The required `alt` prop provides VoiceOver text — the schema rejects empty alt strings. `aspectRatio` constrains the rendered dimensions; `fit` controls cover-vs-contain scaling; `radius` rounds corners. On load error, renders the `fallbackIcon` (default: `image`) centered on a `bg-elevated` background.',
+  IconButton: 'A compact icon-only button for headers and toolbars. Requires `accessibilityLabel` (the schema rejects empty values — icon names are not human-readable). The `variant` differs from Button: use `ghost` (transparent, default) instead of Button\'s `text`. Hit target is always ≥ 44pt regardless of icon size. Circular tap area via `radius-full`.',
 }
 
 const VERB_DESCRIPTIONS: Record<string, string> = {
@@ -152,24 +162,32 @@ for (const name of Object.keys(TOKEN_DESCRIPTIONS).sort()) {
   }
 }
 
-// 2. Component schemas (tier order — 28 sections)
+// 2. Component schemas (tier order — 33 sections)
 sections.push(`---\n\n## Component Schemas\n`)
 // Tier order matches components/index.ts: layout, typography, inputs, display, lists, compound, actions
 const COMPONENT_ORDER = [
-  // Layout tier (5)
+  // Layout tier (5 → 6 with Divider)
   'Screen', 'Section', 'Stack', 'Row', 'Card',
+  // V1 Phase 1 Step 1 — layout addition
+  'Divider',
   // Typography tier (3)
   'Heading', 'Body', 'Caption',
   // Inputs tier (5)
   'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
-  // Display tier (4)
+  // Display tier (4 → 6 with AvatarGroup + Callout)
   'Stat', 'Badge', 'Chip', 'Avatar',
+  // V1 Phase 1 Step 3 — display tier additions
+  'AvatarGroup', 'Callout',
   // Lists tier (5)
   'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
-  // Compound tier (4)
+  // Compound tier (4 → 5 with Image)
   'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker',
-  // Actions tier (2)
+  // V1 Phase 1 Step 1 — compound addition
+  'Image',
+  // Actions tier (2 → 3 with IconButton)
   'Button', 'Fab',
+  // V1 Phase 1 Step 1 — actions addition
+  'IconButton',
 ]
 for (const name of COMPONENT_ORDER) {
   const description = COMPONENT_DESCRIPTIONS[name]

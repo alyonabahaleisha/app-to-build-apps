@@ -5,8 +5,20 @@
  *   1. Zod parse (SpecSchema.parse) — structural shape
  *   2. validateCrossRefs (this file) — referential integrity across the spec
  *
- * The validator runs 10 named checks and returns ALL errors, not just the first.
+ * The validator runs 11 named checks and returns ALL errors, not just the first.
  * Each check accumulates its errors independently; the function merges them all.
+ *
+ * V1 Phase 1 Step 8 (ADR-0009): added 5 new ValidationErrorCode values and
+ * 5 skeleton check functions (date_field_required, image_field_required,
+ * mutually_exclusive_collection, unknown_search_collection, receipt_total_mismatch).
+ * The skeleton functions return [] now; they will be implemented when the V1
+ * components (Calendar, Timeline, Heatmap, Gallery, Carousel, SearchBar, Receipt)
+ * are wired up in a later step.
+ *
+ * ValidatorResult contract change: warnings: ValidationError[] is now always
+ * present. Existing call sites that destructure {errors} continue to work.
+ * Route handlers return only errors[].code to clients (ADR-0007 §F security
+ * pattern); warnings flow to telemetry only.
  *
  * Data Sensitivity (Roz note): error returns are `public-safe` for server-side
  * logging. The `message` and `path` fields MUST NOT be returned verbatim to
@@ -23,11 +35,13 @@ import type {Action} from './actions.js'
 // ---------------------------------------------------------------------------
 
 /**
- * Closed enum of 12 error codes. Adding a 13th requires an ADR bump —
- * escalate to Cal. MT-2 architectural call: slot_name_too_long is a Zod-parse
+ * Closed enum of 17 error codes (V1 Phase 1 Step 8 grows 12 → 17).
+ * Adding an 18th requires an ADR bump — escalate to Cal.
+ * MT-2 architectural call: slot_name_too_long is a Zod-parse
  * failure, not a cross-ref failure; it is intentionally absent.
  */
 export type ValidationErrorCode =
+  // V0 codes (12)
   | 'unknown_collection'
   | 'unknown_field'
   | 'field_type_mismatch'
@@ -40,14 +54,33 @@ export type ValidationErrorCode =
   | 'none_nav_multiple_screens'
   | 'nesting_too_deep'
   | 'duplicate_id'
+  // V1 Phase 1 Step 8 — 5 new codes
+  | 'date_field_required'            // Calendar/Timeline/Heatmap: dateField must reference a date-type field
+  | 'image_field_required'           // Gallery: imageField must reference an image-type field
+  | 'mutually_exclusive_collection'  // Carousel: collectionId XOR cards — not both
+  | 'unknown_search_collection'      // SearchBar: boundCollectionId must exist in spec.collections
+  | 'receipt_total_mismatch'         // Receipt: subtotal+tax+tip must equal total (within 1 cent tolerance)
 
 export type ValidationError = {
   path: (string | number)[]
   message: string
   code: ValidationErrorCode
+  /** Severity tier. Defaults to 'error' if absent. 'warning' = soft signal, flows to telemetry only. */
+  severity?: 'error' | 'warning'
 }
 
-export type ValidatorResult = {ok: true; spec: Spec} | {ok: false; errors: ValidationError[]}
+/**
+ * ValidatorResult — V1 Phase 1 Step 8 contract extension.
+ *
+ * warnings is now always present (even on success). Existing call sites that
+ * destructure {errors} continue to work — warnings is additive.
+ *
+ * Route handlers: return only errors[].code to clients (ADR-0007 §F).
+ * Telemetry: warnings[].code flows to observability pipeline.
+ */
+export type ValidatorResult =
+  | {ok: true; spec: Spec; warnings: ValidationError[]}
+  | {ok: false; errors: ValidationError[]; warnings: ValidationError[]}
 
 // ---------------------------------------------------------------------------
 // § Internal helpers
@@ -584,30 +617,95 @@ function checkDuplicateIds(spec: Spec): ValidationError[] {
 }
 
 // ---------------------------------------------------------------------------
+// § V1 Phase 1 Step 8 — skeleton checks (implemented in later step)
+//
+// These stubs satisfy the contract change (ValidatorResult.warnings always
+// present) and allow T-0009-186..197 tests to pass. Full implementations
+// will be wired when the corresponding V1 components are delivered.
+// ---------------------------------------------------------------------------
+
+/**
+ * Check: Calendar/Timeline/Heatmap components must have dateField referencing
+ * a field of type 'date' on the referenced collection.
+ * Skeleton: returns [] — full implementation in a later step.
+ */
+function checkDateFieldRequired(_spec: Spec): ValidationError[] {
+  return []
+}
+
+/**
+ * Check: Gallery component must have imageField referencing a field of type
+ * 'image' on the referenced collection.
+ * Skeleton: returns [] — full implementation in a later step.
+ */
+function checkImageFieldRequired(_spec: Spec): ValidationError[] {
+  return []
+}
+
+/**
+ * Check: Carousel component must use collectionId XOR cards — not both.
+ * Skeleton: returns [] — full implementation in a later step.
+ */
+function checkMutuallyExclusiveCollection(_spec: Spec): ValidationError[] {
+  return []
+}
+
+/**
+ * Check: SearchBar.boundCollectionId must exist in spec.collections.
+ * Skeleton: returns [] — full implementation in a later step.
+ */
+function checkSearchCollectionRef(_spec: Spec): ValidationError[] {
+  return []
+}
+
+/**
+ * Check (WARNING tier): Receipt subtotal+tax+tip must equal total within 1 cent.
+ * Returns ValidationError with severity='warning' when mismatch > 1 cent.
+ * Skeleton: returns [] — full implementation in a later step.
+ */
+function checkReceiptTotalMismatch(_spec: Spec): ValidationError[] {
+  return []
+}
+
+// ---------------------------------------------------------------------------
 // § validateCrossRefs — public API
 // ---------------------------------------------------------------------------
 
 /**
- * Runs 10 named cross-reference checks on a parsed Spec.
+ * Runs 11 named cross-reference checks + 5 V1 skeleton checks on a parsed Spec.
  *
  * Returns ALL errors across all checks — not just the first. Each check
  * accumulates independently; results are merged into a single error array.
+ *
+ * V1 Phase 1 Step 8: ValidatorResult now always includes warnings: ValidationError[].
+ * Errors = hard failures (severity: 'error' or absent severity).
+ * Warnings = soft signals (severity: 'warning') — flow to telemetry, not clients.
  *
  * Contract: call AFTER SpecSchema.parse() succeeds. The validator assumes
  * the spec is structurally valid (Zod-pass) and only checks referential
  * integrity.
  */
 export function validateCrossRefs(spec: Spec): ValidatorResult {
-  const errors: ValidationError[] = [
-    ...checkCollectionRefs(spec),   // Check 1: unknown_collection
-    ...checkFieldRefs(spec),        // Check 2+3: unknown_field, field_type_mismatch
-    ...checkScreenRefs(spec),       // Check 4: unknown_screen
-    ...checkStateSlotRefs(spec),    // Check 5: unknown_state_slot
-    ...checkSeedData(spec),         // Check 6+7+8: seed_field_missing/extra/required_missing
-    ...checkNavScreenCount(spec),   // Check 9: nav_screen_count_mismatch, none_nav_multiple_screens
-    ...checkNestingDepth(spec),     // Check 10: nesting_too_deep
-    ...checkDuplicateIds(spec),     // Check 11: duplicate_id
+  const allIssues: ValidationError[] = [
+    ...checkCollectionRefs(spec),              // Check 1: unknown_collection
+    ...checkFieldRefs(spec),                   // Check 2+3: unknown_field, field_type_mismatch
+    ...checkScreenRefs(spec),                  // Check 4: unknown_screen
+    ...checkStateSlotRefs(spec),               // Check 5: unknown_state_slot
+    ...checkSeedData(spec),                    // Check 6+7+8: seed_field_missing/extra/required_missing
+    ...checkNavScreenCount(spec),              // Check 9: nav_screen_count_mismatch, none_nav_multiple_screens
+    ...checkNestingDepth(spec),                // Check 10: nesting_too_deep
+    ...checkDuplicateIds(spec),                // Check 11: duplicate_id
+    // V1 Phase 1 Step 8 — skeleton checks (return [] until V1 components land)
+    ...checkDateFieldRequired(spec),           // date_field_required
+    ...checkImageFieldRequired(spec),          // image_field_required
+    ...checkMutuallyExclusiveCollection(spec), // mutually_exclusive_collection
+    ...checkSearchCollectionRef(spec),         // unknown_search_collection
+    ...checkReceiptTotalMismatch(spec),        // receipt_total_mismatch (WARNING tier)
   ]
 
-  return errors.length > 0 ? {ok: false, errors} : {ok: true, spec}
+  // Partition: warnings (severity='warning') vs errors (severity='error' or absent)
+  const errors = allIssues.filter(e => e.severity !== 'warning')
+  const warnings = allIssues.filter(e => e.severity === 'warning')
+
+  return errors.length > 0 ? {ok: false, errors, warnings} : {ok: true, spec, warnings}
 }

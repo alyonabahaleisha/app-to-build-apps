@@ -1,8 +1,8 @@
 import {z} from 'zod'
 
-// Layout tier (5)
-export {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema} from './layout.js'
-export type {Screen, Section, Stack, Row, Card} from './layout.js'
+// Layout tier (5 → 6 with Divider)
+export {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema, DividerSchema} from './layout.js'
+export type {Screen, Section, Stack, Row, Card, Divider} from './layout.js'
 
 // Typography tier (3)
 export {HeadingSchema, BodySchema, CaptionSchema} from './typography.js'
@@ -18,9 +18,9 @@ export {
 } from './inputs.js'
 export type {TextField, NumberField, DateField, Picker, Switch} from './inputs.js'
 
-// Display tier (4)
-export {StatSchema, BadgeSchema, ChipSchema, AvatarSchema} from './display.js'
-export type {Stat, Badge, Chip, Avatar} from './display.js'
+// Display tier (4 → 6 with AvatarGroup + Callout)
+export {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
+export type {Stat, Badge, Chip, Avatar, AvatarGroup, Callout} from './display.js'
 
 // Lists tier (5)
 export {
@@ -32,18 +32,19 @@ export {
 } from './lists.js'
 export type {List, ListItem, SwipeableRow, EmptyState, LoadingState} from './lists.js'
 
-// Compound tier (4)
+// Compound tier (4 → 5 with Image)
 export {
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
+  ImageSchema,
 } from './compound.js'
-export type {ConditionalSection, ListSummary, MediaTray, ImagePicker} from './compound.js'
+export type {ConditionalSection, ListSummary, MediaTray, ImagePicker, Image} from './compound.js'
 
-// Actions tier (2)
-export {ButtonSchema, FabSchema} from './actions.js'
-export type {Button, Fab} from './actions.js'
+// Actions tier (2 → 3 with IconButton)
+export {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
+export type {Button, Fab, IconButton} from './actions.js'
 
 // Slot polymorphism (F-3 closure)
 export {SlotSchema, IconNameSchema} from './slot.js'
@@ -61,7 +62,7 @@ export const MAX_NESTING_DEPTH = 8
 //
 // For now this is a placeholder manual union; Step 5 will re-export the
 // recursive NodeSchema that satisfies z.ZodType<ComponentNode>.
-import {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema} from './layout.js'
+import {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema, DividerSchema} from './layout.js'
 import {HeadingSchema, BodySchema, CaptionSchema} from './typography.js'
 import {
   TextFieldSchema,
@@ -70,7 +71,7 @@ import {
   PickerSchema,
   SwitchSchema,
 } from './inputs.js'
-import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema} from './display.js'
+import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 import {
   ListSchema,
   ListItemSchema,
@@ -83,17 +84,21 @@ import {
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
+  ImageSchema,
 } from './compound.js'
-import {ButtonSchema, FabSchema} from './actions.js'
+import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 28 component schemas in one array — used by the Step 5 discriminated union.
+// All 33 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
+// V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema.
+// V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema.
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
   StackSchema,
   RowSchema,
   CardSchema,
+  DividerSchema,
   HeadingSchema,
   BodySchema,
   CaptionSchema,
@@ -106,6 +111,8 @@ export const ALL_COMPONENT_SCHEMAS = [
   BadgeSchema,
   ChipSchema,
   AvatarSchema,
+  AvatarGroupSchema,
+  CalloutSchema,
   ListSchema,
   ListItemSchema,
   SwipeableRowSchema,
@@ -115,11 +122,13 @@ export const ALL_COMPONENT_SCHEMAS = [
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
+  ImageSchema,
   ButtonSchema,
   FabSchema,
+  IconButtonSchema,
 ] as const
 
-// ComponentNode — union type of all 28 component inferred types.
+// ComponentNode — union type of all 33 component inferred types.
 // Recursive children are typed as ComponentNode[] (z.lazy() in Step 5 resolves this).
 export type ComponentNode =
   | z.infer<typeof ScreenSchema>
@@ -127,6 +136,7 @@ export type ComponentNode =
   | z.infer<typeof StackSchema>
   | z.infer<typeof RowSchema>
   | z.infer<typeof CardSchema>
+  | z.infer<typeof DividerSchema>
   | z.infer<typeof HeadingSchema>
   | z.infer<typeof BodySchema>
   | z.infer<typeof CaptionSchema>
@@ -139,6 +149,8 @@ export type ComponentNode =
   | z.infer<typeof BadgeSchema>
   | z.infer<typeof ChipSchema>
   | z.infer<typeof AvatarSchema>
+  | z.infer<typeof AvatarGroupSchema>
+  | z.infer<typeof CalloutSchema>
   | z.infer<typeof ListSchema>
   | z.infer<typeof ListItemSchema>
   | z.infer<typeof SwipeableRowSchema>
@@ -148,5 +160,7 @@ export type ComponentNode =
   | z.infer<typeof ListSummarySchema>
   | z.infer<typeof MediaTraySchema>
   | z.infer<typeof ImagePickerSchema>
+  | z.infer<typeof ImageSchema>
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
+  | z.infer<typeof IconButtonSchema>

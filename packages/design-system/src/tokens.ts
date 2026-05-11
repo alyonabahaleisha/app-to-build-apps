@@ -175,3 +175,33 @@ export const ACCENT_BY_STANCE_PALETTE = Object.freeze({
 // from @app-creator/protocol, never from this file.
 // ---------------------------------------------------------------------------
 export type TypeScale = (typeof TYPE_BY_STANCE)[Stance]
+
+// ---------------------------------------------------------------------------
+// tintColor — V1 Phase 1 Step 3 (T-0009-068..073, T-0009-240)
+//
+// Converts a #RRGGBB hex color + alpha to an `rgba(r, g, b, alpha)` string.
+// Used by Callout (variant tint backgrounds at 6%), Heatmap (intensity gradient),
+// and TransactionRow (category icon background at 20%).
+//
+// Throws on:
+//   - Input shorter or longer than exactly 7 chars (includes `#`): covers 3-char,
+//     4-char, 5-char, 7-char hex inputs (T-0009-240).
+//   - Input not starting with `#`.
+//   - Alpha outside [0, 1].
+//
+// Does NOT throw on invalid hex digits (parseInt returns NaN; caller's problem).
+// ---------------------------------------------------------------------------
+export function tintColor(hex: string, alpha: number): string {
+  if (hex.length !== 7 || !hex.startsWith('#')) {
+    throw new Error(
+      `tintColor: expected #RRGGBB (7 chars), got "${hex}" (${hex.length} chars)`,
+    )
+  }
+  if (alpha < 0 || alpha > 1) {
+    throw new Error(`tintColor: alpha must be in [0, 1], got ${alpha}`)
+  }
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}

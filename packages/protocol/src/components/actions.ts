@@ -31,6 +31,26 @@ export const ButtonSchema = z
   .strict()
 export type Button = z.infer<typeof ButtonSchema>
 
+// ---------------------------------------------------------------------------
+// IconButton — icon-only button (V1 Phase 1, Step 1)
+//
+// `accessibilityLabel` is REQUIRED (min 1 char) — icon alone is not labeled.
+// Schema rejects missing or empty accessibilityLabel.
+// ---------------------------------------------------------------------------
+export const IconButtonSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('IconButton'),
+    icon: IconNameSchema,
+    action: ActionSchema,
+    variant: z.enum(['primary', 'secondary', 'ghost', 'destructive']).optional(),
+    size: z.enum(['sm', 'md', 'lg']).optional(),
+    accessibilityLabel: z.string().min(1).max(80), // REQUIRED — icon alone is not labeled
+    disabled: BooleanBindingSchema.optional(),
+  })
+  .strict()
+export type IconButton = z.infer<typeof IconButtonSchema>
+
 // FAB — floating action button.
 // icon is required (no text label; screen readers need an explicit
 // accessibilityLabel — no default). accessibilityLabel is required.

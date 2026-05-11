@@ -83,5 +83,28 @@ export const CardSchema = z
   .strict()
 export type Card = z.infer<typeof CardSchema>
 
+// ---------------------------------------------------------------------------
+// Divider — horizontal separator (V1 Phase 1, Step 1)
+//
+// Pure visual primitive: no actions, no bindings.
+// label (optional): renders a centered text break ("Today", "—or—").
+// inset: 'none' = full width; 'start' = 16pt left inset; 'both' = 16pt both sides.
+// weight: 'hairline' = 1pt; 'thick' = 2pt.
+//
+// Accessibility: when no label → accessibilityRole="none" (decorative, skipped by
+// VoiceOver). When label present → accessibilityRole="text" + accessibilityLabel=label.
+// ---------------------------------------------------------------------------
+export const DividerSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('Divider'),
+    label: z.string().max(40).optional(),
+    inset: z.enum(['none', 'start', 'both']).optional(),
+    weight: z.enum(['hairline', 'thick']).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+export type Divider = z.infer<typeof DividerSchema>
+
 // Re-export for components/index.ts convenience
 export {AlignSchema, COMPONENT_ID_REGEX}

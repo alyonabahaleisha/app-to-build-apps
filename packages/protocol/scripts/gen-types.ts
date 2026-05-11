@@ -203,6 +203,7 @@ export type Node =
   | {id: string; type: 'Stack'; gap?: string; align?: 'start' | 'center' | 'end' | 'stretch'; children: Node[]; accessibilityLabel?: string}
   | {id: string; type: 'Row'; gap?: string; align?: 'start' | 'center' | 'end'; justify?: 'start' | 'center' | 'end' | 'space-between' | 'space-around'; wrap?: boolean; children: Node[]; accessibilityLabel?: string}
   | {id: string; type: 'Card'; elevation?: 'flat' | 'raised' | 'floating'; padding?: string; radius?: string; children: Node[]; accessibilityLabel?: string}
+  | {id: string; type: 'Divider'; label?: string; inset?: 'none' | 'start' | 'both'; weight?: 'hairline' | 'thick'; accessibilityLabel?: string}
   // Typography tier
   | {id: string; type: 'Heading'; text: string; level?: 1 | 2 | 3; align?: 'start' | 'center' | 'end'; role?: string; accessibilityLabel?: string}
   | {id: string; type: 'Body'; text: string; role?: string; color?: ColorToken; align?: 'start' | 'center' | 'end'; accessibilityLabel?: string}
@@ -218,6 +219,8 @@ export type Node =
   | {id: string; type: 'Badge'; label: string; tone?: Tone; accessibilityLabel?: string}
   | {id: string; type: 'Chip'; label: string; action?: Action; selected?: BooleanBinding; accessibilityLabel?: string}
   | {id: string; type: 'Avatar'; imageBinding?: ImageBinding; fallbackText?: string; size?: string; accessibilityLabel?: string}
+  | {id: string; type: 'AvatarGroup'; avatars: Array<{name: string; imageUrl?: string}>; maxShown?: number; size?: 'sm' | 'md' | 'lg'; overlap?: 'tight' | 'spread'; accessibilityLabel?: string}
+  | {id: string; type: 'Callout'; variant?: 'info' | 'success' | 'warning' | 'tip' | 'danger'; headline: string; body?: string; icon?: string; action?: {label: string; action: Action}; accessibilityLabel?: string}
   // Lists tier
   | {id: string; type: 'List'; collectionId: string; itemTemplate: Node; emptyState?: Node; accessibilityLabel?: string}
   | {id: string; type: 'ListItem'; leading?: Slot; title: StringBinding; subtitle?: StringBinding; trailing?: Slot; tapAction?: Action; accessibilityLabel?: string}
@@ -229,9 +232,11 @@ export type Node =
   | {id: string; type: 'ListSummary'; collectionId: string; field: string; aggregation: 'count' | 'sum' | 'avg' | 'min' | 'max'; label?: string; accessibilityLabel?: string}
   | {id: string; type: 'MediaTray'; collectionId: string; imageField: string; tapAction?: Action; accessibilityLabel?: string}
   | {id: string; type: 'ImagePicker'; label: string; valueBinding: ImageBinding; optional?: boolean; accessibilityLabel?: string}
+  | {id: string; type: 'Image'; source: ImageBinding; aspectRatio?: '1:1' | '4:5' | '16:9' | '3:4' | '21:9'; fit?: 'cover' | 'contain'; radius?: string; alt: string; fallbackIcon?: string}
   // Actions tier
   | {id: string; type: 'Button'; label: string; action: Action; variant?: 'primary' | 'secondary' | 'destructive'; disabled?: BooleanBinding; accessibilityLabel?: string}
   | {id: string; type: 'Fab'; icon: string; action: Action; accessibilityLabel?: string}
+  | {id: string; type: 'IconButton'; icon: string; action: Action; variant?: 'primary' | 'secondary' | 'ghost' | 'destructive'; size?: 'sm' | 'md' | 'lg'; accessibilityLabel: string; disabled?: BooleanBinding}
 `
 
 // Top-level Spec and Screen types

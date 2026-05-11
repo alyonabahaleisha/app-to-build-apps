@@ -10,6 +10,8 @@ export {
   MOTION,
   STANCE_COLORS,
   ACCENT_BY_STANCE_PALETTE,
+  // V1 Phase 1 Step 3
+  tintColor,
 } from './tokens.js'
 
 export type {TypeScale, MotionEntry, MotionTimingEntry, MotionSpringEntry} from './tokens.js'

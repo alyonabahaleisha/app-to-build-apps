@@ -1,14 +1,16 @@
 /**
  * Actions component schema tests — T-0005-072..097, T-0005-098..125,
  * T-0005-126..128 (F-2 Button regression), T-0005-140 (legacy M1 types)
+ * V1 Phase 1 Step 1 additions: T-0009-011..013 (IconButtonSchema)
  * Components: Button, FAB (2 actions tier)
+ * V1 additions: IconButton (1 new)
  *
  * NOTE: This is packages/protocol/src/components/actions.test.ts — it tests
  * the *component* schemas Button and FAB, not the action verb schemas in
  * packages/protocol/src/actions.test.ts (which tests set/update/navigate etc.).
  */
-import {ButtonSchema, FabSchema} from './actions.js'
-import {BUTTON_FIXTURE, FAB_FIXTURE, BOOLEAN_BINDING_LITERAL} from '../../test/fixtures.js'
+import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
+import {BUTTON_FIXTURE, FAB_FIXTURE, BOOLEAN_BINDING_LITERAL, TOAST_ACTION} from '../../test/fixtures.js'
 
 // ---- Button ----
 
@@ -115,6 +117,80 @@ describe('FabSchema', () => {
 
   it('rejects extra props (.strict())', () => {
     expect(() => FabSchema.parse({...FAB_FIXTURE, loading: false})).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// IconButton — V1 Phase 1 Step 1 (T-0009-011..013)
+// ---------------------------------------------------------------------------
+
+describe('IconButtonSchema (T-0009-011..013)', () => {
+  const VALID_ICON_BUTTON = {
+    id: 'icb1',
+    type: 'IconButton' as const,
+    icon: 'plus' as const,
+    action: TOAST_ACTION,
+    accessibilityLabel: 'Add',
+  }
+
+  // T-0009-011: happy path
+  it('T-0009-011: parses with required props (icon, action, accessibilityLabel)', () => {
+    expect(() => IconButtonSchema.parse(VALID_ICON_BUTTON)).not.toThrow()
+  })
+
+  // T-0009-012: empty accessibilityLabel rejects (a11y critical)
+  it('T-0009-012: rejects empty accessibilityLabel', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, accessibilityLabel: ''}),
+    ).toThrow()
+  })
+
+  // T-0009-013: missing accessibilityLabel rejects (required)
+  it('T-0009-013: rejects when accessibilityLabel is missing', () => {
+    const {accessibilityLabel: _al, ...rest} = VALID_ICON_BUTTON
+    expect(() => IconButtonSchema.parse(rest)).toThrow()
+  })
+
+  it('accepts all variant values', () => {
+    for (const variant of ['primary', 'secondary', 'ghost', 'destructive'] as const) {
+      expect(() => IconButtonSchema.parse({...VALID_ICON_BUTTON, variant})).not.toThrow()
+    }
+  })
+
+  it('accepts all size values', () => {
+    for (const size of ['sm', 'md', 'lg'] as const) {
+      expect(() => IconButtonSchema.parse({...VALID_ICON_BUTTON, size})).not.toThrow()
+    }
+  })
+
+  it('accepts optional disabled BooleanBinding', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, disabled: BOOLEAN_BINDING_LITERAL}),
+    ).not.toThrow()
+  })
+
+  it('rejects plain boolean disabled (requires BooleanBinding)', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, disabled: true}),
+    ).toThrow()
+  })
+
+  it('rejects accessibilityLabel > 80 chars', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, accessibilityLabel: 'x'.repeat(81)}),
+    ).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, loading: false}),
+    ).toThrow()
+  })
+
+  it('rejects invalid icon name', () => {
+    expect(() =>
+      IconButtonSchema.parse({...VALID_ICON_BUTTON, icon: 'rainbow'}),
+    ).toThrow()
   })
 })
 

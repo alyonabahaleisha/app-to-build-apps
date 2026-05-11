@@ -1,30 +1,37 @@
 /**
- * Icon name catalog — 80 semantic icon names (closed set).
+ * Icon name catalog — 98 semantic icon names (closed set).
  *
- * Source: canvas-v0-ux.md §Iconography. Names are kebab-case and map 1:1 to
- * Lucide icon exports (PascalCase conversion handled by gen-icon-paths.ts).
+ * Source: canvas-v0-ux.md §Iconography (80 V0) + canvas-v1-catalog-expansion-phase1-ux.md
+ * §Iconography (18 V1 Phase 1 additions — ADR-0009 Step 8). Names are kebab-case and
+ * map 1:1 to Lucide icon exports (PascalCase conversion handled by gen-icon-paths.ts).
  *
  * Note: 'refresh-cw' substitutes the UX doc's 'refresh' — Lucide ships the
  * refresh glyph as 'RefreshCw', not 'Refresh'. Reported to Sable; accepted
  * as canonical name for this catalog.
  *
+ * Note: 'circle-dollar-sign' substitutes the UX doc's 'currency-circle' — Lucide
+ * ships the icon as 'CircleDollarSign'. The catalog name is the kebab-case of the
+ * actual Lucide export.
+ *
  * Counts by tier:
- *   Navigation   8
- *   Action      10
- *   Indicator    8
- *   Input        6
- *   Content     10
- *   Activity    10
- *   Domain      16
- *   Profile      4
- *   Commerce     4
- *   Time         4
- *   Total       80
+ *   Navigation    10  (+chevrons-up-down, chevrons-left-right)
+ *   Action        10
+ *   Indicator     10  (+bell, circle, plus-circle)
+ *   Input          6
+ *   Content       15  (+calendar-days, file-image, file-text, file-video, flag)
+ *   Activity      10
+ *   Domain        17  (+circle-dollar-sign, lightbulb, sliders-vertical, tags)
+ *   Profile        4
+ *   Commerce       4
+ *   Time           4
+ *   Media/Gallery  4  (+gallery-thumbnails, list-checks)
+ *   Accessibility  4  (already counted above — no new tier)
+ *   Total         98
  */
 import {z} from 'zod'
 
 export const ICON_NAMES = [
-  // Navigation (8)
+  // Navigation (10 — V1 adds chevrons-up-down, chevrons-left-right)
   'chevron-left',
   'chevron-right',
   'chevron-up',
@@ -33,6 +40,8 @@ export const ICON_NAMES = [
   'arrow-right',
   'x',
   'more-horizontal',
+  'chevrons-up-down',       // V1 Phase 1 Step 8 — MultiPicker trigger arrow
+  'chevrons-left-right',    // V1 Phase 1 Step 8 — BeforeAfter slider handle
   // Action (10)
   'plus',
   'minus',
@@ -44,7 +53,7 @@ export const ICON_NAMES = [
   'refresh-cw',
   'save',
   'send',
-  // Indicator (8)
+  // Indicator (11 — V1 adds bell, circle, plus-circle)
   'info',
   'alert-triangle',
   'check',
@@ -53,6 +62,9 @@ export const ICON_NAMES = [
   'help-circle',
   'sparkles',
   'dot',
+  'bell',                   // V1 Phase 1 Step 8 — notification / Callout warning
+  'circle',                 // V1 Phase 1 Step 8 — RatingInput glyph variant
+  'plus-circle',            // V1 Phase 1 Step 8 — StepList "Add step" affordance
   // Input (6)
   'search',
   'filter',
@@ -60,7 +72,7 @@ export const ICON_NAMES = [
   'eye-off',
   'mic',
   'paperclip',
-  // Content kind (10)
+  // Content kind (15 — V1 adds calendar-days, file-image, file-text, file-video, flag)
   'list',
   'grid-2x2',
   'image',
@@ -71,6 +83,11 @@ export const ICON_NAMES = [
   'map-pin',
   'tag',
   'hash',
+  'calendar-days',          // V1 Phase 1 Step 8 — Calendar component
+  'file-image',             // V1 Phase 1 Step 8 — DocumentPicker image type
+  'file-text',              // V1 Phase 1 Step 8 — DocumentPicker default
+  'file-video',             // V1 Phase 1 Step 8 — DocumentPicker video type
+  'flag',                   // V1 Phase 1 Step 8 — StepList completion marker
   // Activity (10)
   'heart',
   'star',
@@ -82,7 +99,7 @@ export const ICON_NAMES = [
   'medal',
   'gift',
   'party-popper',
-  // Domain (16)
+  // Domain (20 — V1 adds circle-dollar-sign, gallery-thumbnails, lightbulb, list-checks, sliders-vertical, tags)
   'book',
   'book-open',
   'dumbbell',
@@ -99,6 +116,14 @@ export const ICON_NAMES = [
   'coffee',
   'plane',
   'rocket',
+  'circle-dollar-sign',     // V1 Phase 1 Step 8 — MoneyField generic icon (Lucide: CircleDollarSign)
+  'gallery-thumbnails',     // V1 Phase 1 Step 8 — Gallery empty state icon
+  'lightbulb',              // V1 Phase 1 Step 8 — Callout `tip` variant icon
+  'list-checks',            // V1 Phase 1 Step 8 — StepList icon
+  'sliders-vertical',       // V1 Phase 1 Step 8 — Slider component indicator
+  'tags',                   // V1 Phase 1 Step 8 — MultiPicker tag-style icon
+  'lock',                   // V1 Phase 1 Step 8 — security / privacy patterns
+  'trending-up',            // V1 Phase 1 Step 8 — Stat trend indicator
   // Profile (4)
   'user',
   'users',

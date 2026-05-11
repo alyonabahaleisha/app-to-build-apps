@@ -1,8 +1,10 @@
 /**
  * Layout component schema tests — T-0005-070..071 + parameterized T-0005-072..098
+ * V1 Phase 1 Step 1 additions: T-0009-001..005, T-0009-243 (Divider)
  * Components: Screen, Section, Stack, Row, Card (5 layout tier)
+ * V1 additions: Divider (1 new)
  */
-import {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema} from './layout.js'
+import {ScreenSchema, SectionSchema, StackSchema, RowSchema, CardSchema, DividerSchema} from './layout.js'
 import {
   SCREEN_FIXTURE,
   SECTION_FIXTURE,
@@ -189,6 +191,88 @@ describe('CardSchema', () => {
 
   it('fails with extra props (.strict())', () => {
     expect(() => CardSchema.parse({...CARD_FIXTURE, shadow: true})).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Divider — V1 Phase 1 Step 1 (T-0009-001..005, T-0009-243)
+// ---------------------------------------------------------------------------
+
+describe('DividerSchema (T-0009-001..005)', () => {
+  // T-0009-001: minimal parse — no optional props
+  it('T-0009-001: parses with no optional props', () => {
+    expect(() =>
+      DividerSchema.parse({id: 'div1', type: 'Divider'}),
+    ).not.toThrow()
+  })
+
+  // T-0009-002: parses with all optional props
+  it('T-0009-002: parses with label, inset, weight', () => {
+    expect(() =>
+      DividerSchema.parse({
+        id: 'div2',
+        type: 'Divider',
+        label: 'Today',
+        inset: 'start',
+        weight: 'thick',
+      }),
+    ).not.toThrow()
+  })
+
+  // T-0009-003: label > 40 chars rejects
+  it('T-0009-003: rejects label > 40 chars', () => {
+    expect(() =>
+      DividerSchema.parse({id: 'div3', type: 'Divider', label: 'x'.repeat(41)}),
+    ).toThrow()
+  })
+
+  // T-0009-004: invalid inset value rejects
+  it('T-0009-004: rejects invalid inset "middle"', () => {
+    expect(() =>
+      DividerSchema.parse({id: 'div4', type: 'Divider', inset: 'middle'}),
+    ).toThrow()
+  })
+
+  // T-0009-005: label at exactly 40 chars succeeds
+  it('T-0009-005: accepts label at exactly 40 chars (boundary)', () => {
+    expect(() =>
+      DividerSchema.parse({id: 'div5', type: 'Divider', label: 'x'.repeat(40)}),
+    ).not.toThrow()
+  })
+
+  // T-0009-243: no label → accessibilityLabel auto; label → accessibilityLabel set
+  // Schema-level: accessibilityLabel is optional; renderer enforces the role behavior.
+  it('T-0009-243: parses without accessibilityLabel (renderer sets role per label presence)', () => {
+    // No label, no accessibilityLabel — valid schema
+    expect(() =>
+      DividerSchema.parse({id: 'div6', type: 'Divider'}),
+    ).not.toThrow()
+    // With label — also valid schema
+    expect(() =>
+      DividerSchema.parse({id: 'div7', type: 'Divider', label: 'Or', accessibilityLabel: 'Or'}),
+    ).not.toThrow()
+  })
+
+  it('accepts all valid inset values', () => {
+    for (const inset of ['none', 'start', 'both'] as const) {
+      expect(() =>
+        DividerSchema.parse({id: 'd1', type: 'Divider', inset}),
+      ).not.toThrow()
+    }
+  })
+
+  it('accepts all valid weight values', () => {
+    for (const weight of ['hairline', 'thick'] as const) {
+      expect(() =>
+        DividerSchema.parse({id: 'd2', type: 'Divider', weight}),
+      ).not.toThrow()
+    }
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() =>
+      DividerSchema.parse({id: 'd3', type: 'Divider', color: 'red'}),
+    ).toThrow()
   })
 })
 

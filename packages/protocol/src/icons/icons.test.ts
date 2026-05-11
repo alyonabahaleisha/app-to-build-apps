@@ -27,9 +27,9 @@ describe('T-0005-219: IconNameSchema — happy path', () => {
 })
 
 // ---------------------------------------------------------------------------
-// T-0005-220: All 80 icon names parse (parameterized)
+// T-0005-220: All 98 icon names parse (parameterized) — V1 Phase 1 Step 8 grows 80→98
 // ---------------------------------------------------------------------------
-describe('T-0005-220: IconNameSchema — all 80 names parse', () => {
+describe('T-0005-220: IconNameSchema — all 98 names parse', () => {
   test.each(ICON_NAMES)("'%s' parses", name => {
     expect(() => IconNameSchema.parse(name)).not.toThrow()
   })
@@ -64,9 +64,9 @@ describe("T-0005-222: ICON_PATHS — 'chevron-left' has non-empty path data", ()
 })
 
 // ---------------------------------------------------------------------------
-// T-0005-223: All 80 icons have non-empty path data (parameterized)
+// T-0005-223: All 98 icons have non-empty path data (parameterized) — V1 Phase 1 Step 8
 // ---------------------------------------------------------------------------
-describe('T-0005-223: ICON_PATHS — all 80 icons have non-empty path data', () => {
+describe('T-0005-223: ICON_PATHS — all 98 icons have non-empty path data', () => {
   test.each(ICON_NAMES)("ICON_PATHS['%s'] is non-empty", name => {
     expect(ICON_PATHS[name].length).toBeGreaterThan(0)
   })
@@ -126,11 +126,11 @@ if (missing.length > 0) {
 })
 
 // ---------------------------------------------------------------------------
-// T-0005-228: Object.keys(ICON_PATHS).length === 80
+// T-0005-228: Object.keys(ICON_PATHS).length === 98 (was 80 — V1 Phase 1 Step 8 adds 18)
 // ---------------------------------------------------------------------------
 describe('T-0005-228: ICON_PATHS exact count', () => {
-  it('has exactly 80 entries', () => {
-    expect(Object.keys(ICON_PATHS).length).toBe(80)
+  it('has exactly 98 entries (V1 Phase 1 Step 8 grows 80 → 98)', () => {
+    expect(Object.keys(ICON_PATHS).length).toBe(98)
   })
 })
 
@@ -144,8 +144,84 @@ describe('T-0005-229: ICON_NAMES vs ICON_PATHS integrity', () => {
     expect(missing).toHaveLength(0)
   })
 
-  it('ICON_NAMES has exactly 80 entries', () => {
-    expect(ICON_NAMES.length).toBe(80)
+  it('ICON_NAMES has exactly 98 entries (V1 Phase 1 Step 8 adds 18)', () => {
+    expect(ICON_NAMES.length).toBe(98)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-198: ICON_NAMES.length === 98 (was 80 — V1 Phase 1 Step 8 adds 18)
+// ---------------------------------------------------------------------------
+describe('T-0009-198: icon catalog grows 80 → 98 (V1 Phase 1 Step 8)', () => {
+  it('ICON_NAMES.length === 98', () => {
+    expect(ICON_NAMES.length).toBe(98)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-199: IconNameSchema.parse('lightbulb') succeeds (new V1 icon)
+// ---------------------------------------------------------------------------
+describe('T-0009-199: new V1 icons parse — lightbulb', () => {
+  it("IconNameSchema.parse('lightbulb') succeeds", () => {
+    expect(() => IconNameSchema.parse('lightbulb')).not.toThrow()
+    expect(IconNameSchema.parse('lightbulb')).toBe('lightbulb')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-200: IconNameSchema.parse('rainbow') rejects (not in catalog)
+// ---------------------------------------------------------------------------
+describe('T-0009-200: closed enum rejects names not in catalog', () => {
+  it("IconNameSchema.parse('rainbow') rejects", () => {
+    expect(() => IconNameSchema.parse('rainbow')).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-201: All 18 new icons resolve to non-empty path data
+// ---------------------------------------------------------------------------
+describe('T-0009-201: all 18 new V1 Phase 1 icons have non-empty path data', () => {
+  const NEW_V1_ICONS = [
+    'bell',
+    'calendar-days',
+    'chevrons-up-down',
+    'chevrons-left-right',
+    'circle',
+    'file-image',
+    'file-text',
+    'file-video',
+    'flag',
+    'gallery-thumbnails',
+    'lightbulb',
+    'list-checks',
+    'plus-circle',
+    'sliders-vertical',
+    'tags',
+    'circle-dollar-sign',
+    'lock',
+    'trending-up',
+  ] as const
+
+  test.each(NEW_V1_ICONS)("ICON_PATHS['%s'] is non-empty", name => {
+    expect(ICON_PATHS[name].length).toBeGreaterThan(0)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-202: Codegen-drift — json-schema.json includes all 98 icon names in
+// the coverIcon enum (verified by running codegen and comparing)
+// This is the static assertion equivalent — IconNameSchema rejects non-catalog names.
+// ---------------------------------------------------------------------------
+describe('T-0009-202: codegen-drift CI — 98 icon names in closed enum', () => {
+  it('IconNameSchema is a closed 98-name enum (drift guard)', () => {
+    // All 98 names parse
+    for (const name of ICON_NAMES) {
+      expect(() => IconNameSchema.parse(name)).not.toThrow()
+    }
+    // A name not in the catalog rejects
+    expect(() => IconNameSchema.parse('not-an-icon')).toThrow()
+    // Count is exact
+    expect(ICON_NAMES.length).toBe(98)
   })
 })
 

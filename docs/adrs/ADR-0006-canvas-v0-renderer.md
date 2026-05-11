@@ -266,9 +266,20 @@ const aiBridge: DispatchMiddleware = (action, next) => {
 }
 ```
 
-Composed in order: `[haptics, toastSideEffect, aiBridge, navigate, undoBuffer, …, reducer]`. Each verb's
+**As-shipped composition (post Step 9 amendment):** `[haptics, toastSideEffect, aiBridge, navigate, undoBuffer, feedback, reducer]`. Each verb's
 side-effect middleware runs before the reducer; some short-circuit
 (toast, aiProcess — they don't mutate state directly).
+
+**Step 9 amendment — `feedback` middleware:** ADR-0006 Step 9 added a
+new middleware at position 6 (between `undoBuffer` and `reducer`).
+The `feedback` middleware intercepts `clearCollection` actions to
+present an `Alert.alert` confirmation BEFORE the reducer runs (so
+clearing 100 rows doesn't happen on a single misclick), and acts as a
+KNOWN_VERBS pass-through with `console.warn` for unknown verbs (defense
+against schema drift). Position 6 is correct: `undoBuffer` must see
+`removeItem` first (it captures row data); `feedback` runs after to
+catch `clearCollection` before reducer. Roz Step 9 round-1 ruling
+ACCEPTED this position.
 
 **Forward-compat note for ADR-0007 (Roz Concern 2 / MT-05):** ADR-0007's
 telemetry middleware **must be inserted BEFORE `toast`**, not after. Toast
@@ -520,18 +531,29 @@ For full 12-register coverage, **the integration test (Step 13's demo
 spec)** renders one screen across all 12 registers. A single snapshot
 per register, validated visually during the polish review week.
 
-#### K. Default `useEffect` ban exception: Apple AI capability check
+#### K. `useEffect` ban — exceptions log
 
 The brief and CLAUDE.md ban `useEffect` in renderer components. The
-single exception is `<AICapabilitiesProvider>`'s mount-time capability
-check — it's an inherently asynchronous OS query that needs to fire
-once on render-tree mount. No app logic; pure infra.
+ESLint rule (root `eslint.config.mjs` post Step 6 round-2 migration)
+fires on every `useEffect()` and `React.useEffect()` call within
+`packages/a2ui-renderer/src/v0/**`, with explicit exemptions per the
+list below.
 
-We document this exception explicitly; an ESLint rule allows
-`useEffect` in `src/ai/` but blocks it everywhere else in the renderer
-package.
+Each exception is a documented architectural decision. Adding a 5th
+exception requires a new amendment to this section. As-shipped
+exceptions:
 
-#### L. Reanimated worklets vs. JS-thread animations
+| # | Surface | Exempted path | Justification | Amendment landed |
+|---|---|---|---|---|
+| 1 | `<AICapabilitiesProvider>` mount-time capability check | `src/v0/ai/**` | Inherently asynchronous OS query that fires once on render-tree mount. No app logic; pure infra. | ADR-0006 §K original (this section) |
+| 2 | `useReducedMotion()` hook for `AccessibilityInfo` subscription | `src/v0/a11y/**` | iOS `AccessibilityInfo.isReduceMotionEnabled` is async; the listener for runtime preference changes is an inherent native-event subscription. No alternative exists in React Native that doesn't use `useEffect` for native event subscriptions. | Step 3 (Roz Step 3 Finding 2 — formalized post round-3) |
+| 3 | `queueMicrotask` ref-guard pattern in `<ListSummary>` for one-shot AI dispatch on mount | `src/v0/components/compound/ListSummary.tsx` only — narrowly scoped, NOT a general path exemption | Genuinely different from `useEffect`: no React lifecycle subscription, no cleanup hook, fires after render commit at microtask checkpoint. Strict-mode safe via persistent `dispatchedRef`. The pattern dispatches once on mount; an alternative `useEffect` would couple to React lifecycle for a fire-and-forget operation. **Restricted to ListSummary; do NOT generalize.** Future similar use cases require a separate §K amendment. | Step 8 (Roz Step 8 round-1 ruling — "ACCEPT WITH AMENDMENT NOTE") |
+| 4 | NavigationPrimitive lifecycle (mount registration + unmount cleanup) | `src/v0/nav/**` | `StackNav.tsx`, `TabsNav.tsx`, `ModalOverlayNav.tsx` each register a `NavigationPrimitive` to `forwardingPrimitive` ref on mount and signal `null` on unmount. The unmount cleanup specifically requires `useEffect`'s return-cleanup; no synchronous alternative exists for unmount-time work. The mount-time registration could be done via ref-guard during render in some cases, but the cleanup forces the exception. | Step 10 (Roz Step 10 round-1 ruling — "ACCEPT (Ruling A)") |
+
+The ESLint rule's `ignores` list reflects these 4 exceptions. Adding
+to the list without a §K amendment is forbidden.
+
+#### L. Reanimated worklets vs. JS-thread animations + FlashList v2 amendment
 
 Brief mandates Reanimated 4. List item enter/exit (`addItem`,
 `removeItem`) uses `LinearTransition` and `FadeOut` layout animations
@@ -543,6 +565,23 @@ The dispatcher fires action signals; layout animations respond to
 state changes (FlashList's data array changing). The dispatcher does
 NOT call animation APIs directly — that would couple business logic
 to animation frames.
+
+**Step 7 amendment — FlashList v2 API change.** The original ADR text
+referenced `estimatedItemSize` as the FlashList virtualization prop.
+`@shopify/flash-list@2.3.1` (the version pinned in Step 1) **removed
+`estimatedItemSize` in v2** — auto-measure replaces it under the new
+architecture. The prop doesn't exist in v2 type declarations or
+runtime JS; setting it would be a no-op. The v2 alternative
+(`overrideItemLayout`) only accepts `span`, not `size`.
+
+Step 7 implementation pivots to apply per-layout heights via the
+container's `minHeight` (using `ITEM_LAYOUT_HEIGHT[itemLayout]`,
+where `compact = 44`, `standard = 56`, `expanded = 80`). T-0006-124
+verifies this via `getByTestId('list-container').props.style.minHeight
+=== expectedSize * 3`. Functionally equivalent to the original ADR
+intent (correct sizing per layout variant); the API surface differs.
+
+Roz Step 7 round-2 ruling ACCEPTED this pivot.
 
 #### M. Recursive children resolution via NodeRenderer + React Suspense (no)
 

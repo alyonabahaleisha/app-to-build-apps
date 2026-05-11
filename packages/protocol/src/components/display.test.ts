@@ -1,8 +1,10 @@
 /**
  * Display component schema tests — T-0005-072..097, T-0005-098..125
+ * V1 Phase 1 Step 3 additions: T-0009-074..075 (AvatarGroup), T-0009-079 (Callout)
  * Components: Stat, Badge, Chip, Avatar (4 display tier)
+ * V1 additions: AvatarGroup, Callout (2 new)
  */
-import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema} from './display.js'
+import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 import {STAT_FIXTURE, BADGE_FIXTURE, CHIP_FIXTURE, AVATAR_FIXTURE, TOAST_ACTION} from '../../test/fixtures.js'
 
 // ---- Stat ----
@@ -130,5 +132,163 @@ describe('AvatarSchema', () => {
 
   it('rejects extra props (.strict())', () => {
     expect(() => AvatarSchema.parse({...AVATAR_FIXTURE, shape: 'square'})).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// AvatarGroup — V1 Phase 1 Step 3 (T-0009-074..075)
+// ---------------------------------------------------------------------------
+
+describe('AvatarGroupSchema (T-0009-074..075)', () => {
+  const VALID_AVATAR_GROUP = {
+    id: 'ag1',
+    type: 'AvatarGroup' as const,
+    avatars: [{name: 'Alex'}, {name: 'Sam'}, {name: 'Jordan'}],
+  }
+
+  // T-0009-074: happy path
+  it('T-0009-074: parses with required props (avatars)', () => {
+    expect(() => AvatarGroupSchema.parse(VALID_AVATAR_GROUP)).not.toThrow()
+  })
+
+  // T-0009-075: 6 avatars rejects (max 5)
+  it('T-0009-075: rejects 6 avatars (max 5)', () => {
+    const tooMany = [
+      {name: 'A'}, {name: 'B'}, {name: 'C'},
+      {name: 'D'}, {name: 'E'}, {name: 'F'},
+    ]
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, avatars: tooMany})).toThrow()
+  })
+
+  it('accepts exactly 5 avatars', () => {
+    const five = [{name: 'A'}, {name: 'B'}, {name: 'C'}, {name: 'D'}, {name: 'E'}]
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, avatars: five})).not.toThrow()
+  })
+
+  it('rejects empty avatars array (min 1)', () => {
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, avatars: []})).toThrow()
+  })
+
+  it('accepts all size values', () => {
+    for (const size of ['sm', 'md', 'lg'] as const) {
+      expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, size})).not.toThrow()
+    }
+  })
+
+  it('accepts all overlap values', () => {
+    for (const overlap of ['tight', 'spread'] as const) {
+      expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, overlap})).not.toThrow()
+    }
+  })
+
+  it('accepts optional maxShown in range [1,5]', () => {
+    for (const maxShown of [1, 2, 3, 4, 5]) {
+      expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, maxShown})).not.toThrow()
+    }
+  })
+
+  it('rejects maxShown: 0 (min 1)', () => {
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, maxShown: 0})).toThrow()
+  })
+
+  it('rejects maxShown: 6 (max 5)', () => {
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, maxShown: 6})).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() => AvatarGroupSchema.parse({...VALID_AVATAR_GROUP, gap: 'space-sm'})).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Callout — V1 Phase 1 Step 3 (T-0009-079)
+// ---------------------------------------------------------------------------
+
+describe('CalloutSchema (T-0009-079)', () => {
+  const VALID_CALLOUT = {
+    id: 'cal1',
+    type: 'Callout' as const,
+    headline: 'Welcome to the app',
+  }
+
+  // T-0009-079: happy path
+  it('T-0009-079: parses with required props (headline)', () => {
+    expect(() => CalloutSchema.parse(VALID_CALLOUT)).not.toThrow()
+  })
+
+  it('variant is optional (undefined when omitted — renderer defaults to "info")', () => {
+    // variant is optional in the schema; the renderer handles the default via ?? 'info'.
+    // Using .optional() instead of .default('info') keeps the ZodType<Node> annotation valid.
+    const result = CalloutSchema.parse(VALID_CALLOUT)
+    expect(result.variant).toBeUndefined()
+  })
+
+  it('accepts all 5 variant values', () => {
+    for (const variant of ['info', 'success', 'warning', 'tip', 'danger'] as const) {
+      expect(() => CalloutSchema.parse({...VALID_CALLOUT, variant})).not.toThrow()
+    }
+  })
+
+  it('rejects invalid variant', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, variant: 'error'})).toThrow()
+  })
+
+  it('accepts optional body', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, body: 'Supporting text'})).not.toThrow()
+  })
+
+  it('rejects body > 400 chars', () => {
+    expect(() =>
+      CalloutSchema.parse({...VALID_CALLOUT, body: 'x'.repeat(401)}),
+    ).toThrow()
+  })
+
+  it('rejects headline > 200 chars', () => {
+    expect(() =>
+      CalloutSchema.parse({...VALID_CALLOUT, headline: 'x'.repeat(201)}),
+    ).toThrow()
+  })
+
+  it('rejects empty headline (min 1)', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, headline: ''})).toThrow()
+  })
+
+  it('accepts optional icon (from IconNameSchema)', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, icon: 'info'})).not.toThrow()
+  })
+
+  it('rejects invalid icon name', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, icon: 'rainbow'})).toThrow()
+  })
+
+  it('accepts optional action with label and action verb', () => {
+    expect(() =>
+      CalloutSchema.parse({
+        ...VALID_CALLOUT,
+        action: {label: 'Learn more', action: TOAST_ACTION},
+      }),
+    ).not.toThrow()
+  })
+
+  it('rejects action with empty label', () => {
+    expect(() =>
+      CalloutSchema.parse({
+        ...VALID_CALLOUT,
+        action: {label: '', action: TOAST_ACTION},
+      }),
+    ).toThrow()
+  })
+
+  it('rejects action label > 40 chars', () => {
+    expect(() =>
+      CalloutSchema.parse({
+        ...VALID_CALLOUT,
+        action: {label: 'x'.repeat(41), action: TOAST_ACTION},
+      }),
+    ).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() => CalloutSchema.parse({...VALID_CALLOUT, color: 'red'})).toThrow()
   })
 })

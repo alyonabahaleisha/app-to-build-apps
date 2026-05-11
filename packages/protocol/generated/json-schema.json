@@ -47,6 +47,8 @@
             "arrow-right",
             "x",
             "more-horizontal",
+            "chevrons-up-down",
+            "chevrons-left-right",
             "plus",
             "minus",
             "share",
@@ -65,6 +67,9 @@
             "help-circle",
             "sparkles",
             "dot",
+            "bell",
+            "circle",
+            "plus-circle",
             "search",
             "filter",
             "eye",
@@ -81,6 +86,11 @@
             "map-pin",
             "tag",
             "hash",
+            "calendar-days",
+            "file-image",
+            "file-text",
+            "file-video",
+            "flag",
             "heart",
             "star",
             "bookmark",
@@ -107,6 +117,14 @@
             "coffee",
             "plane",
             "rocket",
+            "circle-dollar-sign",
+            "gallery-thumbnails",
+            "lightbulb",
+            "list-checks",
+            "sliders-vertical",
+            "tags",
+            "lock",
+            "trending-up",
             "user",
             "users",
             "log-out",
@@ -383,6 +401,46 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "Divider"
+                      },
+                      "label": {
+                        "type": "string",
+                        "maxLength": 40
+                      },
+                      "inset": {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "start",
+                          "both"
+                        ]
+                      },
+                      "weight": {
+                        "type": "string",
+                        "enum": [
+                          "hairline",
+                          "thick"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Heading"
                       },
                       "text": {
@@ -495,7 +553,7 @@
                         ]
                       },
                       "color": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/6/properties/color"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/7/properties/color"
                       },
                       "align": {
                         "type": "string",
@@ -680,7 +738,7 @@
                                 "const": "state"
                               },
                               "slot": {
-                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/8/properties/valueBinding/anyOf/1/properties/slot"
+                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding/anyOf/1/properties/slot"
                               }
                             },
                             "required": [
@@ -784,7 +842,7 @@
                                 "const": "state"
                               },
                               "slot": {
-                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/8/properties/valueBinding/anyOf/1/properties/slot"
+                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding/anyOf/1/properties/slot"
                               }
                             },
                             "required": [
@@ -857,7 +915,7 @@
                         "maxLength": 80
                       },
                       "valueBinding": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/8/properties/valueBinding"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
                       },
                       "options": {
                         "type": "array",
@@ -944,7 +1002,7 @@
                                 "const": "state"
                               },
                               "slot": {
-                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/8/properties/valueBinding/anyOf/1/properties/slot"
+                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding/anyOf/1/properties/slot"
                               }
                             },
                             "required": [
@@ -1149,7 +1207,7 @@
                               "patch": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1193,7 +1251,7 @@
                               "item": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1245,7 +1303,7 @@
                               "patch": {
                                 "type": "object",
                                 "additionalProperties": {
-                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action/anyOf/0/properties/value"
+                                  "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
                                 }
                               }
                             },
@@ -1446,6 +1504,132 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "AvatarGroup"
+                      },
+                      "avatars": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80
+                            },
+                            "imageUrl": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "name"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1,
+                        "maxItems": 5
+                      },
+                      "maxShown": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 5
+                      },
+                      "size": {
+                        "type": "string",
+                        "enum": [
+                          "sm",
+                          "md",
+                          "lg"
+                        ]
+                      },
+                      "overlap": {
+                        "type": "string",
+                        "enum": [
+                          "tight",
+                          "spread"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "avatars"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Callout"
+                      },
+                      "variant": {
+                        "type": "string",
+                        "enum": [
+                          "info",
+                          "success",
+                          "warning",
+                          "tip",
+                          "danger"
+                        ]
+                      },
+                      "headline": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "body": {
+                        "type": "string",
+                        "maxLength": 400
+                      },
+                      "icon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "action": {
+                        "type": "object",
+                        "properties": {
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 40
+                          },
+                          "action": {
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                          }
+                        },
+                        "required": [
+                          "label",
+                          "action"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "headline"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "List"
                       },
                       "collectionId": {
@@ -1632,10 +1816,10 @@
                         ]
                       },
                       "trailing": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/18/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -1669,16 +1853,16 @@
                         "maxLength": 200
                       },
                       "leading": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/18/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
                       },
                       "trailing": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/18/properties/leading"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/21/properties/leading"
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "leadingAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "leadingActionIcon": {
                         "$ref": "#/definitions/Spec/properties/coverIcon"
@@ -1692,7 +1876,7 @@
                         ]
                       },
                       "trailingAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "trailingActionIcon": {
                         "$ref": "#/definitions/Spec/properties/coverIcon"
@@ -1743,7 +1927,7 @@
                         "maxLength": 80
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -1895,7 +2079,7 @@
                         ]
                       },
                       "tapAction": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string"
@@ -1952,7 +2136,7 @@
                                 "const": "state"
                               },
                               "slot": {
-                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/8/properties/valueBinding/anyOf/1/properties/slot"
+                                "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding/anyOf/1/properties/slot"
                               }
                             },
                             "required": [
@@ -2017,6 +2201,64 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "Image"
+                      },
+                      "source": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/28/properties/valueBinding"
+                      },
+                      "aspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "1:1",
+                          "4:5",
+                          "16:9",
+                          "3:4",
+                          "21:9"
+                        ]
+                      },
+                      "fit": {
+                        "type": "string",
+                        "enum": [
+                          "cover",
+                          "contain"
+                        ]
+                      },
+                      "radius": {
+                        "type": "string",
+                        "enum": [
+                          "radius-none",
+                          "radius-sm",
+                          "radius-md",
+                          "radius-lg",
+                          "radius-full"
+                        ]
+                      },
+                      "alt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "fallbackIcon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "source",
+                      "alt"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Button"
                       },
                       "label": {
@@ -2052,10 +2294,10 @@
                         ]
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "disabled": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/12/properties/valueBinding"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/13/properties/valueBinding"
                       },
                       "fullWidth": {
                         "type": "boolean"
@@ -2087,11 +2329,63 @@
                         "$ref": "#/definitions/Spec/properties/coverIcon"
                       },
                       "action": {
-                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action"
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
                       },
                       "accessibilityLabel": {
                         "type": "string",
                         "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "icon",
+                      "action",
+                      "accessibilityLabel"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "IconButton"
+                      },
+                      "icon": {
+                        "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "action": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action"
+                      },
+                      "variant": {
+                        "type": "string",
+                        "enum": [
+                          "primary",
+                          "secondary",
+                          "ghost",
+                          "destructive"
+                        ]
+                      },
+                      "size": {
+                        "type": "string",
+                        "enum": [
+                          "sm",
+                          "md",
+                          "lg"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "disabled": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/13/properties/valueBinding"
                       }
                     },
                     "required": [
@@ -2283,7 +2577,7 @@
         "initialState": {
           "type": "object",
           "additionalProperties": {
-            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/15/properties/action/anyOf/0/properties/value"
+            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/16/properties/action/anyOf/0/properties/value"
           },
           "propertyNames": {
             "minLength": 1,

@@ -84,6 +84,10 @@ A horizontal flex container that places its children side-by-side. Supports `jus
 
 A contained surface that groups related content with configurable elevation and radius. Cards visually separate a cluster of nodes from the background, signaling that the content inside belongs together.
 
+## Divider
+
+A horizontal hairline separator for visual breathing room between sections. The optional `label` renders centered text on the line. `inset` controls left/both-side indentation (16pt). `weight` selects hairline (1pt) or thick (2pt). Stance-driven vertical margin: tight for productive, breathing for expressive.
+
 ## Heading
 
 A bold text label used for screen titles, section headers, and card titles. Supports heading levels 1–3 and optional text alignment. The semantic `role` prop is used by screen readers.
@@ -132,6 +136,14 @@ An interactive pill label that can carry an optional action and a selected state
 
 A circular image component that displays a user or item photo from an ImageBinding. Falls back to `fallbackText` (initials or an emoji) when the image is unavailable. The `size` prop is a SpaceToken.
 
+## AvatarGroup
+
+A horizontal row of overlapping Avatar circles for displaying a group of up to 5 people. When more avatars exist than `maxShown`, a "+N" overflow chip is appended. The `overlap` prop selects tight (−25% diameter) or spread (−10% diameter) stacking. An auto-generated `accessibilityLabel` lists all names with an "and N others" suffix when truncated.
+
+## Callout
+
+An inline contextual notice with a semantic `variant` (info, success, warning, tip, danger) that drives icon and background tint. Warning and danger variants use `accessibilityRole="alert"`. An optional trailing `action` renders a compact button. The `tip` variant uses `bg-elevated` with no color tint; all other variants apply a 6% tint of the variant color.
+
 ## List
 
 A vertically-scrolling collection view that renders one instance of `itemTemplate` per row in the named collection. An optional `emptyState` node is shown when the collection has no rows.
@@ -168,6 +180,10 @@ A horizontally-scrolling image tray that renders one image card per row in the n
 
 A camera and photo-library picker bound to an ImageBinding slot. The selected image URI is written to the bound slot. The `optional` flag controls whether the user must select an image.
 
+## Image
+
+A single image display component backed by an ImageBinding source. The required `alt` prop provides VoiceOver text — the schema rejects empty alt strings. `aspectRatio` constrains the rendered dimensions; `fit` controls cover-vs-contain scaling; `radius` rounds corners. On load error, renders the `fallbackIcon` (default: `image`) centered on a `bg-elevated` background.
+
 ## Button
 
 A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.
@@ -175,6 +191,10 @@ A tappable button that fires an action on press. The `variant` prop selects prim
 ## Fab
 
 A Floating Action Button that anchors to the bottom-right corner of its containing screen. Displays a named icon and fires an action on tap. Use for the single primary creation or navigation action on a screen.
+
+## IconButton
+
+A compact icon-only button for headers and toolbars. Requires `accessibilityLabel` (the schema rejects empty values — icon names are not human-readable). The `variant` differs from Button: use `ghost` (transparent, default) instead of Button's `text`. Hit target is always ≥ 44pt regardless of icon size. Circular tap area via `radius-full`.
 
 ---
 

@@ -1,13 +1,16 @@
 /**
  * Compound component schema tests — T-0005-072..097, T-0005-098..125
  * T-0005-072a..072r (F-09): ImagePicker × 3 binding kinds
+ * V1 Phase 1 Step 1 additions: T-0009-006..010 (ImageSchema)
  * Components: ConditionalSection, ListSummary, MediaTray, ImagePicker (4 compound tier)
+ * V1 additions: Image (1 new)
  */
 import {
   ConditionalSectionSchema,
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
+  ImageSchema,
 } from './compound.js'
 import {
   CONDITIONAL_SECTION_FIXTURE,
@@ -19,6 +22,81 @@ import {
   IMAGE_BINDING_STATE,
   IMAGE_BINDING_COLLECTION,
 } from '../../test/fixtures.js'
+
+// ---------------------------------------------------------------------------
+// Image — V1 Phase 1 Step 1 (T-0009-006..010)
+// ---------------------------------------------------------------------------
+
+describe('ImageSchema (T-0009-006..010)', () => {
+  const VALID_IMAGE = {
+    id: 'img1',
+    type: 'Image' as const,
+    source: IMAGE_BINDING_LITERAL,
+    alt: 'A photo of a sunset',
+  }
+
+  // T-0009-006: happy path with required props
+  it('T-0009-006: parses with source and alt', () => {
+    expect(() => ImageSchema.parse(VALID_IMAGE)).not.toThrow()
+  })
+
+  // T-0009-007: empty alt rejects (accessibility critical)
+  it('T-0009-007: rejects empty alt string', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, alt: ''})).toThrow()
+  })
+
+  // T-0009-008: missing alt rejects (required)
+  it('T-0009-008: rejects when alt is missing entirely', () => {
+    const {alt: _alt, ...rest} = VALID_IMAGE
+    expect(() => ImageSchema.parse(rest)).toThrow()
+  })
+
+  // T-0009-009: alt > 200 chars rejects
+  it('T-0009-009: rejects alt > 200 chars', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, alt: 'x'.repeat(201)})).toThrow()
+  })
+
+  // T-0009-010: alt at exactly 200 chars succeeds
+  it('T-0009-010: accepts alt at exactly 200 chars (boundary)', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, alt: 'x'.repeat(200)})).not.toThrow()
+  })
+
+  it('accepts all aspectRatio values', () => {
+    for (const aspectRatio of ['1:1', '4:5', '16:9', '3:4', '21:9'] as const) {
+      expect(() => ImageSchema.parse({...VALID_IMAGE, aspectRatio})).not.toThrow()
+    }
+  })
+
+  it('accepts all fit values', () => {
+    for (const fit of ['cover', 'contain'] as const) {
+      expect(() => ImageSchema.parse({...VALID_IMAGE, fit})).not.toThrow()
+    }
+  })
+
+  it('accepts all radius values', () => {
+    for (const radius of ['radius-none', 'radius-sm', 'radius-md', 'radius-lg', 'radius-full'] as const) {
+      expect(() => ImageSchema.parse({...VALID_IMAGE, radius})).not.toThrow()
+    }
+  })
+
+  it('accepts fallbackIcon', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, fallbackIcon: 'image'})).not.toThrow()
+  })
+
+  it('rejects invalid aspectRatio', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, aspectRatio: '3:2'})).toThrow()
+  })
+
+  it('rejects extra props (.strict())', () => {
+    expect(() => ImageSchema.parse({...VALID_IMAGE, loading: 'lazy'})).toThrow()
+  })
+
+  it('accepts all 3 binding kinds for source', () => {
+    for (const source of [IMAGE_BINDING_LITERAL, IMAGE_BINDING_STATE, IMAGE_BINDING_COLLECTION]) {
+      expect(() => ImageSchema.parse({...VALID_IMAGE, source})).not.toThrow()
+    }
+  })
+})
 
 // ---- F-09: ImagePicker × 3 binding kinds ----
 

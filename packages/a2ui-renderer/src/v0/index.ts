@@ -69,6 +69,8 @@ export {RowRenderer} from './components/layout/Row.js'
 export {CardRenderer, SHADOW_RECIPES} from './components/layout/Card.js'
 export {LAYOUT_DEFAULTS} from './components/layout/defaults.js'
 export {HostProvider, useHost} from './host/HostContext.js'
+// V1 Phase 1 Step 1 — layout tier addition
+export {DividerRenderer} from './components/layout/Divider.js'
 
 // Step 5: Typography tier + Display tier
 export {HeadingRenderer} from './components/typography/Heading.js'
@@ -78,6 +80,9 @@ export {StatRenderer} from './components/display/Stat.js'
 export {BadgeRenderer} from './components/display/Badge.js'
 export {ChipRenderer} from './components/display/Chip.js'
 export {AvatarRenderer} from './components/display/Avatar.js'
+// V1 Phase 1 Step 3 — display tier additions
+export {AvatarGroupRenderer} from './components/display/AvatarGroup.js'
+export {CalloutRenderer} from './components/display/Callout.js'
 
 // Step 6: Inputs tier
 export {TextFieldRenderer} from './components/inputs/TextField.js'
@@ -101,11 +106,15 @@ export {ListSummaryRenderer} from './components/compound/ListSummary.js'
 export {MediaTrayRenderer} from './components/compound/MediaTray.js'
 export {ImagePickerRenderer} from './components/compound/ImagePicker.js'
 export {makeAIDispatcher, sanitizeRowsForPrompt, AI_TIMEOUT_MS} from './ai/aiDispatcher.js'
+// V1 Phase 1 Step 1 — compound tier addition
+export {ImageRenderer} from './components/compound/Image.js'
 
 // Step 9: Actions tier + feedback middleware
 export {ButtonRenderer} from './components/actions/Button.js'
 export {FABRenderer} from './components/actions/FAB.js'
 export {feedback} from './state/middleware/feedback.js'
+// V1 Phase 1 Step 1 — actions tier addition
+export {IconButtonRenderer} from './components/actions/IconButton.js'
 
 // Step 10: Internal navigation patterns + Renderer wrapper
 export {NoNav} from './nav/NoNav.js'

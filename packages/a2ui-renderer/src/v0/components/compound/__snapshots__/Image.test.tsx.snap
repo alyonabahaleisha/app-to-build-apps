@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageRenderer snapshot (T-0009-014) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="A sunset over the mountains"
+  accessibilityRole="image"
+  style={
+    {
+      "aspectRatio": 0.8,
+      "backgroundColor": "#FFFFFF",
+      "borderRadius": 12,
+      "overflow": "hidden",
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <ActivityIndicator
+      color="#5C6470"
+    />
+  </View>
+  <Image
+    accessibilityElementsHidden={true}
+    onError={[Function]}
+    onLoad={[Function]}
+    onLoadStart={[Function]}
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/photo.jpg",
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`ImageRenderer snapshot (T-0009-015) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="A sunset over the mountains"
+  accessibilityRole="image"
+  style={
+    {
+      "aspectRatio": 0.8,
+      "backgroundColor": "#FFFFFF",
+      "borderRadius": 20,
+      "overflow": "hidden",
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      [
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        },
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <ActivityIndicator
+      color="#6B5F56"
+    />
+  </View>
+  <Image
+    accessibilityElementsHidden={true}
+    onError={[Function]}
+    onLoad={[Function]}
+    onLoadStart={[Function]}
+    resizeMode="cover"
+    source={
+      {
+        "uri": "https://example.com/photo.jpg",
+      }
+    }
+    style={
+      {
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+</View>
+`;

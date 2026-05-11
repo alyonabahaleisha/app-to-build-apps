@@ -2,14 +2,15 @@
  * <Icon> — RN component that renders a Lucide icon by semantic name.
  *
  * Props:
- *   name   — one of the 80 canonical icon names from the protocol catalog
+ *   name   — one of the 98 canonical icon names from the protocol catalog
+ *            (80 V0 + 18 V1 Phase 1 additions — ADR-0009 Step 8)
  *   size   — one of {16, 20, 24, 32} (literal union, TS enforces at call site — T-0005-231)
  *   color  — any color string (theme token resolved by the caller)
  *
  * The closed literal-union `size` type prevents invalid sizes at compile time.
  * No runtime guard needed — TS prevents the call site (F-16, T-0005-231).
  *
- * NAME_TO_COMPONENT maps the 80 kebab-case canonical names to their
+ * NAME_TO_COMPONENT maps the 98 kebab-case canonical names to their
  * lucide-react-native PascalCase component equivalents.
  */
 import * as React from 'react'
@@ -22,12 +23,14 @@ type LucideComponent = React.ComponentType<LucideProps>
 // ---------------------------------------------------------------------------
 // NAME_TO_COMPONENT
 //
-// Explicit mapping of all 80 canonical kebab-case names → PascalCase Lucide
+// Explicit mapping of all 98 canonical kebab-case names → PascalCase Lucide
 // RN components. Explicit (not dynamic) so tree-shaking works and TypeScript
 // can verify the mapping at build time.
+//
+// V1 Phase 1 Step 8: 18 new icons added (ADR-0009).
 // ---------------------------------------------------------------------------
 const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
-  // Navigation (8)
+  // Navigation (10 — V1 adds chevrons-up-down, chevrons-left-right)
   'chevron-left': LucideRN.ChevronLeft,
   'chevron-right': LucideRN.ChevronRight,
   'chevron-up': LucideRN.ChevronUp,
@@ -36,6 +39,8 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   'arrow-right': LucideRN.ArrowRight,
   x: LucideRN.X,
   'more-horizontal': LucideRN.MoreHorizontal,
+  'chevrons-up-down': LucideRN.ChevronsUpDown,
+  'chevrons-left-right': LucideRN.ChevronsLeftRight,
   // Action (10)
   plus: LucideRN.Plus,
   minus: LucideRN.Minus,
@@ -47,7 +52,7 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   'refresh-cw': LucideRN.RefreshCw,
   save: LucideRN.Save,
   send: LucideRN.Send,
-  // Indicator (8)
+  // Indicator (11 — V1 adds bell, circle, plus-circle)
   info: LucideRN.Info,
   'alert-triangle': LucideRN.AlertTriangle,
   check: LucideRN.Check,
@@ -56,6 +61,9 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   'help-circle': LucideRN.HelpCircle,
   sparkles: LucideRN.Sparkles,
   dot: LucideRN.Dot,
+  bell: LucideRN.Bell,
+  circle: LucideRN.Circle,
+  'plus-circle': LucideRN.PlusCircle,
   // Input (6)
   search: LucideRN.Search,
   filter: LucideRN.Filter,
@@ -63,7 +71,7 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   'eye-off': LucideRN.EyeOff,
   mic: LucideRN.Mic,
   paperclip: LucideRN.Paperclip,
-  // Content kind (10)
+  // Content kind (15 — V1 adds calendar-days, file-image, file-text, file-video, flag)
   list: LucideRN.List,
   'grid-2x2': LucideRN.Grid2x2,
   image: LucideRN.Image,
@@ -74,6 +82,11 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   'map-pin': LucideRN.MapPin,
   tag: LucideRN.Tag,
   hash: LucideRN.Hash,
+  'calendar-days': LucideRN.CalendarDays,
+  'file-image': LucideRN.FileImage,
+  'file-text': LucideRN.FileText,
+  'file-video': LucideRN.FileVideo,
+  flag: LucideRN.Flag,
   // Activity (10)
   heart: LucideRN.Heart,
   star: LucideRN.Star,
@@ -85,7 +98,7 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   medal: LucideRN.Medal,
   gift: LucideRN.Gift,
   'party-popper': LucideRN.PartyPopper,
-  // Domain (16)
+  // Domain (22 — V1 adds circle-dollar-sign, gallery-thumbnails, lightbulb, list-checks, sliders-vertical, tags)
   book: LucideRN.Book,
   'book-open': LucideRN.BookOpen,
   dumbbell: LucideRN.Dumbbell,
@@ -102,6 +115,14 @@ const NAME_TO_COMPONENT: Record<IconName, LucideComponent> = {
   coffee: LucideRN.Coffee,
   plane: LucideRN.Plane,
   rocket: LucideRN.Rocket,
+  'circle-dollar-sign': LucideRN.CircleDollarSign,
+  'gallery-thumbnails': LucideRN.GalleryThumbnails,
+  lightbulb: LucideRN.Lightbulb,
+  'list-checks': LucideRN.ListChecks,
+  'sliders-vertical': LucideRN.SlidersVertical,
+  tags: LucideRN.Tags,
+  lock: LucideRN.Lock,
+  'trending-up': LucideRN.TrendingUp,
   // Profile (4)
   user: LucideRN.User,
   users: LucideRN.Users,

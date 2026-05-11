@@ -292,14 +292,57 @@ const FAB: Extract<Node, {type: 'FAB'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended Step 9): NodeRenderer discriminates 28 types correctly
+// Minimal node fixtures — V1 Phase 1 Step 1 (Divider, Image, IconButton)
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms)', () => {
+const DIVIDER: Extract<Node, {type: 'Divider'}> = {
+  id: 'div1',
+  type: 'Divider',
+}
+
+const IMAGE: Extract<Node, {type: 'Image'}> = {
+  id: 'img1',
+  type: 'Image',
+  source: {kind: 'literal', value: 'https://example.com/photo.jpg'},
+  alt: 'A sunset',
+}
+
+const ICON_BUTTON: Extract<Node, {type: 'IconButton'}> = {
+  id: 'icb1',
+  type: 'IconButton',
+  icon: 'plus',
+  action: {type: 'toast', message: 'Done'},
+  accessibilityLabel: 'Add item',
+}
+
+// ---------------------------------------------------------------------------
+// Minimal node fixtures — V1 Phase 1 Step 3 (AvatarGroup, Callout)
+// ---------------------------------------------------------------------------
+
+const AVATAR_GROUP: Extract<Node, {type: 'AvatarGroup'}> = {
+  id: 'ag1',
+  type: 'AvatarGroup',
+  avatars: [{name: 'Alex'}, {name: 'Sam'}],
+}
+
+const CALLOUT: Extract<Node, {type: 'Callout'}> = {
+  id: 'cal1',
+  type: 'Callout',
+  variant: 'info',
+  headline: 'Note',
+}
+
+// ---------------------------------------------------------------------------
+// T-0006-062 (extended V1 Phase 1 Step 3): NodeRenderer discriminates 33 types correctly
+// T-0009-088: 33-arm test
+// ---------------------------------------------------------------------------
+
+describe('NodeRenderer discrimination (T-0006-062 — Step 3 extended to 33 arms, T-0009-088)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
     jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
   })
   afterEach(() => {
     jest.restoreAllMocks()
@@ -311,6 +354,7 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms
     ['Stack', STACK],
     ['Row', ROW],
     ['Card', CARD],
+    ['Divider', DIVIDER],
     ['Heading', HEADING],
     ['Body', BODY],
     ['Caption', CAPTION],
@@ -318,6 +362,8 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms
     ['Badge', BADGE],
     ['Chip', CHIP],
     ['Avatar', AVATAR],
+    ['AvatarGroup', AVATAR_GROUP],
+    ['Callout', CALLOUT],
     ['TextField', TEXTFIELD],
     ['NumberField', NUMBERFIELD],
     ['DateField', DATEFIELD],
@@ -332,8 +378,10 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms
     ['ListSummary', LIST_SUMMARY],
     ['MediaTray', MEDIA_TRAY],
     ['ImagePicker', IMAGE_PICKER],
+    ['Image', IMAGE],
     ['Button', BUTTON],
     ['FAB', FAB],
+    ['IconButton', ICON_BUTTON],
   ] as [string, Node][])('renders %s without error', (_type, node) => {
     const host = makeHostCallbacks()
     const {toJSON} = renderNode(node, host)
@@ -348,16 +396,16 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 9 extended to 28 arms
     expect(host.onUnknownNodeType).not.toHaveBeenCalled()
   })
 
-  it('does not call onUnknownNodeType for any of the 28 node types', () => {
+  it('does not call onUnknownNodeType for any of the 33 node types (T-0009-088)', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
-      SCREEN, SECTION, STACK, ROW, CARD,
+      SCREEN, SECTION, STACK, ROW, CARD, DIVIDER,
       HEADING, BODY, CAPTION,
-      STAT, BADGE, CHIP, AVATAR,
+      STAT, BADGE, CHIP, AVATAR, AVATAR_GROUP, CALLOUT,
       TEXTFIELD, NUMBERFIELD, DATEFIELD, PICKER, SWITCH,
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
-      CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER,
-      BUTTON, FAB,
+      CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER, IMAGE,
+      BUTTON, FAB, ICON_BUTTON,
     ]
     for (const node of allNodes) {
       renderNode(node, host)
