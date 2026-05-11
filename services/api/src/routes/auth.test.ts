@@ -29,9 +29,13 @@ import {createLogSink, PINO_LEVEL} from '../../test/mocks/pinoStream.js'
 import {closeTestPool, getTestDb, getTestPool, truncateAll} from '../../test/setup.js'
 import {userJwt} from '../../test/factories.js'
 
+// Suppress unused import warning — PINO_LEVEL is used in T-0001-040.
+void PINO_LEVEL
+
 const TEST_JWT_SECRET = 'auth-route-test-secret-' + randomUUID()
 process.env.SUPABASE_JWT_SECRET = TEST_JWT_SECRET
 process.env.NODE_ENV = 'test'
+process.env.APPLE_SIWA_CLIENT_ID = 'com.appcreator.test'
 
 // --- Mock the Supabase admin client at the module seam ---------------------
 //
@@ -45,6 +49,16 @@ jest.mock('../lib/supabase.js', () => ({
     auth: {admin: {generateLink: mockGenerateLink}},
   }),
   resetSupabaseAdminForTests: () => {},
+}))
+
+// --- Mock verifyAppleIdentityToken at the module seam ----------------------
+//
+// Route tests don't exercise the Apple JWKS network. We mock at the function
+// level — each test configures the mock to resolve or reject as needed.
+const mockVerifyAppleIdentityToken = jest.fn()
+jest.mock('../lib/appleIdentity.js', () => ({
+  ...jest.requireActual('../lib/appleIdentity.js'),
+  verifyAppleIdentityToken: (...args: unknown[]) => mockVerifyAppleIdentityToken(...args),
 }))
 
 // Imported AFTER the env mutations + jest.mock so auth.ts wires up the mock.
@@ -89,6 +103,14 @@ describe('ADR-0001 Step 3 — auth routes', () => {
     mockGenerateLink.mockResolvedValue({
       data: {properties: {action_link: 'https://example.supabase.co/redacted-link'}},
       error: null,
+    })
+    mockVerifyAppleIdentityToken.mockReset()
+    // Default Apple mock: resolves with happy-path claims. Tests override per case.
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub: 'apple-sub-default',
+      email: 'apple-user@example.com',
+      emailVerified: true,
+      isPrivateEmail: false,
     })
     resetRateLimitForTests()
   })
@@ -630,6 +652,577 @@ describe('ADR-0001 Step 3 — auth routes', () => {
       expect(res.json()).toEqual({sent: true})
     } finally {
       await server.close()
+    }
+  })
+
+  // =========================================================================
+  // ADR-0013 Step 1d — POST /auth/apple route tests (T-0013-044..076)
+  // =========================================================================
+
+  // -------------------------------------------------------------------------
+  // Helper: build a valid Apple sign-in body.
+  // -------------------------------------------------------------------------
+  function appleBody(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+    return {
+      identityToken: 'valid.apple.identity.token',
+      displayName: 'Sarah Connor',
+      ...overrides,
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // T-0013-044 — Happy: valid body → 200 with exact response shape
+  // -------------------------------------------------------------------------
+  it('T-0013-044: POST /auth/apple with valid body returns 200 with {access_token, refresh_token, expires_in, user: {id, display_name}} — no email key', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: appleBody({displayName: 'Sarah Connor'}),
+      })
+      expect(res.statusCode).toBe(200)
+      const body = res.json() as Record<string, unknown>
+
+      // Access + refresh tokens present.
+      expect(typeof body['access_token']).toBe('string')
+      expect(typeof body['refresh_token']).toBe('string')
+      expect(typeof body['expires_in']).toBe('number')
+
+      // User shape: EXACTLY {id, display_name}.
+      const user = body['user'] as Record<string, unknown>
+      expect(Object.keys(user).sort()).toEqual(['display_name', 'id'])
+      expect(typeof user['id']).toBe('string')
+      expect(user['display_name']).toBe('Sarah Connor')
+
+      // No email.
+      expect('email' in user).toBe(false)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-045 — Happy: second sign-in preserves display_name from first
+  // -------------------------------------------------------------------------
+  it('T-0013-045: second sign-in (no displayName in body) returns stored display_name from first sign-in', async () => {
+    // First sign-in: Apple sub resolves; display_name='Sarah Connor' captured.
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub: 'apple-sub-persistent',
+      email: 'sarah@example.com',
+      emailVerified: true,
+      isPrivateEmail: false,
+    })
+
+    const server = await buildAuthServer({db})
+    try {
+      await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: appleBody({displayName: 'Sarah Connor'}),
+      })
+
+      // Second sign-in: Apple no longer sends name. Body omits displayName.
+      const second = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: 'valid.apple.identity.token.2'},
+      })
+      expect(second.statusCode).toBe(200)
+      const user = (second.json() as Record<string, unknown>)['user'] as Record<string, unknown>
+      // First sign-in's display_name is preserved (NOT null, NOT undefined).
+      expect(user['display_name']).toBe('Sarah Connor')
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-046 — Happy: Apple Relay alias email absent from response body
+  // -------------------------------------------------------------------------
+  it('T-0013-046: Apple Relay alias email stored in DB but NEVER in response body or serialized response', async () => {
+    const relayEmail = 'abc123@privaterelay.appleid.com'
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub: 'apple-sub-relay',
+      email: relayEmail,
+      emailVerified: false,
+      isPrivateEmail: true,
+    })
+
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: appleBody(),
+      })
+      expect(res.statusCode).toBe(200)
+      const body = res.json() as Record<string, unknown>
+      const user = body['user'] as Record<string, unknown>
+
+      // email key must NOT appear in user object.
+      expect('email' in user).toBe(false)
+      // Relay alias must not appear ANYWHERE in the serialized response.
+      expect(JSON.stringify(body)).not.toContain('@privaterelay.appleid.com')
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-047 — Failure: empty body → 400
+  // -------------------------------------------------------------------------
+  it('T-0013-047: empty body → 400 {error: "invalid_input"}', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({method: 'POST', url: '/auth/apple', payload: {}})
+      expect(res.statusCode).toBe(400)
+      expect(res.json()).toMatchObject({error: 'invalid_input'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-048 — Failure: identityToken = '' → 400
+  // -------------------------------------------------------------------------
+  it('T-0013-048: identityToken = "" → 400 invalid_input', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: ''},
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.json()).toMatchObject({error: 'invalid_input'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-049 — Failure: identityToken > 4096 chars → 400
+  // -------------------------------------------------------------------------
+  it('T-0013-049: identityToken of 4097 chars → 400 invalid_input (length cap)', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: 'a'.repeat(4097)},
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.json()).toMatchObject({error: 'invalid_input'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-050 — Failure: displayName > 120 chars → 400
+  // -------------------------------------------------------------------------
+  it('T-0013-050: displayName of 121 chars → 400 invalid_input', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: 'valid.apple.identity.token', displayName: 'A'.repeat(121)},
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.json()).toMatchObject({error: 'invalid_input'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-051 — Failure: non-string identityToken → 400
+  // -------------------------------------------------------------------------
+  it('T-0013-051: non-string identityToken (number) → 400 invalid_input', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: 12345},
+      })
+      expect(res.statusCode).toBe(400)
+      expect(res.json()).toMatchObject({error: 'invalid_input'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-052 — Failure: malformed → 401 no detail
+  // -------------------------------------------------------------------------
+  it('T-0013-052: verifyAppleIdentityToken throws malformed → 401 {error: "unauthorized"} no detail', async () => {
+    mockVerifyAppleIdentityToken.mockRejectedValue(
+      Object.assign(new Error('malformed'), {code: 'malformed'}),
+    )
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST', url: '/auth/apple', payload: appleBody(),
+      })
+      expect(res.statusCode).toBe(401)
+      const body = res.json() as Record<string, unknown>
+      expect(body).toEqual({error: 'unauthorized'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-053..058 — Failure codes (parameterized)
+  // -------------------------------------------------------------------------
+  const terminalCodes = [
+    'signature_invalid',
+    'kid_unknown',
+    'issuer_mismatch',
+    'audience_mismatch',
+    'missing_claim',
+  ] as const
+
+  it.each(terminalCodes)(
+    'T-0013-053..058: verifyAppleIdentityToken throws %s → 401 {error: "unauthorized"} no detail',
+    async code => {
+      const {AppleIdentityError: AIError} = await import('../lib/appleIdentity.js')
+      mockVerifyAppleIdentityToken.mockRejectedValue(new AIError(code))
+      const server = await buildAuthServer({db})
+      try {
+        const res = await server.inject({
+          method: 'POST', url: '/auth/apple', payload: appleBody(),
+        })
+        expect(res.statusCode).toBe(401)
+        expect(res.json()).toEqual({error: 'unauthorized'})
+      } finally {
+        await server.close()
+      }
+    },
+  )
+
+  // -------------------------------------------------------------------------
+  // T-0013-055 — Failure: expired → 401 with detail: 'token_expired'
+  // -------------------------------------------------------------------------
+  it('T-0013-055: verifyAppleIdentityToken throws expired → 401 {error: "unauthorized", detail: "token_expired"}', async () => {
+    const {AppleIdentityError: AIError} = await import('../lib/appleIdentity.js')
+    mockVerifyAppleIdentityToken.mockRejectedValue(new AIError('expired'))
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST', url: '/auth/apple', payload: appleBody(),
+      })
+      expect(res.statusCode).toBe(401)
+      expect(res.json()).toEqual({error: 'unauthorized', detail: 'token_expired'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-059 — Failure: jwks_unreachable → 503
+  // -------------------------------------------------------------------------
+  it('T-0013-059: verifyAppleIdentityToken throws jwks_unreachable → 503 {error: "internal"}', async () => {
+    const {AppleIdentityError: AIError} = await import('../lib/appleIdentity.js')
+    mockVerifyAppleIdentityToken.mockRejectedValue(new AIError('jwks_unreachable'))
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST', url: '/auth/apple', payload: appleBody(),
+      })
+      expect(res.statusCode).toBe(503)
+      expect(res.json()).toEqual({error: 'internal'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-060 — Failure: DB error → 500
+  // -------------------------------------------------------------------------
+  it('T-0013-060: findOrCreateByAppleSub throws (DB down) → 500 {error: "internal"}', async () => {
+    const {createDb, createPool} = await import('../db/index.js')
+    const badPool = createPool('postgresql://nope:nope@127.0.0.1:1/none')
+    const badDb = createDb(badPool)
+
+    const server = await buildAuthServer({db: badDb})
+    try {
+      const res = await server.inject({
+        method: 'POST', url: '/auth/apple', payload: appleBody(),
+      })
+      expect(res.statusCode).toBe(500)
+      expect(res.json()).toEqual({error: 'internal'})
+    } finally {
+      await server.close()
+      await badPool.end().catch(() => {})
+    }
+  }, 30_000)
+
+  // -------------------------------------------------------------------------
+  // T-0013-061 — Security: 401 body is exactly the right shape (no claim echo)
+  // -------------------------------------------------------------------------
+  it('T-0013-061: 401 response body for terminal failure is exactly {error: "unauthorized"} — no token echo, no sub', async () => {
+    const {AppleIdentityError: AIError} = await import('../lib/appleIdentity.js')
+    for (const code of ['malformed', 'signature_invalid', 'kid_unknown', 'issuer_mismatch', 'audience_mismatch', 'missing_claim'] as const) {
+      mockVerifyAppleIdentityToken.mockRejectedValue(new AIError(code))
+      const server = await buildAuthServer({db})
+      try {
+        const res = await server.inject({
+          method: 'POST', url: '/auth/apple', payload: appleBody(),
+        })
+        expect(res.statusCode).toBe(401)
+        const body = res.json() as Record<string, unknown>
+        expect(Object.keys(body)).toEqual(['error'])
+        expect(body['error']).toBe('unauthorized')
+        // No token, no sub, no claim values in response body.
+        expect(res.body).not.toContain('apple-sub')
+        expect(res.body).not.toContain('identityToken')
+      } finally {
+        await server.close()
+      }
+    }
+    mockVerifyAppleIdentityToken.mockResolvedValue({sub: 'apple-sub-default', email: 'user@example.com', emailVerified: true, isPrivateEmail: false})
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-062/063 — Security: no raw body / identityToken logged
+  // -------------------------------------------------------------------------
+  it('T-0013-063: identityToken is NEVER logged at any level', async () => {
+    const secretToken = 'super.secret.apple.identity.token.' + randomUUID()
+    const sink = createLogSink()
+    const server = await buildAuthServer({db, sink})
+    try {
+      await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: secretToken, displayName: 'Test User'},
+      })
+      // Check every captured log record — token must not appear.
+      const wholeLog = sink.raw.join('')
+      expect(wholeLog).not.toContain(secretToken)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-064 — Security: access_token is HS256 JWT (not the Apple identity token)
+  // -------------------------------------------------------------------------
+  it('T-0013-064: access_token in response is an HS256 JWT — not the Apple identity token', async () => {
+    const appleToken = 'totally.different.apple.token'
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub: 'apple-sub-jwt-check',
+      email: 'jwt@example.com',
+      emailVerified: true,
+      isPrivateEmail: false,
+    })
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: {identityToken: appleToken},
+      })
+      expect(res.statusCode).toBe(200)
+      const body = res.json() as Record<string, unknown>
+      const accessToken = body['access_token'] as string
+
+      // Must NOT equal the Apple identity token.
+      expect(accessToken).not.toBe(appleToken)
+
+      // Must be a 3-segment JWT with alg=HS256.
+      const parts = accessToken.split('.')
+      expect(parts).toHaveLength(3)
+      const header = JSON.parse(Buffer.from(parts[0]!, 'base64url').toString('utf-8')) as {alg: string}
+      expect(header.alg).toBe('HS256')
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-065 — Concurrency: 10 parallel calls, one users row
+  // -------------------------------------------------------------------------
+  it('T-0013-065: 10 parallel POST /auth/apple with same Apple sub → 1 users row, 10 apple_refresh_tokens rows', async () => {
+    const sub = 'apple-sub-parallel-' + randomUUID().slice(0, 8)
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub,
+      email: 'parallel@example.com',
+      emailVerified: true,
+      isPrivateEmail: false,
+    })
+
+    const server = await buildAuthServer({db})
+    try {
+      const requests = Array.from({length: 10}, () =>
+        server.inject({
+          method: 'POST',
+          url: '/auth/apple',
+          payload: {identityToken: 'valid.apple.token'},
+        }),
+      )
+      const responses = await Promise.all(requests)
+      for (const res of responses) {
+        expect(res.statusCode).toBe(200)
+      }
+
+      const pool = await getTestPool()
+      const {rows: userRows} = await pool.query<{count: string}>(
+        'SELECT COUNT(*)::text AS count FROM users WHERE apple_user_id = $1',
+        [sub],
+      )
+      expect(userRows[0]?.count).toBe('1')
+
+      const {rows: tokenRows} = await pool.query<{count: string}>(
+        `SELECT COUNT(*)::text AS count FROM apple_refresh_tokens
+         WHERE user_id = (SELECT id FROM users WHERE apple_user_id = $1)`,
+        [sub],
+      )
+      expect(Number(tokenRows[0]?.count)).toBe(10)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-066 — Per-IP rate limit: 11th request → 429
+  // -------------------------------------------------------------------------
+  it('T-0013-066: 11th POST /auth/apple from same IP within 60s → 429 {error: "rate_limited"}', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      for (let i = 0; i < 10; i++) {
+        const res = await server.inject({
+          method: 'POST', url: '/auth/apple', payload: appleBody(),
+          // Fastify inject uses 127.0.0.1 as the remote IP by default.
+        })
+        expect(res.statusCode).toBe(200)
+      }
+      const denied = await server.inject({
+        method: 'POST', url: '/auth/apple', payload: appleBody(),
+      })
+      expect(denied.statusCode).toBe(429)
+      expect(denied.json()).toMatchObject({error: 'rate_limited'})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-068 — Regression: /auth/magic-link unchanged
+  // -------------------------------------------------------------------------
+  it('T-0013-068: POST /auth/magic-link still returns 200 on valid email (regression)', async () => {
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/magic-link',
+        payload: {email: 'regression@example.com'},
+      })
+      expect(res.statusCode).toBe(200)
+      expect(res.json()).toEqual({sent: true})
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-069 — Regression: /auth/sync unchanged
+  // -------------------------------------------------------------------------
+  it('T-0013-069: POST /auth/sync with valid JWT still returns 200 (regression)', async () => {
+    const sub = randomUUID()
+    const email = `regression-sync-${randomUUID()}@example.com`
+    const token = userJwt({sub, email, secret: TEST_JWT_SECRET})
+    const server = await buildAuthServer({db})
+    try {
+      const res = await server.inject({
+        method: 'POST',
+        url: '/auth/sync',
+        headers: {authorization: `Bearer ${token}`},
+      })
+      expect(res.statusCode).toBe(200)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-070 — Regression: SIWA-minted JWT verifies via requireAuth
+  // -------------------------------------------------------------------------
+  it('T-0013-070: SIWA-minted JWT verifiable by requireAuth (same HS256 path as magic-link)', async () => {
+    mockVerifyAppleIdentityToken.mockResolvedValue({
+      sub: 'apple-sub-middleware',
+      email: 'middleware@example.com',
+      emailVerified: true,
+      isPrivateEmail: false,
+    })
+
+    const server = await buildAuthServer({db})
+    try {
+      const siwaRes = await server.inject({
+        method: 'POST',
+        url: '/auth/apple',
+        payload: appleBody(),
+      })
+      expect(siwaRes.statusCode).toBe(200)
+      const {access_token} = siwaRes.json() as {access_token: string}
+
+      // Use the SIWA-minted token against /auth/sync (requireAuth middleware).
+      const syncRes = await server.inject({
+        method: 'POST',
+        url: '/auth/sync',
+        headers: {authorization: `Bearer ${access_token}`},
+      })
+      // 200: requireAuth accepted the SIWA JWT.
+      expect(syncRes.statusCode).toBe(200)
+    } finally {
+      await server.close()
+    }
+  })
+
+  // -------------------------------------------------------------------------
+  // T-0013-130 — Negative: email never appears in serialized response body
+  //   across all email fixture shapes (real, relay, empty) × sign-in ordinal
+  // -------------------------------------------------------------------------
+  it('T-0013-130: email substring NEVER appears in serialized POST /auth/apple response body across all fixtures', async () => {
+    const fixtures = [
+      {sub: 'sub-real-1', email: 'real@example.com'},
+      {sub: 'sub-relay-1', email: 'opaque@privaterelay.appleid.com'},
+      {sub: 'sub-empty-1', email: ''},
+    ]
+
+    for (const {sub, email} of fixtures) {
+      mockVerifyAppleIdentityToken.mockResolvedValue({
+        sub,
+        email,
+        emailVerified: email !== '',
+        isPrivateEmail: email.includes('privaterelay'),
+      })
+      const server = await buildAuthServer({db})
+      try {
+        // First sign-in.
+        const res1 = await server.inject({
+          method: 'POST',
+          url: '/auth/apple',
+          payload: {identityToken: 'valid.token', displayName: 'Test User'},
+        })
+        expect(res1.statusCode).toBe(200)
+        // "email" must not appear ANYWHERE in the JSON body.
+        expect(JSON.stringify(res1.json())).not.toContain('"email"')
+
+        // Second sign-in (no displayName).
+        const res2 = await server.inject({
+          method: 'POST',
+          url: '/auth/apple',
+          payload: {identityToken: 'valid.token.2'},
+        })
+        expect(res2.statusCode).toBe(200)
+        expect(JSON.stringify(res2.json())).not.toContain('"email"')
+      } finally {
+        await server.close()
+      }
     }
   })
 

@@ -1352,3 +1352,159 @@ describe('ADR-0011 Step 1 — DB schema rename (mini_apps + mini_app_versions)',
     }
   }, 90_000)
 })
+
+// =============================================================================
+// ADR-0013 Step 1f — Migration 0010 schema tests (T-0013-079..085 + T-0013-133)
+// =============================================================================
+
+import {appleRefreshTokens, users as usersTable} from './schema.js'
+
+describe('ADR-0013 Step 1f — migration 0010 schema (apple_user_id + apple_refresh_tokens)', () => {
+  let pool: import('pg').Pool
+
+  beforeAll(async () => {
+    pool = await getTestPool()
+  })
+
+  afterEach(async () => {
+    await truncateAll()
+  })
+
+  afterAll(async () => {
+    // Pool shared — do not close here.
+  })
+
+  // T-0013-079
+  it('T-0013-079: migration 0010 adds users.apple_user_id with UNIQUE index + apple_refresh_tokens table', async () => {
+    // Column exists.
+    const {rows: cols} = await pool.query<{column_name: string}>(
+      `SELECT column_name FROM information_schema.columns
+       WHERE table_name = 'users' AND column_name = 'apple_user_id'`,
+    )
+    expect(cols).toHaveLength(1)
+
+    // Table exists.
+    const {rows: tables} = await pool.query<{exists: boolean}>(
+      `SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'apple_refresh_tokens' AND table_schema = 'public') AS exists`,
+    )
+    expect(tables[0]?.exists).toBe(true)
+
+    // Unique index exists.
+    const {rows: idxRows} = await pool.query<{indexname: string}>(
+      `SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND indexname = 'users_apple_user_id_idx'`,
+    )
+    expect(idxRows).toHaveLength(1)
+  })
+
+  // T-0013-080
+  it('T-0013-080: migration applies cleanly to existing ADR-0011 schema — no data loss', async () => {
+    // The testcontainer has all migrations applied. We verify existing tables are intact.
+    const {rows} = await pool.query<{table_name: string}>(
+      `SELECT table_name FROM information_schema.tables
+       WHERE table_schema = 'public' AND table_name IN ('mini_apps', 'mini_app_versions', 'out_of_scope_intent')
+       ORDER BY table_name`,
+    )
+    const names = rows.map(r => r.table_name)
+    expect(names).toContain('mini_apps')
+    expect(names).toContain('mini_app_versions')
+    expect(names).toContain('out_of_scope_intent')
+  })
+
+  // T-0013-081
+  it('T-0013-081: two users rows with same non-null apple_user_id → unique constraint violation', async () => {
+    const u1Id = randomUUID()
+    const u2Id = randomUUID()
+    await pool.query(
+      `INSERT INTO users (id, email, apple_user_id) VALUES ($1, $2, $3)`,
+      [u1Id, `u1-${randomUUID()}@example.com`, 'same-apple-sub'],
+    )
+    await expect(
+      pool.query(
+        `INSERT INTO users (id, email, apple_user_id) VALUES ($1, $2, $3)`,
+        [u2Id, `u2-${randomUUID()}@example.com`, 'same-apple-sub'],
+      ),
+    ).rejects.toThrow(/duplicate|unique/i)
+  })
+
+  // T-0013-082
+  it('T-0013-082: apple_user_id is nullable — magic-link users (NULL) coexist with SIWA users', async () => {
+    const magicId = randomUUID()
+    const siwaId = randomUUID()
+
+    // Magic-link user: apple_user_id = NULL.
+    await pool.query(
+      `INSERT INTO users (id, email) VALUES ($1, $2)`,
+      [magicId, `magic-${randomUUID()}@example.com`],
+    )
+    // SIWA user: apple_user_id = 'some-apple-sub'.
+    await pool.query(
+      `INSERT INTO users (id, email, apple_user_id) VALUES ($1, $2, $3)`,
+      [siwaId, `siwa-${randomUUID()}@example.com`, 'some-apple-sub-unique'],
+    )
+
+    const {rows} = await pool.query<{count: string}>(
+      `SELECT COUNT(*)::text AS count FROM users WHERE id IN ($1, $2)`,
+      [magicId, siwaId],
+    )
+    expect(rows[0]?.count).toBe('2')
+  })
+
+  // T-0013-083
+  it('T-0013-083: users.email still UNIQUE — constraint not removed by migration 0010', async () => {
+    const u1Id = randomUUID()
+    const u2Id = randomUUID()
+    const sharedEmail = `shared-${randomUUID()}@example.com`
+
+    await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [u1Id, sharedEmail])
+    await expect(
+      pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [u2Id, sharedEmail]),
+    ).rejects.toThrow(/duplicate|unique/i)
+  })
+
+  // T-0013-084
+  it('T-0013-084: apple_refresh_tokens.token_hash has UNIQUE constraint', async () => {
+    const pool = await getTestPool()
+    const u1 = randomUUID()
+    await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`, [u1, `rt-${randomUUID()}@example.com`])
+
+    const expAt = new Date(Date.now() + 86400 * 1000).toISOString()
+    await pool.query(
+      `INSERT INTO apple_refresh_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
+      [u1, 'unique-hash-abc', expAt],
+    )
+    await expect(
+      pool.query(
+        `INSERT INTO apple_refresh_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
+        [u1, 'unique-hash-abc', expAt],
+      ),
+    ).rejects.toThrow(/duplicate|unique/i)
+  })
+
+  // T-0013-085
+  it('T-0013-085: migration is idempotent — re-running leaves schema intact', async () => {
+    await expect(runMigrations({pool})).resolves.toBeDefined()
+    // Column and table still exist.
+    const {rows} = await pool.query<{exists: boolean}>(
+      `SELECT EXISTS(SELECT 1 FROM information_schema.tables WHERE table_name = 'apple_refresh_tokens') AS exists`,
+    )
+    expect(rows[0]?.exists).toBe(true)
+  })
+
+  // T-0013-133 (compile-time — verified here at runtime to ensure export shape)
+  it('T-0013-133: Drizzle users.$inferSelect includes appleUserId, displayName, appleRefreshAt columns (runtime sanity)', () => {
+    // The compile-time assertion in schema.ts already catches this at typecheck.
+    // Here we verify at runtime that the Drizzle table object exposes the columns.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cols = Object.keys((usersTable as any)['_']['columns'] ?? {})
+    expect(cols).toContain('appleUserId')
+    expect(cols).toContain('displayName')
+    expect(cols).toContain('appleRefreshAt')
+
+    // appleRefreshTokens table exported.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rtCols = Object.keys((appleRefreshTokens as any)['_']['columns'] ?? {})
+    expect(rtCols).toContain('tokenHash')
+    expect(rtCols).toContain('expiresAt')
+    expect(rtCols).toContain('userId')
+  })
+})

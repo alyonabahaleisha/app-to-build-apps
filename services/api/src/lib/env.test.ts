@@ -60,6 +60,77 @@ describe('loadEnv — EVAL_MODE (T-0007-144)', () => {
   })
 })
 
+// =============================================================================
+// ADR-0013 Step 1e — APPLE_SIWA_* config exhaustion (T-0013-071..078)
+// =============================================================================
+
+const BASE_PROD: NodeJS.ProcessEnv = {
+  NODE_ENV: 'production',
+  SUPABASE_URL: 'https://example.supabase.co',
+  SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
+  SUPABASE_JWT_SECRET: 'jwt-secret-prod',
+  APPLE_SIWA_CLIENT_ID: 'com.appcreator.mvp.siwa',
+  APPLE_SIWA_TEAM_ID: 'TEAMID12',
+  APPLE_SIWA_KEY_ID: 'KID1234567',
+  APPLE_SIWA_PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----',
+}
+
+describe('loadEnv — APPLE_SIWA_* config exhaustion (ADR-0013)', () => {
+  // T-0013-071
+  it('T-0013-071: APPLE_SIWA_CLIENT_ID unset in non-test env → throws', () => {
+    const {APPLE_SIWA_CLIENT_ID: _, ...rest} = BASE_PROD
+    expect(() => loadEnv({...rest})).toThrow(/APPLE_SIWA_CLIENT_ID/)
+  })
+
+  // T-0013-072
+  it("T-0013-072: APPLE_SIWA_CLIENT_ID = '' → throws", () => {
+    expect(() => loadEnv({...BASE_PROD, APPLE_SIWA_CLIENT_ID: ''})).toThrow(/APPLE_SIWA_CLIENT_ID/)
+  })
+
+  // T-0013-073
+  it("T-0013-073: APPLE_SIWA_CLIENT_ID = '   ' (whitespace) → throws", () => {
+    expect(() => loadEnv({...BASE_PROD, APPLE_SIWA_CLIENT_ID: '   '})).toThrow(
+      /APPLE_SIWA_CLIENT_ID/,
+    )
+  })
+
+  // T-0013-074
+  it('T-0013-074: APPLE_SIWA_CLIENT_ID unset in test env → succeeds (test relaxation)', () => {
+    // In test env, all APPLE_SIWA_* vars are optional.
+    expect(() => loadEnv({NODE_ENV: 'test'})).not.toThrow()
+  })
+
+  // T-0013-075
+  it('T-0013-075: all four APPLE_SIWA_* vars present and valid in non-test → succeeds with all four populated', () => {
+    const env = loadEnv({...BASE_PROD})
+    expect(env.APPLE_SIWA_CLIENT_ID).toBe('com.appcreator.mvp.siwa')
+    expect(env.APPLE_SIWA_TEAM_ID).toBe('TEAMID12')
+    expect(env.APPLE_SIWA_KEY_ID).toBe('KID1234567')
+    expect(env.APPLE_SIWA_PRIVATE_KEY).toBe(
+      '-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----',
+    )
+  })
+
+  // T-0013-076
+  it('T-0013-076: APPLE_SIWA_PRIVATE_KEY with \\n-escaped multiline content is parsed correctly', () => {
+    const key = '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkq...\n-----END PRIVATE KEY-----'
+    const env = loadEnv({...BASE_PROD, APPLE_SIWA_PRIVATE_KEY: key})
+    expect(env.APPLE_SIWA_PRIVATE_KEY).toBe(key)
+  })
+
+  // T-0013-077
+  it("T-0013-077: APPLE_SIWA_TEAM_ID = 'TEAMID12' (8 chars, Apple's actual format) → accepted", () => {
+    const env = loadEnv({...BASE_PROD, APPLE_SIWA_TEAM_ID: 'TEAMID12'})
+    expect(env.APPLE_SIWA_TEAM_ID).toBe('TEAMID12')
+  })
+
+  // T-0013-078
+  it("T-0013-078: APPLE_SIWA_KEY_ID = 'KID1234567' (10 chars, Apple's actual format) → accepted", () => {
+    const env = loadEnv({...BASE_PROD, APPLE_SIWA_KEY_ID: 'KID1234567'})
+    expect(env.APPLE_SIWA_KEY_ID).toBe('KID1234567')
+  })
+})
+
 describe('loadEnv — T-0007-146: no contradictory-state check', () => {
   // T-0007-146: the PERCENT=100 + SHADOW=true check is gone with PLAN_BUILD_* removal.
   // Verifying env parses cleanly with no PLAN_BUILD_* vars and no post-parse guard.

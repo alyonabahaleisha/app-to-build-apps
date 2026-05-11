@@ -96,8 +96,10 @@ export async function getTestConnectionString(): Promise<string> {
  */
 export async function truncateAll(): Promise<void> {
   if (!_pool) return
+  // apple_refresh_tokens added by migration 0010 (ADR-0013). It references users
+  // via FK CASCADE, so truncating users cascades. We list it explicitly for clarity.
   await _pool.query(
-    'TRUNCATE TABLE memory_embeddings, facts, messages, mini_app_versions, mini_apps, events, out_of_scope_intent, users RESTART IDENTITY CASCADE',
+    'TRUNCATE TABLE apple_refresh_tokens, memory_embeddings, facts, messages, mini_app_versions, mini_apps, events, out_of_scope_intent, users RESTART IDENTITY CASCADE',
   )
 }
 

@@ -53,6 +53,7 @@ import {
 
 // ---------------------------------------------------------------------------
 // users — mirror of Supabase auth.users. PII (email) lives here.
+// ADR-0013: added apple_user_id (stable SIWA sub), display_name, apple_refresh_at.
 // ---------------------------------------------------------------------------
 export const users = pgTable('users', {
   // Matches Supabase auth.users.id. We don't generate UUIDs server-side.
@@ -62,7 +63,40 @@ export const users = pgTable('users', {
   // ADR-0002: nullable; populated lazily on first publish. DB-level UNIQUE
   // catches handle races between simultaneous first-publishes (AC-CG-P3).
   handle: text('handle').unique(),
+  // ADR-0013: Apple "sub" claim — stable per-app-per-user identifier.
+  // Unique via a partial index (see migration 0010; NULLs are not equal).
+  // NULL for magic-link users; set on first SIWA sign-in.
+  appleUserId: text('apple_user_id'),
+  // ADR-0013: captured on first sign-in only (Apple emits name once). NULL if
+  // the user skipped the name scope or this is a magic-link account.
+  displayName: text('display_name'),
+  // ADR-0013: timestamp of the last Apple refresh-token rotation (V0.5+ usage).
+  appleRefreshAt: timestamp('apple_refresh_at', {withTimezone: true}),
 })
+
+// ---------------------------------------------------------------------------
+// apple_refresh_tokens — SIWA session refresh tokens (sha256 hash only).
+// ADR-0013 Step 1. Hashing rationale: §Decision Step 1 — high-entropy random
+// input (32 bytes), so SHA-256 provides sufficient security; password-hashing
+// KDFs add CPU cost with no marginal security benefit (T-0013-040).
+// ---------------------------------------------------------------------------
+export const appleRefreshTokens = pgTable(
+  'apple_refresh_tokens',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, {onDelete: 'cascade'}),
+    // sha256 hex of the 32-byte random token. Unique — collision impossible.
+    tokenHash: text('token_hash').notNull().unique(),
+    createdAt: timestamp('created_at', {withTimezone: true}).notNull().defaultNow(),
+    revokedAt: timestamp('revoked_at', {withTimezone: true}),
+    expiresAt: timestamp('expires_at', {withTimezone: true}).notNull(),
+  },
+  t => ({
+    userIdx: index('apple_refresh_tokens_user_idx').on(t.userId, t.createdAt.desc()),
+  }),
+)
 
 // ---------------------------------------------------------------------------
 // mini_apps — owned by a user, points at the "current" mini_app_versions row.
@@ -272,3 +306,31 @@ export type Event = typeof events.$inferSelect
 export type NewEvent = typeof events.$inferInsert
 export type OutOfScopeIntent = typeof outOfScopeIntent.$inferSelect
 export type NewOutOfScopeIntent = typeof outOfScopeIntent.$inferInsert
+export type AppleRefreshToken = typeof appleRefreshTokens.$inferSelect
+export type NewAppleRefreshToken = typeof appleRefreshTokens.$inferInsert
+
+// ---------------------------------------------------------------------------
+// T-0013-133: Compile-time assertion — Drizzle $inferSelect shape includes
+// the ADR-0013 columns. If the Drizzle definition omits a column (or types it
+// incorrectly), this constant fails to type-check, catching schema drift early.
+// Direction: `users.$inferSelect extends {field: T}` — fails if required fields absent.
+// ---------------------------------------------------------------------------
+const _assertUsersShape: typeof users.$inferSelect extends {
+  appleUserId: string | null
+  displayName: string | null
+  appleRefreshAt: Date | null
+}
+  ? true
+  : never = true
+void _assertUsersShape
+
+const _assertAppleRefreshTokensShape: typeof appleRefreshTokens.$inferSelect extends {
+  id: string
+  userId: string
+  tokenHash: string
+  createdAt: Date
+  expiresAt: Date
+}
+  ? true
+  : never = true
+void _assertAppleRefreshTokensShape

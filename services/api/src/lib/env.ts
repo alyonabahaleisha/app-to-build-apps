@@ -59,6 +59,21 @@ function buildSchema(nodeEnv: string) {
     // Prevents eval runs from polluting the analytics events table.
     // Default 'false'.
     EVAL_MODE: z.enum(['true', 'false']).default('false'),
+
+    // ADR-0013 Step 1 — Apple Sign in with Apple (SIWA) credentials.
+    // Required in non-test environments; optional in test so unit tests that
+    // mock verifyAppleIdentityToken never need real Apple credentials.
+    // T-0013-071..078 cover the config-exhaustion cases.
+    APPLE_SIWA_CLIENT_ID:
+      nodeEnv === 'test' ? optionalNonEmpty : requiredString('APPLE_SIWA_CLIENT_ID'),
+    APPLE_SIWA_TEAM_ID:
+      nodeEnv === 'test' ? optionalNonEmpty : requiredString('APPLE_SIWA_TEAM_ID'),
+    APPLE_SIWA_KEY_ID:
+      nodeEnv === 'test' ? optionalNonEmpty : requiredString('APPLE_SIWA_KEY_ID'),
+    // The .p8 private-key contents, \n-escaped (EAS/dotenv stores multiline
+    // values this way). T-0013-076 covers the multiline parse path.
+    APPLE_SIWA_PRIVATE_KEY:
+      nodeEnv === 'test' ? optionalNonEmpty : requiredString('APPLE_SIWA_PRIVATE_KEY'),
   })
 }
 
