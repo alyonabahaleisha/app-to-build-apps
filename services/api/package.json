@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "eval": "tsx eval/run.ts",
+    "eval:check-regression": "tsx scripts/check-eval-regression.ts",
+    "eval:bump-baseline": "tsx scripts/bump-baseline.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:studio": "drizzle-kit studio"

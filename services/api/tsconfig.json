@@ -11,5 +11,5 @@
       "#/*": ["src/*"]
     }
   },
-  "include": ["src/**/*", "eval/**/*"]
+  "include": ["src/**/*", "eval/**/*", "scripts/**/*", "test/**/*"]
 }

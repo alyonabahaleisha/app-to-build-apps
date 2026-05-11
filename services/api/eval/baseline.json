@@ -1,0 +1,16 @@
+{
+  "prompt_version": "v0.1.0",
+  "captured_at": "2026-05-10T00:00:00Z",
+  "captured_by": "ADR-0010 Step 3",
+  "overall_pass_rate": 0.0,
+  "per_archetype_pass_rate": {
+    "ListCRUD": 0.0,
+    "Tracker": 0.0,
+    "Journal": 0.0,
+    "Calculator": 0.0
+  },
+  "thresholds": {
+    "overall_drop_max_pp": 2,
+    "per_archetype_drop_max_pp": 3
+  }
+}

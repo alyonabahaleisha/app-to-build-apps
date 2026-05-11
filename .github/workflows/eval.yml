@@ -56,6 +56,16 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: pnpm --filter @app-creator/api eval -- --mode=v0
 
+      # ADR-0010 Step 3 — regression gate runs after the eval writes results.
+      # Compares the freshly-written results JSON against services/api/eval/baseline.json.
+      # Exits 1 (blocked) if overall drop > 2pp OR any archetype drop > 3pp.
+      # Override: add `INTENTIONAL_EVAL_REGRESSION: <rationale>` to the PR body.
+      # T-0010-080.
+      - name: Check eval regression (ADR-0010 regression gate)
+        env:
+          GITHUB_PR_BODY: ${{ github.event.pull_request.body }}
+        run: pnpm --filter @app-creator/api eval:check-regression
+
   eval-out-of-scope:
     name: Out-of-Scope Detection Eval
     runs-on: ubuntu-latest
