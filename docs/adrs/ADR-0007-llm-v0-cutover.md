@@ -1961,3 +1961,92 @@ PR 2 is the largest and most consequential. Plan for review time.
   protocol schema is the canonical source — bloat usually signals
   unwarranted union complexity. Trim at the schema level, not by
   hand-pruning the generated output.
+
+## Deviations
+
+### D-0007-01 — Step 7 T-0007-160..166 + T-0007-170..172 implemented as arithmetic mirrors / type guards rather than mocked-SDK harness invocations
+
+**Date:** 2026-05-10
+**Decided by:** Cal (Senior Software Architect)
+**Raised by:** Roz (QA), `docs/pipeline/roz-pr4-qa-ADR-0007.md` NOTE-2
+**Scope:** PR 4 of ADR-0007, committed at `f970acc`.
+
+**The deviation.** The Step 7 test specification described T-0007-160..166
+as harness invocations against a mocked Anthropic SDK ("mocked SDK
+returning valid specs: exits 0 if pass rate ≥90%") and T-0007-170..172
+as runtime shape assertions over the harness's emitted results JSON. As
+implemented in `services/api/eval/run.test.ts`:
+
+- T-0007-160..166 are standalone arithmetic computations over the
+  threshold formulas (`90/100 >= 0.9`, etc.). They do not call
+  `runV0Mode`, `runOutOfScopeDetectionMode`, or
+  `runOutOfScopeFalsePositiveMode`.
+- T-0007-170 asserts `RESULTS_DIR` contains `"eval"` and `"results"`
+  but does not assert the `{ISO-timestamp}-{mode}.json` filename
+  pattern at runtime.
+- T-0007-171 builds a hand-crafted result object and asserts it has
+  no `prompt` field — it does not exercise the harness's actual
+  result-construction path.
+- T-0007-172 asserts on a hand-built `EvalResults` literal rather
+  than on harness output.
+
+**Rationale.**
+
+1. The three mode-runner functions are module-private. Exporting them
+   to enable mocked-SDK tests would commit the harness's three mode
+   entry points to a public API surface. ADR-0007 is still Proposed;
+   the harness's external contract is "the binary, the CLI flags, the
+   results filename" — not the internal three-function decomposition.
+   That public-API decision should be deliberate, not a side-effect
+   of test ergonomics.
+2. The live CI run (`.github/workflows/eval.yml`, two jobs against the
+   real Anthropic API) is the harness's functional test. It exercises
+   the full happy path on every PR touching `services/api/src/llm/**`,
+   `packages/protocol/**`, or
+   `packages/a2ui-renderer/src/v0/components/**`. A regression in
+   mode dispatch, the result-aggregation loop, or `writeResults` would
+   surface there as a CI failure, not pass silently.
+3. AC11 (no raw prompts in results JSON) is enforced at the TypeScript
+   type level: `PerPromptResult` has no `prompt` field, and the
+   construction site at `run.ts:150-156` builds the object with
+   `prompt_id` only. A future code change adding `prompt` to the
+   payload would fail the type check before reaching CI.
+
+**Compensating controls (already in place).**
+
+- Live CI eval run on every relevant PR (T-0007-175, T-0007-176;
+  `eval-v0` and `eval-out-of-scope` jobs).
+- `parseMode` (T-0007-167, T-0007-168), `RESULTS_DIR` (T-0007-170 partial),
+  `scoreArchetype` (T-0007-174), `EVAL_MODE` first-line ordering
+  (T-0007-169), and the no-`Promise.all` source check (T-0007-177) are
+  all tested with specificity.
+- Type-level privacy guard on `PerPromptResult`.
+- Prompt dataset shape (the most substantial deliverable — 160 prompts,
+  4×25 archetype + 6×5 detection + 30 false-positive) is asserted
+  with specificity (T-0007-152..159).
+
+**Compensating control to add as a follow-up (non-blocking).**
+
+Add a runtime structural assertion inside `writeResults` (or a
+post-construction `assertEvalResultsShape` helper) that throws if the
+emitted `EvalResults` object is missing `summary` or `per_prompt`, or
+if any `per_prompt` entry contains a `prompt` field. This is cheap,
+adds no public API surface, and converts the type-level AC11 guarantee
+into a runtime check that fails CI loudly rather than silently
+shipping a malformed results file. Track as an issue against ADR-0007
+follow-up; not a blocker for the M1 cutover kill review.
+
+**What is not deferred.**
+
+If, during M1 operations, we observe a regression in `writeResults` or
+mode dispatch that the live CI run did not catch (e.g., a CI run that
+"passed" but produced a malformed results file consumed downstream),
+this deviation is invalidated and the mode runners must be exported
+and tested against a mocked SDK in a follow-up PR. The deviation is
+contingent on the live CI run continuing to be the effective gate.
+
+**Sign-off.** Cal — 2026-05-10. PR 4 (`f970acc`) is cleared for the
+M1 cutover kill review on this deviation. NOTE-1 (run.ts 403 lines,
+threshold 300) and NOTE-3 (eval.yml path filter missing
+`services/api/eval/**`) remain open as separately tracked follow-ups
+per Roz's QA report.
