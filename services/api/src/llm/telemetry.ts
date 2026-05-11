@@ -100,13 +100,11 @@ export async function writeEvent(
 
   // 3. DB insert — best-effort; errors are swallowed so generation never blocks.
   try {
-    // Extract duration_ms from payload if present (plan_duration_ms or build_duration_ms).
+    // Extract generation_duration_ms from payload if present (V0 generate.completed event).
     const durationMs =
-      typeof payload['plan_duration_ms'] === 'number'
-        ? payload['plan_duration_ms']
-        : typeof payload['build_duration_ms'] === 'number'
-          ? payload['build_duration_ms']
-          : undefined
+      typeof payload['generation_duration_ms'] === 'number'
+        ? payload['generation_duration_ms']
+        : undefined
 
     await db.insert(schema.events).values({
       eventType,
