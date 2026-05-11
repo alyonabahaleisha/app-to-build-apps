@@ -23,6 +23,10 @@ config.resolver.disableHierarchicalLookup = true
 // canonical.ts → renderHash, which is a server-side API).
 const NODE_BUILTIN_STUBS = {
   'node:crypto': path.resolve(projectRoot, '.stubs/node-crypto-stub.js'),
+  // react-native-ai-apple is in optionalDependencies (not published to npm).
+  // Stub returns isAvailable() === false so AICapabilitiesProvider routes to
+  // the "no-foundation-models" fallback (the device-too-old code path).
+  'react-native-ai-apple': path.resolve(projectRoot, '.stubs/react-native-ai-apple-stub.js'),
 }
 
 const upstreamResolveRequest = config.resolver.resolveRequest
