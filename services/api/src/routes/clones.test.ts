@@ -772,13 +772,9 @@ describe('telemetry whitelist — ADR-0008 event types (T-0008-144..152)', () =>
     ).rejects.toThrow(EventPayloadValidationError)
   })
 
-  it('T-0008-150: EVAL_MODE=true short-circuits DB insert for share_link event types (regression coverage in telemetry.test.ts)', () => {
-    // EVAL_MODE short-circuit is covered by the existing T-0007-145 test pattern in
-    // telemetry.test.ts, which mocks the env module directly. Cannot reliably mock
-    // env here without re-importing. The existing pattern confirms the behavior for
-    // all event types including the new ADR-0008 additions.
-    expect(true).toBe(true)
-  })
+  it.todo(
+    'T-0008-150: EVAL_MODE=true short-circuits DB insert for share_link event types — covered by telemetry.test.ts T-0010-128 (cannot reliably re-mock env module after initial import in this suite)',
+  )
 
   it('T-0008-151: existing generate.completed event still whitelists correctly (no cross-contamination)', async () => {
     const {writeEvent, EventPayloadValidationError: EPE} = await import('../llm/telemetry.js')

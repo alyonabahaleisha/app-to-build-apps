@@ -182,11 +182,14 @@ function mockShare501() {
   })
 }
 
-function mockShare200(url = 'https://app.canvas.so/m/share-id-abc') {
+function mockShare200(
+  shareId = 'abcd1234efgh5678ijkl9012',
+  universalLink = 'https://app.canvas.so/m/abcd1234efgh5678ijkl9012/clone',
+) {
   mockFetch.mockResolvedValueOnce({
     ok: true,
     status: 200,
-    json: async () => ({url}),
+    json: async () => ({share_id: shareId, universal_link: universalLink}),
   })
 }
 
@@ -922,7 +925,7 @@ describe('Cal R3 closures', () => {
 
     it('writeEvent IS called with share_link_copied on 200 share path (positive case)', async () => {
       mockDetailOk()
-      mockShare200('https://app.canvas.so/m/test-share-id')
+      mockShare200('xyzw9876abcd1234efgh5678')
       const {findByTestId} = renderRun()
       const meatball = await findByTestId('run-header-meatball')
       fireEvent.press(meatball)
@@ -950,6 +953,92 @@ describe('Cal R3 closures', () => {
       // If this test exists and passes, RunScreen is importable without side-effecting
       // the auth deep-link flow.
     })
+  })
+})
+
+// ============================================================================
+// ADR-0008 Step 7 R2 — Regression tests for whitelist-valid telemetry payloads
+// Ensures call sites in handleShare / handleCopyLink pass keys accepted by the
+// real MOBILE_EVENT_PAYLOAD_WHITELIST. Catches the class of bug where a mock
+// swallows a MobileEventPayloadValidationError that production would throw.
+// ============================================================================
+
+describe('ADR-0008 Step 7 R2 — whitelist-valid telemetry regression', () => {
+  it('handleShare emits share_link_copied with share_id_prefix payload accepted by real whitelist (regression for ADR-0008 Step 7 R2)', async () => {
+    // Use the REAL writeEvent to validate the production payload shape.
+    // jest.requireActual bypasses the module mock for this assertion only.
+    const realTelemetry = jest.requireActual<typeof import('#/lib/telemetry')>('#/lib/telemetry')
+
+    mockDetailOk()
+    // share_id is 24-char ksuid: prefix is first 4 chars → 'abcd'
+    mockShare200('abcd1234efgh5678ijkl9012')
+    const {findByTestId} = renderRun()
+    const meatball = await findByTestId('run-header-meatball')
+    fireEvent.press(meatball)
+    const shareBtn = await findByTestId('meatball-share')
+    await act(async () => {
+      fireEvent.press(shareBtn)
+    })
+
+    // Capture what the (mocked) writeEvent was actually called with.
+    const callArgs = (writeEvent as jest.Mock).mock.calls.find(
+      (c: unknown[]) =>
+        typeof c[0] === 'object' &&
+        c[0] !== null &&
+        (c[0] as Record<string, unknown>).eventType === 'share_link_copied',
+    )?.[0] as Record<string, unknown> | undefined
+    expect(callArgs).toBeDefined()
+
+    // Now prove the real whitelist accepts this exact payload.
+    expect(() => realTelemetry.writeEvent(callArgs as Parameters<typeof realTelemetry.writeEvent>[0])).not.toThrow()
+  })
+
+  it('handleCopyLink emits share_link_copied with share_id_prefix payload accepted by real whitelist (regression for ADR-0008 Step 7 R2)', async () => {
+    const realTelemetry = jest.requireActual<typeof import('#/lib/telemetry')>('#/lib/telemetry')
+
+    mockDetailOk()
+    mockShare200('efgh5678ijkl9012abcd1234')
+    const {findByTestId} = renderRun()
+    const meatball = await findByTestId('run-header-meatball')
+    fireEvent.press(meatball)
+    const copyLinkBtn = await findByTestId('meatball-copy-link')
+    await act(async () => {
+      fireEvent.press(copyLinkBtn)
+    })
+
+    const callArgs = (writeEvent as jest.Mock).mock.calls.find(
+      (c: unknown[]) =>
+        typeof c[0] === 'object' &&
+        c[0] !== null &&
+        (c[0] as Record<string, unknown>).eventType === 'share_link_copied',
+    )?.[0] as Record<string, unknown> | undefined
+    expect(callArgs).toBeDefined()
+
+    expect(() => realTelemetry.writeEvent(callArgs as Parameters<typeof realTelemetry.writeEvent>[0])).not.toThrow()
+  })
+
+  it('share_id_prefix is first 4 chars of share_id from API response (not miniAppId)', async () => {
+    mockDetailOk()
+    // Distinctive share_id: prefix should be 'zzzz', NOT the miniAppId prefix 'aaaa'
+    mockShare200('zzzz9876abcd1234efgh5678')
+    const {findByTestId} = renderRun()
+    const meatball = await findByTestId('run-header-meatball')
+    fireEvent.press(meatball)
+    const shareBtn = await findByTestId('meatball-share')
+    await act(async () => {
+      fireEvent.press(shareBtn)
+    })
+
+    expect(writeEvent as jest.Mock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        eventType: 'share_link_copied',
+        share_id_prefix: 'zzzz',
+      }),
+    )
+    // Must NOT contain miniAppId (UUID-format key that is PII-adjacent)
+    expect(writeEvent as jest.Mock).not.toHaveBeenCalledWith(
+      expect.objectContaining({miniAppId: expect.anything()}),
+    )
   })
 })
 

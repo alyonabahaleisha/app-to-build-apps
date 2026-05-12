@@ -135,9 +135,13 @@ export function RunScreen({route, navigation}: Props) {
   const handleShare = useCallback(async () => {
     meatballRef.current?.dismiss()
     try {
-      await apiFetch(`/me/mini-apps/${miniAppId}/share`, {method: 'POST'})
-      // 200 path (ADR-0008): copy link + haptic + telemetry
-      writeEvent({eventType: 'share_link_copied', miniAppId})
+      const result = await apiFetch<{share_id: string; universal_link: string}>(
+        `/me/mini-apps/${miniAppId}/share`,
+        {method: 'POST'},
+      )
+      // 200 path (ADR-0008): copy link + haptic + telemetry.
+      // share_id_prefix is the first 4 chars of the ksuid — anonymous time-bucket, no PII.
+      writeEvent({eventType: 'share_link_copied', share_id_prefix: result.share_id.slice(0, 4)})
       toast.show(runCopy.linkCopied)
     } catch (err) {
       if (err instanceof ApiError && err.status === 501) {
@@ -153,11 +157,13 @@ export function RunScreen({route, navigation}: Props) {
   const handleCopyLink = useCallback(async () => {
     meatballRef.current?.dismiss()
     try {
-      const result = await apiFetch<{url: string}>(`/me/mini-apps/${miniAppId}/share`, {
-        method: 'POST',
-      })
-      Clipboard.setString(result.url)
-      writeEvent({eventType: 'share_link_copied', miniAppId})
+      const result = await apiFetch<{share_id: string; universal_link: string}>(
+        `/me/mini-apps/${miniAppId}/share`,
+        {method: 'POST'},
+      )
+      Clipboard.setString(result.universal_link)
+      // share_id_prefix is the first 4 chars of the ksuid — anonymous time-bucket, no PII.
+      writeEvent({eventType: 'share_link_copied', share_id_prefix: result.share_id.slice(0, 4)})
       toast.show(runCopy.linkCopied)
     } catch (err) {
       if (err instanceof ApiError && err.status === 501) {
