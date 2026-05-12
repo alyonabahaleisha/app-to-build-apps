@@ -1,0 +1,620 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingsSheet T-0011-141: snapshot (populated state) 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <RCTScrollView
+    contentContainerStyle={
+      [
+        {
+          "gap": 4,
+          "paddingHorizontal": 16,
+          "paddingTop": 8,
+        },
+        {
+          "paddingBottom": 40,
+        },
+      ]
+    }
+    testID="settings-sheet-scroll"
+  >
+    <View>
+      <Text
+        style={
+          [
+            {
+              "letterSpacing": 0.5,
+              "marginBottom": 6,
+              "marginLeft": 4,
+            },
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "fontWeight": "400",
+            },
+          ]
+        }
+      >
+        ACCOUNT
+      </Text>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 12,
+              "borderWidth": 0.5,
+              "marginBottom": 20,
+              "overflow": "hidden",
+            },
+            {
+              "backgroundColor": "#FAFAF7",
+              "borderColor": "#ECEEF1",
+            },
+          ]
+        }
+        testID="settings-account-section"
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "padding": 16,
+            }
+          }
+        >
+          <View
+            accessibilityLabel="Avatar for Jane"
+            accessibilityRole="image"
+            style={
+              [
+                {
+                  "borderRadius": 20,
+                  "borderWidth": 0.5,
+                  "flexShrink": 0,
+                  "height": 40,
+                  "width": 40,
+                },
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderColor": "#ECEEF1",
+                },
+              ]
+            }
+            testID="settings-avatar"
+          />
+          <View
+            style={
+              {
+                "flex": 1,
+                "gap": 2,
+              }
+            }
+          >
+            <Text
+              numberOfLines={1}
+              style={
+                [
+                  {
+                    "fontWeight": "600",
+                  },
+                  {
+                    "color": "#14171A",
+                    "fontSize": 16,
+                  },
+                ]
+              }
+              testID="settings-display-name"
+            >
+              Jane
+            </Text>
+            <Text
+              numberOfLines={1}
+              style={
+                {
+                  "color": "#5C6470",
+                  "fontSize": 13,
+                }
+              }
+              testID="settings-masked-email"
+            >
+              j••e@example.com
+            </Text>
+          </View>
+        </View>
+      </View>
+      <Text
+        style={
+          [
+            {
+              "letterSpacing": 0.5,
+              "marginBottom": 6,
+              "marginLeft": 4,
+            },
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "fontWeight": "400",
+            },
+          ]
+        }
+      >
+        COMING NEXT UPDATE
+      </Text>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 12,
+              "borderWidth": 0.5,
+              "marginBottom": 20,
+              "overflow": "hidden",
+            },
+            {
+              "backgroundColor": "#FAFAF7",
+              "borderColor": "#ECEEF1",
+            },
+          ]
+        }
+        testID="settings-coming-next-section"
+      >
+        <View>
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+                "paddingHorizontal": 16,
+                "paddingVertical": 12,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {},
+                  {
+                    "color": "#14171A",
+                    "fontSize": 16,
+                  },
+                ]
+              }
+              testID="settings-capability-image_gen"
+            >
+              Image generation
+            </Text>
+            <RCTSwitch
+              accessibilityLabel="Notify me about Image generation"
+              accessibilityRole="switch"
+              accessibilityState={
+                {
+                  "checked": false,
+                }
+              }
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#4F46E5"
+              style={
+                {
+                  "height": 31,
+                  "width": 51,
+                }
+              }
+              testID="settings-notify-toggle-image_gen"
+              thumbTintColor="#FFFFFF"
+              tintColor="#ECEEF1"
+              value={false}
+            />
+          </View>
+        </View>
+        <View>
+          <View
+            style={
+              [
+                {
+                  "height": 0.5,
+                  "marginHorizontal": 16,
+                },
+                {
+                  "backgroundColor": "#ECEEF1",
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "justifyContent": "space-between",
+                "paddingHorizontal": 16,
+                "paddingVertical": 12,
+              }
+            }
+          >
+            <Text
+              style={
+                [
+                  {},
+                  {
+                    "color": "#14171A",
+                    "fontSize": 16,
+                  },
+                ]
+              }
+              testID="settings-capability-transcription"
+            >
+              Voice input
+            </Text>
+            <RCTSwitch
+              accessibilityLabel="Notify me about Voice input"
+              accessibilityRole="switch"
+              accessibilityState={
+                {
+                  "checked": true,
+                }
+              }
+              onChange={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
+              onTintColor="#4F46E5"
+              style={
+                {
+                  "height": 31,
+                  "width": 51,
+                }
+              }
+              testID="settings-notify-toggle-transcription"
+              thumbTintColor="#FFFFFF"
+              tintColor="#ECEEF1"
+              value={true}
+            />
+          </View>
+        </View>
+      </View>
+      <Text
+        style={
+          [
+            {
+              "letterSpacing": 0.5,
+              "marginBottom": 6,
+              "marginLeft": 4,
+            },
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "fontWeight": "400",
+            },
+          ]
+        }
+      >
+        ABOUT
+      </Text>
+      <View
+        style={
+          [
+            {
+              "borderRadius": 12,
+              "borderWidth": 0.5,
+              "marginBottom": 20,
+              "overflow": "hidden",
+            },
+            {
+              "backgroundColor": "#FAFAF7",
+              "borderColor": "#ECEEF1",
+            },
+          ]
+        }
+        testID="settings-about-section"
+      >
+        <View
+          accessibilityLabel="Terms"
+          accessibilityRole="link"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "paddingHorizontal": 16,
+              "paddingVertical": 14,
+            }
+          }
+          testID="settings-terms-link"
+        >
+          <Text
+            style={
+              [
+                {},
+                {
+                  "color": "#14171A",
+                  "fontSize": 16,
+                },
+              ]
+            }
+          >
+            Terms
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "height": 0.5,
+                "marginHorizontal": 16,
+              },
+              {
+                "backgroundColor": "#ECEEF1",
+              },
+            ]
+          }
+        />
+        <View
+          accessibilityLabel="Privacy"
+          accessibilityRole="link"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "paddingHorizontal": 16,
+              "paddingVertical": 14,
+            }
+          }
+          testID="settings-privacy-link"
+        >
+          <Text
+            style={
+              [
+                {},
+                {
+                  "color": "#14171A",
+                  "fontSize": 16,
+                },
+              ]
+            }
+          >
+            Privacy
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "height": 0.5,
+                "marginHorizontal": 16,
+              },
+              {
+                "backgroundColor": "#ECEEF1",
+              },
+            ]
+          }
+        />
+        <View
+          accessibilityLabel="Help"
+          accessibilityRole="link"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "paddingHorizontal": 16,
+              "paddingVertical": 14,
+            }
+          }
+          testID="settings-help-link"
+        >
+          <Text
+            style={
+              [
+                {},
+                {
+                  "color": "#14171A",
+                  "fontSize": 16,
+                },
+              ]
+            }
+          >
+            Help
+          </Text>
+        </View>
+        <View
+          style={
+            [
+              {
+                "height": 0.5,
+                "marginHorizontal": 16,
+              },
+              {
+                "backgroundColor": "#ECEEF1",
+              },
+            ]
+          }
+        />
+        <View
+          style={
+            {
+              "paddingHorizontal": 16,
+              "paddingVertical": 14,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#5C6470",
+                "fontSize": 13,
+              }
+            }
+            testID="settings-version"
+          >
+            Version 1.2.3 (456)
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "marginBottom": 16,
+            "marginTop": 8,
+          }
+        }
+      >
+        <View
+          accessibilityLabel="Sign out"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            [
+              {
+                "alignItems": "center",
+                "borderRadius": 12,
+                "borderWidth": 0.5,
+                "justifyContent": "center",
+                "paddingVertical": 14,
+              },
+              {
+                "borderColor": "#C03A2B",
+              },
+            ]
+          }
+          testID="settings-sign-out"
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontWeight": "600",
+                },
+                {
+                  "color": "#C03A2B",
+                  "fontSize": 16,
+                },
+              ]
+            }
+          >
+            Sign out
+          </Text>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</RNCSafeAreaProvider>
+`;

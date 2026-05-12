@@ -54,6 +54,8 @@ import {secureStore, type SecureSnapshot} from '#/state/persisted/secure'
 export interface AuthUser {
   id: string
   email: string
+  /** Optional — set by SIWA (ADR-0013); absent for magic-link users. */
+  displayName?: string
 }
 
 export type SessionStatus = 'loading' | 'unauthenticated' | 'authenticated'
