@@ -58,8 +58,9 @@ export class CloneError extends Error {
 export const CLONE_TOAST_MESSAGES: Record<CloneErrorCode, string> = {
   not_found: 'This tool is no longer available.',
   revoked: 'This share link has been revoked.',
-  network: 'Something went wrong. Please try again.',
-  internal: 'Something went wrong. Please try again.',
+  // ADR-0008 Step 6: generic error copy — aligns to the spec's "Couldn't open the shared tool."
+  network: "Couldn't open the shared tool.",
+  internal: "Couldn't open the shared tool.",
 }
 
 // -- Error mapping -----------------------------------------------------------

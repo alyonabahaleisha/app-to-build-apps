@@ -1,5 +1,5 @@
 /**
- * RunScreen tests — ADR-0011 Step 10.
+ * RunScreen tests — ADR-0011 Step 10 + ADR-0008 Step 6 refactor.
  *
  * T-0011-244..T-0011-284 (41 T-IDs):
  *   Happy:    244..265, 267..268, 277..278, 283..284
@@ -8,9 +8,14 @@
  *   Error:    274..276
  *   Snapshot: 278..282
  *
- * Cal R3 closures:
- *   T-0011-251: share 501 → no share_link_copied telemetry emitted
- *   T-0011-295: useAuthDeepLink regression (Navigation-level; asserted separately)
+ * ADR-0008 Step 6 refactor:
+ *   handleShare + handleCopyLink now delegate to useCreateShareLinkMutation
+ *   via useShareAction. The 501-stub toast ("Share isn't ready yet") is
+ *   superseded by the mutation's onError generic toast (T-0011-251 updated).
+ *   setClipboardString is mocked from #/state/queries/shareLinks so tests
+ *   don't touch the RN Clipboard native module.
+ *
+ * T-0011-295: useAuthDeepLink regression (Navigation-level; asserted separately)
  */
 import React from 'react'
 import {AccessibilityInfo, Alert} from 'react-native'
@@ -24,9 +29,47 @@ import {act, fireEvent, render, waitFor, within} from '@testing-library/react-na
 
 jest.mock('expo-haptics', () => ({
   __esModule: true,
-  ImpactFeedbackStyle: {Light: 'light'},
+  ImpactFeedbackStyle: {Light: 'light', Medium: 'medium', Heavy: 'heavy'},
   impactAsync: jest.fn(async () => {}),
 }))
+
+// LoadSpecFromDevMenu is a __DEV__-only component that requires expo-linking
+// and native DevSettings — not needed for RunScreen integration tests.
+// Stub to null to avoid native-module errors in this test suite.
+jest.mock('#/screens/Run/devMenu/LoadSpecFromDevMenu', () => ({
+  LoadSpecFromDevMenu: () => null,
+}))
+
+// DevSpecContext — useDevSpecMiniAppQuery passes through to the real
+// useMiniAppQuery (which is intercepted by fetch mocks in this suite).
+// No dev spec is active in these tests, so the real query path is always taken.
+jest.mock('#/screens/Run/devMenu/DevSpecContext', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const {useMiniAppQuery} = require('#/state/queries/miniApps')
+  return {
+    useDevSpecMiniAppQuery: (miniAppId: string | undefined) => useMiniAppQuery(miniAppId),
+    DevSpecProvider: ({children}: {children: React.ReactNode}) => children,
+    useDevSpecContext: jest.fn(() => ({
+      setDevSpec: jest.fn(),
+      clearDevSpec: jest.fn(),
+      entry: null,
+    })),
+  }
+})
+
+// Mock setClipboardString so clipboard native module is never touched in tests.
+// Resolves by default — tests that need it to reject can override with
+// mockRejectedValueOnce (see T-0008-143b pattern in shareLinks.test.ts).
+jest.mock('#/state/queries/shareLinks', () => {
+  const actual =
+    jest.requireActual<typeof import('#/state/queries/shareLinks')>(
+      '#/state/queries/shareLinks',
+    )
+  return {
+    ...actual,
+    setClipboardString: jest.fn(async () => {}),
+  }
+})
 
 jest.mock('@expo/vector-icons', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -107,6 +150,7 @@ import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 import {resetApiForTests, setCurrentSession} from '#/lib/api'
 import {writeEvent} from '#/lib/telemetry'
 import {markCoachmarkSeen} from '#/lib/coachmarkStorage'
+import {setClipboardString} from '#/state/queries/shareLinks'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import type {RootStackParamList} from '#/lib/routes/types'
@@ -210,6 +254,8 @@ beforeEach(() => {
   mockHasSeenCoachmark.mockResolvedValue(true) // default: coachmark already seen
   ;(writeEvent as jest.Mock).mockClear()
   ;(markCoachmarkSeen as jest.Mock).mockClear()
+  // Default: clipboard write succeeds (tests needing failure override with mockRejectedValueOnce).
+  ;(setClipboardString as jest.Mock).mockResolvedValue(undefined)
   jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(false)
   jest.spyOn(Alert, 'alert')
 })
@@ -384,7 +430,11 @@ describe('RunScreen — Share (T-0011-250, T-0011-251)', () => {
     expect(calls.some(url => url.includes('/share'))).toBe(true)
   })
 
-  it('T-0011-251: Share 501 → toast "Share isn\'t ready yet"; share_link_copied NOT emitted', async () => {
+  it('T-0011-251: Share 501 → error toast shown; share_link_copied NOT emitted', async () => {
+    // ADR-0008 Step 6 refactor: the 501-stub "Share isn't ready yet" toast is
+    // superseded by the mutation's onError generic ("Couldn't create a share link.
+    // Try again."). The invariant that matters — no share_link_copied telemetry on
+    // failure — is unchanged (P1-9 closure still holds).
     mockDetailOk()
     mockShare501()
     const {findByTestId, findByText} = renderRun()
@@ -394,8 +444,8 @@ describe('RunScreen — Share (T-0011-250, T-0011-251)', () => {
     await act(async () => {
       fireEvent.press(shareBtn)
     })
-    // Toast shown
-    await findByText("Share isn't ready yet")
+    // Error toast shown (onError path)
+    await findByText("Couldn't create a share link. Try again.")
     // Telemetry must NOT have fired share_link_copied (P1-9 closure)
     expect(writeEvent as jest.Mock).not.toHaveBeenCalledWith(
       expect.objectContaining({eventType: 'share_link_copied'}),
@@ -906,8 +956,8 @@ describe('Snapshots', () => {
 // ============================================================================
 
 describe('Cal R3 closures', () => {
-  describe('P1-9: Share 501 telemetry suppression (T-0011-251 — comprehensive)', () => {
-    it('writeEvent is not called with share_link_copied on 501 share path', async () => {
+  describe('P1-9: Share error telemetry suppression (T-0011-251 — comprehensive)', () => {
+    it('writeEvent is not called with share_link_copied on 501 share path (P1-9 closure — mutation onError path)', async () => {
       mockDetailOk()
       mockShare501()
       const {findByTestId} = renderRun()

@@ -17,16 +17,12 @@
  *   - Render-error → RenderErrorBoundary catches → RunFailedBanner
  *
  * Meatball menu actions:
- *   - Share (calls POST /me/mini-apps/:id/share — 501 stub; T-0011-251)
- *   - Copy link (same 501 path)
+ *   - Share (calls POST /me/mini-apps/:id/share via useShareAction — ADR-0008 Step 6)
+ *   - Copy link (same action — useShareAction)
  *   - Make changes → Create with editingMiniAppId + prefilledPrompt
  *   - Rename → RenameSheet
  *   - Archive → confirmation + useArchiveMiniAppMutation → pop to Library
  *   - Delete → confirmation + useDeleteMiniAppMutation → pop to Library
- *
- * Cal R3 closures:
- *   - P1-9: share 501 → toast "Share isn't ready yet"; no share_link_copied telemetry
- *   - P1-10: useAuthDeepLink regression (unaffected — lives at Navigation root)
  *
  * ADR-0008 hook point: celebrate sheet for clone landing left for ADR-0008 PR 3.
  *
@@ -37,7 +33,6 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Alert,
-  Clipboard,
   StyleSheet,
   View,
   type LayoutRectangle,
@@ -46,19 +41,20 @@ import {
 import {SafeContainer} from '#/components/SafeContainer'
 import {useToast} from '#/components/ToastProvider'
 import {hasSeenCoachmark} from '#/lib/coachmarkStorage'
-import {apiFetch, ApiError} from '#/lib/api'
-import {writeEvent} from '#/lib/telemetry'
+import {ApiError} from '#/lib/api'
 import {
   useArchiveMiniAppMutation,
   useDeleteMiniAppMutation,
-  useMiniAppQuery,
 } from '#/state/queries/miniApps'
+import {useDevSpecMiniAppQuery} from '#/screens/Run/devMenu/DevSpecContext'
 import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
+import {useShareAction} from './ShareSheet'
 
 import {Renderer, type HostCallbacks} from '@app-creator/a2ui-renderer'
 import type {Spec} from '@app-creator/protocol'
 
 import {FirstRunCoachmark} from './FirstRunCoachmark'
+import {LoadSpecFromDevMenu} from './devMenu/LoadSpecFromDevMenu'
 import {MeatballMenu, type MeatballMenuRef} from './MeatballMenu'
 import {RenameSheet, type RenameSheetRef} from './RenameSheet'
 import {RunErrorBoundary} from './RunErrorBoundary'
@@ -81,7 +77,10 @@ export function RunScreen({route, navigation}: Props) {
   const theme = useAppShellTheme()
   const toast = useToast()
 
-  const query = useMiniAppQuery(miniAppId)
+  // useDevSpecMiniAppQuery short-circuits to the in-memory dev spec when the
+  // eval harness (LoadSpecFromDevMenu) has injected one via DevSpecContext.
+  // Falls through to the real useMiniAppQuery otherwise.
+  const query = useDevSpecMiniAppQuery(miniAppId)
   const archiveMutation = useArchiveMiniAppMutation()
   const deleteMutation = useDeleteMiniAppMutation()
 
@@ -132,47 +131,24 @@ export function RunScreen({route, navigation}: Props) {
 
   // ---------- meatball action handlers ----------
 
-  const handleShare = useCallback(async () => {
-    meatballRef.current?.dismiss()
-    try {
-      const result = await apiFetch<{share_id: string; universal_link: string}>(
-        `/me/mini-apps/${miniAppId}/share`,
-        {method: 'POST'},
-      )
-      // 200 path (ADR-0008): copy link + haptic + telemetry.
-      // share_id_prefix is the first 4 chars of the ksuid — anonymous time-bucket, no PII.
-      writeEvent({eventType: 'share_link_copied', share_id_prefix: result.share_id.slice(0, 4)})
-      toast.show(runCopy.linkCopied)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 501) {
-        // 501 stub — temporary toast; no telemetry (T-0011-251).
-        toast.show(runCopy.shareNotReady, {variant: 'error'})
-        // Explicitly: do NOT call writeEvent here.
-        return
-      }
-      toast.show(runCopy.shareNotReady, {variant: 'error'})
-    }
-  }, [miniAppId, toast])
+  // ADR-0008 Step 6: share action delegated to useShareAction.
+  // Clipboard write + haptic + telemetry + toasts are owned by the mutation hook.
+  // T-0008-133..143b all flow through useCreateShareLinkMutation internally.
+  const {handleShare: _handleShareBase} = useShareAction({
+    miniAppId,
+    onBeforeShare: () => { meatballRef.current?.dismiss() },
+  })
 
-  const handleCopyLink = useCallback(async () => {
-    meatballRef.current?.dismiss()
-    try {
-      const result = await apiFetch<{share_id: string; universal_link: string}>(
-        `/me/mini-apps/${miniAppId}/share`,
-        {method: 'POST'},
-      )
-      Clipboard.setString(result.universal_link)
-      // share_id_prefix is the first 4 chars of the ksuid — anonymous time-bucket, no PII.
-      writeEvent({eventType: 'share_link_copied', share_id_prefix: result.share_id.slice(0, 4)})
-      toast.show(runCopy.linkCopied)
-    } catch (err) {
-      if (err instanceof ApiError && err.status === 501) {
-        toast.show(runCopy.shareNotReady, {variant: 'error'})
-        return
-      }
-      toast.show(runCopy.shareNotReady, {variant: 'error'})
-    }
-  }, [miniAppId, toast])
+  const handleShare = useCallback(() => {
+    _handleShareBase()
+  }, [_handleShareBase])
+
+  // Copy link uses the same share action — both "Share" and "Copy link" meatball
+  // items produce a clipboard copy (V0 is copy-only; OS share sheet is V0.5).
+  // Dismiss is handled via onBeforeShare inside useShareAction; no double-dismiss.
+  const handleCopyLink = useCallback(() => {
+    _handleShareBase()
+  }, [_handleShareBase])
 
   const handleMakeChanges = useCallback(() => {
     meatballRef.current?.dismiss()
@@ -328,8 +304,8 @@ export function RunScreen({route, navigation}: Props) {
         {/* Meatball action sheet */}
         <MeatballMenu
           ref={meatballRef}
-          onShare={() => { void handleShare() }}
-          onCopyLink={() => { void handleCopyLink() }}
+          onShare={handleShare}
+          onCopyLink={handleCopyLink}
           onMakeChanges={handleMakeChanges}
           onRename={handleRename}
           onArchive={handleArchive}
@@ -338,6 +314,11 @@ export function RunScreen({route, navigation}: Props) {
 
         {/* Rename sheet */}
         <RenameSheet ref={renameSheetRef} />
+
+        {/* Dev-only: eval harness spec loader (ADR-0011 Step 13).
+            Registers the dev-menu item and URL-scheme handler.
+            Renders null in production builds. */}
+        {__DEV__ ? <LoadSpecFromDevMenu navigation={navigation} /> : null}
       </SafeContainer>
     </BottomSheetModalProvider>
   )
