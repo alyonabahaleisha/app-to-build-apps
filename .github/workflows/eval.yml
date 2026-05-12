@@ -51,6 +51,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # ADR-0010 Step 5 — PROMPT_VERSION bump pre-flight guard.
+      # When system.ts changes in a PR, PROMPT_VERSION must be strictly bumped.
+      # Exits 1 and blocks the eval job (saves API credits) if the check fails.
+      # Only runs on PRs — pushes to main have already merged a reviewed bump.
+      # T-0010-113.
+      - name: PROMPT_VERSION bump pre-flight (ADR-0010 Step 5)
+        if: github.event_name == 'pull_request'
+        run: pnpm --filter @app-creator/api eval:check-version-bump
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+
       - name: Run eval — mode=v0 (CI gate ≥90% overall, ≥80% per archetype) — T-0007-176
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
