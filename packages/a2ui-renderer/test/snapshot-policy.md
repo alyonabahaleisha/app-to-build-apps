@@ -1,13 +1,13 @@
 # Renderer Snapshot Policy
 
-_Last updated: Step 12 (ADR-0006)_
+_Last updated: Step 9 (ADR-0009) — V1 Phase 1 catalog expansion_
 
 ## Why 2 of 12 registers?
 
-The V0 renderer supports 12 stance×palette combinations (2 stances × 6 palettes).
-Snapshotting every component across all 12 registers would produce 336 snapshots
-(28 × 12). That's unmanageable: a single token change in the design-system would
-produce 336 snapshot diffs for Roz to review. The signal-to-noise ratio collapses.
+The renderer supports 12 stance×palette combinations (2 stances × 6 palettes).
+Snapshotting every component across all 12 registers would produce 636 snapshots
+(53 × 12). That's unmanageable: a single token change in the design-system would
+produce 636 snapshot diffs for Roz to review. The signal-to-noise ratio collapses.
 
 We snapshot 2 canonical registers instead:
 
@@ -21,12 +21,13 @@ accent colors, different font stack paths (sans vs. serif headings), and differe
 spacing scales. A component regression that only manifests on expressive or only
 on a non-focus palette will still show up in this sample.
 
-28 components × 2 = **56 snapshots**. That is the Step 12 matrix.
+53 components × 2 = **106 snapshots**. That is the Step 9 matrix (V0: 28 components,
+56 snapshots per ADR-0006 Step 12; V1 Phase 1 adds 25 components, 50 snapshots).
 
 ## What polish-review week adds (week 5)
 
 In week 5, Sable runs a visual review across all 12 registers on a physical device.
-This extends the matrix to 336 visual states — but it's a human-in-the-loop review,
+This extends the matrix to 636 visual states — but it's a human-in-the-loop review,
 not a CI snapshot gate. The integration test (`src/v0/__demo__/`) renders one sample
 spec per archetype across all 12 registers during this review.
 
@@ -35,7 +36,7 @@ If a visual regression is found in a non-matrix register during polish review, w
 2. Fix the regression.
 3. Update the snapshot.
 
-We do not add all 12 registers to CI preemptively. The 56-snapshot matrix is the
+We do not add all 12 registers to CI preemptively. The 106-snapshot matrix is the
 right CI gate for V0.
 
 ## Updating snapshots
@@ -57,7 +58,7 @@ the snapshot diff is expected. Snapshots must not be silently updated.
 
 | Path | Description |
 |---|---|
-| `src/v0/snapshot-matrix.test.tsx` | Parameterized matrix test; T-0006-180..235, T-0006-236 |
+| `src/v0/snapshot-matrix.test.tsx` | Parameterized matrix test; T-0006-180..235, T-0006-236, T-0006-237..286 |
 | `src/v0/viewport.test.tsx` | iPhone SE boundary test; T-0006-178 |
 | `src/v0/components/*/` | Per-component snapshot files; 2 per component from build steps |
 

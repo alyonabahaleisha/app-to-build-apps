@@ -1,7 +1,7 @@
 name: Renderer Snapshot Matrix
 
 # Guard: runs on changes to the V0 renderer source or snapshot files.
-# Fails if any of the 56 register-pair snapshots drift from committed goldens.
+# Fails if any of the 106 register-pair snapshots drift from committed goldens.
 #
 # ADR-0006 §CI/CD Impact / Step 12.
 # Snapshot policy: see packages/a2ui-renderer/test/snapshot-policy.md
@@ -27,7 +27,7 @@ on:
 
 jobs:
   renderer-snapshot-matrix:
-    name: Renderer Snapshot Matrix (56 snapshots)
+    name: Renderer Snapshot Matrix (106 snapshots)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
       - name: Typecheck (renderer)
         run: pnpm --filter @app-creator/a2ui-renderer typecheck
 
-      - name: Run snapshot matrix (T-0006-180..235, T-0006-236, T-0006-178)
+      - name: Run snapshot matrix (T-0006-180..235, T-0006-236, T-0006-237..286, T-0006-178)
         # CI runs read-only. Never pass --updateSnapshot here.
         # Drift means a committed snapshot no longer matches the component output.
         # The fix is always an intentional update with a code-review note.

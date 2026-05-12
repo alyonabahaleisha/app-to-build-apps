@@ -1,11 +1,14 @@
 /**
- * Snapshot matrix — Step 12 (ADR-0006)
+ * Snapshot matrix — Step 12 (ADR-0006) + Step 9 (ADR-0009)
  *
- * T-0006-180..235: 28 components × 2 register pairs = 56 snapshots.
+ * T-0006-180..235: 28 components × 2 register pairs = 56 snapshots (V0).
  * T-0006-236: Snapshot stability — deterministic fixtures produce zero
  *   diff across runs. Guaranteed by the absence of any runtime
  *   randomness (no Date.now(), no Math.random(), no seedrandom
  *   calls in component render paths).
+ * T-0006-237..286: 25 new V1 Phase 1 components × 2 register pairs = 50 snapshots.
+ *
+ * Total: 106 snapshots = 53 components × 2 register pairs.
  *
  * Register pairs:
  *   Productive × Focus  — cobalt accent, sans-serif, tighter spacing
@@ -15,9 +18,13 @@
  * Each entry is a [T-ID, componentName, stance, palette, element] tuple.
  *
  * Components that require collection state (List, ListSummary, MediaTray,
- * ConditionalSection) receive a pre-built RendererState via renderWithTheme's
- * rendererState option. SwipeableRow renders the swipe action panels inline
- * (jestSetup mock) so no special state is needed.
+ * ConditionalSection, GridList, Carousel, Timeline, Heatmap) receive a
+ * pre-built RendererState via renderWithTheme's rendererState option.
+ * SwipeableRow renders the swipe action panels inline (jestSetup mock).
+ *
+ * Date-sensitive components (Calendar, Heatmap, Timeline) require fake
+ * timers pinned to 2026-01-15T12:00:00Z for deterministic snapshots.
+ * The describe block that contains these entries sets up fake timers.
  *
  * Snapshot policy: see packages/a2ui-renderer/test/snapshot-policy.md
  */
@@ -32,34 +39,74 @@ import type {RendererState} from './state/types'
 // Component imports
 // ---------------------------------------------------------------------------
 
+// V0 — Layout
 import {ScreenRenderer} from './components/layout/Screen'
 import {SectionRenderer} from './components/layout/Section'
 import {StackRenderer} from './components/layout/Stack'
 import {RowRenderer} from './components/layout/Row'
 import {CardRenderer} from './components/layout/Card'
+// V0 — Typography
 import {HeadingRenderer} from './components/typography/Heading'
 import {BodyRenderer} from './components/typography/Body'
 import {CaptionRenderer} from './components/typography/Caption'
+// V0 — Display
 import {StatRenderer} from './components/display/Stat'
 import {BadgeRenderer} from './components/display/Badge'
 import {ChipRenderer} from './components/display/Chip'
 import {AvatarRenderer} from './components/display/Avatar'
+// V0 — Inputs
 import {TextFieldRenderer} from './components/inputs/TextField'
 import {NumberFieldRenderer} from './components/inputs/NumberField'
 import {DateFieldRenderer} from './components/inputs/DateField'
 import {PickerRenderer} from './components/inputs/Picker'
 import {SwitchRenderer} from './components/inputs/Switch'
+// V0 — Lists
 import {ListRenderer} from './components/lists/List'
 import {ListItemRenderer} from './components/lists/ListItem'
 import {SwipeableRowRenderer} from './components/lists/SwipeableRow'
 import {EmptyStateRenderer} from './components/lists/EmptyState'
 import {LoadingStateRenderer} from './components/lists/LoadingState'
+// V0 — Compound
 import {ConditionalSectionRenderer} from './components/compound/ConditionalSection'
 import {ListSummaryRenderer} from './components/compound/ListSummary'
 import {MediaTrayRenderer} from './components/compound/MediaTray'
 import {ImagePickerRenderer} from './components/compound/ImagePicker'
+// V0 — Actions
 import {ButtonRenderer} from './components/actions/Button'
 import {FABRenderer} from './components/actions/FAB'
+
+// V1 Phase 1 — Layout
+import {DividerRenderer} from './components/layout/Divider'
+import {ImageRenderer} from './components/compound/Image'
+// V1 Phase 1 — Actions
+import {IconButtonRenderer} from './components/actions/IconButton'
+// V1 Phase 1 — Inputs
+import {MoneyFieldRenderer} from './components/inputs/MoneyField'
+import {TimeFieldRenderer} from './components/inputs/TimeField'
+import {MultiPickerRenderer} from './components/inputs/MultiPicker'
+import {SliderRenderer} from './components/inputs/Slider'
+import {RatingInputRenderer} from './components/inputs/RatingInput'
+import {SearchBarRenderer} from './components/inputs/SearchBar'
+// V1 Phase 1 — Display
+import {AvatarGroupRenderer} from './components/display/AvatarGroup'
+import {CalloutRenderer} from './components/display/Callout'
+// V1 Phase 1 — Lists
+import {GridListRenderer} from './components/lists/GridList'
+import {CarouselRenderer} from './components/lists/Carousel'
+import {TimelineRenderer} from './components/lists/Timeline'
+import {ErrorStateRenderer} from './components/lists/ErrorState'
+// V1 Phase 1 — Compound (Productivity)
+import {TransactionRowRenderer} from './components/compound/TransactionRow'
+import {ReceiptRenderer} from './components/compound/Receipt'
+import {MetricTileRenderer} from './components/compound/MetricTile'
+import {StepListRenderer} from './components/compound/StepList'
+import {CalendarRenderer} from './components/compound/Calendar'
+import {HeatmapRenderer} from './components/compound/Heatmap'
+// V1 Phase 1 — Compound (Content/Media)
+import {GalleryRenderer} from './components/compound/Gallery'
+import {CommerceCardRenderer} from './components/compound/CommerceCard'
+import {BeforeAfterRenderer} from './components/compound/BeforeAfter'
+import {DocumentPickerRenderer} from './components/compound/DocumentPicker'
 
 // ---------------------------------------------------------------------------
 // AI capabilities mock (ListSummary needs it)
@@ -147,6 +194,118 @@ const photosState: RendererState = buildInitialRendererState(SPEC_WITH_PHOTOS)
 const workoutsState: RendererState = buildInitialRendererState(SPEC_WITH_WORKOUTS)
 
 // ---------------------------------------------------------------------------
+// V1 Phase 1 — additional shared specs for new collection-dependent components
+// ---------------------------------------------------------------------------
+
+/** Spec that owns 'gridphotos' collection used by GridList. */
+const SPEC_WITH_GRIDPHOTOS: Spec = {
+  ...SPEC_WITH_ITEMS,
+  coverIcon: 'image',
+  collections: [
+    {
+      id: 'gridphotos',
+      name: 'Grid Photos',
+      syncMode: 'local' as const,
+      fields: [{name: 'title', type: {type: 'string'} as const, required: true}],
+      seedData: [
+        {title: 'Sunrise'},
+        {title: 'Cityscape'},
+        {title: 'Portrait'},
+        {title: 'Landscape'},
+      ],
+    },
+  ],
+}
+
+/** Spec that owns 'slides' collection used by Carousel. */
+const SPEC_WITH_SLIDES: Spec = {
+  ...SPEC_WITH_ITEMS,
+  coverIcon: 'list',
+  collections: [
+    {
+      id: 'slides',
+      name: 'Slides',
+      syncMode: 'local' as const,
+      fields: [{name: 'title', type: {type: 'string'} as const, required: true}],
+      seedData: [
+        {title: 'Slide 1'},
+        {title: 'Slide 2'},
+        {title: 'Slide 3'},
+      ],
+    },
+  ],
+}
+
+/** Spec that owns 'events' collection used by Timeline. */
+const SPEC_WITH_EVENTS: Spec = {
+  ...SPEC_WITH_ITEMS,
+  coverIcon: 'calendar',
+  collections: [
+    {
+      id: 'events',
+      name: 'Events',
+      syncMode: 'local' as const,
+      fields: [
+        {name: 'title', type: {type: 'string'} as const, required: true},
+        {name: 'createdAt', type: {type: 'date'} as const, required: true},
+      ],
+      seedData: [
+        {title: 'Team meeting', createdAt: '2026-01-10'},
+        {title: 'Design review', createdAt: '2026-01-12'},
+        {title: 'Launch day', createdAt: '2026-01-15'},
+      ],
+    },
+  ],
+}
+
+/** Spec that owns 'habits' collection used by Heatmap. */
+const SPEC_WITH_HABITS: Spec = {
+  ...SPEC_WITH_ITEMS,
+  coverIcon: 'flame',
+  collections: [
+    {
+      id: 'habits',
+      name: 'Habits',
+      syncMode: 'local' as const,
+      fields: [
+        {name: 'name', type: {type: 'string'} as const, required: true},
+        {name: 'completedAt', type: {type: 'date'} as const, required: true},
+      ],
+      seedData: [
+        {name: 'Morning run', completedAt: '2026-01-10'},
+        {name: 'Evening walk', completedAt: '2026-01-12'},
+        {name: 'Yoga', completedAt: '2026-01-14'},
+      ],
+    },
+  ],
+}
+
+/** Spec that owns 'gallery_imgs' collection used by Gallery. */
+const SPEC_WITH_GALLERY: Spec = {
+  ...SPEC_WITH_ITEMS,
+  coverIcon: 'image',
+  collections: [
+    {
+      id: 'gallery_imgs',
+      name: 'Gallery',
+      syncMode: 'local' as const,
+      fields: [{name: 'photoUrl', type: {type: 'image'} as const, required: true}],
+      seedData: [
+        {photoUrl: 'https://example.com/p1.jpg'},
+        {photoUrl: 'https://example.com/p2.jpg'},
+        {photoUrl: 'https://example.com/p3.jpg'},
+      ],
+    },
+  ],
+}
+
+const gridphotosState: RendererState = buildInitialRendererState(SPEC_WITH_GRIDPHOTOS)
+const slidesState: RendererState = buildInitialRendererState(SPEC_WITH_SLIDES)
+const eventsState: RendererState = buildInitialRendererState(SPEC_WITH_EVENTS)
+const habitsState: RendererState = buildInitialRendererState(SPEC_WITH_HABITS)
+const galleryState: RendererState = buildInitialRendererState(SPEC_WITH_GALLERY)
+
+// ---------------------------------------------------------------------------
 // Node fixtures
 // ---------------------------------------------------------------------------
 
@@ -178,6 +337,33 @@ type MediaTrayNode = Extract<Node, {type: 'MediaTray'}>
 type ImagePickerNode = Extract<Node, {type: 'ImagePicker'}>
 type ButtonNode = Extract<Node, {type: 'Button'}>
 type FabNode = Extract<Node, {type: 'FAB'}>
+
+// V1 Phase 1 node types
+type DividerNode = Extract<Node, {type: 'Divider'}>
+type ImageNode = Extract<Node, {type: 'Image'}>
+type IconButtonNode = Extract<Node, {type: 'IconButton'}>
+type MoneyFieldNode = Extract<Node, {type: 'MoneyField'}>
+type TimeFieldNode = Extract<Node, {type: 'TimeField'}>
+type MultiPickerNode = Extract<Node, {type: 'MultiPicker'}>
+type SliderNode = Extract<Node, {type: 'Slider'}>
+type RatingInputNode = Extract<Node, {type: 'RatingInput'}>
+type SearchBarNode = Extract<Node, {type: 'SearchBar'}>
+type AvatarGroupNode = Extract<Node, {type: 'AvatarGroup'}>
+type CalloutNode = Extract<Node, {type: 'Callout'}>
+type GridListNode = Extract<Node, {type: 'GridList'}>
+type CarouselNode = Extract<Node, {type: 'Carousel'}>
+type TimelineNode = Extract<Node, {type: 'Timeline'}>
+type ErrorStateNode = Extract<Node, {type: 'ErrorState'}>
+type TransactionRowNode = Extract<Node, {type: 'TransactionRow'}>
+type ReceiptNode = Extract<Node, {type: 'Receipt'}>
+type MetricTileNode = Extract<Node, {type: 'MetricTile'}>
+type StepListNode = Extract<Node, {type: 'StepList'}>
+type CalendarNode = Extract<Node, {type: 'Calendar'}>
+type HeatmapNode = Extract<Node, {type: 'Heatmap'}>
+type GalleryNode = Extract<Node, {type: 'Gallery'}>
+type CommerceCardNode = Extract<Node, {type: 'CommerceCard'}>
+type BeforeAfterNode = Extract<Node, {type: 'BeforeAfter'}>
+type DocumentPickerNode = Extract<Node, {type: 'DocumentPicker'}>
 
 // Layout
 
@@ -402,6 +588,252 @@ const FAB_NODE: FabNode = {
   action: {type: 'addItem', collection: 'items', item: {name: 'New workout'}},
 }
 
+// V1 Phase 1 — Layout
+
+const DIVIDER_NODE: DividerNode = {
+  id: 'mx-divider',
+  type: 'Divider',
+  label: 'Today',
+  weight: 'hairline',
+  inset: 'none',
+}
+
+const IMAGE_NODE: ImageNode = {
+  id: 'mx-image',
+  type: 'Image',
+  source: {kind: 'literal', value: 'https://example.com/hero.jpg'},
+  aspectRatio: '16:9',
+  alt: 'Hero image',
+}
+
+// V1 Phase 1 — Actions
+
+const ICON_BUTTON_NODE: IconButtonNode = {
+  id: 'mx-iconbutton',
+  type: 'IconButton',
+  icon: 'edit',
+  variant: 'secondary',
+  size: 'md',
+  accessibilityLabel: 'Edit workout',
+  action: {type: 'set', target: 'editing', value: true},
+}
+
+// V1 Phase 1 — Inputs
+
+const MONEY_FIELD_NODE: MoneyFieldNode = {
+  id: 'mx-moneyfield',
+  type: 'MoneyField',
+  label: 'Tip amount',
+  valueBinding: {kind: 'state', slot: 'tipCents'},
+  currency: 'USD',
+}
+
+const TIME_FIELD_NODE: TimeFieldNode = {
+  id: 'mx-timefield',
+  type: 'TimeField',
+  label: 'Workout time',
+  valueBinding: {kind: 'state', slot: 'startTime'},
+}
+
+const MULTI_PICKER_NODE: MultiPickerNode = {
+  id: 'mx-multipicker',
+  type: 'MultiPicker',
+  label: 'Muscle groups',
+  valueBinding: {kind: 'state', slot: 'muscleGroups'},
+  options: [
+    {value: 'chest', label: 'Chest'},
+    {value: 'back', label: 'Back'},
+    {value: 'legs', label: 'Legs'},
+    {value: 'shoulders', label: 'Shoulders'},
+  ],
+}
+
+const SLIDER_NODE: SliderNode = {
+  id: 'mx-slider',
+  type: 'Slider',
+  label: 'Intensity',
+  valueBinding: {kind: 'state', slot: 'intensity'},
+  min: 1,
+  max: 10,
+  step: 1,
+  showValue: true,
+}
+
+const RATING_INPUT_NODE: RatingInputNode = {
+  id: 'mx-ratinginput',
+  type: 'RatingInput',
+  label: 'Session rating',
+  valueBinding: {kind: 'state', slot: 'rating'},
+  scale: 5,
+  glyph: 'star',
+}
+
+const SEARCH_BAR_NODE: SearchBarNode = {
+  id: 'mx-searchbar',
+  type: 'SearchBar',
+  valueBinding: {kind: 'state', slot: 'query'},
+  placeholder: 'Search workouts…',
+}
+
+// V1 Phase 1 — Display
+
+const AVATAR_GROUP_NODE: AvatarGroupNode = {
+  id: 'mx-avatargroup',
+  type: 'AvatarGroup',
+  avatars: [
+    {name: 'José García'},
+    {name: '李明'},
+    {name: "O'Brien"},
+  ],
+  maxShown: 3,
+  size: 'md',
+}
+
+const CALLOUT_NODE: CalloutNode = {
+  id: 'mx-callout',
+  type: 'Callout',
+  variant: 'info',
+  headline: 'Rest day recommended',
+  body: 'You have trained 5 days in a row.',
+}
+
+// V1 Phase 1 — Lists
+
+const GRID_LIST_NODE: GridListNode = {
+  id: 'mx-gridlist',
+  type: 'GridList',
+  collectionId: 'gridphotos',
+  columns: 2,
+}
+
+const CAROUSEL_NODE: CarouselNode = {
+  id: 'mx-carousel',
+  type: 'Carousel',
+  collectionId: 'slides',
+  indicator: 'dots',
+}
+
+const TIMELINE_NODE: TimelineNode = {
+  id: 'mx-timeline',
+  type: 'Timeline',
+  collectionId: 'events',
+  dateField: 'createdAt',
+  dateFormat: 'absolute',
+}
+
+const ERROR_STATE_NODE: ErrorStateNode = {
+  id: 'mx-errorstate',
+  type: 'ErrorState',
+  headline: 'Failed to load',
+  body: 'Check your connection and try again.',
+}
+
+// V1 Phase 1 — Compound (Productivity)
+
+const TRANSACTION_ROW_NODE: TransactionRowNode = {
+  id: 'mx-transactionrow',
+  type: 'TransactionRow',
+  date: 'Jan 14, 2026',
+  merchant: 'Gym membership',
+  amount: {kind: 'literal', value: -4999},
+  currency: 'USD',
+  categoryIcon: 'zap',
+}
+
+const RECEIPT_NODE: ReceiptNode = {
+  id: 'mx-receipt',
+  type: 'Receipt',
+  items: [
+    {label: 'Protein shake', amount: {kind: 'literal', value: 799}},
+    {label: 'Resistance band', amount: {kind: 'literal', value: 1299}},
+  ],
+  subtotal: {kind: 'literal', value: 2098},
+  tax: {kind: 'literal', value: 168},
+  total: {kind: 'literal', value: 2266},
+  currency: 'USD',
+}
+
+const METRIC_TILE_NODE: MetricTileNode = {
+  id: 'mx-metrictile',
+  type: 'MetricTile',
+  value: '14',
+  label: 'Workouts this month',
+  delta: '+3',
+  deltaTone: 'positive',
+  sparklineData: [5, 7, 6, 9, 11, 10, 14],
+}
+
+const STEP_LIST_NODE: StepListNode = {
+  id: 'mx-steplist',
+  type: 'StepList',
+  style: 'numbered',
+  steps: [
+    {title: 'Warm up', body: '5 minutes light cardio'},
+    {title: 'Main set', body: '3 × 10 reps each exercise'},
+    {title: 'Cool down', body: 'Stretch for 5 minutes'},
+  ],
+}
+
+const CALENDAR_NODE: CalendarNode = {
+  id: 'mx-calendar',
+  type: 'Calendar',
+  view: 'month',
+  selectedBinding: {kind: 'state', slot: 'selectedDate'},
+}
+
+const HEATMAP_NODE: HeatmapNode = {
+  id: 'mx-heatmap',
+  type: 'Heatmap',
+  collectionId: 'habits',
+  dateField: 'completedAt',
+  range: '90d',
+  intensityMode: 'count',
+}
+
+// V1 Phase 1 — Compound (Content/Media)
+
+const GALLERY_NODE: GalleryNode = {
+  id: 'mx-gallery',
+  type: 'Gallery',
+  images: [
+    {kind: 'literal', value: 'https://example.com/a.jpg'},
+    {kind: 'literal', value: 'https://example.com/b.jpg'},
+    {kind: 'literal', value: 'https://example.com/c.jpg'},
+  ],
+  columns: 3,
+  aspectRatio: '1:1',
+}
+
+const COMMERCE_CARD_NODE: CommerceCardNode = {
+  id: 'mx-commercecard',
+  type: 'CommerceCard',
+  title: 'Foam Roller Pro',
+  image: {kind: 'literal', value: 'https://example.com/foam-roller.jpg'},
+  price: {kind: 'literal', value: 3499},
+  priceCompare: {kind: 'literal', value: 4999},
+  currency: 'USD',
+  ctaLabel: 'Add to cart',
+  badge: 'Sale',
+}
+
+const BEFORE_AFTER_NODE: BeforeAfterNode = {
+  id: 'mx-beforeafter',
+  type: 'BeforeAfter',
+  before: {kind: 'literal', value: 'https://example.com/before.jpg'},
+  after: {kind: 'literal', value: 'https://example.com/after.jpg'},
+  mode: 'side-by-side',
+  beforeLabel: 'Before',
+  afterLabel: 'After',
+}
+
+const DOCUMENT_PICKER_NODE: DocumentPickerNode = {
+  id: 'mx-documentpicker',
+  type: 'DocumentPicker',
+  label: 'Attach training plan',
+  valueBinding: {kind: 'state', slot: 'planUri'},
+  acceptedTypes: ['pdf'],
+}
+
 // ---------------------------------------------------------------------------
 // Matrix entries
 //
@@ -611,22 +1043,251 @@ const MATRIX_ENTRIES: MatrixEntry[] = [
   {tId: 'T-0006-235', label: 'FAB/expressive×health',
     stance: 'expressive', palette: 'health',
     element: <FABRenderer node={{...FAB_NODE, id: 'mx-fab-e', icon: 'plus', accessibilityLabel: 'Add journal entry'}} />},
+
+  // -------------------------------------------------------------------------
+  // V1 Phase 1 productive×focus (T-0006-237..261)
+  // Tier order: Layout, Actions, Inputs, Display, Lists, Compound
+  // -------------------------------------------------------------------------
+  // Layout
+  {tId: 'T-0006-237', label: 'Divider/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <DividerRenderer node={DIVIDER_NODE} />},
+  {tId: 'T-0006-238', label: 'Image/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <ImageRenderer node={IMAGE_NODE} />},
+  // Actions
+  {tId: 'T-0006-239', label: 'IconButton/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <IconButtonRenderer node={ICON_BUTTON_NODE} />},
+  // Inputs
+  {tId: 'T-0006-240', label: 'MoneyField/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <MoneyFieldRenderer node={MONEY_FIELD_NODE} />},
+  {tId: 'T-0006-241', label: 'TimeField/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <TimeFieldRenderer node={TIME_FIELD_NODE} />},
+  {tId: 'T-0006-242', label: 'MultiPicker/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <MultiPickerRenderer node={MULTI_PICKER_NODE} />},
+  {tId: 'T-0006-243', label: 'Slider/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <SliderRenderer node={SLIDER_NODE} />},
+  {tId: 'T-0006-244', label: 'RatingInput/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <RatingInputRenderer node={RATING_INPUT_NODE} />},
+  {tId: 'T-0006-245', label: 'SearchBar/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <SearchBarRenderer node={SEARCH_BAR_NODE} />},
+  // Display
+  {tId: 'T-0006-246', label: 'AvatarGroup/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <AvatarGroupRenderer node={AVATAR_GROUP_NODE} />},
+  {tId: 'T-0006-247', label: 'Callout/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <CalloutRenderer node={CALLOUT_NODE} />},
+  // Lists
+  {tId: 'T-0006-248', label: 'GridList/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <GridListRenderer node={GRID_LIST_NODE} />,
+    rendererState: gridphotosState},
+  {tId: 'T-0006-249', label: 'Carousel/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <CarouselRenderer node={CAROUSEL_NODE} />,
+    rendererState: slidesState},
+  {tId: 'T-0006-250', label: 'Timeline/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <TimelineRenderer node={TIMELINE_NODE} />,
+    rendererState: eventsState},
+  {tId: 'T-0006-251', label: 'ErrorState/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <ErrorStateRenderer node={ERROR_STATE_NODE} />},
+  // Compound
+  {tId: 'T-0006-252', label: 'TransactionRow/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <TransactionRowRenderer node={TRANSACTION_ROW_NODE} />},
+  {tId: 'T-0006-253', label: 'Receipt/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <ReceiptRenderer node={RECEIPT_NODE} />},
+  {tId: 'T-0006-254', label: 'MetricTile/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <MetricTileRenderer node={METRIC_TILE_NODE} />},
+  {tId: 'T-0006-255', label: 'StepList/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <StepListRenderer node={STEP_LIST_NODE} />},
+  {tId: 'T-0006-256', label: 'Calendar/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <CalendarRenderer node={CALENDAR_NODE} />},
+  {tId: 'T-0006-257', label: 'Heatmap/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <HeatmapRenderer node={HEATMAP_NODE} />,
+    rendererState: habitsState},
+  {tId: 'T-0006-258', label: 'Gallery/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <GalleryRenderer node={GALLERY_NODE} />,
+    rendererState: galleryState},
+  {tId: 'T-0006-259', label: 'CommerceCard/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <CommerceCardRenderer node={COMMERCE_CARD_NODE} />},
+  {tId: 'T-0006-260', label: 'BeforeAfter/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <BeforeAfterRenderer node={BEFORE_AFTER_NODE} />},
+  {tId: 'T-0006-261', label: 'DocumentPicker/productive×focus',
+    stance: 'productive', palette: 'focus',
+    element: <DocumentPickerRenderer node={DOCUMENT_PICKER_NODE} />},
+
+  // -------------------------------------------------------------------------
+  // V1 Phase 1 expressive×health (T-0006-262..286)
+  // Tier order: Layout, Actions, Inputs, Display, Lists, Compound
+  // -------------------------------------------------------------------------
+  // Layout
+  {tId: 'T-0006-262', label: 'Divider/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <DividerRenderer node={{...DIVIDER_NODE, id: 'mx-divider-e', label: 'This week', weight: 'thick'}} />},
+  {tId: 'T-0006-263', label: 'Image/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <ImageRenderer node={{...IMAGE_NODE, id: 'mx-image-e', aspectRatio: '4:5', alt: 'Wellness moment'}} />},
+  // Actions
+  {tId: 'T-0006-264', label: 'IconButton/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <IconButtonRenderer node={{...ICON_BUTTON_NODE, id: 'mx-iconbutton-e', icon: 'heart', variant: 'primary', accessibilityLabel: 'Like entry'}} />},
+  // Inputs
+  {tId: 'T-0006-265', label: 'MoneyField/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <MoneyFieldRenderer node={{...MONEY_FIELD_NODE, id: 'mx-moneyfield-e', label: 'Wellness budget', currency: 'EUR'}} />},
+  {tId: 'T-0006-266', label: 'TimeField/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <TimeFieldRenderer node={{...TIME_FIELD_NODE, id: 'mx-timefield-e', label: 'Meditation time'}} />},
+  {tId: 'T-0006-267', label: 'MultiPicker/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <MultiPickerRenderer node={{...MULTI_PICKER_NODE, id: 'mx-multipicker-e', label: 'Wellness goals',
+      options: [
+        {value: 'mindfulness', label: 'Mindfulness'},
+        {value: 'sleep', label: 'Sleep'},
+        {value: 'nutrition', label: 'Nutrition'},
+        {value: 'movement', label: 'Movement'},
+      ]}} />},
+  {tId: 'T-0006-268', label: 'Slider/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <SliderRenderer node={{...SLIDER_NODE, id: 'mx-slider-e', label: 'Mood level', format: 'integer'}} />},
+  {tId: 'T-0006-269', label: 'RatingInput/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <RatingInputRenderer node={{...RATING_INPUT_NODE, id: 'mx-ratinginput-e', label: 'Mood rating', glyph: 'heart'}} />},
+  {tId: 'T-0006-270', label: 'SearchBar/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <SearchBarRenderer node={{...SEARCH_BAR_NODE, id: 'mx-searchbar-e', placeholder: 'Search journal entries…'}} />},
+  // Display
+  {tId: 'T-0006-271', label: 'AvatarGroup/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <AvatarGroupRenderer node={{...AVATAR_GROUP_NODE, id: 'mx-avatargroup-e', size: 'lg', overlap: 'spread'}} />},
+  {tId: 'T-0006-272', label: 'Callout/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <CalloutRenderer node={{...CALLOUT_NODE, id: 'mx-callout-e', variant: 'success', headline: 'Goal achieved!', body: 'You completed your wellness streak.'}} />},
+  // Lists
+  {tId: 'T-0006-273', label: 'GridList/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <GridListRenderer node={{...GRID_LIST_NODE, id: 'mx-gridlist-e', columns: 3}} />,
+    rendererState: gridphotosState},
+  {tId: 'T-0006-274', label: 'Carousel/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <CarouselRenderer node={{...CAROUSEL_NODE, id: 'mx-carousel-e', indicator: 'fraction', cardWidth: 'peek'}} />,
+    rendererState: slidesState},
+  {tId: 'T-0006-275', label: 'Timeline/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <TimelineRenderer node={{...TIMELINE_NODE, id: 'mx-timeline-e', dateFormat: 'relative', groupBy: 'week'}} />,
+    rendererState: eventsState},
+  {tId: 'T-0006-276', label: 'ErrorState/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <ErrorStateRenderer node={{...ERROR_STATE_NODE, id: 'mx-errorstate-e', headline: 'Could not load entries', body: 'Please try again later.'}} />},
+  // Compound
+  {tId: 'T-0006-277', label: 'TransactionRow/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <TransactionRowRenderer node={{...TRANSACTION_ROW_NODE, id: 'mx-transactionrow-e', merchant: 'Yoga studio', amount: {kind: 'literal', value: 2500}}} />},
+  {tId: 'T-0006-278', label: 'Receipt/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <ReceiptRenderer node={{...RECEIPT_NODE, id: 'mx-receipt-e',
+      items: [{label: 'Essential oils', amount: {kind: 'literal', value: 1599}}],
+      subtotal: {kind: 'literal', value: 1599},
+      total: {kind: 'literal', value: 1599}}} />},
+  {tId: 'T-0006-279', label: 'MetricTile/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <MetricTileRenderer node={{...METRIC_TILE_NODE, id: 'mx-metrictile-e', value: '7 days', label: 'Mindfulness streak', delta: '+2 days', deltaTone: 'positive', sparklineData: undefined}} />},
+  {tId: 'T-0006-280', label: 'StepList/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <StepListRenderer node={{...STEP_LIST_NODE, id: 'mx-steplist-e', style: 'checklist',
+      steps: [
+        {title: 'Morning meditation', done: {kind: 'literal', value: true}},
+        {title: 'Gratitude journal', done: {kind: 'literal', value: false}},
+        {title: 'Evening walk', done: {kind: 'literal', value: false}},
+      ]}} />},
+  {tId: 'T-0006-281', label: 'Calendar/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <CalendarRenderer node={{...CALENDAR_NODE, id: 'mx-calendar-e', firstDayOfWeek: 'monday'}} />},
+  {tId: 'T-0006-282', label: 'Heatmap/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <HeatmapRenderer node={{...HEATMAP_NODE, id: 'mx-heatmap-e', range: '30d', intensityMode: 'binary'}} />,
+    rendererState: habitsState},
+  {tId: 'T-0006-283', label: 'Gallery/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <GalleryRenderer node={{...GALLERY_NODE, id: 'mx-gallery-e', aspectRatio: '4:5'}} />,
+    rendererState: galleryState},
+  {tId: 'T-0006-284', label: 'CommerceCard/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <CommerceCardRenderer node={{...COMMERCE_CARD_NODE, id: 'mx-commercecard-e', title: 'Meditation cushion', badge: undefined, ctaLabel: 'Buy now'}} />},
+  {tId: 'T-0006-285', label: 'BeforeAfter/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <BeforeAfterRenderer node={{...BEFORE_AFTER_NODE, id: 'mx-beforeafter-e', mode: 'side-by-side', beforeLabel: 'Day 1', afterLabel: 'Day 30'}} />},
+  {tId: 'T-0006-286', label: 'DocumentPicker/expressive×health',
+    stance: 'expressive', palette: 'health',
+    element: <DocumentPickerRenderer node={{...DOCUMENT_PICKER_NODE, id: 'mx-documentpicker-e', label: 'Attach wellness plan', acceptedTypes: ['pdf', 'image']}} />},
 ]
 
 // ---------------------------------------------------------------------------
 // Parameterized snapshot matrix
-// T-0006-180..235: 28 × 2 = 56 snapshots
+// T-0006-180..235: 28 × 2 = 56 snapshots (V0)
+// T-0006-237..286: 25 × 2 = 50 snapshots (V1 Phase 1)
+// Total: 106 snapshots = 53 components × 2 register pairs
 // T-0006-236: stability — deterministic output, zero diff on re-run
 // ---------------------------------------------------------------------------
 
-describe('Snapshot matrix — 56 register-pair snapshots (T-0006-180..235)', () => {
-  it.each(MATRIX_ENTRIES)(
-    '$tId — $label',
-    ({stance, palette, element, rendererState}) => {
-      const {toJSON} = renderWithTheme(element, {stance, palette, rendererState})
-      expect(toJSON()).toMatchSnapshot()
-    },
-  )
+// Date-sensitive V1 entries (Calendar, Heatmap, Timeline): T-IDs that render
+// with date.now(). We run these under fake timers pinned to 2026-01-15T12:00:00Z.
+const DATE_SENSITIVE_TIDS = new Set([
+  'T-0006-250', 'T-0006-256', 'T-0006-257', // productive×focus
+  'T-0006-275', 'T-0006-281', 'T-0006-282', // expressive×health
+])
+
+const DATE_STABLE_ENTRIES = MATRIX_ENTRIES.filter(e => !DATE_SENSITIVE_TIDS.has(e.tId))
+const DATE_SENSITIVE_ENTRIES = MATRIX_ENTRIES.filter(e => DATE_SENSITIVE_TIDS.has(e.tId))
+
+describe('Snapshot matrix — 106 register-pair snapshots (T-0006-180..286)', () => {
+  describe('Date-stable entries (T-0006-180..249, T-0006-251..255, T-0006-258..274, T-0006-276..280, T-0006-283..286)', () => {
+    it.each(DATE_STABLE_ENTRIES)(
+      '$tId — $label',
+      ({stance, palette, element, rendererState}) => {
+        const {toJSON} = renderWithTheme(element, {stance, palette, rendererState})
+        expect(toJSON()).toMatchSnapshot()
+      },
+    )
+  })
+
+  describe('Date-sensitive entries — Calendar, Heatmap, Timeline (T-0006-250, 256, 257, 275, 281, 282)', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+      jest.setSystemTime(new Date('2026-01-15T12:00:00Z'))
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it.each(DATE_SENSITIVE_ENTRIES)(
+      '$tId — $label',
+      ({stance, palette, element, rendererState}) => {
+        const {toJSON} = renderWithTheme(element, {stance, palette, rendererState})
+        expect(toJSON()).toMatchSnapshot()
+      },
+    )
+  })
 })
 
 // ---------------------------------------------------------------------------
@@ -635,23 +1296,26 @@ describe('Snapshot matrix — 56 register-pair snapshots (T-0006-180..235)', () 
 // Jest snapshot tests are deterministic by nature — if the fixtures and
 // component implementations contain no randomness (no Date.now(), no
 // Math.random(), no seedrandom without a fixed seed), running the suite
-// twice produces zero diff. This test asserts the count is exactly 56
+// twice produces zero diff. This test asserts the count is exactly 106
 // by examining the MATRIX_ENTRIES array, which is the single source of
-// truth for the parameterized test above.
+// truth for the parameterized tests above.
 //
-// The assertion is: matrix size === 28 components × 2 register pairs.
+// The assertion is: matrix size === 53 components × 2 register pairs.
 // If a component is added or removed without updating this file, this
 // test catches the drift before CI snapshot diff does.
+//
+// T-IDs: T-0006-180..235 (V0, 56 entries) + T-0006-237..286 (V1, 50 entries).
+// T-0006-236 is the stability test itself — intentional gap in the sequence.
 // ---------------------------------------------------------------------------
 
 describe('Snapshot matrix stability (T-0006-236)', () => {
-  it('matrix has exactly 56 entries (28 components × 2 register pairs)', () => {
-    expect(MATRIX_ENTRIES).toHaveLength(56)
+  it('matrix has exactly 106 entries (53 components × 2 register pairs)', () => {
+    expect(MATRIX_ENTRIES).toHaveLength(106)
   })
 
   it('all productive×focus entries have stance=productive and palette=focus', () => {
     const productiveFocusEntries = MATRIX_ENTRIES.filter(e => e.stance === 'productive')
-    expect(productiveFocusEntries).toHaveLength(28)
+    expect(productiveFocusEntries).toHaveLength(53)
     productiveFocusEntries.forEach(e => {
       expect(e.palette).toBe('focus')
     })
@@ -659,24 +1323,34 @@ describe('Snapshot matrix stability (T-0006-236)', () => {
 
   it('all expressive×health entries have stance=expressive and palette=health', () => {
     const expressiveHealthEntries = MATRIX_ENTRIES.filter(e => e.stance === 'expressive')
-    expect(expressiveHealthEntries).toHaveLength(28)
+    expect(expressiveHealthEntries).toHaveLength(53)
     expressiveHealthEntries.forEach(e => {
       expect(e.palette).toBe('health')
     })
   })
 
-  it('T-IDs are unique and cover T-0006-180..235 without gaps', () => {
+  it('T-IDs are unique; cover T-0006-180..235 and T-0006-237..286 with one gap at 236', () => {
     const tIds = MATRIX_ENTRIES.map(e => e.tId)
     const unique = new Set(tIds)
-    expect(unique.size).toBe(56)
+    expect(unique.size).toBe(106)
 
     const numbers = tIds.map(id => parseInt(id.replace('T-0006-', ''), 10))
     const sorted = [...numbers].sort((a, b) => a - b)
     expect(sorted[0]).toBe(180)
-    expect(sorted[55]).toBe(235)
-    // No gaps
+    expect(sorted[105]).toBe(286)
+
+    // Two contiguous blocks with a single gap at 236 (the stability test itself).
+    // Block 1: 180..235 (56 entries), Block 2: 237..286 (50 entries).
     for (let i = 1; i < sorted.length; i++) {
-      expect(sorted[i]).toBe(sorted[i - 1]! + 1)
+      const prev = sorted[i - 1]!
+      const curr = sorted[i]!
+      const gap = curr - prev
+      if (prev === 235 && curr === 237) {
+        // Expected gap at T-0006-236 (this stability test).
+        expect(gap).toBe(2)
+      } else {
+        expect(gap).toBe(1)
+      }
     }
   })
 })
