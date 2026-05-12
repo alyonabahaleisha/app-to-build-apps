@@ -4,7 +4,9 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 
 import {ToastProvider} from '#/components/ToastProvider'
+import {LinkingProvider} from '#/lib/linking/LinkingProvider'
 import {Navigation} from '#/Navigation'
+import {DevSpecProvider} from '#/screens/Run/devMenu/DevSpecContext'
 import {SessionProvider} from '#/state/session/SessionProvider'
 import {AppShellThemeProvider} from '#/theme/AppShellThemeProvider'
 
@@ -22,8 +24,28 @@ export default function App() {
           <AppShellThemeProvider>
             <SessionProvider>
               <ToastProvider>
-                <Navigation />
-                <StatusBar style="auto" />
+                {/*
+                 * LinkingProvider — ADR-0011 Step 12.
+                 * Wires Universal Link callbacks at the session-aware level.
+                 * Must be inside <SessionProvider> and <ToastProvider> (reads
+                 * both). Must be outside <NavigationContainer> (which lives
+                 * inside <Navigation>); navigation-to-SignIn is implicit via
+                 * session-gated stack in Navigation.tsx.
+                 */}
+                <LinkingProvider>
+                  {/*
+                   * DevSpecProvider — ADR-0011 Step 13.
+                   * Wraps the entire app so RunScreen can receive in-memory specs
+                   * from the eval harness (via LoadSpecFromDevMenu) without a DB write.
+                   * The provider itself is lightweight (one useState); registration of
+                   * the dev-menu item and URL handler is gated on __DEV__ inside
+                   * LoadSpecFromDevMenu.
+                   */}
+                  <DevSpecProvider>
+                    <Navigation />
+                    <StatusBar style="auto" />
+                  </DevSpecProvider>
+                </LinkingProvider>
               </ToastProvider>
             </SessionProvider>
           </AppShellThemeProvider>

@@ -1,0 +1,682 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ShellLayout T-0011-140: snapshot with header 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      [
+        {
+          "backgroundColor": "#FAFAF7",
+          "flex": 1,
+          "paddingBottom": 34,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 44,
+        },
+        undefined,
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+      testID="shell-layout-root"
+    >
+      <View
+        testID="snapshot-header"
+      >
+        <Text>
+          Header
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+        testID="shell-layout-body"
+      >
+        <Text>
+          Body content
+        </Text>
+      </View>
+      <View
+        accessibilityRole="tablist"
+        style={
+          [
+            {
+              "borderTopWidth": 0.5,
+              "flexDirection": "row",
+            },
+            {
+              "backgroundColor": "#FAFAF7",
+              "borderTopColor": "#ECEEF1",
+            },
+          ]
+        }
+        testID="tab-bar"
+      >
+        <View
+          accessibilityLabel="Library"
+          accessibilityRole="tab"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": true,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "minHeight": 44,
+              "paddingVertical": 10,
+            }
+          }
+          testID="tab-library"
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontSize": 13,
+                  "fontWeight": "600",
+                },
+                {
+                  "color": "#4F46E5",
+                },
+              ]
+            }
+          >
+            Library
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Create"
+          accessibilityRole="tab"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "minHeight": 44,
+              "paddingVertical": 10,
+            }
+          }
+          testID="tab-create"
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontSize": 13,
+                  "fontWeight": "600",
+                },
+                {
+                  "color": "#5C6470",
+                },
+              ]
+            }
+          >
+            Create
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`ShellLayout T-0011-140: snapshot without header 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      [
+        {
+          "backgroundColor": "#FAFAF7",
+          "flex": 1,
+          "paddingBottom": 34,
+          "paddingLeft": 0,
+          "paddingRight": 0,
+          "paddingTop": 44,
+        },
+        undefined,
+      ]
+    }
+  >
+    <View
+      style={
+        {
+          "flex": 1,
+        }
+      }
+      testID="shell-layout-root"
+    >
+      <View
+        style={
+          {
+            "flex": 1,
+          }
+        }
+        testID="shell-layout-body"
+      >
+        <Text>
+          Body content
+        </Text>
+      </View>
+      <View
+        accessibilityRole="tablist"
+        style={
+          [
+            {
+              "borderTopWidth": 0.5,
+              "flexDirection": "row",
+            },
+            {
+              "backgroundColor": "#FAFAF7",
+              "borderTopColor": "#ECEEF1",
+            },
+          ]
+        }
+        testID="tab-bar"
+      >
+        <View
+          accessibilityLabel="Library"
+          accessibilityRole="tab"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "minHeight": 44,
+              "paddingVertical": 10,
+            }
+          }
+          testID="tab-library"
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontSize": 13,
+                  "fontWeight": "600",
+                },
+                {
+                  "color": "#5C6470",
+                },
+              ]
+            }
+          >
+            Library
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Create"
+          accessibilityRole="tab"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": true,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "flex": 1,
+              "justifyContent": "center",
+              "minHeight": 44,
+              "paddingVertical": 10,
+            }
+          }
+          testID="tab-create"
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontSize": 13,
+                  "fontWeight": "600",
+                },
+                {
+                  "color": "#4F46E5",
+                },
+              ]
+            }
+          >
+            Create
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`TabBar T-0011-139: snapshot — create active 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    accessibilityRole="tablist"
+    style={
+      [
+        {
+          "borderTopWidth": 0.5,
+          "flexDirection": "row",
+        },
+        {
+          "backgroundColor": "#FAFAF7",
+          "borderTopColor": "#ECEEF1",
+        },
+      ]
+    }
+    testID="tab-bar"
+  >
+    <View
+      accessibilityLabel="Library"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "minHeight": 44,
+          "paddingVertical": 10,
+        }
+      }
+      testID="tab-library"
+    >
+      <Text
+        style={
+          [
+            {
+              "fontSize": 13,
+              "fontWeight": "600",
+            },
+            {
+              "color": "#5C6470",
+            },
+          ]
+        }
+      >
+        Library
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Create"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "minHeight": 44,
+          "paddingVertical": 10,
+        }
+      }
+      testID="tab-create"
+    >
+      <Text
+        style={
+          [
+            {
+              "fontSize": 13,
+              "fontWeight": "600",
+            },
+            {
+              "color": "#4F46E5",
+            },
+          ]
+        }
+      >
+        Create
+      </Text>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`TabBar T-0011-139: snapshot — library active 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    accessibilityRole="tablist"
+    style={
+      [
+        {
+          "borderTopWidth": 0.5,
+          "flexDirection": "row",
+        },
+        {
+          "backgroundColor": "#FAFAF7",
+          "borderTopColor": "#ECEEF1",
+        },
+      ]
+    }
+    testID="tab-bar"
+  >
+    <View
+      accessibilityLabel="Library"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "minHeight": 44,
+          "paddingVertical": 10,
+        }
+      }
+      testID="tab-library"
+    >
+      <Text
+        style={
+          [
+            {
+              "fontSize": 13,
+              "fontWeight": "600",
+            },
+            {
+              "color": "#4F46E5",
+            },
+          ]
+        }
+      >
+        Library
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Create"
+      accessibilityRole="tab"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "minHeight": 44,
+          "paddingVertical": 10,
+        }
+      }
+      testID="tab-create"
+    >
+      <Text
+        style={
+          [
+            {
+              "fontSize": 13,
+              "fontWeight": "600",
+            },
+            {
+              "color": "#5C6470",
+            },
+          ]
+        }
+      >
+        Create
+      </Text>
+    </View>
+  </View>
+</RNCSafeAreaProvider>
+`;

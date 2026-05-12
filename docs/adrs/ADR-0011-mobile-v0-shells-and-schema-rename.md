@@ -1162,13 +1162,28 @@ The 14 steps run in **three phases**:
   screen.
 - **Acceptance criteria:**
   - LinkingProvider renders without errors at app root.
-  - In test mode, calling `LinkingProvider.handle('/m/abc/clone')`
-    invokes the registered `onCloneLinkOpen` with `('abc', 'warm')`.
-  - Unknown mode (`/m/abc/view`) invokes `onUnsupportedMode` with
-    `('view', 'abc')`.
-  - In this ADR's scope, the registered handlers fire telemetry only
-    (`share_link_handled` with `{mode, shareId_hash}`) and show a
-    "Coming soon" toast — full handler is ADR-0008.
+  - Active clone link (`/m/{share_id}/clone`) on authed session →
+    `useCloneMutation.mutate({shareId})` fires immediately (mutation
+    surfaces success/error toasts).
+  - Active clone link on unauthed session → `setPendingClone(shareId)`
+    is called; the session-conditional stack already presents SignIn
+    so no imperative navigation is needed at this layer.
+  - Reserved modes (`view`, `remix`) → "Coming soon — preview and
+    remix arrive in V0.5." toast; no clone mutation; no client-side
+    telemetry (server emits `share_link.reserved_mode_viewed` per
+    ADR-0008 Step 7).
+  - Post-SIWA replay: when session flips unauthed→authed,
+    `popPendingClone()` is called once; if non-null, the clone mutation
+    fires with the recovered shareId. Sign-out resets the replay guard
+    so a subsequent sign-in can replay a new pending intent.
+  - Note: ADR-0008 Steps 5+6 had already shipped the clone-flow
+    primitives by the time Step 12 landed, so the original stub-mode
+    criterion (telemetry-only + "Coming soon" toast on clone) was
+    superseded. The criterion above reflects the actually-shipped
+    behavior.
+  - Note: tests inject `useUniversalLink` callbacks via jest module
+    mocks (mock-capture pattern); there is no `LinkingProvider.handle()`
+    test API.
 - **Estimated complexity:** Low (surface only).
 
 #### Step 13: Dev-only `LoadSpecFromDevMenu` hook for ADR-0010
