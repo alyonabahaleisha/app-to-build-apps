@@ -1,0 +1,5723 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CalendarRenderer snapshot (T-0009-152) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Calendar"
+  role="grid"
+  testID="calendar-cal1"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingHorizontal": 8,
+        "paddingVertical": 4,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Previous month"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "padding": 4,
+        }
+      }
+      testID="calendar-prev-cal1"
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#1A1715"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279899925,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="m15 18-6-6 6-6"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279899925,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <Text
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "lineHeight": 26,
+        }
+      }
+      testID="calendar-month-label-cal1"
+    >
+      January 2026
+    </Text>
+    <View
+      accessibilityLabel="Next month"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "padding": 4,
+        }
+      }
+      testID="calendar-next-cal1"
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#1A1715"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279899925,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="m9 18 6-6-6-6"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279899925,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "paddingHorizontal": 4,
+      }
+    }
+    testID="calendar-dow-header-cal1"
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        S
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        M
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        W
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        F
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+      >
+        S
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "paddingHorizontal": 4,
+      }
+    }
+    testID="calendar-grid-cal1"
+  >
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-0"
+    >
+      <View
+        accessibilityLabel="Sunday, December 28"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-28"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          28
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, December 29"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-29"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          29
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, December 30"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-30"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          30
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, December 31"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-31"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          31
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 1"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-01"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 2"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-02"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          2
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 3"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-03"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          3
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-1"
+    >
+      <View
+        accessibilityLabel="Sunday, January 4"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-04"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          4
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 5"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-05"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          5
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 6"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-06"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          6
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 7"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-07"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          7
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 8"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-08"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          8
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 9"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-09"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          9
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 10"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-10"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          10
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-2"
+    >
+      <View
+        accessibilityLabel="Sunday, January 11"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-11"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          11
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-12"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          12
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 13"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-13"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          13
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 14"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-14"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          14
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 15"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-15"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          15
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 16"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-16"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          16
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 17"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-17"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          17
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-3"
+    >
+      <View
+        accessibilityLabel="Sunday, January 18"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-18"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          18
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 19"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-19"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          19
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 20"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-20"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          20
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 21"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-21"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          21
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 22"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-22"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          22
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 23"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-23"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          23
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 24"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-24"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          24
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-4"
+    >
+      <View
+        accessibilityLabel="Sunday, January 25"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-25"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          25
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 26"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-26"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          26
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 27"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-27"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          27
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 28"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-28"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          28
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 29"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-29"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          29
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 30"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-30"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          30
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 31"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-31"
+      >
+        <Text
+          style={
+            {
+              "color": "#1A1715",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          31
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-5"
+    >
+      <View
+        accessibilityLabel="Sunday, February 1"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-01"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, February 2"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-02"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          2
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, February 3"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-03"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          3
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, February 4"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-04"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          4
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, February 5"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-05"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          5
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, February 6"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-06"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          6
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, February 7"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-07"
+      >
+        <Text
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+        >
+          7
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`CalendarRenderer snapshot (T-0009-152) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Calendar"
+  role="grid"
+  testID="calendar-cal1"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "space-between",
+        "paddingHorizontal": 8,
+        "paddingVertical": 4,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Previous month"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "padding": 4,
+        }
+      }
+      testID="calendar-prev-cal1"
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#14171A"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279506714,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="m15 18-6-6 6-6"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279506714,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+    <Text
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "400",
+          "lineHeight": 24,
+        }
+      }
+      testID="calendar-month-label-cal1"
+    >
+      January 2026
+    </Text>
+    <View
+      accessibilityLabel="Next month"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "padding": 4,
+        }
+      }
+      testID="calendar-next-cal1"
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={20}
+        bbWidth={20}
+        fill="none"
+        focusable={false}
+        height={20}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="#14171A"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 20,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
+        width={20}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "payload": 4279506714,
+              "type": 0,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth={2}
+        >
+          <RNSVGPath
+            d="m9 18 6-6-6-6"
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "payload": 4279506714,
+                "type": 0,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth={2}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "paddingHorizontal": 4,
+      }
+    }
+    testID="calendar-dow-header-cal1"
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        S
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        M
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        W
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        F
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "height": 36,
+          "justifyContent": "center",
+          "width": 36,
+        }
+      }
+    >
+      <Text
+        accessibilityElementsHidden={true}
+        style={
+          {
+            "color": "#5C6470",
+            "fontSize": 13,
+            "fontWeight": "400",
+            "lineHeight": 18,
+          }
+        }
+      >
+        S
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "paddingHorizontal": 4,
+      }
+    }
+    testID="calendar-grid-cal1"
+  >
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-0"
+    >
+      <View
+        accessibilityLabel="Sunday, December 28"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-28"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          28
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, December 29"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-29"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          29
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, December 30"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-30"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          30
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, December 31"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2025-12-31"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          31
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 1"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-01"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 2"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-02"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          2
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 3"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-03"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          3
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-1"
+    >
+      <View
+        accessibilityLabel="Sunday, January 4"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-04"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          4
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 5"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-05"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          5
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 6"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-06"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          6
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 7"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-07"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          7
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 8"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-08"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          8
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 9"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-09"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          9
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 10"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-10"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          10
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-2"
+    >
+      <View
+        accessibilityLabel="Sunday, January 11"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-11"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          11
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 12"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-12"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          12
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 13"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-13"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          13
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 14"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-14"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          14
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 15"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-15"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          15
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 16"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-16"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          16
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 17"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-17"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          17
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-3"
+    >
+      <View
+        accessibilityLabel="Sunday, January 18"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-18"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          18
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 19"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-19"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          19
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 20"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-20"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          20
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 21"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-21"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          21
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 22"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-22"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          22
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 23"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-23"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          23
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 24"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-24"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          24
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-4"
+    >
+      <View
+        accessibilityLabel="Sunday, January 25"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-25"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          25
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, January 26"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-26"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          26
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, January 27"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-27"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          27
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, January 28"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-28"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          28
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, January 29"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-29"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          29
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, January 30"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-30"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          30
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, January 31"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-01-31"
+      >
+        <Text
+          style={
+            {
+              "color": "#14171A",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          31
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="calendar-row-cal1-5"
+    >
+      <View
+        accessibilityLabel="Sunday, February 1"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-01"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          1
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Monday, February 2"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-02"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          2
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Tuesday, February 3"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-03"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          3
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Wednesday, February 4"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-04"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          4
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Thursday, February 5"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-05"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          5
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Friday, February 6"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-06"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          6
+        </Text>
+      </View>
+      <View
+        accessibilityLabel="Saturday, February 7"
+        accessibilityRole="button"
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "borderRadius": 9999,
+            "height": 36,
+            "justifyContent": "center",
+            "width": 36,
+          }
+        }
+        testID="calendar-cell-cal1-2026-02-07"
+      >
+        <Text
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 13,
+              "lineHeight": 18,
+            }
+          }
+        >
+          7
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

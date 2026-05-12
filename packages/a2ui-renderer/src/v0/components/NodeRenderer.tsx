@@ -22,6 +22,8 @@
  *         = 43 arms total.
  * V1 Phase 1 Step 5: +4 compound (TransactionRow, Receipt, MetricTile, StepList)
  *         = 47 arms total.
+ * V1 Phase 1 Step 6: +2 compound (Calendar, Heatmap)
+ *         = 49 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -80,6 +82,9 @@ import {TransactionRowRenderer} from './compound/TransactionRow.js'
 import {ReceiptRenderer} from './compound/Receipt.js'
 import {MetricTileRenderer} from './compound/MetricTile.js'
 import {StepListRenderer} from './compound/StepList.js'
+// V1 Phase 1 Step 6 — Date components
+import {CalendarRenderer} from './compound/Calendar.js'
+import {HeatmapRenderer} from './compound/Heatmap.js'
 import {ButtonRenderer} from './actions/Button.js'
 import {FABRenderer} from './actions/FAB.js'
 import {IconButtonRenderer} from './actions/IconButton.js'
@@ -196,6 +201,11 @@ export function NodeRenderer({node}: {node: Node}) {
     // Actions tier — V1 Phase 1 Step 1
     case 'IconButton':
       return <IconButtonRenderer node={node} />
+    // Date components tier — V1 Phase 1 Step 6
+    case 'Calendar':
+      return <CalendarRenderer node={node} />
+    case 'Heatmap':
+      return <HeatmapRenderer node={node} />
     default: {
       // Defense-in-depth: schema validation upstream should have caught this.
       // Calling host.onUnknownNodeType makes the violation observable to the host

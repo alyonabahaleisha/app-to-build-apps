@@ -3,8 +3,10 @@
  * T-0005-072a..072r (F-09): ImagePicker × 3 binding kinds
  * V1 Phase 1 Step 1 additions: T-0009-006..010 (ImageSchema)
  * V1 Phase 1 Step 5 additions: T-0009-111, 116-117, 121, 125, 128, 134, 236
+ * V1 Phase 1 Step 6 additions: T-0009-138..140, T-0009-147, T-0009-155..156, T-0009-244a
  * Components: ConditionalSection, ListSummary, MediaTray, ImagePicker (4 compound tier)
- * V1 additions: Image (1 new), TransactionRow, Receipt, MetricTile, StepList (4 new)
+ * V1 additions: Image (1 new), TransactionRow, Receipt, MetricTile, StepList (4 new),
+ *               Calendar, Heatmap (2 new)
  */
 import {
   ConditionalSectionSchema,
@@ -16,6 +18,8 @@ import {
   ReceiptSchema,
   MetricTileSchema,
   StepListSchema,
+  CalendarSchema,
+  HeatmapSchema,
 } from './compound.js'
 import {
   CONDITIONAL_SECTION_FIXTURE,
@@ -609,5 +613,177 @@ describe('StepListSchema (T-0009-125, T-0009-128)', () => {
     expect(() =>
       StepListSchema.parse({...VALID_STEP_LIST, ordered: true}),
     ).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// V1 Phase 1 Step 6 — Date component schemas
+// ---------------------------------------------------------------------------
+
+// ---- CalendarSchema (T-0009-138, T-0009-139, T-0009-140, T-0009-156) ----
+
+describe('CalendarSchema (T-0009-138, T-0009-139, T-0009-140, T-0009-156)', () => {
+  const BASE_CALENDAR = {
+    id: 'cal1',
+    type: 'Calendar' as const,
+  }
+
+  // T-0009-138: happy path without collection binding
+  it('T-0009-138: parses without collection binding (view: month)', () => {
+    const result = CalendarSchema.safeParse({...BASE_CALENDAR, view: 'month'})
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-138 variant: parses with no view at all (optional)
+  it('parses without any optional fields', () => {
+    const result = CalendarSchema.safeParse(BASE_CALENDAR)
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-139: happy path with full collection binding
+  it('T-0009-139: parses with collectionId and dateField', () => {
+    const result = CalendarSchema.safeParse({
+      ...BASE_CALENDAR,
+      view: 'month',
+      collectionId: 'events',
+      dateField: 'eventDate',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts selectedBinding as state binding', () => {
+    const result = CalendarSchema.safeParse({
+      ...BASE_CALENDAR,
+      selectedBinding: {kind: 'state', slot: 'selectedDate'},
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts firstDayOfWeek: sunday and monday', () => {
+    for (const firstDayOfWeek of ['sunday', 'monday'] as const) {
+      const result = CalendarSchema.safeParse({...BASE_CALENDAR, firstDayOfWeek})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('accepts view: week', () => {
+    const result = CalendarSchema.safeParse({...BASE_CALENDAR, view: 'week'})
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-140: collectionId set but no dateField — superRefine rejects with specific message + path
+  it('T-0009-140: rejects collectionId without dateField at superRefine', () => {
+    const result = CalendarSchema.safeParse({
+      ...BASE_CALENDAR,
+      collectionId: 'events',
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      const issue = result.error.issues[0]
+      expect(issue).toBeDefined()
+      expect(issue!.message).toBe('Calendar with collectionId requires dateField')
+      expect(issue!.path).toEqual(['dateField'])
+    }
+  })
+
+  // T-0009-156: view: 'year' is not in the enum — must reject
+  it('T-0009-156: rejects view: "year" (not in enum)', () => {
+    const result = CalendarSchema.safeParse({...BASE_CALENDAR, view: 'year'})
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = CalendarSchema.safeParse({...BASE_CALENDAR, showWeekNumbers: true})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts collectionId up to 64 chars', () => {
+    const result = CalendarSchema.safeParse({
+      ...BASE_CALENDAR,
+      collectionId: 'a'.repeat(64),
+      dateField: 'date',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects collectionId over 64 chars', () => {
+    const result = CalendarSchema.safeParse({
+      ...BASE_CALENDAR,
+      collectionId: 'a'.repeat(65),
+      dateField: 'date',
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---- HeatmapSchema (T-0009-147, T-0009-155, T-0009-244a) ----
+
+describe('HeatmapSchema (T-0009-147, T-0009-155, T-0009-244a)', () => {
+  const BASE_HEATMAP = {
+    id: 'hm1',
+    type: 'Heatmap' as const,
+    collectionId: 'workouts',
+    dateField: 'completedAt',
+  }
+
+  // T-0009-147: happy path with required fields + range
+  it('T-0009-147: parses with collectionId, dateField, range: 90d', () => {
+    const result = HeatmapSchema.safeParse({...BASE_HEATMAP, range: '90d'})
+    expect(result.success).toBe(true)
+  })
+
+  it('parses with minimal required fields only', () => {
+    const result = HeatmapSchema.safeParse(BASE_HEATMAP)
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts all valid range values', () => {
+    for (const range of ['30d', '90d', '180d', '365d'] as const) {
+      const result = HeatmapSchema.safeParse({...BASE_HEATMAP, range})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  // T-0009-244a: range '365d' is the enum max — must succeed (boundary)
+  it('T-0009-244a: accepts range: "365d" (exactly at enum max)', () => {
+    const result = HeatmapSchema.safeParse({...BASE_HEATMAP, range: '365d'})
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-155: range '500d' is not in the enum — must reject
+  it('T-0009-155: rejects range: "500d" (not in enum)', () => {
+    const result = HeatmapSchema.safeParse({...BASE_HEATMAP, range: '500d'})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts intensityMode values', () => {
+    for (const intensityMode of ['count', 'binary'] as const) {
+      const result = HeatmapSchema.safeParse({...BASE_HEATMAP, intensityMode})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('rejects missing collectionId', () => {
+    const {collectionId: _c, ...rest} = BASE_HEATMAP
+    const result = HeatmapSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects missing dateField', () => {
+    const {dateField: _d, ...rest} = BASE_HEATMAP
+    const result = HeatmapSchema.safeParse(rest)
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = HeatmapSchema.safeParse({...BASE_HEATMAP, showLegend: true})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts diverse collectionId formats (i18n safe)', () => {
+    for (const collectionId of ['habits', 'workout-log', 'study_sessions']) {
+      const result = HeatmapSchema.safeParse({...BASE_HEATMAP, collectionId})
+      expect(result.success).toBe(true)
+    }
   })
 })

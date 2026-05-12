@@ -1,0 +1,5219 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HeatmapRenderer snapshot (T-0009-153) — expressive×health matches snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Activity heatmap"
+  testID="heatmap-hm1"
+>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "marginRight": 2,
+          "width": 16,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        >
+          S
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        >
+          T
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        >
+          T
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#6B5F56",
+              "fontSize": 8,
+              "lineHeight": 20,
+            }
+          }
+        >
+          S
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="heatmap-grid-hm1"
+    >
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 31, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 31, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 1, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 1, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 2, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 2, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 3, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 3, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 4, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 4, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 5, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 5, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 6, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 6, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 7, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 7, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 8, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 8, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 9, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 9, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 10, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 10, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 11, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 11, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 1, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 1, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 2, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 2, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 3, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 3, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 4, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 4, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 5, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 5, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 6, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 6, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 7, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 7, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 8, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 8, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 9, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 9, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 10, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 10, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 11, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 11, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 31, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 31, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 1, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 1, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 2, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 2, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 3, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 3, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 4, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 4, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 5, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 5, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 6, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 6, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 7, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 7, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 8, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 8, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 9, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 9, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 10, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 10, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 11, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 11, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 12, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 12, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 13, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 13, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 14, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 14, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 15, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 15, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "#4A7438",
+              "borderRadius": 2,
+              "borderWidth": 1,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "height": 12,
+              "margin": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "height": 12,
+              "margin": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`HeatmapRenderer snapshot (T-0009-153) — productive×focus matches snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Activity heatmap"
+  testID="heatmap-hm1"
+>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "marginRight": 2,
+          "width": 16,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        >
+          S
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        >
+          T
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        >
+          T
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "height": 14,
+            "justifyContent": "center",
+          }
+        }
+      >
+        <Text
+          accessibilityElementsHidden={true}
+          style={
+            {
+              "color": "#5C6470",
+              "fontSize": 8,
+              "lineHeight": 18,
+            }
+          }
+        >
+          S
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+      testID="heatmap-grid-hm1"
+    >
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Oct 31, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Oct 31, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 1, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 1, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 2, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 2, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 3, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 3, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 4, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 4, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 5, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 5, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 6, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 6, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 7, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 7, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 8, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 8, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 9, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 9, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 10, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 10, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 11, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 11, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Nov 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Nov 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 1, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 1, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 2, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 2, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 3, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 3, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 4, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 4, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 5, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 5, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 6, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 6, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 7, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 7, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 8, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 8, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 9, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 9, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 10, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 10, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 11, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 11, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 12, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 12, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 13, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 13, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 14, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 14, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 15, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 15, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 16, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 16, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 17, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 17, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 18, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 18, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 19, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 19, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 20, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 20, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 21, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 21, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 22, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 22, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 23, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 23, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 24, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 24, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 25, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 25, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 26, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 26, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 27, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 27, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 28, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 28, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 29, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 29, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 30, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 30, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Dec 31, 2025",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Dec 31, 2025: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 1, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 1, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 2, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 2, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 3, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 3, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 4, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 4, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 5, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 5, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 6, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 6, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 7, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 7, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 8, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 8, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 9, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 9, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 10, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 10, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 11, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 11, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 12, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 12, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 13, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 13, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 14, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 14, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "transparent",
+              "borderRadius": 2,
+              "borderWidth": 0,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          accessibilityActions={
+            [
+              {
+                "label": "0 items on Jan 15, 2026",
+                "name": "cellInfo",
+              },
+            ]
+          }
+          accessibilityLabel="Jan 15, 2026: 0 items"
+          onAccessibilityAction={[Function]}
+          style={
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderColor": "#4F46E5",
+              "borderRadius": 2,
+              "borderWidth": 1,
+              "height": 12,
+              "margin": 1,
+              "opacity": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "height": 12,
+              "margin": 1,
+              "width": 12,
+            }
+          }
+        />
+        <View
+          style={
+            {
+              "height": 12,
+              "margin": 1,
+              "width": 12,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;

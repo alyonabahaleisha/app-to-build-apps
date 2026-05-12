@@ -2989,6 +2989,103 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "Calendar"
+                      },
+                      "view": {
+                        "type": "string",
+                        "enum": [
+                          "month",
+                          "week"
+                        ]
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "dateField": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "selectedBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/11/properties/valueBinding"
+                      },
+                      "firstDayOfWeek": {
+                        "type": "string",
+                        "enum": [
+                          "sunday",
+                          "monday"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "Heatmap"
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "dateField": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "range": {
+                        "type": "string",
+                        "enum": [
+                          "30d",
+                          "90d",
+                          "180d",
+                          "365d"
+                        ]
+                      },
+                      "intensityMode": {
+                        "type": "string",
+                        "enum": [
+                          "count",
+                          "binary"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "collectionId",
+                      "dateField"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Button"
                       },
                       "label": {

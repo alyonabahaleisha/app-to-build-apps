@@ -240,6 +240,14 @@ A KPI tile displaying a prominent value, label, optional delta indicator, and op
 
 An ordered list of steps rendered in either `numbered` or `checklist` style. In `numbered` style, steps show index circles connected by a vertical rail line. In `checklist` style, each step has a checkbox bound via an optional `done` BooleanBinding. Each step has a `title` (required) and optional `body` text. Maximum 20 steps.
 
+## Calendar
+
+A month or week calendar grid with optional collection binding for marking dates. In month view, renders a 6-row × 7-column grid (42 fixed cells). Leading and trailing cells from adjacent months render in muted color. `firstDayOfWeek` shifts the grid: `sunday` (default) or `monday`. When `collectionId` and `dateField` are both set, the renderer marks matching dates with an accent dot beneath the day number. The `selectedBinding` (DateBinding) is updated via dispatch when the user taps a date cell. Month navigation chevrons manage internal month state independently of the spec. `view: 'week'` renders a single 7-cell row for the current week.
+
+## Heatmap
+
+A date-intensity heatmap grid backed by a required collection. Groups collection items by `dateField` and bins counts into intensity levels. In `count` mode (default), days with items are quintile-binned into 5 levels (level 0 = no items; levels 1–5 = quintiles of the non-zero count distribution). In `binary` mode, any day with at least one item gets level 1, otherwise level 0. The `range` prop controls the window of days displayed (ending today): 30d, 90d (default), 180d, or 365d. The grid is 7 cells tall (Sun–Sat) by N weeks wide. Today's cell has a 1pt accent border. Each cell's long-press exposes per-cell info (date, count) via `accessibilityCustomActions`.
+
 ## Button
 
 A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.

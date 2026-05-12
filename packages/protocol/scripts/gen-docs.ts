@@ -122,6 +122,10 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   MetricTile: 'A KPI tile displaying a prominent value, label, optional delta indicator, and optional sparkline chart. `value` and `label` are hardcoded strings. `delta` shows a change string; `deltaTone` colors it: `positive` → success, `negative` → danger, `neutral` → fg-muted. `sparklineData` accepts up to 30 data points rendered as a `<Polyline>` via react-native-svg. Single-point sparkline renders as a horizontal line at midpoint. Without `sparklineData`, no sparkline area is rendered.',
   StepList: 'An ordered list of steps rendered in either `numbered` or `checklist` style. In `numbered` style, steps show index circles connected by a vertical rail line. In `checklist` style, each step has a checkbox bound via an optional `done` BooleanBinding. Each step has a `title` (required) and optional `body` text. Maximum 20 steps.',
 
+  // V1 Phase 1 Step 6 — Date components
+  Calendar: 'A month or week calendar grid with optional collection binding for marking dates. In month view, renders a 6-row × 7-column grid (42 fixed cells). Leading and trailing cells from adjacent months render in muted color. `firstDayOfWeek` shifts the grid: `sunday` (default) or `monday`. When `collectionId` and `dateField` are both set, the renderer marks matching dates with an accent dot beneath the day number. The `selectedBinding` (DateBinding) is updated via dispatch when the user taps a date cell. Month navigation chevrons manage internal month state independently of the spec. `view: \'week\'` renders a single 7-cell row for the current week.',
+  Heatmap: 'A date-intensity heatmap grid backed by a required collection. Groups collection items by `dateField` and bins counts into intensity levels. In `count` mode (default), days with items are quintile-binned into 5 levels (level 0 = no items; levels 1–5 = quintiles of the non-zero count distribution). In `binary` mode, any day with at least one item gets level 1, otherwise level 0. The `range` prop controls the window of days displayed (ending today): 30d, 90d (default), 180d, or 365d. The grid is 7 cells tall (Sun–Sat) by N weeks wide. Today\'s cell has a 1pt accent border. Each cell\'s long-press exposes per-cell info (date, count) via `accessibilityCustomActions`.',
+
   // Actions tier
   Button: 'A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.',
   Fab: 'A Floating Action Button that anchors to the bottom-right corner of its containing screen. Displays a named icon and fires an action on tap. Use for the single primary creation or navigation action on a screen.',
@@ -214,6 +218,8 @@ const COMPONENT_ORDER = [
   'Image',
   // V1 Phase 1 Step 5 — Productivity domain compounds
   'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
+  // V1 Phase 1 Step 6 — Date components
+  'Calendar', 'Heatmap',
   // Actions tier (2 → 3 with IconButton)
   'Button', 'Fab',
   // V1 Phase 1 Step 1 — actions addition

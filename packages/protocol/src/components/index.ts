@@ -58,7 +58,7 @@ export {
 } from './lists.js'
 export type {List, ListItem, SwipeableRow, EmptyState, LoadingState, GridList, Carousel, Timeline, ErrorState} from './lists.js'
 
-// Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5)
+// Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5 → 11 with V1 Phase 1 Step 6)
 export {
   ConditionalSectionSchema,
   ListSummarySchema,
@@ -70,6 +70,11 @@ export {
   ReceiptSchema,
   MetricTileSchema,
   StepListSchema,
+  // V1 Phase 1 Step 6 — Date components
+  // Note: CalendarBaseSchema used in NodeSchema discriminated union (superRefine → ZodEffects)
+  CalendarBaseSchema,
+  CalendarSchema,
+  HeatmapSchema,
 } from './compound.js'
 export type {
   ConditionalSection,
@@ -84,6 +89,9 @@ export type {
   MetricTile,
   StepList,
   Step,
+  // V1 Phase 1 Step 6
+  Calendar,
+  Heatmap,
 } from './compound.js'
 
 // Actions tier (2 → 3 with IconButton)
@@ -145,16 +153,21 @@ import {
   ReceiptSchema,
   MetricTileSchema,
   StepListSchema,
+  // V1 Phase 1 Step 6 — Date components
+  CalendarBaseSchema,
+  CalendarSchema,
+  HeatmapSchema,
 } from './compound.js'
 import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 47 component schemas in one array — used by the Step 5 discriminated union.
+// All 49 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
 // V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema (→33).
 // V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema (→35).
 // V1 Phase 1 Step 2 adds: MoneyField, TimeField, MultiPicker, Slider, RatingInput, SearchBar (→39).
 // V1 Phase 1 Step 4 adds: GridList, Carousel, Timeline, ErrorState (→43).
 // V1 Phase 1 Step 5 adds: TransactionRow, Receipt, MetricTile, StepList (→47).
+// V1 Phase 1 Step 6 adds: Calendar, Heatmap (→49).
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
@@ -208,6 +221,11 @@ export const ALL_COMPONENT_SCHEMAS = [
   ButtonSchema,
   FabSchema,
   IconButtonSchema,
+  // V1 Phase 1 Step 6 — Date components
+  // Note: CalendarBaseSchema used here (not CalendarSchema) because z.discriminatedUnion
+  // requires ZodObject; CalendarSchema's superRefine returns ZodEffects (incompatible).
+  CalendarBaseSchema,
+  HeatmapSchema,
 ] as const
 
 // ComponentNode — union type of all 39 component inferred types.
@@ -263,3 +281,6 @@ export type ComponentNode =
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
   | z.infer<typeof IconButtonSchema>
+  // V1 Phase 1 Step 6 — Date components
+  | z.infer<typeof CalendarSchema>
+  | z.infer<typeof HeatmapSchema>

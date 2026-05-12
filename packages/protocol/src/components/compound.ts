@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import {COMPONENT_ID_REGEX} from './layout.js'
 import {ActionSchema} from '../actions.js'
-import {ImageBindingSchema, NumberBindingSchema, BooleanBindingSchema} from '../binding.js'
+import {ImageBindingSchema, NumberBindingSchema, BooleanBindingSchema, DateBindingSchema} from '../binding.js'
 import {IconNameSchema} from './slot.js'
 import {CurrencySchema} from '../enums.js'
 
@@ -188,3 +188,74 @@ export const StepListSchema = z
   .strict()
 export type StepList = z.infer<typeof StepListSchema>
 export type Step = z.infer<typeof StepSchema>
+
+// ---------------------------------------------------------------------------
+// V1 Phase 1 Step 6 — Date components
+// ---------------------------------------------------------------------------
+
+// CalendarBaseSchema — the raw ZodObject shape for CalendarSchema.
+// Use this for the NodeSchema discriminated union (superRefine → ZodEffects,
+// which is incompatible with z.discriminatedUnion's ZodObject requirement).
+// Mirrors the CarouselBaseSchema / CarouselSchema pattern in lists.ts.
+//
+// NOTE: view and firstDayOfWeek use .optional() (not .default()) to avoid
+// ZodEffects _input/_output mismatch when used in the NodeSchema discriminated
+// union (z.lazy wraps the union in ZodLazy, requiring _input === _output for
+// the Node type alias). Renderer applies defaults: view → 'month'.
+// See the same pattern in lists.ts for GridList, Carousel, Timeline, ErrorState.
+export const CalendarBaseSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('Calendar'),
+    view: z.enum(['month', 'week']).optional(),
+    collectionId: z.string().min(1).max(64).optional(),
+    dateField: z.string().min(1).max(64).optional(),
+    selectedBinding: DateBindingSchema.optional(),
+    firstDayOfWeek: z.enum(['sunday', 'monday']).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+
+// CalendarSchema — wraps CalendarBaseSchema with the cross-field superRefine.
+//
+// superRefine rule: if collectionId is set, dateField must also be set.
+// The error path is ['dateField'] (per ADR-0009 Step 6 code shape).
+//
+// Use CalendarSchema for parsing; use CalendarBaseSchema in discriminated unions.
+export const CalendarSchema = CalendarBaseSchema.superRefine((data, ctx) => {
+  // If collectionId is set, dateField must be set
+  if (data.collectionId && !data.dateField) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Calendar with collectionId requires dateField',
+      path: ['dateField'],
+    })
+  }
+})
+export type Calendar = z.infer<typeof CalendarSchema>
+
+// HeatmapSchema — date-intensity grid backed by a required collection.
+//
+// collectionId + dateField are REQUIRED (not optional) — per ADR-0009 Step 6
+// code shape. The schema groups collection items by dateField, then
+// quintile-bins counts into 5 intensity levels (or 2 for binary mode).
+//
+// range: window of days to display (ending at today).
+// intensityMode: 'count' (quintile binning) or 'binary' (present/absent).
+//
+// NOTE: range and intensityMode use .optional() (not .default()) to avoid
+// ZodEffects _input/_output mismatch in the NodeSchema discriminated union.
+// Renderer applies defaults: range → '90d', intensityMode → 'count'.
+// See the same pattern in lists.ts for Timeline, ErrorState, etc.
+export const HeatmapSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('Heatmap'),
+    collectionId: z.string().min(1).max(64),
+    dateField: z.string().min(1).max(64),
+    range: z.enum(['30d', '90d', '180d', '365d']).optional(),
+    intensityMode: z.enum(['count', 'binary']).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+export type Heatmap = z.infer<typeof HeatmapSchema>

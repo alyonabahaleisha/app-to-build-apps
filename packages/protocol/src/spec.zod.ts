@@ -73,6 +73,12 @@ import {
   ReceiptSchema,
   MetricTileSchema,
   StepListSchema,
+  // V1 Phase 1 Step 6 — Date components
+  // Note: CalendarBaseSchema used in the discriminated union (not CalendarSchema)
+  // because z.discriminatedUnion requires ZodObject; superRefine returns ZodEffects.
+  CalendarBaseSchema,
+  CalendarSchema,
+  HeatmapSchema,
   // Actions tier (2 → 3 with IconButton)
   ButtonSchema,
   FabSchema,
@@ -194,6 +200,9 @@ export type Node =
   | z.infer<typeof ReceiptSchema>
   | z.infer<typeof MetricTileSchema>
   | z.infer<typeof StepListSchema>
+  // V1 Phase 1 Step 6 — Date components
+  | z.infer<typeof CalendarSchema>
+  | z.infer<typeof HeatmapSchema>
   // Actions tier (2 → 3 with IconButton)
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
@@ -265,6 +274,10 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     ReceiptSchema,
     MetricTileSchema,
     StepListSchema,
+    // V1 Phase 1 Step 6 — Date components
+    // CalendarBaseSchema (not CalendarSchema) in the union: superRefine → ZodEffects, not ZodObject
+    CalendarBaseSchema,
+    HeatmapSchema,
     // Actions tier
     ButtonSchema,
     FabSchema,

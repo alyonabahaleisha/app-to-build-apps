@@ -2,10 +2,11 @@
  * NodeRenderer tests
  * T-0006-062: NodeRenderer discriminates 5 layout types correctly
  *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8,
- *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4, 47 in V1P1S5)
+ *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4, 47 in V1P1S5, 49 in V1P1S6)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
  * T-0009-109: NodeRenderer 43-arm boundary test
  * T-0009-133: NodeRenderer 47-arm boundary test
+ * T-0009-154: NodeRenderer 49-arm boundary test
  */
 import React from 'react'
 import {render} from '@testing-library/react-native'
@@ -33,6 +34,7 @@ jest.mock('../ai/AICapabilitiesProvider', () => {
 // Minimal spec for RendererStateContext used by input components.
 // Includes a 'workouts' collection for compound tier components (Step 8).
 // Includes an 'events' collection for V1P1S4 Timeline / GridList / Carousel.
+// Includes a 'habits' collection for V1P1S6 Calendar / Heatmap.
 const MINIMAL_SPEC: Spec = {
   version: 1,
   archetype: 'ListCRUD',
@@ -61,6 +63,16 @@ const MINIMAL_SPEC: Spec = {
         {name: 'createdAt', type: {type: 'date'} as const, required: true},
       ],
       seedData: [{title: 'Kickoff', createdAt: '2026-01-01T09:00:00Z'}],
+      syncMode: 'local' as const,
+    },
+    {
+      id: 'habits',
+      name: 'Habits',
+      fields: [
+        {name: 'name', type: {type: 'string'} as const, required: true},
+        {name: 'completedAt', type: {type: 'date'} as const, required: true},
+      ],
+      seedData: [{name: 'Morning run', completedAt: '2026-01-01'}],
       syncMode: 'local' as const,
     },
   ],
@@ -430,6 +442,22 @@ const STEP_LIST: Extract<Node, {type: 'StepList'}> = {
 }
 
 // ---------------------------------------------------------------------------
+// Minimal node fixtures — V1 Phase 1 Step 6 (Calendar, Heatmap)
+// ---------------------------------------------------------------------------
+
+const CALENDAR: Extract<Node, {type: 'Calendar'}> = {
+  id: 'cal1',
+  type: 'Calendar',
+}
+
+const HEATMAP: Extract<Node, {type: 'Heatmap'}> = {
+  id: 'hm1',
+  type: 'Heatmap',
+  collectionId: 'habits',
+  dateField: 'completedAt',
+}
+
+// ---------------------------------------------------------------------------
 // Minimal node fixtures — V1 Phase 1 Step 4 (GridList, Carousel, Timeline, ErrorState)
 // ---------------------------------------------------------------------------
 
@@ -459,12 +487,13 @@ const ERROR_STATE: Extract<Node, {type: 'ErrorState'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended V1 Phase 1 Step 5): NodeRenderer discriminates 47 types correctly
+// T-0006-062 (extended V1 Phase 1 Step 6): NodeRenderer discriminates 49 types correctly
 // T-0009-109: 43-arm boundary test (retained for regression)
-// T-0009-133: 47-arm boundary test
+// T-0009-133: 47-arm boundary test (retained for regression)
+// T-0009-154: 49-arm boundary test
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 47 arms, T-0009-109, T-0009-133)', () => {
+describe('NodeRenderer discrimination (T-0006-062 — Step 6 extended to 49 arms, T-0009-109, T-0009-133, T-0009-154)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
@@ -527,6 +556,9 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 47 arms
     ['Receipt', RECEIPT],
     ['MetricTile', METRIC_TILE],
     ['StepList', STEP_LIST],
+    // Date components tier — V1 Phase 1 Step 6 (2)
+    ['Calendar', CALENDAR],
+    ['Heatmap', HEATMAP],
     // Actions tier (3)
     ['Button', BUTTON],
     ['FAB', FAB],
@@ -546,8 +578,9 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 47 arms
   })
 
   // T-0009-109: 43-arm boundary test (retained for regression — now superseded by T-0009-133)
-  // T-0009-133: 47-arm boundary test — all arms present, none call onUnknownNodeType
-  it('T-0009-109 / T-0009-133: does not call onUnknownNodeType for any of the 47 node types', () => {
+  // T-0009-133: 47-arm boundary test (retained for regression — now superseded by T-0009-154)
+  // T-0009-154: 49-arm boundary test — all arms present, none call onUnknownNodeType
+  it('T-0009-109 / T-0009-133 / T-0009-154: does not call onUnknownNodeType for any of the 49 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
       // Layout (6)
@@ -562,14 +595,15 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 5 extended to 47 arms
       // Lists (9)
       LIST, LIST_ITEM, SWIPEABLE_ROW, EMPTY_STATE, LOADING_STATE,
       GRID_LIST, CAROUSEL, TIMELINE, ERROR_STATE,
-      // Compound (9)
+      // Compound (11)
       CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER, IMAGE,
       TRANSACTION_ROW, RECEIPT, METRIC_TILE, STEP_LIST,
+      CALENDAR, HEATMAP,
       // Actions (3)
       BUTTON, FAB, ICON_BUTTON,
     ]
-    // Total: 6 + 3 + 6 + 11 + 9 + 9 + 3 = 47
-    expect(allNodes.length).toBe(47)
+    // Total: 6 + 3 + 6 + 11 + 9 + 11 + 3 = 49
+    expect(allNodes.length).toBe(49)
 
     for (const node of allNodes) {
       renderNode(node, host)
