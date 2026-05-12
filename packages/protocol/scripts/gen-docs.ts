@@ -126,6 +126,12 @@ const COMPONENT_DESCRIPTIONS: Record<string, string> = {
   Calendar: 'A month or week calendar grid with optional collection binding for marking dates. In month view, renders a 6-row × 7-column grid (42 fixed cells). Leading and trailing cells from adjacent months render in muted color. `firstDayOfWeek` shifts the grid: `sunday` (default) or `monday`. When `collectionId` and `dateField` are both set, the renderer marks matching dates with an accent dot beneath the day number. The `selectedBinding` (DateBinding) is updated via dispatch when the user taps a date cell. Month navigation chevrons manage internal month state independently of the spec. `view: \'week\'` renders a single 7-cell row for the current week.',
   Heatmap: 'A date-intensity heatmap grid backed by a required collection. Groups collection items by `dateField` and bins counts into intensity levels. In `count` mode (default), days with items are quintile-binned into 5 levels (level 0 = no items; levels 1–5 = quintiles of the non-zero count distribution). In `binary` mode, any day with at least one item gets level 1, otherwise level 0. The `range` prop controls the window of days displayed (ending today): 30d, 90d (default), 180d, or 365d. The grid is 7 cells tall (Sun–Sat) by N weeks wide. Today\'s cell has a 1pt accent border. Each cell\'s long-press exposes per-cell info (date, count) via `accessibilityCustomActions`.',
 
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  Gallery: 'A grid of images sourced from either a static `images` array (ImageBinding list) or a collection\'s `imageField`. The two sources are mutually exclusive — the schema rejects specs that set both or neither. `columns` selects 2, 3 (default), or 4 columns; `aspectRatio` constrains each cell to `1:1` or `4:5`. Tapping a cell opens a fullscreen modal with the full-resolution image; a close button (IconButton, icon: `x`) dismisses the modal. An empty images array or a collection with 0 rows renders a "No photos yet" empty state with the `image` icon. Rows whose `imageField` value is null render with the fallback icon instead of crashing the grid.',
+  CommerceCard: 'A product card with a clipped header image, title, price, optional strikethrough comparison price, and a CTA button. The image clips to the top of the card via `borderTopLeftRadius` and `overflow: hidden`. Price and optional `priceCompare` are expressed in integer cents; the renderer divides by 100 and formats via `Intl.NumberFormat`. `priceCompare` renders with `textDecorationLine: line-through`. An optional `badge` string renders in the top-right corner of the image (accent background, accent-fg text). The `ctaAction` fires when the CTA button is pressed.',
+  BeforeAfter: 'An image comparison component that renders a `before` and `after` image pair. In `side-by-side` mode (static), the two images share equal width with a hairline divider between them. In `slider` mode (default), a draggable thumb clips the `after` image via a Reanimated worklet — `useSharedValue` drives the clip-width animated style and `Gesture.Pan().onUpdate()` updates the fraction on each frame. The thumb has `accessibilityRole="adjustable"` with increment/decrement actions that move the reveal by 10% per swipe. When Reduce Motion is enabled, `slider` mode degrades to the static 50/50 split.',
+  DocumentPicker: 'A labeled tappable area backed by `expo-document-picker`. Tapping invokes `getDocumentAsync` with a MIME type derived from the `acceptedTypes` array (`pdf` → `application/pdf`; `image` → `image/*`; `video` → `video/*`; `audio` → `audio/*`; `any` → `*/*`). On success, the selected file URI is written to the `valueBinding` state slot via a `set` dispatch. Cancellation is a silent no-op. On error, an error caption appears below the picker and the next tap retries. A literal binding renders in read-only display mode (no picker invoked).',
+
   // Actions tier
   Button: 'A tappable button that fires an action on press. The `variant` prop selects primary (accent fill), secondary (outlined), or destructive (danger fill) styling. The optional `disabled` BooleanBinding disables interaction.',
   Fab: 'A Floating Action Button that anchors to the bottom-right corner of its containing screen. Displays a named icon and fires an action on tap. Use for the single primary creation or navigation action on a screen.',
@@ -190,7 +196,7 @@ for (const name of Object.keys(TOKEN_DESCRIPTIONS).sort()) {
   }
 }
 
-// 2. Component schemas (tier order — 47 sections)
+// 2. Component schemas (tier order — 53 sections)
 sections.push(`---\n\n## Component Schemas\n`)
 // Tier order matches components/index.ts: layout, typography, inputs, display, lists, compound, actions
 const COMPONENT_ORDER = [
@@ -220,6 +226,8 @@ const COMPONENT_ORDER = [
   'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
   // V1 Phase 1 Step 6 — Date components
   'Calendar', 'Heatmap',
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  'Gallery', 'CommerceCard', 'BeforeAfter', 'DocumentPicker',
   // Actions tier (2 → 3 with IconButton)
   'Button', 'Fab',
   // V1 Phase 1 Step 1 — actions addition

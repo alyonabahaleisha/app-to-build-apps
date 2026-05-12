@@ -1,0 +1,360 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CommerceCardRenderer snapshots (T-0009-182) T-0009-182a: snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Wireless Headphones"
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 12,
+      "borderWidth": 1,
+      "overflow": "hidden",
+    }
+  }
+  testID="commerce-card-cc1"
+>
+  <View
+    style={
+      {
+        "aspectRatio": 1.3333333333333333,
+        "backgroundColor": "#FFFFFF",
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "overflow": "hidden",
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+          },
+        ]
+      }
+    >
+      <ActivityIndicator
+        color="#5C6470"
+      />
+    </View>
+    <Image
+      accessibilityLabel="Wireless Headphones"
+      accessibilityRole="image"
+      onError={[Function]}
+      onLoad={[Function]}
+      resizeMode="cover"
+      source={
+        {
+          "uri": "https://example.com/headphones.jpg",
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "gap": 4,
+        "padding": 12,
+      }
+    }
+  >
+    <Text
+      numberOfLines={2}
+      style={
+        {
+          "color": "#14171A",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 24,
+        }
+      }
+      testID="commerce-card-title-cc1"
+    >
+      Wireless Headphones
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "fontWeight": "700",
+            "lineHeight": 24,
+          }
+        }
+        testID="commerce-card-price-cc1"
+      >
+        $99.99
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Add"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#4F46E5",
+          "borderRadius": 12,
+          "marginTop": 4,
+          "paddingVertical": 8,
+        }
+      }
+      testID="commerce-card-cta-cc1"
+    >
+      <Text
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 16,
+            "fontWeight": "600",
+          }
+        }
+      >
+        Add
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`CommerceCardRenderer snapshots (T-0009-182) T-0009-182b: snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Wireless Headphones"
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#EFE9DF",
+      "borderRadius": 12,
+      "borderWidth": 1,
+      "overflow": "hidden",
+    }
+  }
+  testID="commerce-card-cc2"
+>
+  <View
+    style={
+      {
+        "aspectRatio": 1.3333333333333333,
+        "backgroundColor": "#FFFFFF",
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "overflow": "hidden",
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "alignItems": "center",
+            "justifyContent": "center",
+          },
+        ]
+      }
+    >
+      <ActivityIndicator
+        color="#6B5F56"
+      />
+    </View>
+    <Image
+      accessibilityLabel="Wireless Headphones"
+      accessibilityRole="image"
+      onError={[Function]}
+      onLoad={[Function]}
+      resizeMode="cover"
+      source={
+        {
+          "uri": "https://example.com/headphones.jpg",
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+  </View>
+  <View
+    style={
+      {
+        "gap": 4,
+        "padding": 12,
+      }
+    }
+  >
+    <Text
+      numberOfLines={2}
+      style={
+        {
+          "color": "#1A1715",
+          "fontSize": 16,
+          "fontWeight": "600",
+          "lineHeight": 26,
+        }
+      }
+      testID="commerce-card-title-cc2"
+    >
+      Wireless Headphones
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#6B5F56",
+            "fontSize": 14,
+            "lineHeight": 20,
+            "textDecorationLine": "line-through",
+          }
+        }
+        testID="commerce-card-price-compare-cc2"
+      >
+        $99.99
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "fontWeight": "700",
+            "lineHeight": 26,
+          }
+        }
+        testID="commerce-card-price-cc2"
+      >
+        $79.99
+      </Text>
+    </View>
+    <View
+      accessibilityLabel="Add"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "#4A7438",
+          "borderRadius": 12,
+          "marginTop": 4,
+          "paddingVertical": 8,
+        }
+      }
+      testID="commerce-card-cta-cc2"
+    >
+      <Text
+        style={
+          {
+            "color": "#FFFFFF",
+            "fontSize": 16,
+            "fontWeight": "600",
+          }
+        }
+      >
+        Add
+      </Text>
+    </View>
+  </View>
+</View>
+`;

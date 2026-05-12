@@ -1,0 +1,543 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GalleryRenderer snapshots (T-0009-181) T-0009-181a: snapshot at productive×focus 1`] = `
+<View
+  accessibilityLabel="Photo gallery"
+  role="list"
+  testID="gallery-gal1"
+>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "gap": 4,
+        "marginBottom": 0,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Photo 1 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#5C6470"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo1.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Photo 2 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#5C6470"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo2.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Photo 3 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#5C6470"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo3.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`GalleryRenderer snapshots (T-0009-181) T-0009-181b: snapshot at expressive×health 1`] = `
+<View
+  accessibilityLabel="Photo gallery"
+  role="list"
+  testID="gallery-gal1"
+>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "gap": 4,
+        "marginBottom": 0,
+      }
+    }
+  >
+    <View
+      accessibilityLabel="Photo 1 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#6B5F56"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo1.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Photo 2 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#6B5F56"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo2.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Photo 3 of 3"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 6,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "alignItems": "center",
+              "justifyContent": "center",
+            },
+          ]
+        }
+      >
+        <ActivityIndicator
+          color="#6B5F56"
+        />
+      </View>
+      <Image
+        accessibilityElementsHidden={true}
+        onError={[Function]}
+        onLoad={[Function]}
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/photo3.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+</View>
+`;

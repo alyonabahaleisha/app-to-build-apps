@@ -1,0 +1,313 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BeforeAfterRenderer snapshots (T-0009-183) T-0009-183a: snapshot at productive×focus (slider mode) 1`] = `
+<View
+  accessibilityLabel="Before and After comparison"
+  testID="before-after-ba1"
+>
+  <View
+    style={
+      {
+        "aspectRatio": 1.3333333333333333,
+        "backgroundColor": "#FFFFFF",
+        "borderRadius": 12,
+        "overflow": "hidden",
+        "width": "100%",
+      }
+    }
+    testID="before-after-composite-ba1"
+  >
+    <Image
+      accessibilityLabel="Before"
+      accessibilityRole="image"
+      resizeMode="cover"
+      source={
+        {
+          "uri": "https://example.com/before.jpg",
+        }
+      }
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+        }
+      }
+    />
+    <View
+      style={
+        [
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          },
+          {
+            "overflow": "hidden",
+            "width": "50%",
+          },
+        ]
+      }
+      testID="before-after-after-clip-ba1"
+    >
+      <Image
+        accessibilityLabel="After"
+        accessibilityRole="image"
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/after.jpg",
+          }
+        }
+        style={
+          [
+            {
+              "bottom": 0,
+              "left": 0,
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            },
+            {
+              "width": 10000,
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityActions={
+        [
+          {
+            "label": "Show more after",
+            "name": "increment",
+          },
+          {
+            "label": "Show more before",
+            "name": "decrement",
+          },
+        ]
+      }
+      accessibilityLabel="Image comparison slider"
+      accessibilityRole="adjustable"
+      accessibilityValue={
+        {
+          "max": 100,
+          "min": 0,
+          "now": 50,
+        }
+      }
+      onAccessibilityAction={[Function]}
+      style={
+        [
+          {
+            "alignItems": "center",
+            "bottom": 0,
+            "justifyContent": "center",
+            "position": "absolute",
+            "top": 0,
+            "width": 32,
+          },
+          {
+            "left": "50%",
+            "transform": [
+              {
+                "translateX": -16,
+              },
+            ],
+          },
+        ]
+      }
+      testID="before-after-thumb-ba1"
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "white",
+            "bottom": 0,
+            "left": 15,
+            "position": "absolute",
+            "top": 0,
+            "width": 2,
+          }
+        }
+      />
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "white",
+            "borderRadius": 16,
+            "elevation": 4,
+            "height": 32,
+            "justifyContent": "center",
+            "shadowColor": "black",
+            "shadowOffset": {
+              "height": 2,
+              "width": 0,
+            },
+            "shadowOpacity": 0.3,
+            "shadowRadius": 4,
+            "width": 32,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "marginTop": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#5C6470",
+          "flex": 1,
+          "fontSize": 13,
+          "textAlign": "center",
+        }
+      }
+    >
+      Before
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#5C6470",
+          "flex": 1,
+          "fontSize": 13,
+          "textAlign": "center",
+        }
+      }
+    >
+      After
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`BeforeAfterRenderer snapshots (T-0009-183) T-0009-183b: snapshot at expressive×health (side-by-side mode) 1`] = `
+<View
+  accessibilityLabel="Before and After comparison"
+  testID="before-after-ba2"
+>
+  <View
+    style={
+      {
+        "borderRadius": 12,
+        "flexDirection": "row",
+        "overflow": "hidden",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "aspectRatio": 1.3333333333333333,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <Image
+        accessibilityLabel="Before"
+        accessibilityRole="image"
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/before.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+    <View
+      style={
+        {
+          "backgroundColor": "#EFE9DF",
+          "width": 0.5,
+        }
+      }
+      testID="before-after-divider-ba2"
+    />
+    <View
+      style={
+        {
+          "aspectRatio": 1.3333333333333333,
+          "flex": 1,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <Image
+        accessibilityLabel="After"
+        accessibilityRole="image"
+        resizeMode="cover"
+        source={
+          {
+            "uri": "https://example.com/after.jpg",
+          }
+        }
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+        "marginTop": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "flex": 1,
+          "fontSize": 14,
+          "textAlign": "center",
+        }
+      }
+    >
+      Before
+    </Text>
+    <Text
+      style={
+        {
+          "color": "#6B5F56",
+          "flex": 1,
+          "fontSize": 14,
+          "textAlign": "center",
+        }
+      }
+    >
+      After
+    </Text>
+  </View>
+</View>
+`;

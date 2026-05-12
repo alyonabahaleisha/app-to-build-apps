@@ -79,6 +79,14 @@ import {
   CalendarBaseSchema,
   CalendarSchema,
   HeatmapSchema,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  // Note: GalleryBaseSchema used in the discriminated union (not GallerySchema)
+  // because z.discriminatedUnion requires ZodObject; superRefine returns ZodEffects.
+  GalleryBaseSchema,
+  GallerySchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
   // Actions tier (2 → 3 with IconButton)
   ButtonSchema,
   FabSchema,
@@ -203,6 +211,11 @@ export type Node =
   // V1 Phase 1 Step 6 — Date components
   | z.infer<typeof CalendarSchema>
   | z.infer<typeof HeatmapSchema>
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  | z.infer<typeof GallerySchema>
+  | z.infer<typeof CommerceCardSchema>
+  | z.infer<typeof BeforeAfterSchema>
+  | z.infer<typeof DocumentPickerSchema>
   // Actions tier (2 → 3 with IconButton)
   | z.infer<typeof ButtonSchema>
   | z.infer<typeof FabSchema>
@@ -278,6 +291,12 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     // CalendarBaseSchema (not CalendarSchema) in the union: superRefine → ZodEffects, not ZodObject
     CalendarBaseSchema,
     HeatmapSchema,
+    // V1 Phase 1 Step 7 — Content/Media expansion
+    // GalleryBaseSchema (not GallerySchema) in the union: superRefine → ZodEffects, not ZodObject
+    GalleryBaseSchema,
+    CommerceCardSchema,
+    BeforeAfterSchema,
+    DocumentPickerSchema,
     // Actions tier
     ButtonSchema,
     FabSchema,

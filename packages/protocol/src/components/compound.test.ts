@@ -4,9 +4,11 @@
  * V1 Phase 1 Step 1 additions: T-0009-006..010 (ImageSchema)
  * V1 Phase 1 Step 5 additions: T-0009-111, 116-117, 121, 125, 128, 134, 236
  * V1 Phase 1 Step 6 additions: T-0009-138..140, T-0009-147, T-0009-155..156, T-0009-244a
+ * V1 Phase 1 Step 7 additions: T-0009-158..162, T-0009-165, T-0009-170, T-0009-174..177
  * Components: ConditionalSection, ListSummary, MediaTray, ImagePicker (4 compound tier)
  * V1 additions: Image (1 new), TransactionRow, Receipt, MetricTile, StepList (4 new),
- *               Calendar, Heatmap (2 new)
+ *               Calendar, Heatmap (2 new),
+ *               Gallery, CommerceCard, BeforeAfter, DocumentPicker (4 new)
  */
 import {
   ConditionalSectionSchema,
@@ -20,6 +22,10 @@ import {
   StepListSchema,
   CalendarSchema,
   HeatmapSchema,
+  GallerySchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
 } from './compound.js'
 import {
   CONDITIONAL_SECTION_FIXTURE,
@@ -785,5 +791,379 @@ describe('HeatmapSchema (T-0009-147, T-0009-155, T-0009-244a)', () => {
       const result = HeatmapSchema.safeParse({...BASE_HEATMAP, collectionId})
       expect(result.success).toBe(true)
     }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// V1 Phase 1 Step 7 — Content/Media expansion schemas
+// ---------------------------------------------------------------------------
+
+// ---- GallerySchema (T-0009-158..162) ----
+
+describe('GallerySchema (T-0009-158..162)', () => {
+  const IMAGE_BINDING_LITERAL = {kind: 'literal' as const, value: 'http://example.com/photo.jpg'}
+
+  // T-0009-158: collectionId + imageField
+  it('T-0009-158: parses with collectionId + imageField', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      collectionId: 'photos',
+      imageField: 'photoUrl',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-159: static images array
+  it('T-0009-159: parses with images array (literal binding)', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      images: [IMAGE_BINDING_LITERAL],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  // T-0009-160: both-set rejected
+  it('T-0009-160: rejects when both collectionId+imageField and images are set', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      collectionId: 'photos',
+      imageField: 'photoUrl',
+      images: [IMAGE_BINDING_LITERAL],
+    })
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0]!.message).toContain('exactly one of')
+    }
+  })
+
+  // T-0009-161: neither-set rejected
+  it('T-0009-161: rejects when neither source is set', () => {
+    const result = GallerySchema.safeParse({id: 'g1', type: 'Gallery'})
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0]!.message).toContain('exactly one of')
+    }
+  })
+
+  // T-0009-162: collectionId without imageField rejected at superRefine
+  it('T-0009-162: rejects collectionId without imageField (superRefine path check)', () => {
+    const result = GallerySchema.safeParse({id: 'g1', type: 'Gallery', collectionId: 'photos'})
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      const issue = result.error.issues.find(i => i.path.includes('imageField'))
+      expect(issue).toBeDefined()
+      expect(issue!.message).toBe('Gallery with collectionId requires imageField')
+    }
+  })
+
+  it('accepts valid columns values (2, 3, 4)', () => {
+    for (const columns of [2, 3, 4] as const) {
+      const result = GallerySchema.safeParse({
+        id: 'g1',
+        type: 'Gallery',
+        images: [IMAGE_BINDING_LITERAL],
+        columns,
+      })
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('rejects columns: 5 (not in literal union)', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      images: [IMAGE_BINDING_LITERAL],
+      columns: 5,
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts aspectRatio values', () => {
+    for (const aspectRatio of ['1:1', '4:5'] as const) {
+      const result = GallerySchema.safeParse({
+        id: 'g1',
+        type: 'Gallery',
+        images: [IMAGE_BINDING_LITERAL],
+        aspectRatio,
+      })
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('rejects images array over 50 items', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      images: Array(51).fill(IMAGE_BINDING_LITERAL),
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = GallerySchema.safeParse({
+      id: 'g1',
+      type: 'Gallery',
+      images: [IMAGE_BINDING_LITERAL],
+      showCaption: true,
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---- CommerceCardSchema (T-0009-165) ----
+
+describe('CommerceCardSchema (T-0009-165)', () => {
+  const VALID_COMMERCE = {
+    id: 'cc1',
+    type: 'CommerceCard' as const,
+    title: 'Blue Sneakers',
+    image: {kind: 'literal' as const, value: 'https://example.com/sneakers.jpg'},
+    price: {kind: 'literal' as const, value: 8999},
+  }
+
+  // T-0009-165: happy path
+  it('T-0009-165: parses with image, title, price', () => {
+    const result = CommerceCardSchema.safeParse(VALID_COMMERCE)
+    expect(result.success).toBe(true)
+  })
+
+  it('currency is optional (renderer defaults to USD)', () => {
+    const result = CommerceCardSchema.safeParse(VALID_COMMERCE)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      // Optional — schema stores undefined; renderer applies USD default
+      expect(result.data.currency === undefined || typeof result.data.currency === 'string').toBe(true)
+    }
+  })
+
+  it('ctaLabel is optional (renderer defaults to "Add")', () => {
+    const result = CommerceCardSchema.safeParse(VALID_COMMERCE)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      // Optional — schema stores undefined; renderer applies 'Add' default
+      expect(result.data.ctaLabel === undefined || typeof result.data.ctaLabel === 'string').toBe(true)
+    }
+  })
+
+  it('accepts optional priceCompare', () => {
+    const result = CommerceCardSchema.safeParse({
+      ...VALID_COMMERCE,
+      priceCompare: {kind: 'literal', value: 12999},
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts optional badge', () => {
+    const result = CommerceCardSchema.safeParse({...VALID_COMMERCE, badge: 'Sale'})
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts optional ctaAction', () => {
+    const result = CommerceCardSchema.safeParse({
+      ...VALID_COMMERCE,
+      ctaAction: {type: 'toast', message: 'Added to cart'},
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects title over 120 chars', () => {
+    const result = CommerceCardSchema.safeParse({...VALID_COMMERCE, title: 'A'.repeat(121)})
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects ctaLabel over 40 chars', () => {
+    const result = CommerceCardSchema.safeParse({
+      ...VALID_COMMERCE,
+      ctaLabel: 'Add to Cart Right Now Today'.padEnd(41, '!'),
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts state binding for price', () => {
+    const result = CommerceCardSchema.safeParse({
+      ...VALID_COMMERCE,
+      price: {kind: 'state', slot: 'priceSlot'},
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts diverse titles (i18n)', () => {
+    for (const title of ['José García', '電子製品', "O'Brien's Gadget"]) {
+      const result = CommerceCardSchema.safeParse({...VALID_COMMERCE, title})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = CommerceCardSchema.safeParse({...VALID_COMMERCE, discount: 0.2})
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---- BeforeAfterSchema (T-0009-170) ----
+
+describe('BeforeAfterSchema (T-0009-170)', () => {
+  const BEFORE_IMAGE = {kind: 'literal' as const, value: 'https://example.com/before.jpg'}
+  const AFTER_IMAGE = {kind: 'literal' as const, value: 'https://example.com/after.jpg'}
+
+  const VALID_BEFORE_AFTER = {
+    id: 'ba1',
+    type: 'BeforeAfter' as const,
+    before: BEFORE_IMAGE,
+    after: AFTER_IMAGE,
+  }
+
+  // T-0009-170: happy path with mode: slider
+  it('T-0009-170: parses with before, after, mode: slider', () => {
+    const result = BeforeAfterSchema.safeParse({...VALID_BEFORE_AFTER, mode: 'slider'})
+    expect(result.success).toBe(true)
+  })
+
+  it('parses with mode: side-by-side', () => {
+    const result = BeforeAfterSchema.safeParse({...VALID_BEFORE_AFTER, mode: 'side-by-side'})
+    expect(result.success).toBe(true)
+  })
+
+  it('parses without mode (optional — renderer defaults to slider)', () => {
+    const result = BeforeAfterSchema.safeParse(VALID_BEFORE_AFTER)
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts optional beforeLabel + afterLabel', () => {
+    const result = BeforeAfterSchema.safeParse({
+      ...VALID_BEFORE_AFTER,
+      beforeLabel: 'Before treatment',
+      afterLabel: 'After treatment',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects beforeLabel over 40 chars', () => {
+    const result = BeforeAfterSchema.safeParse({
+      ...VALID_BEFORE_AFTER,
+      beforeLabel: 'A'.repeat(41),
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects mode: "fade" (not in enum)', () => {
+    const result = BeforeAfterSchema.safeParse({...VALID_BEFORE_AFTER, mode: 'fade'})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts state binding for before/after images', () => {
+    const result = BeforeAfterSchema.safeParse({
+      id: 'ba1',
+      type: 'BeforeAfter',
+      before: {kind: 'state', slot: 'beforeSlot'},
+      after: {kind: 'state', slot: 'afterSlot'},
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = BeforeAfterSchema.safeParse({...VALID_BEFORE_AFTER, animate: true})
+    expect(result.success).toBe(false)
+  })
+})
+
+// ---- DocumentPickerSchema (T-0009-174..177) ----
+
+describe('DocumentPickerSchema (T-0009-174..177)', () => {
+  const VALID_DOC_PICKER = {
+    id: 'dp1',
+    type: 'DocumentPicker' as const,
+    label: 'Attach Document',
+    valueBinding: {kind: 'state' as const, slot: 'docUri'},
+  }
+
+  // T-0009-174: happy path
+  it('T-0009-174: parses with label, valueBinding, acceptedTypes: ["pdf", "image"]', () => {
+    const result = DocumentPickerSchema.safeParse({
+      ...VALID_DOC_PICKER,
+      acceptedTypes: ['pdf', 'image'],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('parses without acceptedTypes (optional — renderer defaults to ["any"])', () => {
+    const result = DocumentPickerSchema.safeParse(VALID_DOC_PICKER)
+    expect(result.success).toBe(true)
+    if (result.success) {
+      // acceptedTypes is optional; renderer applies default ['any'] — schema stores undefined
+      expect(result.data.acceptedTypes === undefined || Array.isArray(result.data.acceptedTypes)).toBe(true)
+    }
+  })
+
+  // T-0009-175: empty array rejected
+  it('T-0009-175: acceptedTypes: [] rejects (min 1)', () => {
+    const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, acceptedTypes: []})
+    expect(result.success).toBe(false)
+  })
+
+  // T-0009-176: 5 types rejected
+  it('T-0009-176: 5 acceptedTypes rejects (max 4)', () => {
+    const result = DocumentPickerSchema.safeParse({
+      ...VALID_DOC_PICKER,
+      acceptedTypes: ['pdf', 'image', 'video', 'audio', 'any'],
+    })
+    expect(result.success).toBe(false)
+  })
+
+  // T-0009-177: unknown enum value rejected
+  it('T-0009-177: acceptedTypes: ["gif"] rejects (not in enum)', () => {
+    const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, acceptedTypes: ['gif']})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts all valid acceptedTypes enum values', () => {
+    for (const t of ['pdf', 'image', 'video', 'audio', 'any'] as const) {
+      const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, acceptedTypes: [t]})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('accepts exactly 4 acceptedTypes (boundary)', () => {
+    const result = DocumentPickerSchema.safeParse({
+      ...VALID_DOC_PICKER,
+      acceptedTypes: ['pdf', 'image', 'video', 'audio'],
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects label over 80 chars', () => {
+    const result = DocumentPickerSchema.safeParse({
+      ...VALID_DOC_PICKER,
+      label: 'A'.repeat(81),
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects empty label', () => {
+    const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, label: ''})
+    expect(result.success).toBe(false)
+  })
+
+  it('accepts diverse labels (i18n)', () => {
+    for (const label of ['Fichier', '文件', "O'Brien's CV"]) {
+      const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, label})
+      expect(result.success).toBe(true)
+    }
+  })
+
+  it('accepts optional placeholder', () => {
+    const result = DocumentPickerSchema.safeParse({
+      ...VALID_DOC_PICKER,
+      placeholder: 'Select a PDF...',
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('rejects extra props (.strict())', () => {
+    const result = DocumentPickerSchema.safeParse({...VALID_DOC_PICKER, multiple: true})
+    expect(result.success).toBe(false)
   })
 })

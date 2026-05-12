@@ -3086,6 +3086,217 @@
                       },
                       "type": {
                         "type": "string",
+                        "const": "Gallery"
+                      },
+                      "collectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "imageField": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 64
+                      },
+                      "images": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/38/properties/valueBinding"
+                        },
+                        "maxItems": 50
+                      },
+                      "columns": {
+                        "type": "number",
+                        "enum": [
+                          2,
+                          3,
+                          4
+                        ]
+                      },
+                      "aspectRatio": {
+                        "type": "string",
+                        "enum": [
+                          "1:1",
+                          "4:5"
+                        ]
+                      },
+                      "gap": {
+                        "type": "string",
+                        "enum": [
+                          "space-none",
+                          "space-xs",
+                          "space-sm",
+                          "space-md",
+                          "space-lg",
+                          "space-xl"
+                        ]
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "CommerceCard"
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 120
+                      },
+                      "image": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/38/properties/valueBinding"
+                      },
+                      "price": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "priceCompare": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                      },
+                      "currency": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/14/properties/currency"
+                      },
+                      "ctaLabel": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 40
+                      },
+                      "ctaAction": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/22/properties/action"
+                      },
+                      "badge": {
+                        "type": "string",
+                        "maxLength": 40
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "title",
+                      "image",
+                      "price"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "BeforeAfter"
+                      },
+                      "before": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/38/properties/valueBinding"
+                      },
+                      "after": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/38/properties/valueBinding"
+                      },
+                      "mode": {
+                        "type": "string",
+                        "enum": [
+                          "slider",
+                          "side-by-side"
+                        ]
+                      },
+                      "beforeLabel": {
+                        "type": "string",
+                        "maxLength": 40
+                      },
+                      "afterLabel": {
+                        "type": "string",
+                        "maxLength": 40
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "before",
+                      "after"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
+                        "const": "DocumentPicker"
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 80
+                      },
+                      "valueBinding": {
+                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                      },
+                      "acceptedTypes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "pdf",
+                            "image",
+                            "video",
+                            "audio",
+                            "any"
+                          ]
+                        },
+                        "minItems": 1,
+                        "maxItems": 4
+                      },
+                      "placeholder": {
+                        "type": "string",
+                        "maxLength": 80
+                      },
+                      "accessibilityLabel": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "label",
+                      "valueBinding"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-zA-Z0-9_]{0,63}$"
+                      },
+                      "type": {
+                        "type": "string",
                         "const": "Button"
                       },
                       "label": {

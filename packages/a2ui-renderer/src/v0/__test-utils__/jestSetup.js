@@ -114,8 +114,9 @@ jest.mock('expo-haptics', () => ({
 }))
 
 // Mock react-native-gesture-handler — SwipeableRow uses Swipeable from RNGH.
-// In tests, render the children and action buttons directly (always visible)
-// so tests can assert on dispatch calls without simulating gesture events.
+// BeforeAfter uses GestureDetector + Gesture.Pan() from RNGH.
+// In tests, render children directly (always visible) so tests can assert on
+// dispatch calls without simulating gesture events.
 jest.mock('react-native-gesture-handler', () => {
   const React = require('react')
   const {View} = require('react-native')
@@ -131,8 +132,33 @@ jest.mock('react-native-gesture-handler', () => {
   function GestureHandlerRootView({children, style}) {
     return React.createElement(View, {style}, children)
   }
-  return {Swipeable, GestureHandlerRootView}
+  // GestureDetector — renders children transparently (no native gesture infrastructure in tests)
+  function GestureDetector({children}) {
+    return React.createElement(React.Fragment, null, children)
+  }
+  // Gesture.Pan() — stub that returns a fluent builder with onUpdate/onEnd no-ops.
+  // BeforeAfter stores the reference but the gesture never fires in JSDOM.
+  const PanGestureBuilder = {
+    onUpdate: function(fn) { this._onUpdate = fn; return this },
+    onEnd: function(fn) { this._onEnd = fn; return this },
+    _onUpdate: null,
+    _onEnd: null,
+  }
+  const Gesture = {
+    Pan: () => Object.create(PanGestureBuilder),
+    Simultaneous: (...gestures) => gestures[0],
+    Exclusive: (...gestures) => gestures[0],
+    Race: (...gestures) => gestures[0],
+  }
+  return {Swipeable, GestureHandlerRootView, GestureDetector, Gesture}
 })
+
+// Mock expo-document-picker — native document picker; not available in Jest env.
+// Default behavior: picker returns a cancelled result. Tests that need a successful
+// pick call mockResolvedValueOnce on getDocumentAsync.
+jest.mock('expo-document-picker', () => ({
+  getDocumentAsync: jest.fn().mockResolvedValue({canceled: true, assets: null}),
+}))
 
 // Mock @gorhom/bottom-sheet — Step 10: nav patterns + DateField + Picker Gorhom integration.
 // BottomSheetModal renders inline (visible) when present() is called; hidden otherwise.

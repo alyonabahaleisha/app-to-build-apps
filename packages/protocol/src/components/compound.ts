@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import {COMPONENT_ID_REGEX} from './layout.js'
 import {ActionSchema} from '../actions.js'
-import {ImageBindingSchema, NumberBindingSchema, BooleanBindingSchema, DateBindingSchema} from '../binding.js'
+import {ImageBindingSchema, NumberBindingSchema, BooleanBindingSchema, DateBindingSchema, StringBindingSchema} from '../binding.js'
 import {IconNameSchema} from './slot.js'
 import {CurrencySchema} from '../enums.js'
 
@@ -259,3 +259,139 @@ export const HeatmapSchema = z
   })
   .strict()
 export type Heatmap = z.infer<typeof HeatmapSchema>
+
+// ---------------------------------------------------------------------------
+// V1 Phase 1 Step 7 — Content/Media expansion
+// ---------------------------------------------------------------------------
+
+// GalleryBaseSchema — raw ZodObject shape for the GallerySchema.
+// Used in NodeSchema discriminated union (superRefine → ZodEffects, which is
+// incompatible with z.discriminatedUnion's ZodObject requirement).
+// Mirrors the CalendarBaseSchema / CarouselBaseSchema pattern.
+//
+// NOTE: columns and aspectRatio use .optional() (not .default()) to avoid
+// ZodEffects _input/_output mismatch in the NodeSchema discriminated union.
+// Renderer applies defaults: columns → 3, aspectRatio → '1:1'.
+export const GalleryBaseSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('Gallery'),
+    collectionId: z.string().min(1).max(64).optional(),
+    imageField: z.string().min(1).max(64).optional(),
+    images: z.array(ImageBindingSchema).max(50).optional(),
+    columns: z.union([z.literal(2), z.literal(3), z.literal(4)]).optional(),
+    aspectRatio: z.enum(['1:1', '4:5']).optional(),
+    gap: z.enum(['space-none', 'space-xs', 'space-sm', 'space-md', 'space-lg', 'space-xl']).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+
+// GallerySchema — wraps GalleryBaseSchema with two superRefine cross-field checks.
+//
+// Check 1: Mutually exclusive — (collectionId+imageField) XOR images.
+//   Both-set rejected; neither-set rejected.
+// Check 2: If collectionId set, imageField required (path ['imageField']).
+//
+// Use GallerySchema for parsing; use GalleryBaseSchema in discriminated unions.
+export const GallerySchema = GalleryBaseSchema.superRefine((data, ctx) => {
+  // A "complete" collection binding requires BOTH collectionId AND imageField.
+  // An "images" binding requires images array with at least one entry.
+  const hasCollection = data.collectionId !== undefined && data.imageField !== undefined
+  const hasImages = data.images !== undefined && data.images.length > 0
+  if (hasCollection === hasImages) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Gallery requires exactly one of (collectionId+imageField) or images',
+    })
+  }
+  if (data.collectionId && !data.imageField) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Gallery with collectionId requires imageField',
+      path: ['imageField'],
+    })
+  }
+})
+export type Gallery = z.infer<typeof GallerySchema>
+
+// CommerceCardSchema — product card with image, price, and optional CTA.
+//
+// price and priceCompare are in integer cents (zero-decimal for JPY).
+// priceCompare renders with textDecorationLine: 'line-through' (strikethrough).
+// currency defaults to 'USD' in the renderer (schema stores as optional).
+// ctaLabel defaults to 'Add' in the renderer (schema stores as optional).
+//
+// NOTE: currency and ctaLabel use .optional() (not .default()) to avoid
+// ZodEffects _input/_output mismatch in the NodeSchema discriminated union.
+// Renderer applies defaults: currency → 'USD', ctaLabel → 'Add'.
+// Same pattern as CalendarBaseSchema, HeatmapSchema, BeforeAfterSchema.
+export const CommerceCardSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('CommerceCard'),
+    title: z.string().min(1).max(120),
+    image: ImageBindingSchema,
+    price: NumberBindingSchema,
+    priceCompare: NumberBindingSchema.optional(),
+    currency: CurrencySchema.optional(),
+    ctaLabel: z.string().min(1).max(40).optional(),
+    ctaAction: ActionSchema.optional(),
+    badge: z.string().max(40).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+export type CommerceCard = z.infer<typeof CommerceCardSchema>
+
+// BeforeAfterSchema — side-by-side or slider image comparison.
+//
+// mode: 'slider' — draggable thumb divides before (left/bottom) and after (right/top).
+//        Uses Reanimated worklet for the pan gesture.
+// mode: 'side-by-side' — static 50/50 split with a hairline divider. No animation.
+//
+// Reduced-motion: when AccessibilityInfo.reduceMotionEnabled is true, 'slider'
+// mode degrades to a static 50/50 split (no drag interaction).
+//
+// NOTE: mode uses .optional() (not .default()) to avoid ZodEffects mismatch
+// in the NodeSchema discriminated union. Renderer applies default: mode → 'slider'.
+export const BeforeAfterSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('BeforeAfter'),
+    before: ImageBindingSchema,
+    after: ImageBindingSchema,
+    mode: z.enum(['slider', 'side-by-side']).optional(),
+    beforeLabel: z.string().max(40).optional(),
+    afterLabel: z.string().max(40).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+export type BeforeAfter = z.infer<typeof BeforeAfterSchema>
+
+// DocumentPickerSchema — labeled tappable area that invokes expo-document-picker.
+//
+// valueBinding: StringBinding — receives the selected file URI on success.
+// acceptedTypes: maps to MIME types passed to DocumentPicker.getDocumentAsync().
+//   'pdf'   → 'application/pdf'
+//   'image' → 'image/*'
+//   'video' → 'video/*'
+//   'audio' → 'audio/*'
+//   'any'   → '*/*'
+//
+// On cancel: no-op (silent). On permission denied: shows error caption; retries on next tap.
+//
+// NOTE: acceptedTypes uses .optional() (not .default()) to avoid ZodEffects
+// _input/_output mismatch in the NodeSchema discriminated union.
+// Renderer applies default: acceptedTypes → ['any'].
+// Same pattern as CalendarBaseSchema, HeatmapSchema etc.
+export const DocumentPickerSchema = z
+  .object({
+    id: z.string().regex(COMPONENT_ID_REGEX),
+    type: z.literal('DocumentPicker'),
+    label: z.string().min(1).max(80),
+    valueBinding: StringBindingSchema,
+    acceptedTypes: z.array(z.enum(['pdf', 'image', 'video', 'audio', 'any'])).min(1).max(4).optional(),
+    placeholder: z.string().max(80).optional(),
+    accessibilityLabel: z.string().optional(),
+  })
+  .strict()
+export type DocumentPicker = z.infer<typeof DocumentPickerSchema>

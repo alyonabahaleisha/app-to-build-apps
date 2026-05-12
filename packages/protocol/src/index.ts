@@ -126,6 +126,14 @@ export {
   ListSummarySchema,
   MediaTraySchema,
   ImagePickerSchema,
+  // V1 Phase 1 Step 6 — Date components
+  CalendarSchema,
+  HeatmapSchema,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  GallerySchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
   // Actions tier
   ButtonSchema,
   FabSchema,
@@ -169,6 +177,14 @@ export type {
   ListSummary,
   MediaTray,
   ImagePicker,
+  // V1 Phase 1 Step 6 — Date components
+  Calendar,
+  Heatmap,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  Gallery,
+  CommerceCard,
+  BeforeAfter,
+  DocumentPicker,
   Button,
   Fab,
   Slot,

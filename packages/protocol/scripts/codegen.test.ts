@@ -167,7 +167,7 @@ describe('T-0005-183: generated/docs.md has ≥60 sections', () => {
 // section (## ComponentName) must exist AND have at least one non-empty body
 // paragraph. Guards the silent-empty-doc failure mode.
 // ---------------------------------------------------------------------------
-describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 49 components (V1 Phase 1 Step 6)', () => {
+describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 53 components (V1 Phase 1 Step 7)', () => {
   const COMPONENT_NAMES = [
     // Layout tier (5 → 6 with Divider)
     'Screen', 'Section', 'Stack', 'Row', 'Card',
@@ -187,7 +187,7 @@ describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 
     'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
     // V1 Phase 1 Step 4 — Lists & Data tier expansion
     'GridList', 'Carousel', 'Timeline', 'ErrorState',
-    // Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5 → 11 with V1 Phase 1 Step 6)
+    // Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5 → 11 with V1 Phase 1 Step 6 → 15 with V1 Phase 1 Step 7)
     'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker',
     // V1 Phase 1 Step 1 — compound addition
     'Image',
@@ -195,6 +195,8 @@ describe('T-0005-183a (F-07): gen-docs.ts emits non-empty paragraph for each of 
     'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
     // V1 Phase 1 Step 6 — Date components
     'Calendar', 'Heatmap',
+    // V1 Phase 1 Step 7 — Content/Media expansion
+    'Gallery', 'CommerceCard', 'BeforeAfter', 'DocumentPicker',
     // Actions tier (2 → 3 with IconButton)
     'Button', 'Fab',
     // V1 Phase 1 Step 1 — actions addition
@@ -529,8 +531,8 @@ describe('T-0005-187b (F-13): action verb union has exactly 12 members', () => {
 // Additive cardinality tripwires (following Step 1 precedent)
 // ---------------------------------------------------------------------------
 
-describe('Additive: 49 component schemas present in NodeSchema union (V1 Phase 1 Step 6)', () => {
-  it('NodeSchema anyOf union in json-schema.json has exactly 49 members (all component types)', () => {
+describe('Additive: 53 component schemas present in NodeSchema union (V1 Phase 1 Step 7)', () => {
+  it('NodeSchema anyOf union in json-schema.json has exactly 53 members (all component types)', () => {
     const schema = JSON.parse(fs.readFileSync(JSON_SCHEMA_PATH, 'utf8')) as unknown
 
     const COMPONENT_NAMES = new Set([
@@ -554,6 +556,8 @@ describe('Additive: 49 component schemas present in NodeSchema union (V1 Phase 1
       'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
       // V1 Phase 1 Step 6 — Date components
       'Calendar', 'Heatmap',
+      // V1 Phase 1 Step 7 — Content/Media expansion
+      'Gallery', 'CommerceCard', 'BeforeAfter', 'DocumentPicker',
       'Button', 'FAB',
       // V1 Phase 1 Step 1 — actions tier addition
       'IconButton',
@@ -592,14 +596,14 @@ describe('Additive: 49 component schemas present in NodeSchema union (V1 Phase 1
     }
 
     const unions = findComponentUnion(schema)
-    // The top-level NodeSchema union should have 47 members (28 V0 + 3 V1P1S1 + 2 V1P1S3 + 6 V1P1S2 + 4 V1P1S4 + 4 V1P1S5)
-    const fullUnions = unions.filter(u => u.length === 49)
+    // The top-level NodeSchema union should have 53 members (28 V0 + 3 V1P1S1 + 2 V1P1S3 + 6 V1P1S2 + 4 V1P1S4 + 4 V1P1S5 + 2 V1P1S6 + 4 V1P1S7)
+    const fullUnions = unions.filter(u => u.length === 53)
     expect(fullUnions.length).toBeGreaterThanOrEqual(1)
   })
 })
 
-describe('Additive: docs.md section count — exactly 82 named sections (V1 Phase 1 Step 6)', () => {
-  it('docs.md has exactly 82 named ## sections (13 token + 49 component + 12 verb + 5 binding + 3 top-level)', () => {
+describe('Additive: docs.md section count — exactly 86 named sections (V1 Phase 1 Step 7)', () => {
+  it('docs.md has exactly 86 named ## sections (13 token + 53 component + 12 verb + 5 binding + 3 top-level)', () => {
     const content = fs.readFileSync(DOCS_PATH, 'utf8')
     // Named sections are ## headers that are NOT group headers
     const GROUP_HEADERS = new Set([
@@ -612,6 +616,6 @@ describe('Additive: docs.md section count — exactly 82 named sections (V1 Phas
     ])
     const allHeaders = content.split('\n').filter(l => l.startsWith('## ')).map(l => l.slice(3).trim())
     const namedHeaders = allHeaders.filter(h => !GROUP_HEADERS.has(h))
-    expect(namedHeaders.length).toBe(82)
+    expect(namedHeaders.length).toBe(86)
   })
 })

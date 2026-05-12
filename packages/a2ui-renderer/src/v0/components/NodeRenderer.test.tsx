@@ -2,11 +2,12 @@
  * NodeRenderer tests
  * T-0006-062: NodeRenderer discriminates 5 layout types correctly
  *             (extended to 12 in Step 5, 17 in Step 6, 22 in Step 7, 26 in Step 8,
- *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4, 47 in V1P1S5, 49 in V1P1S6)
+ *             33 in V1P1S1+S3, 39 in V1P1S2, 43 in V1P1S4, 47 in V1P1S5, 49 in V1P1S6, 53 in V1P1S7)
  * T-0006-063: NodeRenderer with unknown type calls host.onUnknownNodeType + renders null
  * T-0009-109: NodeRenderer 43-arm boundary test
  * T-0009-133: NodeRenderer 47-arm boundary test
  * T-0009-154: NodeRenderer 49-arm boundary test
+ * T-0009-185: NodeRenderer 53-arm boundary test (V1 Phase 1 Step 7)
  */
 import React from 'react'
 import {render} from '@testing-library/react-native'
@@ -76,7 +77,7 @@ const MINIMAL_SPEC: Spec = {
       syncMode: 'local' as const,
     },
   ],
-  initialState: {textSlot: '', numSlot: 0, boolSlot: false, dateSlot: '2026-01-01', strSlot: '', photoSlot: ''},
+  initialState: {textSlot: '', numSlot: 0, boolSlot: false, dateSlot: '2026-01-01', strSlot: '', photoSlot: '', docSlot: ''},
 }
 
 const MINIMAL_STATE = buildInitialRendererState(MINIMAL_SPEC)
@@ -458,6 +459,41 @@ const HEATMAP: Extract<Node, {type: 'Heatmap'}> = {
 }
 
 // ---------------------------------------------------------------------------
+// Minimal node fixtures — V1 Phase 1 Step 7 (Gallery, CommerceCard, BeforeAfter, DocumentPicker)
+// ---------------------------------------------------------------------------
+
+const GALLERY: Extract<Node, {type: 'Gallery'}> = {
+  id: 'gal1',
+  type: 'Gallery',
+  images: [{kind: 'literal', value: 'https://example.com/photo.jpg'}],
+}
+
+const COMMERCE_CARD: Extract<Node, {type: 'CommerceCard'}> = {
+  id: 'cc1',
+  type: 'CommerceCard',
+  title: 'Widget',
+  image: {kind: 'literal', value: 'https://example.com/widget.jpg'},
+  price: {kind: 'literal', value: 1999},
+  currency: 'USD',
+  ctaLabel: 'Add',
+}
+
+const BEFORE_AFTER: Extract<Node, {type: 'BeforeAfter'}> = {
+  id: 'ba1',
+  type: 'BeforeAfter',
+  before: {kind: 'literal', value: 'https://example.com/before.jpg'},
+  after: {kind: 'literal', value: 'https://example.com/after.jpg'},
+}
+
+const DOCUMENT_PICKER: Extract<Node, {type: 'DocumentPicker'}> = {
+  id: 'dp1',
+  type: 'DocumentPicker',
+  label: 'Attach',
+  valueBinding: {kind: 'state', slot: 'docSlot'},
+  acceptedTypes: ['any'],
+}
+
+// ---------------------------------------------------------------------------
 // Minimal node fixtures — V1 Phase 1 Step 4 (GridList, Carousel, Timeline, ErrorState)
 // ---------------------------------------------------------------------------
 
@@ -487,13 +523,14 @@ const ERROR_STATE: Extract<Node, {type: 'ErrorState'}> = {
 }
 
 // ---------------------------------------------------------------------------
-// T-0006-062 (extended V1 Phase 1 Step 6): NodeRenderer discriminates 49 types correctly
+// T-0006-062 (extended V1 Phase 1 Step 7): NodeRenderer discriminates 53 types correctly
 // T-0009-109: 43-arm boundary test (retained for regression)
 // T-0009-133: 47-arm boundary test (retained for regression)
-// T-0009-154: 49-arm boundary test
+// T-0009-154: 49-arm boundary test (retained for regression)
+// T-0009-185: 53-arm boundary test
 // ---------------------------------------------------------------------------
 
-describe('NodeRenderer discrimination (T-0006-062 — Step 6 extended to 49 arms, T-0009-109, T-0009-133, T-0009-154)', () => {
+describe('NodeRenderer discrimination (T-0006-062 — Step 7 extended to 53 arms, T-0009-109, T-0009-133, T-0009-154, T-0009-185)', () => {
   // Suppress console.warn for List/MediaTray/ConditionalSection with
   // unknown or empty collectionId variations.
   beforeEach(() => {
@@ -559,6 +596,11 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 6 extended to 49 arms
     // Date components tier — V1 Phase 1 Step 6 (2)
     ['Calendar', CALENDAR],
     ['Heatmap', HEATMAP],
+    // Content/Media tier — V1 Phase 1 Step 7 (4)
+    ['Gallery', GALLERY],
+    ['CommerceCard', COMMERCE_CARD],
+    ['BeforeAfter', BEFORE_AFTER],
+    ['DocumentPicker', DOCUMENT_PICKER],
     // Actions tier (3)
     ['Button', BUTTON],
     ['FAB', FAB],
@@ -579,8 +621,9 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 6 extended to 49 arms
 
   // T-0009-109: 43-arm boundary test (retained for regression — now superseded by T-0009-133)
   // T-0009-133: 47-arm boundary test (retained for regression — now superseded by T-0009-154)
-  // T-0009-154: 49-arm boundary test — all arms present, none call onUnknownNodeType
-  it('T-0009-109 / T-0009-133 / T-0009-154: does not call onUnknownNodeType for any of the 49 node types', () => {
+  // T-0009-154: 49-arm boundary test (retained for regression — now superseded by T-0009-185)
+  // T-0009-185: 53-arm boundary test — all arms present, none call onUnknownNodeType
+  it('T-0009-109 / T-0009-133 / T-0009-154 / T-0009-185: does not call onUnknownNodeType for any of the 53 node types', () => {
     const host = makeHostCallbacks()
     const allNodes: Node[] = [
       // Layout (6)
@@ -599,11 +642,13 @@ describe('NodeRenderer discrimination (T-0006-062 — Step 6 extended to 49 arms
       CONDITIONAL_SECTION, LIST_SUMMARY, MEDIA_TRAY, IMAGE_PICKER, IMAGE,
       TRANSACTION_ROW, RECEIPT, METRIC_TILE, STEP_LIST,
       CALENDAR, HEATMAP,
+      // Content/Media — V1 Phase 1 Step 7 (4)
+      GALLERY, COMMERCE_CARD, BEFORE_AFTER, DOCUMENT_PICKER,
       // Actions (3)
       BUTTON, FAB, ICON_BUTTON,
     ]
-    // Total: 6 + 3 + 6 + 11 + 9 + 11 + 3 = 49
-    expect(allNodes.length).toBe(49)
+    // Total: 6 + 3 + 6 + 11 + 9 + 11 + 4 + 3 = 53
+    expect(allNodes.length).toBe(53)
 
     for (const node of allNodes) {
       renderNode(node, host)

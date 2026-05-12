@@ -24,6 +24,8 @@
  *         = 47 arms total.
  * V1 Phase 1 Step 6: +2 compound (Calendar, Heatmap)
  *         = 49 arms total.
+ * V1 Phase 1 Step 7: +4 content/media (Gallery, CommerceCard, BeforeAfter, DocumentPicker)
+ *         = 53 arms total.
  *
  * Defense-in-depth: the schema should prevent unknown types from reaching here
  * via validateCrossRefs(). The default branch calls host.onUnknownNodeType()
@@ -85,6 +87,11 @@ import {StepListRenderer} from './compound/StepList.js'
 // V1 Phase 1 Step 6 — Date components
 import {CalendarRenderer} from './compound/Calendar.js'
 import {HeatmapRenderer} from './compound/Heatmap.js'
+// V1 Phase 1 Step 7 — Content/Media expansion
+import {GalleryRenderer} from './compound/Gallery.js'
+import {CommerceCardRenderer} from './compound/CommerceCard.js'
+import {BeforeAfterRenderer} from './compound/BeforeAfter.js'
+import {DocumentPickerRenderer} from './compound/DocumentPicker.js'
 import {ButtonRenderer} from './actions/Button.js'
 import {FABRenderer} from './actions/FAB.js'
 import {IconButtonRenderer} from './actions/IconButton.js'
@@ -206,6 +213,15 @@ export function NodeRenderer({node}: {node: Node}) {
       return <CalendarRenderer node={node} />
     case 'Heatmap':
       return <HeatmapRenderer node={node} />
+    // Content/Media tier — V1 Phase 1 Step 7
+    case 'Gallery':
+      return <GalleryRenderer node={node} />
+    case 'CommerceCard':
+      return <CommerceCardRenderer node={node} />
+    case 'BeforeAfter':
+      return <BeforeAfterRenderer node={node} />
+    case 'DocumentPicker':
+      return <DocumentPickerRenderer node={node} />
     default: {
       // Defense-in-depth: schema validation upstream should have caught this.
       // Calling host.onUnknownNodeType makes the violation observable to the host

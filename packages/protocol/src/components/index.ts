@@ -58,7 +58,7 @@ export {
 } from './lists.js'
 export type {List, ListItem, SwipeableRow, EmptyState, LoadingState, GridList, Carousel, Timeline, ErrorState} from './lists.js'
 
-// Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5 → 11 with V1 Phase 1 Step 6)
+// Compound tier (4 → 5 with Image → 9 with V1 Phase 1 Step 5 → 11 with V1 Phase 1 Step 6 → 15 with Step 7)
 export {
   ConditionalSectionSchema,
   ListSummarySchema,
@@ -75,6 +75,13 @@ export {
   CalendarBaseSchema,
   CalendarSchema,
   HeatmapSchema,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  // Note: GalleryBaseSchema used in NodeSchema discriminated union (superRefine → ZodEffects)
+  GalleryBaseSchema,
+  GallerySchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
 } from './compound.js'
 export type {
   ConditionalSection,
@@ -92,6 +99,11 @@ export type {
   // V1 Phase 1 Step 6
   Calendar,
   Heatmap,
+  // V1 Phase 1 Step 7
+  Gallery,
+  CommerceCard,
+  BeforeAfter,
+  DocumentPicker,
 } from './compound.js'
 
 // Actions tier (2 → 3 with IconButton)
@@ -157,10 +169,16 @@ import {
   CalendarBaseSchema,
   CalendarSchema,
   HeatmapSchema,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  GalleryBaseSchema,
+  GallerySchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
 } from './compound.js'
 import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 
-// All 49 component schemas in one array — used by the Step 5 discriminated union.
+// All 53 component schemas in one array — used by the Step 5 discriminated union.
 // Step 5 passes this to z.discriminatedUnion('type', ALL_COMPONENT_SCHEMAS).
 // V1 Phase 1 Step 1 adds: DividerSchema, ImageSchema, IconButtonSchema (→33).
 // V1 Phase 1 Step 3 adds: AvatarGroupSchema, CalloutSchema (→35).
@@ -168,6 +186,7 @@ import {ButtonSchema, FabSchema, IconButtonSchema} from './actions.js'
 // V1 Phase 1 Step 4 adds: GridList, Carousel, Timeline, ErrorState (→43).
 // V1 Phase 1 Step 5 adds: TransactionRow, Receipt, MetricTile, StepList (→47).
 // V1 Phase 1 Step 6 adds: Calendar, Heatmap (→49).
+// V1 Phase 1 Step 7 adds: Gallery, CommerceCard, BeforeAfter, DocumentPicker (→53).
 export const ALL_COMPONENT_SCHEMAS = [
   ScreenSchema,
   SectionSchema,
@@ -226,9 +245,16 @@ export const ALL_COMPONENT_SCHEMAS = [
   // requires ZodObject; CalendarSchema's superRefine returns ZodEffects (incompatible).
   CalendarBaseSchema,
   HeatmapSchema,
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  // Note: GalleryBaseSchema used here (not GallerySchema) because z.discriminatedUnion
+  // requires ZodObject; GallerySchema's superRefine returns ZodEffects (incompatible).
+  GalleryBaseSchema,
+  CommerceCardSchema,
+  BeforeAfterSchema,
+  DocumentPickerSchema,
 ] as const
 
-// ComponentNode — union type of all 39 component inferred types.
+// ComponentNode — union type of all 53 component inferred types.
 // Recursive children are typed as ComponentNode[] (z.lazy() in Step 5 resolves this).
 export type ComponentNode =
   | z.infer<typeof ScreenSchema>
@@ -284,3 +310,8 @@ export type ComponentNode =
   // V1 Phase 1 Step 6 — Date components
   | z.infer<typeof CalendarSchema>
   | z.infer<typeof HeatmapSchema>
+  // V1 Phase 1 Step 7 — Content/Media expansion
+  | z.infer<typeof GallerySchema>
+  | z.infer<typeof CommerceCardSchema>
+  | z.infer<typeof BeforeAfterSchema>
+  | z.infer<typeof DocumentPickerSchema>

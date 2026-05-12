@@ -86,6 +86,16 @@ const TIMELINE_SHORT: TimelineNode = {
 // ---------------------------------------------------------------------------
 
 describe('TimelineRenderer snapshot (T-0009-107) — productive×focus', () => {
+  // Pin system time so relative-date strings are stable across CI runs.
+  // Same anchor as Heatmap/Calendar (Step 6) for catalog-wide consistency.
+  beforeEach(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2026-01-15T12:00:00Z'))
+  })
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
   it('matches snapshot at productive×focus', () => {
     const spec = makeSpec()
     const rendererState = buildInitialRendererState(spec)
@@ -102,6 +112,16 @@ describe('TimelineRenderer snapshot (T-0009-107) — productive×focus', () => {
 // ---------------------------------------------------------------------------
 
 describe('TimelineRenderer snapshot (T-0009-107) — expressive×health', () => {
+  // Pin system time so relative-date strings are stable across CI runs.
+  // Same anchor as Heatmap/Calendar (Step 6) for catalog-wide consistency.
+  beforeEach(() => {
+    jest.useFakeTimers()
+    jest.setSystemTime(new Date('2026-01-15T12:00:00Z'))
+  })
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
   it('matches snapshot at expressive×health', () => {
     const spec = makeSpec()
     const rendererState = buildInitialRendererState(spec)
