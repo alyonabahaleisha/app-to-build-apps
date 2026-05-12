@@ -184,7 +184,6 @@ function renderGenerating(opts: HarnessOptions = {}) {
                 <Stack.Screen name="Create" component={StubScreen} />
                 <Stack.Screen name="Library" component={StubScreen} />
                 <Stack.Screen name="SignIn" component={StubScreen} />
-                <Stack.Screen name="AppRunner" component={StubScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </ToastProvider>

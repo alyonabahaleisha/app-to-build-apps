@@ -8,8 +8,8 @@
  * `linkExpired` so the SignIn screen renders its "That link expired" banner.
  *
  * ADR-0011 Step 9: CreateScreen, GeneratingScreen, OutOfScopeScreen, and
- * QuotaExhaustedScreen wired. ChatScreen deleted. AppRunnerScreen kept
- * until Step 11 finalizes the full V0 navigator shape.
+ * QuotaExhaustedScreen wired. ChatScreen deleted.
+ * ADR-0011 Step 10: RunScreen replaces AppRunnerScreen. AppRunnerScreen deleted.
  *
  * Step 11 will finalize this to the full V0 shape:
  *   SignInScreen ↔ ShellLayout (LibraryStack + CreateStack).
@@ -24,12 +24,12 @@ import {ActivityIndicator, StyleSheet, Text, View} from 'react-native'
 
 import {SafeContainer} from '#/components/SafeContainer'
 import {useAuthDeepLink} from '#/lib/deepLink'
-import {AppRunnerScreen} from '#/screens/AppRunner'
 import {CreateScreen} from '#/screens/Create/CreateScreen'
 import {GeneratingScreen} from '#/screens/Generating/GeneratingScreen'
 import {LibraryScreen} from '#/screens/Library/LibraryScreen'
 import {OutOfScopeScreen} from '#/screens/OutOfScope/OutOfScopeScreen'
 import {QuotaExhaustedScreen} from '#/screens/QuotaExhausted/QuotaExhaustedScreen'
+import {RunScreen} from '#/screens/Run/RunScreen'
 import {SignInScreen as SignIn} from '#/screens/SignIn/SignInScreen'
 import {signInCopy} from '#/screens/SignIn/copy'
 import {useSession} from '#/state/session/useSession'
@@ -77,9 +77,8 @@ export function Navigation() {
             />
             <Stack.Screen name="OutOfScope" component={OutOfScopeScreen} />
             <Stack.Screen name="QuotaExhausted" component={QuotaExhaustedScreen} />
-            {/* Run screen — Step 10 will replace AppRunner with RunScreen */}
-            {/* AppRunner kept until Step 11 deletion */}
-            <Stack.Screen name="AppRunner" component={AppRunnerScreen} />
+            {/* Run screen — replaces M1 AppRunner (ADR-0011 Step 10) */}
+            <Stack.Screen name="Run" component={RunScreen} />
           </>
         ) : (
           <Stack.Screen name="SignIn">

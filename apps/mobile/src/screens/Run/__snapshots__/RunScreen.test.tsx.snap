@@ -1,0 +1,3574 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshots T-0011-278: RunHeader default: RunHeader default 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+              testID="run-screen-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderBottomWidth": 0.5,
+                      "flexDirection": "row",
+                      "height": 44,
+                      "paddingHorizontal": 8,
+                    },
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "#ECEEF1",
+                    },
+                  ]
+                }
+                testID="run-header"
+              >
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-back"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    &lt;
+                  </Text>
+                </View>
+                <Text
+                  accessibilityRole="header"
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "flex": 1,
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#14171A",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                  testID="run-header-title"
+                >
+                  My Workout Tracker
+                </Text>
+                <View
+                  accessibilityHint="Opens share, edit, archive, delete."
+                  accessibilityLabel="Tool options"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onLayout={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-meatball"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    •••
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="run-renderer-container"
+              >
+                <View
+                  testID="v0-renderer-sentinel"
+                >
+                  <Text>
+                    renderer
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 16,
+                }
+              }
+              testID="meatball-sheet-content"
+            >
+              <View
+                accessibilityLabel="Share"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-share"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Share
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Copy link"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-copy-link"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Copy link
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Make changes"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-make-changes"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Make changes
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Rename"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-rename"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Rename
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Archive"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-archive"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Archive
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Delete"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-delete"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#EF4444",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Delete
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "gap": 12,
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 20,
+                }
+              }
+              testID="rename-sheet-content"
+            >
+              <Text
+                accessibilityRole="header"
+                style={
+                  [
+                    {
+                      "marginBottom": 4,
+                    },
+                    {
+                      "color": "#14171A",
+                      "fontSize": 18,
+                      "fontWeight": "600",
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                Rename
+              </Text>
+              <TextInput
+                maxLength={81}
+                onChangeText={[Function]}
+                onSubmitEditing={[Function]}
+                placeholder="Tool name"
+                placeholderTextColor="#5C6470"
+                returnKeyType="done"
+                style={
+                  [
+                    {
+                      "borderRadius": 10,
+                      "borderWidth": 0.5,
+                      "paddingHorizontal": 14,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#FAFAF7",
+                      "borderColor": "#ECEEF1",
+                      "color": "#14171A",
+                      "fontSize": 16,
+                    },
+                  ]
+                }
+                testID="rename-input"
+                value=""
+              />
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                    "gap": 12,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                <View
+                  accessibilityLabel="Cancel"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "borderColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                  testID="rename-cancel"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#5C6470",
+                        "fontSize": 16,
+                      }
+                    }
+                  >
+                    Cancel
+                  </Text>
+                </View>
+                <View
+                  accessibilityLabel="Save"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": true,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "backgroundColor": "#4F46E5",
+                        "opacity": 0.5,
+                      },
+                    ]
+                  }
+                  testID="rename-save"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                      }
+                    }
+                  >
+                    Save
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Run"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`Snapshots T-0011-279: MeatballMenu action sheet: MeatballMenu 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+              testID="run-screen-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderBottomWidth": 0.5,
+                      "flexDirection": "row",
+                      "height": 44,
+                      "paddingHorizontal": 8,
+                    },
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "#ECEEF1",
+                    },
+                  ]
+                }
+                testID="run-header"
+              >
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-back"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    &lt;
+                  </Text>
+                </View>
+                <Text
+                  accessibilityRole="header"
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "flex": 1,
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#14171A",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                  testID="run-header-title"
+                >
+                  My Workout Tracker
+                </Text>
+                <View
+                  accessibilityHint="Opens share, edit, archive, delete."
+                  accessibilityLabel="Tool options"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onLayout={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-meatball"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    •••
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="run-renderer-container"
+              >
+                <View
+                  testID="v0-renderer-sentinel"
+                >
+                  <Text>
+                    renderer
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 16,
+                }
+              }
+              testID="meatball-sheet-content"
+            >
+              <View
+                accessibilityLabel="Share"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-share"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Share
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Copy link"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-copy-link"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Copy link
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Make changes"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-make-changes"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Make changes
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Rename"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-rename"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Rename
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Archive"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-archive"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Archive
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Delete"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-delete"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#EF4444",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Delete
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "gap": 12,
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 20,
+                }
+              }
+              testID="rename-sheet-content"
+            >
+              <Text
+                accessibilityRole="header"
+                style={
+                  [
+                    {
+                      "marginBottom": 4,
+                    },
+                    {
+                      "color": "#14171A",
+                      "fontSize": 18,
+                      "fontWeight": "600",
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                Rename
+              </Text>
+              <TextInput
+                maxLength={81}
+                onChangeText={[Function]}
+                onSubmitEditing={[Function]}
+                placeholder="Tool name"
+                placeholderTextColor="#5C6470"
+                returnKeyType="done"
+                style={
+                  [
+                    {
+                      "borderRadius": 10,
+                      "borderWidth": 0.5,
+                      "paddingHorizontal": 14,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#FAFAF7",
+                      "borderColor": "#ECEEF1",
+                      "color": "#14171A",
+                      "fontSize": 16,
+                    },
+                  ]
+                }
+                testID="rename-input"
+                value=""
+              />
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                    "gap": 12,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                <View
+                  accessibilityLabel="Cancel"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "borderColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                  testID="rename-cancel"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#5C6470",
+                        "fontSize": 16,
+                      }
+                    }
+                  >
+                    Cancel
+                  </Text>
+                </View>
+                <View
+                  accessibilityLabel="Save"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": true,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "backgroundColor": "#4F46E5",
+                        "opacity": 0.5,
+                      },
+                    ]
+                  }
+                  testID="rename-save"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                      }
+                    }
+                  >
+                    Save
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Run"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`Snapshots T-0011-280: RenameSheet: RenameSheet 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+              testID="run-screen-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderBottomWidth": 0.5,
+                      "flexDirection": "row",
+                      "height": 44,
+                      "paddingHorizontal": 8,
+                    },
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "#ECEEF1",
+                    },
+                  ]
+                }
+                testID="run-header"
+              >
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-back"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    &lt;
+                  </Text>
+                </View>
+                <Text
+                  accessibilityRole="header"
+                  numberOfLines={1}
+                  style={
+                    [
+                      {
+                        "flex": 1,
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#14171A",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                  testID="run-header-title"
+                >
+                  My Workout Tracker
+                </Text>
+                <View
+                  accessibilityHint="Opens share, edit, archive, delete."
+                  accessibilityLabel="Tool options"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onLayout={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-meatball"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    •••
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "flex": 1,
+                  }
+                }
+                testID="run-renderer-container"
+              >
+                <View
+                  testID="v0-renderer-sentinel"
+                >
+                  <Text>
+                    renderer
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 16,
+                }
+              }
+              testID="meatball-sheet-content"
+            >
+              <View
+                accessibilityLabel="Share"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-share"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Share
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Copy link"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-copy-link"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Copy link
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Make changes"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-make-changes"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Make changes
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Rename"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-rename"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Rename
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Archive"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-archive"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#14171A",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Archive
+                </Text>
+              </View>
+              <View
+                accessibilityLabel="Delete"
+                accessibilityRole="button"
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  [
+                    {
+                      "borderRadius": 8,
+                      "paddingVertical": 14,
+                    },
+                    false,
+                  ]
+                }
+                testID="meatball-delete"
+              >
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "left",
+                      },
+                      {
+                        "color": "#EF4444",
+                      },
+                      {
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                >
+                  Delete
+                </Text>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "gap": 12,
+                  "paddingBottom": 24,
+                  "paddingHorizontal": 20,
+                }
+              }
+              testID="rename-sheet-content"
+            >
+              <Text
+                accessibilityRole="header"
+                style={
+                  [
+                    {
+                      "marginBottom": 4,
+                    },
+                    {
+                      "color": "#14171A",
+                      "fontSize": 18,
+                      "fontWeight": "600",
+                      "lineHeight": 24,
+                    },
+                  ]
+                }
+              >
+                Rename
+              </Text>
+              <TextInput
+                maxLength={81}
+                onChangeText={[Function]}
+                onSubmitEditing={[Function]}
+                placeholder="Tool name"
+                placeholderTextColor="#5C6470"
+                returnKeyType="done"
+                style={
+                  [
+                    {
+                      "borderRadius": 10,
+                      "borderWidth": 0.5,
+                      "paddingHorizontal": 14,
+                      "paddingVertical": 12,
+                    },
+                    {
+                      "backgroundColor": "#FAFAF7",
+                      "borderColor": "#ECEEF1",
+                      "color": "#14171A",
+                      "fontSize": 16,
+                    },
+                  ]
+                }
+                testID="rename-input"
+                value="My Workout Tracker"
+              />
+              <View
+                style={
+                  {
+                    "flexDirection": "row",
+                    "gap": 12,
+                    "marginTop": 4,
+                  }
+                }
+              >
+                <View
+                  accessibilityLabel="Cancel"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "borderColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                  testID="rename-cancel"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#5C6470",
+                        "fontSize": 16,
+                      }
+                    }
+                  >
+                    Cancel
+                  </Text>
+                </View>
+                <View
+                  accessibilityLabel="Save"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": false,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "flex": 1,
+                        "justifyContent": "center",
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "backgroundColor": "#4F46E5",
+                        "opacity": 1,
+                      },
+                    ]
+                  }
+                  testID="rename-save"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#FFFFFF",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                      }
+                    }
+                  >
+                    Save
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Run"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`Snapshots T-0011-281: RunHeader loading: RunHeader loading 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+              testID="run-screen-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderBottomWidth": 0.5,
+                      "flexDirection": "row",
+                      "height": 44,
+                      "paddingHorizontal": 8,
+                    },
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "#ECEEF1",
+                    },
+                  ]
+                }
+                testID="run-header-loading"
+              >
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-back"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    &lt;
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "borderRadius": 8,
+                      "flex": 1,
+                      "height": 16,
+                      "marginHorizontal": 16,
+                    }
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "height": 44,
+                        "justifyContent": "center",
+                        "width": 44,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                />
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flex": 1,
+                    "justifyContent": "center",
+                  }
+                }
+                testID="run-loading"
+              >
+                <ActivityIndicator
+                  color="#4F46E5"
+                  size="large"
+                />
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Run"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;
+
+exports[`Snapshots T-0011-282: RunFailedBanner: RunFailedBanner 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    [
+      {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <RNSScreenStack
+      style={
+        {
+          "flex": 1,
+        }
+      }
+    >
+      <RNSScreen
+        activityState={2}
+        aria-hidden={false}
+        collapsable={false}
+        fullScreenSwipeShadowEnabled={true}
+        gestureResponseDistance={
+          {
+            "bottom": -1,
+            "end": -1,
+            "start": -1,
+            "top": -1,
+          }
+        }
+        hasLargeHeader={false}
+        nativeBackButtonDismissalEnabled={false}
+        onAppear={[Function]}
+        onDisappear={[Function]}
+        onDismissed={[Function]}
+        onGestureCancel={[Function]}
+        onHeaderBackButtonClicked={[Function]}
+        onHeaderHeightChange={[Function]}
+        onNativeDismissCancelled={[Function]}
+        onSheetDetentChanged={[Function]}
+        onTransitionProgress={[Function]}
+        onWillAppear={[Function]}
+        onWillDisappear={[Function]}
+        replaceAnimation="push"
+        scrollEdgeEffects={
+          {
+            "bottom": "automatic",
+            "left": "automatic",
+            "right": "automatic",
+            "top": "automatic",
+          }
+        }
+        sheetAllowedDetents={
+          [
+            1,
+          ]
+        }
+        sheetCornerRadius={-1}
+        sheetDefaultResizeAnimationEnabled={true}
+        sheetElevation={24}
+        sheetExpandsWhenScrolledToEdge={true}
+        sheetGrabberVisible={false}
+        sheetInitialDetent={0}
+        sheetInitialDetentIndex={0}
+        sheetLargestUndimmedDetent={-1}
+        sheetLargestUndimmedDetentIndex={-1}
+        sheetShouldOverflowTopInset={false}
+        shouldFreeze={false}
+        stackPresentation="push"
+        style={
+          {
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "zIndex": undefined,
+          }
+        }
+        swipeDirection="horizontal"
+      >
+        <RNSScreenContentWrapper
+          collapsable={false}
+          style={
+            [
+              {
+                "flex": 1,
+              },
+              [
+                {
+                  "backgroundColor": "rgb(242, 242, 242)",
+                },
+                undefined,
+              ],
+            ]
+          }
+        >
+          <View
+            style={
+              [
+                {
+                  "backgroundColor": "#FAFAF7",
+                  "flex": 1,
+                  "paddingBottom": 0,
+                  "paddingLeft": 0,
+                  "paddingRight": 0,
+                  "paddingTop": 0,
+                },
+                undefined,
+              ]
+            }
+          >
+            <View
+              style={
+                {
+                  "flex": 1,
+                }
+              }
+              testID="run-screen-root"
+            >
+              <View
+                style={
+                  [
+                    {
+                      "alignItems": "center",
+                      "borderBottomWidth": 0.5,
+                      "flexDirection": "row",
+                      "height": 44,
+                      "paddingHorizontal": 8,
+                    },
+                    {
+                      "backgroundColor": "#FFFFFF",
+                      "borderBottomColor": "#ECEEF1",
+                    },
+                  ]
+                }
+                testID="run-header-loading"
+              >
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 20,
+                      "left": 20,
+                      "right": 20,
+                      "top": 20,
+                    }
+                  }
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "height": 44,
+                      "justifyContent": "center",
+                      "width": 44,
+                    }
+                  }
+                  testID="run-header-back"
+                >
+                  <Text
+                    style={
+                      [
+                        {
+                          "fontSize": 18,
+                          "fontWeight": "600",
+                        },
+                        {
+                          "color": "#14171A",
+                        },
+                      ]
+                    }
+                  >
+                    &lt;
+                  </Text>
+                </View>
+                <View
+                  style={
+                    {
+                      "borderRadius": 8,
+                      "flex": 1,
+                      "height": 16,
+                      "marginHorizontal": 16,
+                    }
+                  }
+                />
+                <View
+                  style={
+                    [
+                      {
+                        "alignItems": "center",
+                        "height": 44,
+                        "justifyContent": "center",
+                        "width": 44,
+                      },
+                      {
+                        "opacity": 0,
+                      },
+                    ]
+                  }
+                />
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flex": 1,
+                    "gap": 12,
+                    "justifyContent": "center",
+                    "padding": 24,
+                  }
+                }
+                testID="run-failed-banner"
+              >
+                <Text
+                  accessibilityElementsHidden={true}
+                  style={
+                    {
+                      "fontSize": 48,
+                      "marginBottom": 8,
+                    }
+                  }
+                >
+                  ⚠
+                </Text>
+                <Text
+                  accessibilityRole="header"
+                  style={
+                    [
+                      {
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#14171A",
+                        "fontSize": 24,
+                        "fontWeight": "600",
+                        "lineHeight": 30,
+                      },
+                    ]
+                  }
+                  testID="run-failed-headline"
+                >
+                  This tool didn't render.
+                </Text>
+                <Text
+                  style={
+                    [
+                      {
+                        "textAlign": "center",
+                      },
+                      {
+                        "color": "#5C6470",
+                        "fontSize": 16,
+                        "fontWeight": "400",
+                        "lineHeight": 24,
+                      },
+                    ]
+                  }
+                  testID="run-failed-body"
+                >
+                  Something went wrong. Try recreating it.
+                </Text>
+                <View
+                  accessibilityLabel="Back to Library"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    [
+                      {
+                        "borderRadius": 10,
+                        "borderWidth": 0.5,
+                        "marginTop": 8,
+                        "paddingHorizontal": 24,
+                        "paddingVertical": 12,
+                      },
+                      {
+                        "borderColor": "#ECEEF1",
+                      },
+                    ]
+                  }
+                  testID="run-failed-back"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#14171A",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                      }
+                    }
+                  >
+                    Back to Library
+                  </Text>
+                </View>
+                <View
+                  accessibilityLabel="Recreate"
+                  accessibilityRole="button"
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "paddingHorizontal": 16,
+                      "paddingVertical": 10,
+                    }
+                  }
+                  testID="run-failed-recreate"
+                >
+                  <Text
+                    style={
+                      {
+                        "color": "#4F46E5",
+                        "fontSize": 16,
+                        "fontWeight": "600",
+                      }
+                    }
+                  >
+                    Recreate
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </RNSScreenContentWrapper>
+        <RNSScreenStackHeaderConfig
+          backButtonInCustomView={false}
+          backTitleFontFamily="System"
+          backTitleVisible={true}
+          backgroundColor="rgb(255, 255, 255)"
+          color="rgb(0, 122, 255)"
+          direction="ltr"
+          disableBackButtonMenu={false}
+          experimental_userInterfaceStyle="light"
+          hidden={true}
+          hideBackButton={false}
+          largeTitleFontFamily="System"
+          largeTitleFontWeight="700"
+          largeTitleHideShadow={false}
+          pointerEvents="box-none"
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "justifyContent": "space-between",
+              "position": "absolute",
+              "top": "-100%",
+              "width": "100%",
+            }
+          }
+          title="Run"
+          titleColor="rgb(28, 28, 30)"
+          titleFontFamily="System"
+          titleFontWeight="600"
+          topInsetEnabled={false}
+          translucent={false}
+        />
+      </RNSScreen>
+    </RNSScreenStack>
+  </View>
+</RNCSafeAreaProvider>
+`;

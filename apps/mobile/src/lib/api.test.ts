@@ -94,6 +94,12 @@ describe('expo-secure-store import boundary', () => {
       'state/persisted/secure.ts',
       // Tests are allowed to `jest.mock(...)` the package.
       'state/session/SessionProvider.test.tsx',
+      // Coachmark dismissal state is stored in the iOS keychain (T-0011 AC).
+      // Uses a separate key namespace (coachmark.*) from the session tokens.
+      'lib/coachmarkStorage.ts',
+      'lib/coachmarkStorage.test.ts',
+      // RunScreen test mocks expo-secure-store for coachmark fixture control.
+      'screens/Run/RunScreen.test.tsx',
     ])
     const violations = files.filter(f => !allowed.has(f))
     expect(violations).toEqual([])
