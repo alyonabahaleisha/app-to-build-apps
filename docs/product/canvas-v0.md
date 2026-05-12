@@ -325,7 +325,10 @@ public-launch growth loop we don't have.
       archetype-balanced eval set (25 prompts × 4 archetypes). No
       archetype below 80%. (Re-baselined from M2's 85% / 75% on broader
       taxonomy; brief tightens because catalog is wider but archetype
-      surface is narrower.)
+      surface is narrower.) Quality bar additionally enforced by the
+      weekly grading rubric per ADR-0010; both AC-G9 (≥90% / ≥80%) and
+      weekly grading Primary average ≥3.5 per archetype must hold for
+      V0 launch.
 - [ ] **AC-G10** **p95 generation latency ≤12s** server-side; p50 ≤9s.
       (The "7–9s" quoted in the brief is a UX target; the SLO is
       latency-budget-aligned.)
@@ -629,6 +632,15 @@ public-facing iteration. Four are headline KPIs; two are diagnostic.
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------- |
 | **Friend conversion**      | % of received Universal Links that result in a Canvas install                                                         | App Store / SKAdNetwork attribution + Branch / Adjust deep-link match                | ≥**15%** week 4 onwards             |
 | **Out-of-scope volume**    | % of prompts that hit V0.5 capabilities, broken down by capability                                                    | `out_of_scope_intent` events grouped by `capability`                                 | **No target — this is signal**     |
+
+### Pre-launch diagnostic (one)
+
+The following metric is a **launch gate, not a KPI**. It does not appear in
+post-launch dashboards. It must hold at the time of App Store submission.
+
+| Diagnostic | Definition | Measurement | Launch gate |
+| --- | --- | --- | --- |
+| **`prompt_grading_primary_avg`** | Weekly grading Primary average per archetype, measured by Sable against a 40-prompt random sample using the rubric in `docs/pipeline/prompt-grading-template.md`. Defined and instrumented by ADR-0010. | Per-archetype Primary average from the most recent completed grading session before submission | ≥**3.5** per archetype (all 4 must hold) |
 
 ### Measurement methodology
 
