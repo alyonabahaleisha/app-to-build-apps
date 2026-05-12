@@ -118,7 +118,9 @@ export function RunScreen({route, navigation}: Props) {
   // ---------- navigation handlers ----------
 
   const handleBack = useCallback(() => {
-    navigation.goBack()
+    // ADR-0011 Step 14: pop all the way to Library regardless of intermediate
+    // Create/Generating screens in the stack (mirrors QuotaExhaustedScreen pattern).
+    navigation.popToTop()
   }, [navigation])
 
   const handleMeatball = useCallback(() => {

@@ -278,6 +278,7 @@ interface HarnessOptions {
 function renderRun(opts: HarnessOptions = {}) {
   const navigateSpy = jest.fn()
   const goBackSpy = jest.fn()
+  const popToTopSpy = jest.fn()
   const qc = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
   })
@@ -290,6 +291,9 @@ function renderRun(opts: HarnessOptions = {}) {
       },
       goBack: () => {
         goBackSpy()
+      },
+      popToTop: () => {
+        popToTopSpy()
       },
     } as typeof props.navigation
     return <RunScreen {...props} navigation={wrappedNav} />
@@ -329,7 +333,7 @@ function renderRun(opts: HarnessOptions = {}) {
     </SafeAreaProvider>,
   )
 
-  return {...result, navigateSpy, goBackSpy, queryClient: qc}
+  return {...result, navigateSpy, goBackSpy, popToTopSpy, queryClient: qc}
 }
 
 // ============================================================================
@@ -385,14 +389,14 @@ describe('RunScreen — populated state', () => {
     expect(root).not.toBeNull()
   })
 
-  it('T-0011-248: tap back → goBack called', async () => {
+  it('T-0011-248: tap back → popToTop called (back navigates to Library)', async () => {
     mockDetailOk()
-    const {findByTestId, goBackSpy} = renderRun()
+    const {findByTestId, popToTopSpy} = renderRun()
     // Wait for populated header (not loading header) before pressing back
     await findByTestId('run-header')
     const back = await findByTestId('run-header-back')
     fireEvent.press(back)
-    expect(goBackSpy).toHaveBeenCalledTimes(1)
+    expect(popToTopSpy).toHaveBeenCalledTimes(1)
   })
 
   it('T-0011-249: tap meatball → action sheet items visible (6 items)', async () => {
