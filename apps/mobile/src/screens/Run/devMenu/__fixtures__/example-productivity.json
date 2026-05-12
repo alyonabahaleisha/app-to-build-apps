@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "archetype": "Tracker",
+  "stance": "productive",
+  "palette": "focus",
+  "coverIcon": "check-circle",
+  "navigation": "stack",
+  "initialScreenId": "main",
+  "collections": [],
+  "screens": [
+    {
+      "id": "main",
+      "root": {
+        "id": "root",
+        "type": "Stack",
+        "children": [
+          {
+            "id": "heading1",
+            "type": "Heading",
+            "text": "Productivity Tracker",
+            "level": 1
+          },
+          {
+            "id": "body1",
+            "type": "Body",
+            "text": "Track your daily tasks and goals."
+          },
+          {
+            "id": "btn1",
+            "type": "Button",
+            "label": "Add Task",
+            "variant": "primary",
+            "action": {
+              "type": "toast",
+              "message": "Task added!"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

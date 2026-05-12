@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "archetype": "Tracker",
+  "stance": "productive",
+  "palette": "focus",
+  "coverIcon": "target",
+  "navigation": "stack",
+  "initialScreenId": "home",
+  "collections": [],
+  "screens": [
+    {
+      "id": "home",
+      "root": {
+        "id": "root",
+        "type": "Stack",
+        "children": [
+          {
+            "id": "heading1",
+            "type": "Heading",
+            "text": "Habit Tracker",
+            "level": 1
+          },
+          {
+            "id": "body1",
+            "type": "Body",
+            "text": "Build consistent daily habits."
+          },
+          {
+            "id": "btn1",
+            "type": "Button",
+            "label": "Mark Done",
+            "variant": "primary",
+            "action": {
+              "type": "toast",
+              "message": "Habit marked!"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
