@@ -19,6 +19,10 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
+    // Universal Links entitlement — required for iOS to intercept
+    // https://canvas.app/m/* URLs. The AASA file on the API side must
+    // list this app's APPLE_APP_ID_PREFIX to close the handshake.
+    associatedDomains: ['applinks:canvas.app'],
   },
   plugins: ['expo-secure-store', 'expo-apple-authentication'],
   extra: {
@@ -27,5 +31,11 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
     eas: {projectId: process.env.EAS_PROJECT_ID ?? ''},
+    // Dev-mode runtime smoke check: assert that the running app's bundle ID
+    // matches the AASA file's expected appID. Set to the same value as the
+    // server-side APPLE_APP_ID_PREFIX env var (e.g. "TEAMID.com.appcreator.mvp").
+    // Intentionally undefined in CI/production — the Eva post-deploy smoke
+    // test curls the AASA file directly (aasa-smoke.yml).
+    appleAppSiteAssociationAppId: process.env.APPLE_APP_SITE_EXPECTED_APP_ID,
   },
 })
