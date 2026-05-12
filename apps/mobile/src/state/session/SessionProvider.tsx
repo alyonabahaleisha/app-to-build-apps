@@ -46,6 +46,7 @@ import {
   setCurrentSession,
   type SessionAuth,
 } from '#/lib/api'
+import {clearPendingClone} from '#/lib/pendingClone'
 import {secureStore, type SecureSnapshot} from '#/state/persisted/secure'
 
 // -- Public types -----------------------------------------------------------
@@ -262,6 +263,10 @@ export function SessionProvider({children, storage}: SessionProviderProps) {
       // here. Token NEVER appears in the warning string (T-0001-082).
       console.warn('secure-store clear failed')
     }
+    // ADR-0008 Step 5: clear any pending clone intent on sign-out to prevent
+    // cross-account replay if another user signs in on the same device (T-0008-123).
+    // clearPendingClone is idempotent — safe to call when nothing is stored.
+    await clearPendingClone()
     if (mountedRef.current) setState({status: 'unauthenticated'})
   }, [clearRefreshTimer, store])
 

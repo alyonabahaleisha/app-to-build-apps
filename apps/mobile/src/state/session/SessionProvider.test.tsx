@@ -516,6 +516,39 @@ describe('SessionProvider', () => {
     expect(session?.status).toBe('unauthenticated')
   })
 
+  it('T-0008-123: signOut clears the pending clone intent (cross-account protection)', async () => {
+    // Use redeemToken to reach authenticated state (avoids relying on cold-start
+    // hydration path which may be affected by prior test mock overrides).
+    const accessToken = jwtForUser({sub: 'user-uuid-aaa', email: 'a@b.c'})
+    mockSyncOk({id: 'user-uuid-aaa', email: 'a@b.c'})
+
+    let session: ReturnType<typeof useSession> | undefined
+    render(
+      <SessionProvider>
+        <SessionProbe onValue={v => (session = v)} />
+      </SessionProvider>,
+    )
+    await waitFor(() => expect(session?.status).toBe('unauthenticated'))
+
+    await act(async () => {
+      await session!.redeemToken({accessToken, refreshToken: 'rt-abc'})
+    })
+    expect(session?.status).toBe('authenticated')
+
+    // Seed a pending clone intent in the SecureStore mock. The key matches
+    // the KEY constant in pendingClone.ts.
+    const PENDING_CLONE_KEY = 'pendingClone.shareId.v1'
+    SecureStoreMock.__mem.set(PENDING_CLONE_KEY, 'aBcD1234aBcD1234aBcD1234')
+
+    await act(async () => {
+      await session!.signOut()
+    })
+
+    // The pending clone intent must be gone after sign-out.
+    expect(SecureStoreMock.__mem.has(PENDING_CLONE_KEY)).toBe(false)
+    expect(session?.status).toBe('unauthenticated')
+  })
+
   it('T-0001-083: two simultaneous redeemToken calls → one /auth/sync call', async () => {
     const accessToken = jwtForUser()
     mockSyncOk()

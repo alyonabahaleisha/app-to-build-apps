@@ -100,6 +100,11 @@ describe('expo-secure-store import boundary', () => {
       'lib/coachmarkStorage.test.ts',
       // RunScreen test mocks expo-secure-store for coachmark fixture control.
       'screens/Run/RunScreen.test.tsx',
+      // Pending-clone intent persists share_id across the SIWA round-trip
+      // (ADR-0008 Step 5). Separate key namespace (pendingClone.*) from
+      // session tokens and coachmark state.
+      'lib/pendingClone.ts',
+      'lib/pendingClone.test.ts',
     ])
     const violations = files.filter(f => !allowed.has(f))
     expect(violations).toEqual([])
