@@ -24,6 +24,15 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+import * as runModule from './run'
+import {
+  ARCHETYPE_PROMPTS,
+  V1_ARCHETYPE_PROMPTS,
+  OUT_OF_SCOPE_DETECTION_PROMPTS,
+  OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS,
+  RE_PROMPT_CONTINUITY_PROMPTS,
+} from './prompts'
+
 // ---------------------------------------------------------------------------
 // T-0007-169: Source-level EVAL_MODE assertion.
 // Must be a source read, not a runtime check — T-0007-169 notes that a
@@ -404,11 +413,13 @@ describe('T-0007-177: sequential processing', () => {
 // ---------------------------------------------------------------------------
 
 describe('VALID_MODES export', () => {
-  it('contains exactly the 3 V0 modes', () => {
-    expect(VALID_MODES).toHaveLength(3)
+  it('contains exactly the 5 modes (v0, v1, detection, false-positive, all)', () => {
+    expect(VALID_MODES).toHaveLength(5)
     expect(VALID_MODES).toContain('v0')
+    expect(VALID_MODES).toContain('v1')
     expect(VALID_MODES).toContain('out-of-scope-detection')
     expect(VALID_MODES).toContain('out-of-scope-false-positive')
+    expect(VALID_MODES).toContain('all')
   })
 
   it('does not contain retired modes', () => {
@@ -416,6 +427,112 @@ describe('VALID_MODES export', () => {
     for (const mode of retired) {
       expect(VALID_MODES).not.toContain(mode)
     }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0009-226: runAllMode runs all 225 prompts across 5 prompt sets.
+//
+// Sub-runner functions call generateAppSpec directly (local references), so we
+// control them via the generateAppSpec mock already established above. We mock
+// generateAppSpec to return an async generator that immediately yields a
+// predictable final event for every prompt. We then call runAllMode() and
+// verify the aggregated result counts and structure.
+// ---------------------------------------------------------------------------
+
+describe('T-0009-226: runAllMode — all 225 prompts across 5 prompt sets', () => {
+  // ---------------------------------------------------------------------------
+  // Count assertions — static, no LLM calls needed.
+  // These verify that the AllModeResult shape accounts for all 5 prompt sets
+  // and the counts sum correctly to 225.
+  // ---------------------------------------------------------------------------
+
+  it('T-0009-226: prompt array counts sum to 225', () => {
+    const total =
+      ARCHETYPE_PROMPTS.length +
+      V1_ARCHETYPE_PROMPTS.length +
+      OUT_OF_SCOPE_DETECTION_PROMPTS.length +
+      OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS.length +
+      RE_PROMPT_CONTINUITY_PROMPTS.length
+
+    expect(total).toBe(225)
+    expect(ARCHETYPE_PROMPTS.length).toBe(100)
+    expect(V1_ARCHETYPE_PROMPTS.length).toBe(60)
+    expect(OUT_OF_SCOPE_DETECTION_PROMPTS.length).toBe(30)
+    expect(OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS.length).toBe(30)
+    expect(RE_PROMPT_CONTINUITY_PROMPTS.length).toBe(5)
+  })
+
+  it('T-0009-226: runAllMode — source invokes all 4 sub-runners', () => {
+    // Source-level assertion — same pattern as T-0007-177.
+    // runAllMode must call all 4 sub-runner functions.
+    const runPath = path.join(__dirname, 'run.ts')
+    const src = fs.readFileSync(runPath, 'utf8')
+
+    // Locate the runAllMode function body (between its definition and the next section).
+    const allModeStart = src.indexOf('async function runAllMode()')
+    const allModeEnd = src.indexOf('\n// ---------------------------------------------------------------------------', allModeStart + 1)
+    const allModeBody = src.slice(allModeStart, allModeEnd)
+
+    expect(allModeBody).toContain('runV0Mode()')
+    expect(allModeBody).toContain('runV1Mode()')
+    expect(allModeBody).toContain('runOutOfScopeDetectionMode()')
+    expect(allModeBody).toContain('runOutOfScopeFalsePositiveMode()')
+  })
+
+  it('T-0009-226: runAllMode — source aggregates totalPromptsRun from all 5 prompt arrays', () => {
+    const runPath = path.join(__dirname, 'run.ts')
+    const src = fs.readFileSync(runPath, 'utf8')
+
+    const allModeStart = src.indexOf('async function runAllMode()')
+    const allModeEnd = src.indexOf('\n// ---------------------------------------------------------------------------', allModeStart + 1)
+    const allModeBody = src.slice(allModeStart, allModeEnd)
+
+    // All 5 prompt arrays must contribute to totalPromptsRun.
+    expect(allModeBody).toContain('ARCHETYPE_PROMPTS.length')
+    expect(allModeBody).toContain('V1_ARCHETYPE_PROMPTS.length')
+    expect(allModeBody).toContain('OUT_OF_SCOPE_DETECTION_PROMPTS.length')
+    expect(allModeBody).toContain('OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS.length')
+    expect(allModeBody).toContain('RE_PROMPT_CONTINUITY_PROMPTS.length')
+  })
+
+  // ---------------------------------------------------------------------------
+  // Runtime assertion — mock generateAppSpec to avoid real LLM calls.
+  // We configure it to always return a generator that yields a 'done' event
+  // for spec-generating prompts and an 'out_of_scope' event for detection
+  // prompts, matching the per-mode expectations.
+  // ---------------------------------------------------------------------------
+
+  it('T-0009-226: runAllMode returns AllModeResult with correct structure and 225 totalPromptsRun', async () => {
+    const specForListCRUD = {..._validSpec(), archetype: 'ListCRUD'} as Spec
+
+    // generateAppSpec mock: return a done event for every prompt.
+    // Detection prompts expect 'out_of_scope' so their gate will fail, but that
+    // is acceptable here — we're testing the aggregation structure, not pass/fail values.
+    const mockGen = async function* () {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      yield {type: 'done' as const, spec: specForListCRUD, generationId: 'mock', thinking_duration_ms: 0, generation_duration_ms: 0} as any
+    }
+    _mockGenerateAppSpec.mockImplementation(() => mockGen())
+
+    const result = await runModule.runAllMode()
+
+    // Counts are derived from the static prompt arrays — must always be 225.
+    expect(result.totalPromptsRun).toBe(225)
+    expect(result.archetype_v0.count).toBe(100)
+    expect(result.v1_exercising.count).toBe(60)
+    expect(result.out_of_scope_detection.count).toBe(30)
+    expect(result.out_of_scope_false_positive.count).toBe(30)
+    expect(result.re_prompt_continuity.count).toBe(5)
+
+    // Result shape must include all 5 set keys.
+    expect(result).toHaveProperty('archetype_v0')
+    expect(result).toHaveProperty('v1_exercising')
+    expect(result).toHaveProperty('out_of_scope_detection')
+    expect(result).toHaveProperty('out_of_scope_false_positive')
+    expect(result).toHaveProperty('re_prompt_continuity')
+    expect(result).toHaveProperty('passed')
+    expect(typeof result.passed).toBe('boolean')
   })
 })
 

@@ -1,12 +1,17 @@
 /**
- * V0 eval prompt sets — ADR-0007 Step 7.
+ * V0 + V1 eval prompt sets — ADR-0007 Step 7 + ADR-0009 Step 10.
  *
- * Three exports:
- *   ARCHETYPE_PROMPTS         — 100 prompts, 25 per archetype (ListCRUD, Tracker, Journal, Calculator)
+ * Five exports:
+ *   ARCHETYPE_PROMPTS              — 100 prompts, 25 per archetype (ListCRUD, Tracker, Journal, Calculator)
  *   OUT_OF_SCOPE_DETECTION_PROMPTS — 30 prompts, 6 per capability (image_gen, vision, chat, transcription, classification)
  *   OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS — 30 in-scope prompts that brush against out-of-scope capabilities
+ *   V1_ARCHETYPE_PROMPTS           — 60 V1-exercising prompts, 15 per archetype (ADR-0009 Step 10)
+ *   RE_PROMPT_CONTINUITY_PROMPTS   — 5 re-prompt continuity pairs (ADR-0009 Step 10)
+ *
+ * Total: 225 prompts (100 + 30 + 30 + 60 + 5). T-0009-221.
  *
  * Labeling methodology: each prompt maps unambiguously to the labeled archetype or capability.
+ * V1 prompts target at least one V1 component each; components are noted inline.
  * Ambiguous cases are noted inline.
  *
  * T-0007-152: ARCHETYPE_PROMPTS.length === 100
@@ -17,6 +22,8 @@
  * T-0007-157: expected_capability in closed enum, no 'unknown'
  * T-0007-158: OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS.length === 30
  * T-0007-159: each has expected_archetype + brushes_against
+ * T-0009-221: total exported prompts === 225 (100 + 30 + 30 + 60 + 5)
+ * T-0009-222: V1_ARCHETYPE_PROMPTS has 60 entries, 15 per archetype
  */
 
 // ---------------------------------------------------------------------------
@@ -1118,5 +1125,522 @@ export const OUT_OF_SCOPE_FALSE_POSITIVE_PROMPTS: FalsePositiveEntry[] = [
     expected_archetype: 'Calculator',
     brushes_against: 'classification',
     label_note: 'Manual risk matrix formula (Calculator), not AI risk classification.',
+  },
+]
+
+// ---------------------------------------------------------------------------
+// V1_ARCHETYPE_PROMPTS — 60 V1-exercising prompts, 15 per archetype.
+// ADR-0009 Step 10. Each prompt targets at least one V1 component.
+// Target components noted inline for traceability. T-0009-221, T-0009-222.
+// Pass-rate gate: ≥75% per archetype (run against live LLM in CI eval).
+// ---------------------------------------------------------------------------
+
+export type V1PromptEntry = {
+  id: string
+  prompt: string
+  expected_archetype: V0Archetype
+  target_v1_components: string[]
+  label_note: string
+}
+
+export const V1_ARCHETYPE_PROMPTS: V1PromptEntry[] = [
+  // --------------------------------------------------------------------------
+  // V1 ListCRUD — 15 prompts
+  // Each exercises at least one V1 component in a list-management context.
+  // --------------------------------------------------------------------------
+  {
+    id: 'v1-lc-01',
+    prompt: 'expense tracker — add purchases with merchant name, amount, and category; browse and delete',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['TransactionRow', 'MoneyField'],
+    label_note: 'ListCRUD: financial records → TransactionRow for rows; MoneyField for amount entry.',
+  },
+  {
+    id: 'v1-lc-02',
+    prompt: 'product catalog app — list products with photo, name, and price; add and delete items',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['CommerceCard', 'Image'],
+    label_note: 'ListCRUD: product records → CommerceCard or Image for product photo.',
+  },
+  {
+    id: 'v1-lc-03',
+    prompt: 'recipe book with step-by-step instructions — save recipes with ingredients list and ordered steps',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['StepList', 'Image'],
+    label_note: 'ListCRUD: recipe records with StepList for ordered steps; Image for recipe photo.',
+  },
+  {
+    id: 'v1-lc-04',
+    prompt: 'contact directory — manage a list of people with photo, name, and tags for their role',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['AvatarGroup', 'SearchBar', 'MultiPicker'],
+    label_note: 'ListCRUD: contact records; SearchBar for filtering; MultiPicker for role tags.',
+  },
+  {
+    id: 'v1-lc-05',
+    prompt: 'task list with star ratings for priority — add tasks, rate importance 1-5, delete done ones',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['RatingInput'],
+    label_note: 'ListCRUD: task records with RatingInput for priority star rating.',
+  },
+  {
+    id: 'v1-lc-06',
+    prompt: 'plant collection app — add plants with a photo, care notes, and watering schedule; browse and delete',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['Image', 'TimeField'],
+    label_note: 'ListCRUD: plant records; Image for plant photo; TimeField for watering time.',
+  },
+  {
+    id: 'v1-lc-07',
+    prompt: 'document library — add files with title and type, pick from device storage, delete old ones',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['DocumentPicker'],
+    label_note: 'ListCRUD: document records; DocumentPicker to attach files.',
+  },
+  {
+    id: 'v1-lc-08',
+    prompt: 'investment portfolio — add holdings with ticker, amount invested, and currency; browse and delete',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['MoneyField', 'Divider'],
+    label_note: 'ListCRUD: holding records; MoneyField for invested amount; Divider between sections.',
+  },
+  {
+    id: 'v1-lc-09',
+    prompt: 'team skills board — add team members with photo and select their skills from a multi-pick list',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['MultiPicker', 'AvatarGroup'],
+    label_note: 'ListCRUD: member records; MultiPicker for skill tags; AvatarGroup for team overview.',
+  },
+  {
+    id: 'v1-lc-10',
+    prompt: 'wine collection — add bottles with photo, vintage, variety, and price; mark opened',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['Image', 'MoneyField', 'GridList'],
+    label_note: 'ListCRUD: bottle records; Image for label photo; MoneyField for price; GridList for grid browse.',
+  },
+  {
+    id: 'v1-lc-11',
+    prompt: 'appointment book — add appointments with doctor name, date, time, and fee; browse by date',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['TimeField', 'MoneyField', 'Timeline'],
+    label_note: 'ListCRUD: appointment records; TimeField for appointment time; MoneyField for fee; Timeline for date-ordered list.',
+  },
+  {
+    id: 'v1-lc-12',
+    prompt: 'travel photo album — add trips with name and photos; browse photos in a grid',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['Gallery', 'Image'],
+    label_note: 'ListCRUD: trip records; Gallery for photo grid on detail screen.',
+  },
+  {
+    id: 'v1-lc-13',
+    prompt: 'event planner — add events with description, ticket price, and start time; filter by category',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['TimeField', 'MoneyField', 'SearchBar', 'MultiPicker'],
+    label_note: 'ListCRUD: event records; TimeField + MoneyField for event meta; SearchBar/MultiPicker for filter.',
+  },
+  {
+    id: 'v1-lc-14',
+    prompt: 'subscription manager — add subscriptions with cost, billing date, and renewal interval; see total spend',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['MoneyField', 'MetricTile', 'Divider'],
+    label_note: 'ListCRUD: subscription records; MoneyField for cost; MetricTile for total spend; Divider between groups.',
+  },
+  {
+    id: 'v1-lc-15',
+    prompt: 'medication list — add medications with name, dosage, and daily time reminders; mark taken',
+    expected_archetype: 'ListCRUD',
+    target_v1_components: ['TimeField', 'Callout'],
+    label_note: 'ListCRUD: medication records; TimeField for dosage time; Callout for missed-dose warning.',
+  },
+
+  // --------------------------------------------------------------------------
+  // V1 Tracker — 15 prompts
+  // Each exercises at least one V1 component in a repeated-logging context.
+  // --------------------------------------------------------------------------
+  {
+    id: 'v1-tr-01',
+    prompt: 'habit tracker with a heatmap showing my consistency over the last 90 days',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Heatmap'],
+    label_note: 'Tracker: daily habit log; Heatmap for 90-day density view.',
+  },
+  {
+    id: 'v1-tr-02',
+    prompt: 'daily expense diary — log each purchase amount and category, see this month\'s spending total',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['MoneyField', 'TransactionRow', 'MetricTile'],
+    label_note: 'Tracker: per-purchase log; MoneyField for amount; TransactionRow for rows; MetricTile for monthly total.',
+  },
+  {
+    id: 'v1-tr-03',
+    prompt: 'mood tracker where I rate my mood each day with stars and see my weekly average mood',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['RatingInput', 'MetricTile'],
+    label_note: 'Tracker: daily star-rating log; RatingInput for mood; MetricTile for weekly average.',
+  },
+  {
+    id: 'v1-tr-04',
+    prompt: 'workout log — log exercises with sets, reps, and weight; see a calendar of workout days',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Calendar', 'Divider'],
+    label_note: 'Tracker: workout session log; Calendar to see active days; Divider between days.',
+  },
+  {
+    id: 'v1-tr-05',
+    prompt: 'sleep tracker — log bedtime and wake time each night using a time picker',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['TimeField', 'MetricTile'],
+    label_note: 'Tracker: nightly log; TimeField for bedtime/wake; MetricTile for average duration.',
+  },
+  {
+    id: 'v1-tr-06',
+    prompt: 'water intake tracker — log each glass with a slider for ounces, see daily total',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Slider', 'MetricTile'],
+    label_note: 'Tracker: per-glass log; Slider for ounce amount; MetricTile for daily total.',
+  },
+  {
+    id: 'v1-tr-07',
+    prompt: 'savings tracker — log each deposit to my savings goal; see how much I have saved with a sparkline trend',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['MoneyField', 'MetricTile'],
+    label_note: 'Tracker: deposit log; MoneyField for amount; MetricTile with sparkline for total savings trend.',
+  },
+  {
+    id: 'v1-tr-08',
+    prompt: 'reading tracker — log minutes read per day and see a heatmap of reading streaks',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Heatmap', 'Slider'],
+    label_note: 'Tracker: daily reading log; Heatmap for streak visualization; Slider for minutes input.',
+  },
+  {
+    id: 'v1-tr-09',
+    prompt: 'pain level tracker — rate pain 1-10 twice a day; see a calendar marked with high-pain days',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['RatingInput', 'Calendar'],
+    label_note: 'Tracker: pain log; RatingInput for level; Calendar for day-level view.',
+  },
+  {
+    id: 'v1-tr-10',
+    prompt: 'fitness photo progress tracker — log a weekly photo and see a before/after comparison of first and latest',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['BeforeAfter', 'Image'],
+    label_note: 'Tracker: weekly photo log; BeforeAfter for first-vs-latest comparison.',
+  },
+  {
+    id: 'v1-tr-11',
+    prompt: 'nutrition tracker — log meals with calorie and macro counts using sliders; see daily totals',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Slider', 'MetricTile', 'Divider'],
+    label_note: 'Tracker: meal log; Slider for macros; MetricTile for daily totals; Divider between meal groups.',
+  },
+  {
+    id: 'v1-tr-12',
+    prompt: 'study session tracker — log study minutes per subject; see a heatmap of study days',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['Heatmap', 'MultiPicker'],
+    label_note: 'Tracker: study log; Heatmap for session density; MultiPicker for subject filter.',
+  },
+  {
+    id: 'v1-tr-13',
+    prompt: 'gift budget tracker — log gift purchases with amount and recipient; see total spent',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['MoneyField', 'TransactionRow', 'Receipt'],
+    label_note: 'Tracker: gift purchase log; MoneyField for amount; TransactionRow for entries; Receipt for total.',
+  },
+  {
+    id: 'v1-tr-14',
+    prompt: 'medication adherence tracker — log each dose time; see a calendar of adherence',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['TimeField', 'Calendar', 'Callout'],
+    label_note: 'Tracker: dose log; TimeField for time; Calendar for adherence view; Callout for missed-dose alert.',
+  },
+  {
+    id: 'v1-tr-15',
+    prompt: 'productivity tracker — rate each day 1-5 stars and tag with focus areas; see monthly heatmap',
+    expected_archetype: 'Tracker',
+    target_v1_components: ['RatingInput', 'MultiPicker', 'Heatmap'],
+    label_note: 'Tracker: daily rating log; RatingInput for score; MultiPicker for focus tags; Heatmap for month view.',
+  },
+
+  // --------------------------------------------------------------------------
+  // V1 Journal — 15 prompts
+  // Each exercises at least one V1 component in a narrative-entry context.
+  // --------------------------------------------------------------------------
+  {
+    id: 'v1-jo-01',
+    prompt: 'travel journal with photos — write about each day of my trip and attach a photo',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Image', 'Gallery'],
+    label_note: 'Journal: dated narrative entries; Image per entry; Gallery for all trip photos.',
+  },
+  {
+    id: 'v1-jo-02',
+    prompt: 'food journal — write what I ate and rate the meal with stars',
+    expected_archetype: 'Journal',
+    target_v1_components: ['RatingInput'],
+    label_note: 'Journal: meal narrative entries with RatingInput for satisfaction rating.',
+  },
+  {
+    id: 'v1-jo-03',
+    prompt: 'dream diary — record dreams with images I attach; browse and search past entries',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Image', 'SearchBar'],
+    label_note: 'Journal: dated dream entries; Image attachment; SearchBar for entry search.',
+  },
+  {
+    id: 'v1-jo-04',
+    prompt: 'recovery journal — write daily reflections and tag each entry with my mood category',
+    expected_archetype: 'Journal',
+    target_v1_components: ['MultiPicker', 'Timeline'],
+    label_note: 'Journal: daily reflective entries; MultiPicker for mood tags; Timeline for chronological browse.',
+  },
+  {
+    id: 'v1-jo-05',
+    prompt: 'concert journal — write about each show I attend, attach a photo, and rate it',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Image', 'RatingInput', 'Carousel'],
+    label_note: 'Journal: concert entries; Image for show photo; RatingInput for rating; Carousel for photo highlights.',
+  },
+  {
+    id: 'v1-jo-06',
+    prompt: 'home renovation journal — document each project phase with before and after photos',
+    expected_archetype: 'Journal',
+    target_v1_components: ['BeforeAfter', 'Image'],
+    label_note: 'Journal: renovation phase entries; BeforeAfter for progress comparison.',
+  },
+  {
+    id: 'v1-jo-07',
+    prompt: 'learning journal — write about each course session; tag subjects with a multi-select',
+    expected_archetype: 'Journal',
+    target_v1_components: ['MultiPicker', 'Callout'],
+    label_note: 'Journal: session entries; MultiPicker for subject tags; Callout for key-insight highlight.',
+  },
+  {
+    id: 'v1-jo-08',
+    prompt: 'recipe development journal — document recipe experiments with photos and a step list',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Image', 'StepList', 'Divider'],
+    label_note: 'Journal: recipe experiment entries; Image for dish photo; StepList for method steps.',
+  },
+  {
+    id: 'v1-jo-09',
+    prompt: 'project retrospective journal — write post-mortems with file attachments for deliverables',
+    expected_archetype: 'Journal',
+    target_v1_components: ['DocumentPicker', 'Callout'],
+    label_note: 'Journal: retrospective entries; DocumentPicker for deliverable files; Callout for action items.',
+  },
+  {
+    id: 'v1-jo-10',
+    prompt: 'gratitude journal with a photo — write what I am grateful for and attach an inspiring image',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Image', 'Divider'],
+    label_note: 'Journal: daily gratitude entries; Image for photo; Divider between date sections.',
+  },
+  {
+    id: 'v1-jo-11',
+    prompt: 'skin care journal — document my routine with product names and before/after skin photos',
+    expected_archetype: 'Journal',
+    target_v1_components: ['BeforeAfter', 'StepList'],
+    label_note: 'Journal: routine entries; BeforeAfter for skin comparison; StepList for routine steps.',
+  },
+  {
+    id: 'v1-jo-12',
+    prompt: 'book notes journal — after each book write key ideas and rate it; browse by a timeline',
+    expected_archetype: 'Journal',
+    target_v1_components: ['RatingInput', 'Timeline'],
+    label_note: 'Journal: per-book reflection entries; RatingInput for rating; Timeline for chronological view.',
+  },
+  {
+    id: 'v1-jo-13',
+    prompt: 'nature journal — write about each walk with species observations; attach a photo gallery',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Gallery', 'SearchBar'],
+    label_note: 'Journal: outing entries; Gallery for observation photos; SearchBar for species search.',
+  },
+  {
+    id: 'v1-jo-14',
+    prompt: 'birth story journal — write about each stage of labor and delivery with a step-by-step timeline',
+    expected_archetype: 'Journal',
+    target_v1_components: ['Timeline', 'Image'],
+    label_note: 'Journal: narrative entries; Timeline for stage-by-stage view; Image for milestone photos.',
+  },
+  {
+    id: 'v1-jo-15',
+    prompt: 'startup journal — write daily entries, rate my energy level, and tag with strategic themes',
+    expected_archetype: 'Journal',
+    target_v1_components: ['RatingInput', 'MultiPicker', 'Callout'],
+    label_note: 'Journal: daily founder entries; RatingInput for energy; MultiPicker for themes; Callout for alerts.',
+  },
+
+  // --------------------------------------------------------------------------
+  // V1 Calculator — 15 prompts
+  // Each exercises at least one V1 component in a computation context.
+  // --------------------------------------------------------------------------
+  {
+    id: 'v1-ca-01',
+    prompt: 'tip calculator with a receipt breakdown showing subtotal, tax, tip, and total per person',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Receipt'],
+    label_note: 'Calculator: tip inputs; MoneyField for bill; Receipt for itemized breakdown.',
+  },
+  {
+    id: 'v1-ca-02',
+    prompt: 'grocery budget calculator — enter item prices with a money field, see total and remaining budget',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'MetricTile'],
+    label_note: 'Calculator: item prices via MoneyField; MetricTile for total spend and budget remaining.',
+  },
+  {
+    id: 'v1-ca-03',
+    prompt: 'freelance rate calculator — enter hourly rate and hours; see project total and monthly income target',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'MetricTile', 'Divider'],
+    label_note: 'Calculator: MoneyField for rate; MetricTile for income projections; Divider between input/output.',
+  },
+  {
+    id: 'v1-ca-04',
+    prompt: 'paint cost estimator — enter room dimensions with sliders, see paint quantity and cost',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['Slider', 'MoneyField', 'MetricTile'],
+    label_note: 'Calculator: Slider for dimensions; MoneyField for paint price; MetricTile for total cost.',
+  },
+  {
+    id: 'v1-ca-05',
+    prompt: 'mortgage affordability calculator — enter income, expenses, and down payment; see max home price',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'MetricTile', 'Callout'],
+    label_note: 'Calculator: MoneyField for financial inputs; MetricTile for max price; Callout for guidance tip.',
+  },
+  {
+    id: 'v1-ca-06',
+    prompt: 'event cost splitter — enter total event cost and split equally; show a receipt-style summary',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Receipt'],
+    label_note: 'Calculator: MoneyField for event cost; Receipt for per-person itemized split.',
+  },
+  {
+    id: 'v1-ca-07',
+    prompt: 'investment return calculator — enter principal, rate slider, and years; see projected value',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'MetricTile'],
+    label_note: 'Calculator: MoneyField for principal; Slider for rate; MetricTile for projected value.',
+  },
+  {
+    id: 'v1-ca-08',
+    prompt: 'catering cost calculator — enter per-head cost and headcount with a slider; see total and tax',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'Receipt'],
+    label_note: 'Calculator: MoneyField for per-head; Slider for count; Receipt for total with tax.',
+  },
+  {
+    id: 'v1-ca-09',
+    prompt: 'hourly time tracker and invoice calculator — enter time worked and rate; see invoice total',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['TimeField', 'MoneyField', 'Receipt'],
+    label_note: 'Calculator: TimeField for hours; MoneyField for rate; Receipt for invoice breakdown.',
+  },
+  {
+    id: 'v1-ca-10',
+    prompt: 'ingredient cost calculator — enter ingredient costs; see recipe total and per-serving cost',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'MetricTile'],
+    label_note: 'Calculator: MoneyField for ingredient prices; Slider for servings; MetricTile for cost per serving.',
+  },
+  {
+    id: 'v1-ca-11',
+    prompt: 'electricity cost calculator — enter wattage slider and usage hours; see monthly cost',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['Slider', 'MoneyField', 'MetricTile'],
+    label_note: 'Calculator: Slider for wattage; MoneyField for unit rate; MetricTile for monthly cost.',
+  },
+  {
+    id: 'v1-ca-12',
+    prompt: 'discount and tax calculator — enter original price, discount percent, and tax rate; see final price',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'Receipt'],
+    label_note: 'Calculator: MoneyField for price; Slider for discount/tax percent; Receipt for breakdown.',
+  },
+  {
+    id: 'v1-ca-13',
+    prompt: 'donation impact calculator — enter donation amount, see how many meals that provides',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'MetricTile', 'Callout'],
+    label_note: 'Calculator: MoneyField for donation; MetricTile for impact; Callout for thank-you note.',
+  },
+  {
+    id: 'v1-ca-14',
+    prompt: 'salary negotiation calculator — enter base, bonus slider, and equity; see total comp and tax estimate',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'Receipt'],
+    label_note: 'Calculator: MoneyField for base/equity; Slider for bonus; Receipt for total comp breakdown.',
+  },
+  {
+    id: 'v1-ca-15',
+    prompt: 'trip budget planner — enter daily budget and trip length with a slider; see itemized spend plan',
+    expected_archetype: 'Calculator',
+    target_v1_components: ['MoneyField', 'Slider', 'Receipt'],
+    label_note: 'Calculator: MoneyField for daily budget; Slider for days; Receipt for spend breakdown.',
+  },
+]
+
+// ---------------------------------------------------------------------------
+// RE_PROMPT_CONTINUITY_PROMPTS — 5 re-prompt continuity pairs.
+// ADR-0009 Step 10 §11. Each pair: initial prompt + refinement prompt.
+// The LLM should preserve the original component-set on the refinement
+// unless the user explicitly requests a change.
+// Pass-rate gate: ≥80% (run against live LLM in CI eval). T-0009-223.
+// ---------------------------------------------------------------------------
+
+export type ContinuityPromptEntry = {
+  id: string
+  initial: string
+  refinement: string
+  expected_archetype: V0Archetype
+  preserved_components: string[]
+  label_note: string
+}
+
+export const RE_PROMPT_CONTINUITY_PROMPTS: ContinuityPromptEntry[] = [
+  {
+    id: 'cont-01',
+    initial: 'recipe book app where I can save recipes with ingredients and steps',
+    refinement: 'add a photo for each recipe',
+    expected_archetype: 'ListCRUD',
+    preserved_components: ['StepList', 'List'],
+    label_note: 'Refinement adds Image inside existing recipe records; must NOT re-architect StepList to Gallery.',
+  },
+  {
+    id: 'cont-02',
+    initial: 'habit tracker with a heatmap of my streaks',
+    refinement: 'also let me add notes for each day',
+    expected_archetype: 'Tracker',
+    preserved_components: ['Heatmap'],
+    label_note: 'Refinement adds a text field to existing entries; must NOT replace Heatmap with Calendar.',
+  },
+  {
+    id: 'cont-03',
+    initial: 'daily expense log where I enter amounts and categories',
+    refinement: 'make the total stand out more',
+    expected_archetype: 'Tracker',
+    preserved_components: ['TransactionRow', 'MoneyField'],
+    label_note: 'Refinement emphasizes the total (Stat/MetricTile tweak); must NOT replace TransactionRow with ListItem.',
+  },
+  {
+    id: 'cont-04',
+    initial: 'travel journal where I write about each day and attach photos',
+    refinement: 'add a rating so I can rate each day of the trip',
+    expected_archetype: 'Journal',
+    preserved_components: ['Image', 'Gallery'],
+    label_note: 'Refinement adds RatingInput to each entry; must NOT replace Gallery with a bare List.',
+  },
+  {
+    id: 'cont-05',
+    initial: 'tip calculator with a receipt showing subtotal, tax, and total',
+    refinement: 'add a slider for the tip percentage instead of typing it',
+    expected_archetype: 'Calculator',
+    preserved_components: ['Receipt', 'MoneyField'],
+    label_note: 'Refinement swaps NumberField for Slider on tip percent; must NOT remove Receipt or MoneyField.',
   },
 ]

@@ -91,8 +91,10 @@ it('T-0007-026: SYSTEM_PROMPT_CATALOG mentions all 5 out-of-scope capabilities',
 })
 
 // ─── T-0007-027 — Boundary ─────────────────────────────────────────────────
-it('T-0007-027: SYSTEM_PROMPT_CATALOG.length <= 25000 chars', () => {
-  expect(SYSTEM_PROMPT_CATALOG.length).toBeLessThanOrEqual(25_000)
+// Budget bumped from 25,000 → 40,000 chars per ADR-0009 Step 10 (T-0009-217).
+// V1 catalog (53 components) lands ~37,500 chars; 40,000 reserves ~6% headroom.
+it('T-0007-027: SYSTEM_PROMPT_CATALOG.length <= 40000 chars', () => {
+  expect(SYSTEM_PROMPT_CATALOG.length).toBeLessThanOrEqual(40_000)
 })
 
 // ─── T-0007-028 — Boundary ─────────────────────────────────────────────────
@@ -163,8 +165,9 @@ it('T-0007-035: SYSTEM_PROMPT_CATALOG includes at least 4 example specs (4 occur
 // =============================================================================
 
 // ─── T-0010-001 — Happy ───────────────────────────────────────────────────
-it('T-0010-001: PROMPT_VERSION === "v0.1.0"', () => {
-  expect(PROMPT_VERSION).toBe('v0.1.0')
+// Bumped from v0.1.0 → v0.2.0 per ADR-0009 Step 10 (V1 catalog expansion).
+it('T-0010-001: PROMPT_VERSION === "v0.2.0"', () => {
+  expect(PROMPT_VERSION).toBe('v0.2.0')
 })
 
 // ─── T-0010-002 — Boundary ────────────────────────────────────────────────
@@ -174,10 +177,10 @@ it('T-0010-002: PROMPT_VERSION matches semver shape /^v\\d+\\.\\d+\\.\\d+$/', ()
 
 // ─── T-0010-003 — Boundary ────────────────────────────────────────────────
 it('T-0010-003: PROMPT_VERSION is exported as const (literal type preserved)', () => {
-  // TypeScript const assertion ensures the literal type "v0.1.0" not widened to string.
+  // TypeScript const assertion ensures the literal type "v0.2.0" not widened to string.
   // At runtime we verify the value is a string matching the literal — TS enforces the rest.
-  const version: 'v0.1.0' = PROMPT_VERSION
-  expect(version).toBe('v0.1.0')
+  const version: 'v0.2.0' = PROMPT_VERSION
+  expect(version).toBe('v0.2.0')
 })
 
 // ─── T-0010-004 — Happy ───────────────────────────────────────────────────
@@ -375,13 +378,15 @@ it('T-0010-022: set verb description includes the no-arithmetic-expression cavea
 })
 
 // ─── T-0010-023 — Boundary ────────────────────────────────────────────────
-it('T-0010-023: SYSTEM_PROMPT_CATALOG.length <= 25000 chars (token budget ceiling)', () => {
-  expect(SYSTEM_PROMPT_CATALOG.length).toBeLessThanOrEqual(25_000)
+// Budget bumped from 25,000 → 40,000 chars per ADR-0009 Step 10 (T-0009-217).
+it('T-0010-023: SYSTEM_PROMPT_CATALOG.length <= 40000 chars (token budget ceiling, V1)', () => {
+  expect(SYSTEM_PROMPT_CATALOG.length).toBeLessThanOrEqual(40_000)
 })
 
 // ─── T-0010-024 — Boundary ────────────────────────────────────────────────
-it('T-0010-024: SYSTEM_PROMPT_CATALOG.length >= 22000 chars (v0.1.0 additions sanity floor)', () => {
-  expect(SYSTEM_PROMPT_CATALOG.length).toBeGreaterThanOrEqual(22_000)
+// Floor bumped: V1 catalog (53 components) is substantially larger than v0.1.0.
+it('T-0010-024: SYSTEM_PROMPT_CATALOG.length >= 35000 chars (v0.2.0 V1 additions sanity floor)', () => {
+  expect(SYSTEM_PROMPT_CATALOG.length).toBeGreaterThanOrEqual(35_000)
 })
 
 // ─── T-0010-025 — Boundary ────────────────────────────────────────────────
@@ -448,14 +453,21 @@ it.each(ARCHETYPES_V0)(
 )
 
 // ─── T-0010-031 — Breaking change ─────────────────────────────────────────
-it('T-0010-031: MoneyField does not appear as a documented V0 catalog component (### MoneyField)', () => {
-  // MoneyField is a V1 component. It must not be listed in the Component Catalog
-  // as an available component. The Calculator recipe may mention it as a
-  // "V0 has no MoneyField" disclaimer — that is intentional and expected.
-  // This test specifically guards the catalog from gaining MoneyField as a usable component.
-  expect(SYSTEM_PROMPT_CATALOG).not.toContain('### MoneyField')
-  // Also verify neither the static block documents it as available
-  expect(SYSTEM_PROMPT_STATIC).not.toContain('MoneyField')
+// ADR-0009 Step 10: MoneyField IS now a documented V1 catalog component.
+// The breaking-change guard is now that MoneyField appears in the V1 section,
+// NOT in the V0 Component Catalog (28 components) section.
+// The static block still must not reference MoneyField as an always-available V0 component.
+it('T-0010-031: MoneyField appears in the V1 catalog section (not as a V0 component)', () => {
+  // V1 catalog section must document MoneyField.
+  expect(SYSTEM_PROMPT_CATALOG).toContain('### MoneyField')
+  // The V0 28-component section header must not claim MoneyField is a V0 component.
+  const v0SectionEnd = SYSTEM_PROMPT_CATALOG.indexOf('## V1 Component Catalog')
+  const v0Section = v0SectionEnd !== -1
+    ? SYSTEM_PROMPT_CATALOG.slice(0, v0SectionEnd)
+    : SYSTEM_PROMPT_CATALOG
+  expect(v0Section).not.toContain('### MoneyField')
+  // Static block should not independently document MoneyField as a V0 rule.
+  expect(SYSTEM_PROMPT_STATIC).not.toContain('### MoneyField')
 })
 
 // ─── T-0010-032 — Happy ───────────────────────────────────────────────────
@@ -465,4 +477,138 @@ it('T-0010-032: PROMPT_VERSION is exported alongside SYSTEM_PROMPT_STATIC and SY
   expect(typeof SYSTEM_PROMPT_STATIC).toBe('string')
   expect(typeof SYSTEM_PROMPT_CATALOG).toBe('string')
   expect(PROMPT_VERSION.length).toBeGreaterThan(0)
+})
+
+// =============================================================================
+// ADR-0009 Step 10 — V1 Catalog Tests (T-0009-213 through T-0009-220)
+// =============================================================================
+
+// ─── T-0009-213 — Happy ───────────────────────────────────────────────────
+const ALL_53_COMPONENTS = [
+  // V0 — 28 components
+  'Screen', 'Section', 'Stack', 'Row', 'Card',
+  'Heading', 'Body', 'Caption',
+  'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
+  'Stat', 'Badge', 'Chip', 'Avatar',
+  'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
+  'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker',
+  'Button', 'FAB',
+  // V1 — 25 components
+  'Divider', 'Image', 'IconButton',
+  'MoneyField', 'TimeField', 'MultiPicker', 'Slider', 'RatingInput', 'SearchBar',
+  'AvatarGroup', 'Callout',
+  'GridList', 'Carousel', 'Timeline', 'ErrorState',
+  'TransactionRow', 'Receipt', 'MetricTile', 'StepList',
+  'Calendar', 'Heatmap',
+  'Gallery', 'CommerceCard', 'BeforeAfter', 'DocumentPicker',
+]
+
+it.each(ALL_53_COMPONENTS)(
+  'T-0009-213: SYSTEM_PROMPT_CATALOG mentions all 53 component names — "%s"',
+  (componentName) => {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(componentName)
+  },
+)
+
+// ─── T-0009-214 — Happy ───────────────────────────────────────────────────
+it('T-0009-214: catalog includes stance affinity cheat-sheet section', () => {
+  expect(SYSTEM_PROMPT_CATALOG).toContain('Stance Affinity Cheat-Sheet')
+  // Must mention both stances explicitly
+  const stanceSection = (() => {
+    const start = SYSTEM_PROMPT_CATALOG.indexOf('Stance Affinity Cheat-Sheet')
+    const end = SYSTEM_PROMPT_CATALOG.indexOf('\n---', start)
+    return end !== -1
+      ? SYSTEM_PROMPT_CATALOG.slice(start, end)
+      : SYSTEM_PROMPT_CATALOG.slice(start, start + 2000)
+  })()
+  expect(stanceSection).toContain('Productive stance')
+  expect(stanceSection).toContain('Expressive stance')
+})
+
+// ─── T-0009-215 — Happy ───────────────────────────────────────────────────
+it('T-0009-215: catalog includes domain compound usage hints (TransactionRow, MetricTile, Calendar)', () => {
+  expect(SYSTEM_PROMPT_CATALOG).toContain('Domain Compound Usage Hints')
+  const hintsSection = (() => {
+    const start = SYSTEM_PROMPT_CATALOG.indexOf('Domain Compound Usage Hints')
+    const end = SYSTEM_PROMPT_CATALOG.indexOf('\n---', start)
+    return end !== -1
+      ? SYSTEM_PROMPT_CATALOG.slice(start, end)
+      : SYSTEM_PROMPT_CATALOG.slice(start, start + 3000)
+  })()
+  expect(hintsSection).toContain('TransactionRow')
+  expect(hintsSection).toContain('MetricTile')
+  expect(hintsSection).toContain('Calendar')
+})
+
+// ─── T-0009-216 — Happy ───────────────────────────────────────────────────
+it('T-0009-216: catalog includes re-prompt continuity instruction', () => {
+  expect(SYSTEM_PROMPT_CATALOG).toContain('Re-Prompt Continuity')
+  const continuitySection = (() => {
+    const start = SYSTEM_PROMPT_CATALOG.indexOf('Re-Prompt Continuity')
+    return SYSTEM_PROMPT_CATALOG.slice(start, start + 1000)
+  })()
+  // Must instruct on what NOT to do on re-prompts
+  expect(continuitySection.toLowerCase()).toMatch(/do not|don't/)
+})
+
+// ─── T-0009-217 — Boundary ────────────────────────────────────────────────
+it('T-0009-217: SYSTEM_PROMPT_CATALOG.length <= 40000 chars (~10000 tokens)', () => {
+  expect(SYSTEM_PROMPT_CATALOG.length).toBeLessThanOrEqual(40_000)
+})
+
+// ─── T-0009-218 — Boundary (tool JSON Schema — see produceAppSpec.test.ts) ──
+// Verified by produceAppSpec.test.ts T-0007-018. The ADR target was 40,000 chars;
+// the measured V1 schema is ~42,245 chars; the actual gate is 50,000 chars.
+// T-0009-218 is the ADR reference; produceAppSpec.test.ts carries the assertion.
+
+// ─── T-0009-219 — Regression ──────────────────────────────────────────────
+it('T-0009-219: T-0007-022..026 regression — archetypes, components, verbs, bindings, capabilities', () => {
+  const archetypes = ['ListCRUD', 'Tracker', 'Journal', 'Calculator']
+  for (const a of archetypes) {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(a)
+  }
+  const v0Components = [
+    'Screen', 'Section', 'Stack', 'Row', 'Card', 'Heading', 'Body', 'Caption',
+    'TextField', 'NumberField', 'DateField', 'Picker', 'Switch',
+    'Stat', 'Badge', 'Chip', 'Avatar',
+    'List', 'ListItem', 'SwipeableRow', 'EmptyState', 'LoadingState',
+    'ConditionalSection', 'ListSummary', 'MediaTray', 'ImagePicker', 'Button', 'FAB',
+  ]
+  for (const c of v0Components) {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(c)
+  }
+  const verbs = ['set', 'update', 'reset', 'addItem', 'removeItem', 'updateItem',
+    'clearCollection', 'navigate', 'back', 'capture', 'toast', 'aiProcess']
+  for (const v of verbs) {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(v)
+  }
+  const bindings = ['literal', 'state', 'collectionField', 'image', 'date']
+  for (const b of bindings) {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(b)
+  }
+  const capabilities = ['image_gen', 'vision', 'chat', 'transcription', 'classification']
+  for (const cap of capabilities) {
+    expect(SYSTEM_PROMPT_CATALOG).toContain(cap)
+  }
+})
+
+// ─── T-0009-220 — Failure (M1-only names absent, Image correctly present) ──
+const M1_ONLY_ABSENT = ['Container', 'Counter', 'Toggle', 'TextInput', 'Form']
+
+it.each(M1_ONLY_ABSENT)(
+  'T-0009-220: catalog does NOT contain M1-only component name "%s"',
+  (m1Name) => {
+    // Check catalog without examples section to avoid false positives
+    const catalogWithoutExamples = SYSTEM_PROMPT_CATALOG.split('## Examples')[0] ?? SYSTEM_PROMPT_CATALOG
+    expect(catalogWithoutExamples).not.toContain(m1Name)
+  },
+)
+
+it('T-0009-220b: catalog DOES contain "Image" (V1 Image component is real)', () => {
+  expect(SYSTEM_PROMPT_CATALOG).toContain('Image')
+})
+
+it('T-0009-220c: catalog does NOT contain "M1 catalog" or "M1-only" substring', () => {
+  expect(SYSTEM_PROMPT_CATALOG).not.toContain('M1 catalog')
+  expect(SYSTEM_PROMPT_CATALOG).not.toContain('M1-only')
 })
