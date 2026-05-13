@@ -35,7 +35,7 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {SafeContainer} from '#/components/SafeContainer'
-import {useMiniAppsListQuery, type MiniApp} from '#/state/queries/miniApps'
+import {useMiniAppsListQuery, useDeleteMiniAppMutation, type MiniApp} from '#/state/queries/miniApps'
 import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {libraryCopy, noResultsCopy} from './copy'
@@ -56,6 +56,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Library'>
 export function LibraryScreen({navigation}: Props) {
   const theme = useAppShellTheme()
   const query = useMiniAppsListQuery()
+  const deleteMutation = useDeleteMiniAppMutation()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [activeFilter, setActiveFilter] = useState<FilterChip>('all')
@@ -119,9 +120,9 @@ export function LibraryScreen({navigation}: Props) {
     // useArchiveMiniAppMutation — wired in Step 10.
   }, [])
 
-  const handleDelete = useCallback((_id: string) => {
-    // useDeleteMiniAppMutation — wired in Step 10.
-  }, [])
+  const handleDelete = useCallback((id: string) => {
+    deleteMutation.mutate({id})
+  }, [deleteMutation])
 
   // ---------- filter + search ----------
 

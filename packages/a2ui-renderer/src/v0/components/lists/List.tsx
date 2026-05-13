@@ -58,6 +58,7 @@ import {useReducedMotion} from '../../a11y/useReducedMotion.js'
 import {NodeRenderer} from '../NodeRenderer.js'
 import {ITEM_LAYOUT_HEIGHT} from './defaults.js'
 import type {Row, RowId} from '../../state/types.js'
+import {SwipeableRowRenderer} from './SwipeableRow.js'
 // V1 Phase 1 Step 2: SearchBar integration
 import {useSearchFilter} from '../../state/SearchFilterContext.js'
 
@@ -238,23 +239,36 @@ export function ListRenderer({node}: {node: ListNode}) {
       layout={layoutAnim}
       accessibilityLabel={node.accessibilityLabel ?? node.collectionId}
     >
-      {rowEntries.map(item => (
-        <Animated.View
-          key={item.rowId}
-          entering={enteringAnim}
-          exiting={exitingAnim}
-        >
-          <ListItemContextProvider
-            value={{row: item.row, rowId: item.rowId, index: item.index}}
+      {rowEntries.map(item => {
+        const title = String(item.row['name'] ?? item.row['title'] ?? item.row['label'] ?? Object.values(item.row)[0] ?? '')
+        const subtitle = String(item.row['subtitle'] ?? item.row['description'] ?? item.row['detail'] ?? '')
+        const swipeableNode = {
+          id: item.rowId,
+          type: 'SwipeableRow' as const,
+          title,
+          ...(subtitle ? {subtitle} : {}),
+          trailingAction: {
+            type: 'removeItem' as const,
+            collection: node.collectionId,
+            itemId: item.rowId,
+          },
+          trailingActionIcon: 'trash' as const,
+          trailingActionColor: 'danger' as const,
+        }
+        return (
+          <Animated.View
+            key={item.rowId}
+            entering={enteringAnim}
+            exiting={exitingAnim}
           >
-            <DefaultRowView
-              row={item.row}
-              theme={theme}
-              rowHeight={estimatedItemSize}
-            />
-          </ListItemContextProvider>
-        </Animated.View>
-      ))}
+            <ListItemContextProvider
+              value={{row: item.row, rowId: item.rowId, index: item.index}}
+            >
+              <SwipeableRowRenderer node={swipeableNode} itemLayout={itemLayout} />
+            </ListItemContextProvider>
+          </Animated.View>
+        )
+      })}
     </Animated.View>
   )
 }
