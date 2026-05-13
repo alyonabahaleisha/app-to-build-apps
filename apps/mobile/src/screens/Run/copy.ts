@@ -40,6 +40,8 @@ export const runCopy = {
   deleteAlertBody: 'This cannot be undone.',
   deleteAlertConfirm: 'Delete',
   deleteAlertCancel: 'Cancel',
+  deleteError: "Couldn't delete this tool",
+  archiveError: "Couldn't archive this tool",
 
   // Loading state
   loading: 'Loading…',

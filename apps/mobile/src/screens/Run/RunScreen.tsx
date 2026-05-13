@@ -177,16 +177,15 @@ export function RunScreen({route, navigation}: Props) {
         {
           text: runCopy.archiveAlertConfirm,
           onPress: () => {
+            navigation.goBack()
             archiveMutation.mutate({id: miniAppId}, {
-              onSuccess: () => {
-                navigation.goBack()
-              },
+              onError: () => toast.show(runCopy.archiveError),
             })
           },
         },
       ],
     )
-  }, [miniAppId, archiveMutation, navigation])
+  }, [miniAppId, archiveMutation, navigation, toast])
 
   const handleDelete = useCallback(() => {
     meatballRef.current?.dismiss()
@@ -199,16 +198,15 @@ export function RunScreen({route, navigation}: Props) {
           text: runCopy.deleteAlertConfirm,
           style: 'destructive',
           onPress: () => {
+            navigation.goBack()
             deleteMutation.mutate({id: miniAppId}, {
-              onSuccess: () => {
-                navigation.goBack()
-              },
+              onError: () => toast.show(runCopy.deleteError),
             })
           },
         },
       ],
     )
-  }, [miniAppId, deleteMutation, navigation])
+  }, [miniAppId, deleteMutation, navigation, toast])
 
   const handleCoachmarkDismiss = useCallback(() => {
     setCoachmarkVisible(false)
