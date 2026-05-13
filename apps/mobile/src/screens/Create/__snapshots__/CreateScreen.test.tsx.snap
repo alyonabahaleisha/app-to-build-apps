@@ -151,6 +151,15 @@ exports[`CreateScreen T-0011-237: snapshot — default state: create-default 1`]
                     ]
                   }
                 >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "justifyContent": "center",
+                        "width": 32,
+                      }
+                    }
+                  />
                   <Text
                     accessibilityRole="header"
                     style={
@@ -213,6 +222,11 @@ exports[`CreateScreen T-0011-237: snapshot — default state: create-default 1`]
                           "borderRadius": 16,
                           "borderWidth": 0.5,
                           "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "alignItems": "center",
+                          "justifyContent": "center",
                           "width": 32,
                         },
                         {
@@ -1253,6 +1267,15 @@ exports[`CreateScreen T-0011-238: snapshot — typing state with chips collapsed
                     ]
                   }
                 >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "justifyContent": "center",
+                        "width": 32,
+                      }
+                    }
+                  />
                   <Text
                     accessibilityRole="header"
                     style={
@@ -1315,6 +1338,11 @@ exports[`CreateScreen T-0011-238: snapshot — typing state with chips collapsed
                           "borderRadius": 16,
                           "borderWidth": 0.5,
                           "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "alignItems": "center",
+                          "justifyContent": "center",
                           "width": 32,
                         },
                         {
@@ -1892,6 +1920,15 @@ exports[`CreateScreen T-0011-239: snapshot — with editing pill: create-editing
                     ]
                   }
                 >
+                  <View
+                    style={
+                      {
+                        "alignItems": "center",
+                        "justifyContent": "center",
+                        "width": 32,
+                      }
+                    }
+                  />
                   <Text
                     accessibilityRole="header"
                     style={
@@ -1954,6 +1991,11 @@ exports[`CreateScreen T-0011-239: snapshot — with editing pill: create-editing
                           "borderRadius": 16,
                           "borderWidth": 0.5,
                           "height": 32,
+                          "width": 32,
+                        },
+                        {
+                          "alignItems": "center",
+                          "justifyContent": "center",
                           "width": 32,
                         },
                         {

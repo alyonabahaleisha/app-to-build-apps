@@ -109,6 +109,22 @@ export function CreateScreen({route, navigation}: Props) {
         <View style={styles.root} testID="create-screen-root">
           {/* Header bar */}
           <View style={[styles.header, {borderBottomColor: theme.divider}]}>
+            {/* Left — back button or spacer */}
+            {navigation.canGoBack() ? (
+              <Pressable
+                onPress={() => navigation.goBack()}
+                accessibilityRole="button"
+                accessibilityLabel="Go back"
+                hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
+                style={styles.headerControl}
+                testID="create-back"
+              >
+                <Text style={{color: theme.fg, fontSize: 24}}>‹</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.headerControl} />
+            )}
+
             <Text
               style={[
                 {
@@ -132,6 +148,7 @@ export function CreateScreen({route, navigation}: Props) {
               hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
               style={[
                 styles.avatar,
+                styles.headerControl,
                 {
                   backgroundColor: theme['bg-elevated'],
                   borderColor: theme.divider,
@@ -215,6 +232,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  headerControl: {
+    width: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   avatar: {
     width: 32,

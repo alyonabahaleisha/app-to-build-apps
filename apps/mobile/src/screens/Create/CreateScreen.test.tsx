@@ -164,11 +164,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>()
 
 interface HarnessOptions {
   params?: RootStackParamList['Create']
+  canGoBack?: boolean
 }
 
 function renderCreate(opts: HarnessOptions = {}) {
   const navigateSpy = jest.fn()
   const replaceSpy = jest.fn()
+  const goBackSpy = jest.fn()
   const qc = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
   })
@@ -182,6 +184,13 @@ function renderCreate(opts: HarnessOptions = {}) {
       replace: (...args: unknown[]) => {
         replaceSpy(...args)
       },
+      // Override canGoBack and goBack when the test opts in
+      ...(opts.canGoBack !== undefined
+        ? {
+            canGoBack: () => opts.canGoBack!,
+            goBack: goBackSpy,
+          }
+        : {}),
     } as typeof props.navigation
     return <CreateScreen {...props} navigation={wrappedNav} />
   }
@@ -221,7 +230,7 @@ function renderCreate(opts: HarnessOptions = {}) {
     </SafeAreaProvider>,
   )
 
-  return {...result, navigateSpy, replaceSpy}
+  return {...result, navigateSpy, replaceSpy, goBackSpy}
 }
 
 // ---- Tests ------------------------------------------------------------------
@@ -441,6 +450,31 @@ describe('CreateScreen', () => {
   it('T-0011-206: two different seeds → at least one different chip (tested in suggestedPrompts.test.ts)', () => {
     // Cross-reference: T-0011-206 is authoritatively tested in suggestedPrompts.test.ts.
     expect(true).toBe(true)
+  })
+
+  // ---- Back button -----------------------------------------------------------
+
+  it('T-0011-231a: back button renders when canGoBack is true', async () => {
+    const {queryByTestId} = renderCreate({canGoBack: true})
+    await waitFor(() => {
+      expect(queryByTestId('create-back')).not.toBeNull()
+    })
+  })
+
+  it('T-0011-231b-nav: back button absent when canGoBack is false', async () => {
+    const {queryByTestId} = renderCreate({canGoBack: false})
+    await waitFor(() => {
+      expect(queryByTestId('create-back')).toBeNull()
+    })
+  })
+
+  it('T-0011-231c: pressing back button calls navigation.goBack', async () => {
+    const {getByTestId, goBackSpy} = renderCreate({canGoBack: true})
+    await waitFor(() => {
+      expect(getByTestId('create-back')).toBeTruthy()
+    })
+    fireEvent.press(getByTestId('create-back'))
+    expect(goBackSpy).toHaveBeenCalledTimes(1)
   })
 
   // ---- FAB navigates to Generating ----------------------------------------
