@@ -166,6 +166,9 @@ export const MetricTileBaseSchema = z
     deltaTone: z.enum(['positive', 'negative', 'neutral']).optional(),
     sparklineData: z.array(z.number()).max(30).optional(),
     icon: IconNameSchema.optional(),
+    // emptyLabel: shown when valueBinding resolves to null/undefined at runtime.
+    // Renderer default: 'Not yet tracked'. Max 32 chars; must invite action.
+    emptyLabel: z.string().max(32).optional(),
     accessibilityLabel: z.string().optional(),
   })
   .strict()

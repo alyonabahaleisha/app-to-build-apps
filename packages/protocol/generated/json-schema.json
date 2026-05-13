@@ -1416,6 +1416,10 @@
                           "center"
                         ]
                       },
+                      "emptyLabel": {
+                        "type": "string",
+                        "maxLength": 32
+                      },
                       "accessibilityLabel": {
                         "type": "string"
                       }
@@ -2982,6 +2986,10 @@
                       },
                       "icon": {
                         "$ref": "#/definitions/Spec/properties/coverIcon"
+                      },
+                      "emptyLabel": {
+                        "type": "string",
+                        "maxLength": 32
                       },
                       "accessibilityLabel": {
                         "type": "string"

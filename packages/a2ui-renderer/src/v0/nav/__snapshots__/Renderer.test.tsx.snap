@@ -48,6 +48,9 @@ exports[`Milestone B Integration (T-0006-173) Milestone B end-to-end snapshot 1`
           >
             <Text
               accessibilityElementsHidden={true}
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.5}
+              numberOfLines={1}
               style={
                 {
                   "color": "#14171A",

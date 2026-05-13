@@ -273,6 +273,41 @@ describe('MetricTileRenderer 30-point sparkline (T-0009-236)', () => {
 })
 
 // ---------------------------------------------------------------------------
+// QW3 — empty state: renders emptyLabel when valueBinding resolves to empty
+// ---------------------------------------------------------------------------
+
+describe('MetricTileRenderer empty state (QW3)', () => {
+  it('renders emptyLabel when valueBinding slot is absent', () => {
+    const METRIC_EMPTY: MetricTileNode = {
+      id: 'met_empty',
+      type: 'MetricTile',
+      valueBinding: {kind: 'state', slot: 'missing'},
+      label: 'Est. Earnings',
+      emptyLabel: 'Log hours to see earnings',
+    }
+    const {getByText} = renderWithTheme(<MetricTileRenderer node={METRIC_EMPTY} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    expect(getByText('Log hours to see earnings', {includeHiddenElements: true})).toBeTruthy()
+  })
+
+  it('renders default "Not yet tracked" when emptyLabel absent and slot missing', () => {
+    const METRIC_EMPTY2: MetricTileNode = {
+      id: 'met_empty2',
+      type: 'MetricTile',
+      valueBinding: {kind: 'state', slot: 'missing'},
+      label: 'Revenue',
+    }
+    const {getByText} = renderWithTheme(<MetricTileRenderer node={METRIC_EMPTY2} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    expect(getByText('Not yet tracked', {includeHiddenElements: true})).toBeTruthy()
+  })
+})
+
+// ---------------------------------------------------------------------------
 // MetricTile valueBinding — renders slot value from RendererState
 // ---------------------------------------------------------------------------
 

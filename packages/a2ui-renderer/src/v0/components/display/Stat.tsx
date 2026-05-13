@@ -80,25 +80,47 @@ export function StatRenderer({node}: {node: StatNode}) {
   const align = node.align ?? 'start'
   const textAlign = align === 'start' ? 'left' : 'center'
 
+  const isEmpty = resolvedValue === ''
+
   return (
     <View
       accessibilityRole="text"
       accessibilityLabel={a11yLabel}
     >
-      {/* Value */}
-      <Text
-        style={{
-          fontSize: valueTypeSpec.size,
-          lineHeight: valueTypeSpec.lineHeight,
-          fontWeight: String(valueTypeSpec.weight) as '600',
-          letterSpacing: valueTypeSpec.letterSpacing,
-          color: theme.fg,
-          textAlign,
-        }}
-        accessibilityElementsHidden
-      >
-        {resolvedValue}
-      </Text>
+      {/* Value — or empty-state label when binding resolves to null/undefined */}
+      {isEmpty ? (
+        <Text
+          style={{
+            fontSize: labelTypeSpec.size,
+            lineHeight: labelTypeSpec.lineHeight,
+            fontWeight: String(labelTypeSpec.weight) as '400',
+            letterSpacing: labelTypeSpec.letterSpacing,
+            color: theme['fg-muted'],
+            fontStyle: 'italic',
+            textAlign,
+          }}
+          accessibilityElementsHidden
+        >
+          {node.emptyLabel ?? 'Not yet tracked'}
+        </Text>
+      ) : (
+        <Text
+          style={{
+            fontSize: valueTypeSpec.size,
+            lineHeight: valueTypeSpec.lineHeight,
+            fontWeight: String(valueTypeSpec.weight) as '600',
+            letterSpacing: valueTypeSpec.letterSpacing,
+            color: theme.fg,
+            textAlign,
+          }}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.5}
+          accessibilityElementsHidden
+        >
+          {resolvedValue}
+        </Text>
+      )}
 
       {/* Label */}
       {node.label ? (

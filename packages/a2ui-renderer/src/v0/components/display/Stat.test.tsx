@@ -165,6 +165,41 @@ describe('StatRenderer boundary (T-0006-085)', () => {
 })
 
 // ---------------------------------------------------------------------------
+// QW3 — empty state: renders emptyLabel when valueBinding resolves to empty
+// ---------------------------------------------------------------------------
+
+describe('StatRenderer empty state (QW3)', () => {
+  it('renders emptyLabel when valueBinding slot is absent', () => {
+    const STAT_BINDING: StatNode = {
+      id: 'stat_empty',
+      type: 'Stat',
+      valueBinding: {kind: 'state', slot: 'missing'},
+      label: 'water today',
+      emptyLabel: 'Log water to see total',
+    }
+    const {getByText} = renderWithTheme(<StatRenderer node={STAT_BINDING} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    expect(getByText('Log water to see total', {includeHiddenElements: true})).toBeTruthy()
+  })
+
+  it('renders default "Not yet tracked" when emptyLabel absent and slot missing', () => {
+    const STAT_BINDING: StatNode = {
+      id: 'stat_empty2',
+      type: 'Stat',
+      valueBinding: {kind: 'state', slot: 'missing'},
+      label: 'steps',
+    }
+    const {getByText} = renderWithTheme(<StatRenderer node={STAT_BINDING} />, {
+      stance: 'productive',
+      palette: 'focus',
+    })
+    expect(getByText('Not yet tracked', {includeHiddenElements: true})).toBeTruthy()
+  })
+})
+
+// ---------------------------------------------------------------------------
 // T-0006-300: valueBinding — renders slot value from RendererState
 // ---------------------------------------------------------------------------
 

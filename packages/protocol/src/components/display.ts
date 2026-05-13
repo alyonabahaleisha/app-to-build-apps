@@ -22,6 +22,9 @@ export const StatBaseSchema = z
     delta: z.string().max(40).optional(),
     deltaTone: z.enum(['positive', 'negative', 'neutral']).optional(),
     align: z.enum(['start', 'center']).optional(),
+    // emptyLabel: shown when valueBinding resolves to null/undefined at runtime.
+    // Renderer default: 'Not yet tracked'. Max 32 chars; must invite action.
+    emptyLabel: z.string().max(32).optional(),
     accessibilityLabel: z.string().optional(),
   })
   .strict()

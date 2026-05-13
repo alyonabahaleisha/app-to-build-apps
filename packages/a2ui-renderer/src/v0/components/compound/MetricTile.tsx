@@ -159,6 +159,7 @@ export function MetricTileRenderer({node}: {node: MetricTileNode}) {
   const binding: Binding<string | number> = node.valueBinding ?? fallbackBinding
   const boundValue = useBinding<string | number>(binding)
   const resolvedValue = String(boundValue ?? '')
+  const isEmpty = resolvedValue === ''
 
   const h1Spec = theme.type['h1']
   const captionSpec = theme.type.caption
@@ -166,9 +167,10 @@ export function MetricTileRenderer({node}: {node: MetricTileNode}) {
 
   const toneColor = deltaToneColor(node.deltaTone, theme)
 
+  const displayValue = isEmpty ? (node.emptyLabel ?? 'Not yet tracked') : resolvedValue
   const a11yLabel =
     node.accessibilityLabel ??
-    [resolvedValue, node.label, node.delta].filter(Boolean).join(', ')
+    [displayValue, node.label, node.delta].filter(Boolean).join(', ')
 
   return (
     <View
@@ -190,18 +192,36 @@ export function MetricTileRenderer({node}: {node: MetricTileNode}) {
             </View>
           ) : null}
 
-          {/* Value */}
-          <Text
-            style={{
-              fontSize: h1Spec.size,
-              lineHeight: h1Spec.lineHeight,
-              fontWeight: String(h1Spec.weight) as '700',
-              color: theme.fg,
-            }}
-            accessibilityElementsHidden
-          >
-            {resolvedValue}
-          </Text>
+          {/* Value — or empty-state label when binding resolves to null/undefined */}
+          {isEmpty ? (
+            <Text
+              style={{
+                fontSize: captionSpec.size,
+                lineHeight: captionSpec.lineHeight,
+                fontWeight: String(captionSpec.weight) as '400',
+                color: theme['fg-muted'],
+                fontStyle: 'italic',
+              }}
+              accessibilityElementsHidden
+            >
+              {node.emptyLabel ?? 'Not yet tracked'}
+            </Text>
+          ) : (
+            <Text
+              style={{
+                fontSize: h1Spec.size,
+                lineHeight: h1Spec.lineHeight,
+                fontWeight: String(h1Spec.weight) as '700',
+                color: theme.fg,
+              }}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.5}
+              accessibilityElementsHidden
+            >
+              {resolvedValue}
+            </Text>
+          )}
         </View>
 
         {/* Sparkline — T-0009-124: only rendered when sparklineData is present */}

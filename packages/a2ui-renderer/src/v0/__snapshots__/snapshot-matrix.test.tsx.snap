@@ -10010,6 +10010,9 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
 >
   <Text
     accessibilityElementsHidden={true}
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.5}
+    numberOfLines={1}
     style={
       {
         "color": "#14171A",
@@ -12434,6 +12437,9 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
 >
   <Text
     accessibilityElementsHidden={true}
+    adjustsFontSizeToFit={true}
+    minimumFontScale={0.5}
+    numberOfLines={1}
     style={
       {
         "color": "#1A1715",
@@ -17070,6 +17076,9 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
     >
       <Text
         accessibilityElementsHidden={true}
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.5}
+        numberOfLines={1}
         style={
           {
             "color": "#14171A",
@@ -20429,6 +20438,9 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
     >
       <Text
         accessibilityElementsHidden={true}
+        adjustsFontSizeToFit={true}
+        minimumFontScale={0.5}
+        numberOfLines={1}
         style={
           {
             "color": "#1A1715",
