@@ -18,10 +18,12 @@
  * T-0006-079: delta-tone resolves correctly
  * T-0006-085: no delta prop → no delta block rendered
  */
-import React from 'react'
+import React, {useMemo} from 'react'
 import {View, Text} from 'react-native'
 import type {Node} from '@app-creator/protocol'
 import {useTheme} from '../../theme/RendererThemeProvider.js'
+import {useBinding} from '../../state/useBinding.js'
+import type {Binding} from '../../state/useBinding.js'
 
 type StatNode = Extract<Node, {type: 'Stat'}>
 
@@ -42,8 +44,8 @@ function deltaToneColor(
 }
 
 // Build a simple accessibility label combining all visible information.
-function buildA11yLabel(node: StatNode): string {
-  const parts: string[] = [String(node.value)]
+function buildA11yLabel(resolvedValue: string, node: StatNode): string {
+  const parts: string[] = [resolvedValue]
   if (node.label) parts.push(node.label)
   if (node.delta && node.deltaTone && node.deltaTone !== 'neutral') {
     parts.push(`trending ${node.deltaTone === 'positive' ? 'up' : 'down'}`)
@@ -54,6 +56,17 @@ function buildA11yLabel(node: StatNode): string {
 export function StatRenderer({node}: {node: StatNode}) {
   const theme = useTheme()
 
+  // Always call useBinding to satisfy rules-of-hooks. When no valueBinding is
+  // present, use a stable literal binding derived from node.value so the hook
+  // is never skipped. The XOR refine on StatSchema guarantees exactly one is set.
+  const fallbackBinding = useMemo<Binding<string>>(
+    () => ({kind: 'literal', value: node.value ?? ''}),
+    [node.value],
+  )
+  const binding: Binding<string | number> = node.valueBinding ?? fallbackBinding
+  const boundValue = useBinding<string | number>(binding)
+  const resolvedValue = String(boundValue ?? '')
+
   // The schema Stat has no 'size' prop — it was in the UX brief but the protocol
   // uses 'value', 'label', 'delta', 'deltaTone', 'align'. Value type defaults to h1.
   const valueTypeSpec = theme.type['h1']
@@ -62,7 +75,7 @@ export function StatRenderer({node}: {node: StatNode}) {
 
   const toneColor = deltaToneColor(node.deltaTone, theme)
 
-  const a11yLabel = node.accessibilityLabel ?? buildA11yLabel(node)
+  const a11yLabel = node.accessibilityLabel ?? buildA11yLabel(resolvedValue, node)
 
   const align = node.align ?? 'start'
   const textAlign = align === 'start' ? 'left' : 'center'
@@ -84,7 +97,7 @@ export function StatRenderer({node}: {node: StatNode}) {
         }}
         accessibilityElementsHidden
       >
-        {String(node.value)}
+        {resolvedValue}
       </Text>
 
       {/* Label */}

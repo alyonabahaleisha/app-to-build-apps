@@ -80,7 +80,7 @@ describe('@app-creator/protocol index smoke', () => {
   it('re-exports Step 2 + Step 3 schemas from package root', () => {
     expect(SlotNameSchema).toBeDefined()
     expect(ActionSchema).toBeDefined()
-    expect(ACTION_VERB_COUNT).toBe(12)
+    expect(ACTION_VERB_COUNT).toBe(13)
     expect(StringBindingSchema).toBeDefined() // sample one binding
     expect(CollectionSchema).toBeDefined()
     expect(FieldTypeSchema).toBeDefined()

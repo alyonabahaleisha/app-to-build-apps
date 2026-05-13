@@ -8,7 +8,7 @@
  *   - JSON Schema 7 format (zod-to-json-schema `target: 'jsonSchema7'`)
  *   - Deterministic: same input always produces the same bytes
  *   - Does NOT contain "share" anywhere (F-02 / T-0005-187a guard)
- *   - Action verb discriminated union has exactly 12 members (F-13 / T-0005-187b)
+ *   - Action verb discriminated union has exactly 13 members (F-13 / T-0005-187b)
  *
  * Run via: pnpm --filter @app-creator/protocol codegen
  */

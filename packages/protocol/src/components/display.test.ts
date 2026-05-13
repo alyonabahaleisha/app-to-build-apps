@@ -1,11 +1,12 @@
 /**
  * Display component schema tests — T-0005-072..097, T-0005-098..125
  * V1 Phase 1 Step 3 additions: T-0009-074..075 (AvatarGroup), T-0009-079 (Callout)
+ * V0 actions hotfix: T-0006-101..102 (Stat.valueBinding XOR)
  * Components: Stat, Badge, Chip, Avatar (4 display tier)
  * V1 additions: AvatarGroup, Callout (2 new)
  */
 import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
-import {STAT_FIXTURE, BADGE_FIXTURE, CHIP_FIXTURE, AVATAR_FIXTURE, TOAST_ACTION} from '../../test/fixtures.js'
+import {STAT_FIXTURE, STAT_FIXTURE_WITH_BINDING, BADGE_FIXTURE, CHIP_FIXTURE, AVATAR_FIXTURE, TOAST_ACTION} from '../../test/fixtures.js'
 
 // ---- Stat ----
 
@@ -14,9 +15,44 @@ describe('StatSchema', () => {
     expect(() => StatSchema.parse(STAT_FIXTURE)).not.toThrow()
   })
 
-  it('fails when value is missing', () => {
+  it('fails when neither value nor valueBinding is provided', () => {
     const {value: _v, ...rest} = STAT_FIXTURE
     expect(() => StatSchema.parse(rest)).toThrow()
+  })
+
+  it('fails when both value and valueBinding are provided (XOR refine)', () => {
+    expect(() =>
+      StatSchema.parse({...STAT_FIXTURE, valueBinding: {kind: 'state', slot: 'count'}}),
+    ).toThrow()
+  })
+
+  // T-0006-101 — Stat.valueBinding parses with all 3 binding kinds
+  it('T-0006-101a: parses with valueBinding: {kind: "state", slot: "count"}', () => {
+    expect(() => StatSchema.parse(STAT_FIXTURE_WITH_BINDING)).not.toThrow()
+  })
+
+  it('T-0006-101b: parses with valueBinding: {kind: "literal", value: 42}', () => {
+    const {value: _v, ...rest} = STAT_FIXTURE
+    expect(() =>
+      StatSchema.parse({...rest, valueBinding: {kind: 'literal', value: 42}}),
+    ).not.toThrow()
+  })
+
+  it('T-0006-101c: parses with valueBinding: {kind: "collectionField", ...}', () => {
+    const {value: _v, ...rest} = STAT_FIXTURE
+    expect(() =>
+      StatSchema.parse({
+        ...rest,
+        valueBinding: {kind: 'collectionField', collectionId: 'workouts', field: 'reps'},
+      }),
+    ).not.toThrow()
+  })
+
+  // T-0006-102 — Stat XOR refine rejects both value and valueBinding
+  it('T-0006-102: rejects both value and valueBinding present (XOR)', () => {
+    expect(() =>
+      StatSchema.parse({...STAT_FIXTURE, valueBinding: {kind: 'state', slot: 'count'}}),
+    ).toThrow()
   })
 
   it('fails when label is missing', () => {

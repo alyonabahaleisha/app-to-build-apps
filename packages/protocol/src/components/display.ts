@@ -2,13 +2,22 @@ import {z} from 'zod'
 import {COMPONENT_ID_REGEX} from './layout.js'
 import {ActionSchema} from '../actions.js'
 import {IconNameSchema} from './slot.js'
+import {StringBindingSchema, NumberBindingSchema} from '../binding.js'
 
-// Stat — big-number display with optional delta.
-export const StatSchema = z
+// StatBaseSchema — raw ZodObject shape for StatSchema.
+// Used in NodeSchema discriminated union (refine → ZodEffects, which is
+// incompatible with z.discriminatedUnion's ZodObject requirement).
+// Mirrors the CalendarBaseSchema / CalendarSchema pattern in compound.ts.
+export const StatBaseSchema = z
   .object({
     id: z.string().regex(COMPONENT_ID_REGEX),
     type: z.literal('Stat'),
-    value: z.string().min(1).max(80),
+    // value: legacy literal string (kept for back-compat with hand-authored specs
+    // and the seed Stats in V0 prompt examples). Required when valueBinding is absent.
+    value: z.string().min(1).max(80).optional(),
+    // valueBinding: live binding for Stats that should track a state slot
+    // (counters, totals, derived metrics). Resolved at render time.
+    valueBinding: z.union([StringBindingSchema, NumberBindingSchema]).optional(),
     label: z.string().min(1).max(80),
     delta: z.string().max(40).optional(),
     deltaTone: z.enum(['positive', 'negative', 'neutral']).optional(),
@@ -16,6 +25,13 @@ export const StatSchema = z
     accessibilityLabel: z.string().optional(),
   })
   .strict()
+
+// StatSchema — wraps StatBaseSchema with the XOR refine.
+// Use StatSchema for standalone parsing; use StatBaseSchema in discriminated unions.
+export const StatSchema = StatBaseSchema.refine(
+  v => (v.value !== undefined) !== (v.valueBinding !== undefined),
+  {message: 'Stat must have exactly one of `value` or `valueBinding`'},
+)
 export type Stat = z.infer<typeof StatSchema>
 
 // Badge — small status pill; tone-tinted.

@@ -413,19 +413,20 @@ describe('T-0005-187a (F-02): json-schema.json does not contain "share" verb', (
 })
 
 // ---------------------------------------------------------------------------
-// T-0005-187b — Boundary (F-13): action verb discriminated union has exactly 12 members
+// T-0005-187b — Boundary (F-13): action verb discriminated union has exactly 13 members
 //
 // Walk generated/json-schema.json to find the Action discriminated union (an
 // anyOf/oneOf where every member object has type.const = a known verb name).
-// Assert exactly 12 members. Catches accidental verb addition or removal.
+// Assert exactly 13 members. Catches accidental verb addition or removal.
 // ---------------------------------------------------------------------------
-describe('T-0005-187b (F-13): action verb union has exactly 12 members', () => {
+describe('T-0005-187b (F-13): action verb union has exactly 13 members', () => {
   const KNOWN_VERB_NAMES = new Set([
     'set', 'update', 'reset', 'addItem', 'removeItem', 'updateItem',
     'clearCollection', 'navigate', 'back', 'capture', 'toast', 'aiProcess',
+    'increment',
   ])
 
-  it('finds exactly one action verb union with exactly 12 members', () => {
+  it('finds exactly one action verb union with exactly 13 members', () => {
     const schema = JSON.parse(fs.readFileSync(JSON_SCHEMA_PATH, 'utf8')) as unknown
 
     /**
@@ -476,13 +477,13 @@ describe('T-0005-187b (F-13): action verb union has exactly 12 members', () => {
     // There must be at least one action verb union in the schema
     expect(verbUnions.length).toBeGreaterThanOrEqual(1)
 
-    // The union(s) that contain action verbs must all have exactly 12 members
+    // The union(s) that contain action verbs must all have exactly 13 members
     for (const union of verbUnions) {
-      expect(union.length).toBe(12)
+      expect(union.length).toBe(13)
     }
   })
 
-  it('action verb union contains all 12 expected verbs (no substitution)', () => {
+  it('action verb union contains all 13 expected verbs (no substitution)', () => {
     const schema = JSON.parse(fs.readFileSync(JSON_SCHEMA_PATH, 'utf8')) as unknown
 
     function findVerbUnions(obj: unknown, results: string[][] = []): string[][] {
@@ -602,8 +603,8 @@ describe('Additive: 53 component schemas present in NodeSchema union (V1 Phase 1
   })
 })
 
-describe('Additive: docs.md section count — exactly 86 named sections (V1 Phase 1 Step 7)', () => {
-  it('docs.md has exactly 86 named ## sections (13 token + 53 component + 12 verb + 5 binding + 3 top-level)', () => {
+describe('Additive: docs.md section count — exactly 87 named sections (V1 Phase 1 Step 7)', () => {
+  it('docs.md has exactly 87 named ## sections (13 token + 53 component + 13 verb + 5 binding + 3 top-level)', () => {
     const content = fs.readFileSync(DOCS_PATH, 'utf8')
     // Named sections are ## headers that are NOT group headers
     const GROUP_HEADERS = new Set([
@@ -616,6 +617,6 @@ describe('Additive: docs.md section count — exactly 86 named sections (V1 Phas
     ])
     const allHeaders = content.split('\n').filter(l => l.startsWith('## ')).map(l => l.slice(3).trim())
     const namedHeaders = allHeaders.filter(h => !GROUP_HEADERS.has(h))
-    expect(namedHeaders.length).toBe(86)
+    expect(namedHeaders.length).toBe(87)
   })
 })

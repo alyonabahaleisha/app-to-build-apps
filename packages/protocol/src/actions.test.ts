@@ -1,10 +1,10 @@
 import {ActionSchema, ACTION_VERB_COUNT} from './actions.js'
 
 // ---------------------------------------------------------------------------
-// T-0005-038 — All 12 action verb literals parse with valid params
+// T-0005-038 — All 13 action verb literals parse with valid params
 // ---------------------------------------------------------------------------
 
-describe('T-0005-038 — all 12 verbs parse with valid params', () => {
+describe('T-0005-038 — all 13 verbs parse with valid params', () => {
   const VALID_ACTIONS = [
     {type: 'set', target: 'slot1', value: 'hello'},
     {type: 'update', collection: 'workouts', itemId: 'item1', patch: {name: 'Run'}},
@@ -24,6 +24,7 @@ describe('T-0005-038 — all 12 verbs parse with valid params', () => {
       prompt: 'sum it up',
       target: 'summary',
     },
+    {type: 'increment', target: 'count', by: 1},
   ] as const
 
   it.each(VALID_ACTIONS)('$type action parses successfully', action => {
@@ -42,17 +43,79 @@ describe('T-0005-039 — share verb is absent (F-4 cut)', () => {
 })
 
 // ---------------------------------------------------------------------------
-// T-0005-040 — Action verb union has exactly 12 members (cardinality tripwire)
+// T-0005-040 — Action verb union has exactly 13 members (cardinality tripwire)
 // ---------------------------------------------------------------------------
 
-describe('T-0005-040 — action verb union has exactly 12 members', () => {
-  it('ACTION_VERB_COUNT equals 12', () => {
-    expect(ACTION_VERB_COUNT).toBe(12)
+describe('T-0005-040 — action verb union has exactly 13 members', () => {
+  it('ACTION_VERB_COUNT equals 13', () => {
+    expect(ACTION_VERB_COUNT).toBe(13)
   })
 
-  it('ActionSchema options array has exactly 12 entries', () => {
+  it('ActionSchema options array has exactly 13 entries', () => {
     // z.discriminatedUnion exposes .options
-    expect((ActionSchema as {options: unknown[]}).options).toHaveLength(12)
+    expect((ActionSchema as {options: unknown[]}).options).toHaveLength(13)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0005-200 — increment action parses with by, min, max
+// ---------------------------------------------------------------------------
+
+describe('T-0005-200 — increment action parses with by, min, max', () => {
+  it('parses with just target and by', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'count', by: 1})).not.toThrow()
+  })
+
+  it('parses with negative by (decrement semantics)', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'count', by: -1})).not.toThrow()
+  })
+
+  it('parses with optional min and max clamp', () => {
+    expect(() =>
+      ActionSchema.parse({type: 'increment', target: 'count', by: 1, min: 0, max: 100}),
+    ).not.toThrow()
+  })
+
+  it('parses with by: 0', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'count', by: 0})).not.toThrow()
+  })
+
+  it('parses with fractional by', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'score', by: 0.5})).not.toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0005-201 — increment without target fails
+// ---------------------------------------------------------------------------
+
+describe('T-0005-201 — increment without target fails', () => {
+  it('fails when target is missing', () => {
+    expect(() => ActionSchema.parse({type: 'increment', by: 1})).toThrow()
+  })
+
+  it('fails when target is empty string', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: '', by: 1})).toThrow()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0005-202 — increment with non-numeric by fails
+// ---------------------------------------------------------------------------
+
+describe('T-0005-202 — increment with non-numeric by fails', () => {
+  it('fails when by is a string', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'count', by: '1'})).toThrow()
+  })
+
+  it('fails when by is missing', () => {
+    expect(() => ActionSchema.parse({type: 'increment', target: 'count'})).toThrow()
+  })
+
+  it('fails with extra unknown fields (.strict())', () => {
+    expect(() =>
+      ActionSchema.parse({type: 'increment', target: 'count', by: 1, step: 1}),
+    ).toThrow()
   })
 })
 

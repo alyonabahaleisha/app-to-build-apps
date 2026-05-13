@@ -9872,9 +9872,6 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
     {
       "backgroundColor": "#FAFAF7",
       "flex": 1,
-      "paddingBottom": 0,
-      "paddingHorizontal": 20,
-      "paddingTop": 0,
     }
   }
 />
@@ -10514,68 +10511,59 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
   accessibilityLabel="items"
   style={
     {
-      "flex": 1,
       "minHeight": 112,
     }
   }
   testID="list-container"
 >
-  <View
-    testID="flashlist"
-  >
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#14171A",
-                "fontSize": 16,
-                "lineHeight": 24,
-              }
-            }
-          >
-            Morning run
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Morning run
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#14171A",
-                "fontSize": 16,
-                "lineHeight": 24,
-              }
-            }
-          >
-            Evening walk
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Evening walk
+      </Text>
     </View>
   </View>
 </View>
@@ -11924,9 +11912,6 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
     {
       "backgroundColor": "#FBF8F3",
       "flex": 1,
-      "paddingBottom": 0,
-      "paddingHorizontal": 32,
-      "paddingTop": 0,
     }
   }
 />
@@ -12551,68 +12536,59 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
   accessibilityLabel="items"
   style={
     {
-      "flex": 1,
       "minHeight": 160,
     }
   }
   testID="list-container"
 >
-  <View
-    testID="flashlist"
-  >
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 80,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 80,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1A1715",
-                "fontSize": 16,
-                "lineHeight": 26,
-              }
-            }
-          >
-            Morning run
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Morning run
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 80,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 80,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1A1715",
-                "fontSize": 16,
-                "lineHeight": 26,
-              }
-            }
-          >
-            Evening walk
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Evening walk
+      </Text>
     </View>
   </View>
 </View>

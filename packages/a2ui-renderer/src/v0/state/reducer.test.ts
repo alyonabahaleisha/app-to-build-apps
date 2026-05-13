@@ -1,11 +1,11 @@
 /**
  * Reducer tests — T-0006-006 through T-0006-012a, T-0006-028
  *
- * Tests the pure reducer for all 12 verbs + internal actions.
+ * Tests the pure reducer for all 13 verbs + internal actions.
  * No React, no hooks — pure function tests.
  */
 import {reducer, buildInitialRendererState, resetRowIdCounter} from './reducer'
-import type {RendererState} from './types'
+import type {RendererState, RendererAction} from './types'
 import type {Collection, Spec} from '@app-creator/protocol'
 
 // -- Test fixtures ------------------------------------------------------------
@@ -96,9 +96,9 @@ describe('reducer — set verb (T-0006-006)', () => {
   })
 })
 
-// -- T-0006-007: all 12 verbs (parameterized) ----------------------------------
+// -- T-0006-007: all 13 verbs (parameterized) ----------------------------------
 
-describe('reducer — 12 verbs (T-0006-007)', () => {
+describe('reducer — 13 verbs (T-0006-007)', () => {
   describe('set', () => {
     it('slots.get(target) === value, other slots unchanged', () => {
       resetRowIdCounter()
@@ -106,6 +106,30 @@ describe('reducer — 12 verbs (T-0006-007)', () => {
       const next = reducer(state, {type: 'set', target: 'x', value: 42})
       expect(next.slots.get('x')).toBe(42)
       expect(next.slots.get('greeting')).toBe('hello')
+    })
+
+    it('resolves {kind:"state", slot} reference — copies slot A into slot B', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      // x is 5 in initialState; copy it into a new slot 'copy'
+      const next = reducer(state, {
+        type: 'set',
+        target: 'copy',
+        value: {kind: 'state' as const, slot: 'x'},
+      })
+      expect(next.slots.get('copy')).toBe(5)
+      expect(next.slots.get('x')).toBe(5)
+    })
+
+    it('resolves {kind:"state"} ref for absent slot — defaults to empty string', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const next = reducer(state, {
+        type: 'set',
+        target: 'dest',
+        value: {kind: 'state' as const, slot: 'nonExistentSlot'},
+      })
+      expect(next.slots.get('dest')).toBe('')
     })
   })
 
@@ -290,6 +314,64 @@ describe('reducer — 12 verbs (T-0006-007)', () => {
       expect(next).toEqual(state)
     })
   })
+
+  describe('increment', () => {
+    it('increments from 0 when slot is absent', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const next = reducer(state, {type: 'increment', target: 'count', by: 1})
+      expect(next.slots.get('count')).toBe(1)
+    })
+
+    it('increments from current numeric value', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const withCount = reducer(state, {type: 'set', target: 'count', value: 5})
+      const next = reducer(withCount, {type: 'increment', target: 'count', by: 3})
+      expect(next.slots.get('count')).toBe(8)
+    })
+
+    it('decrements with negative by', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const withCount = reducer(state, {type: 'set', target: 'count', value: 10})
+      const next = reducer(withCount, {type: 'increment', target: 'count', by: -4})
+      expect(next.slots.get('count')).toBe(6)
+    })
+
+    it('clamps at min when result would go below', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const withCount = reducer(state, {type: 'set', target: 'count', value: 0})
+      const next = reducer(withCount, {type: 'increment', target: 'count', by: -1, min: 0})
+      expect(next.slots.get('count')).toBe(0)
+    })
+
+    it('clamps at max when result would go above', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const withCount = reducer(state, {type: 'set', target: 'count', value: 100})
+      const next = reducer(withCount, {type: 'increment', target: 'count', by: 5, max: 100})
+      expect(next.slots.get('count')).toBe(100)
+    })
+
+    it('by: 0 leaves the value unchanged (still writes the slot)', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      const withCount = reducer(state, {type: 'set', target: 'count', value: 7})
+      const next = reducer(withCount, {type: 'increment', target: 'count', by: 0})
+      expect(next.slots.get('count')).toBe(7)
+    })
+
+    it('non-numeric current slot value defaults to 0 before adding by', () => {
+      resetRowIdCounter()
+      const state = buildInitialRendererState(MINIMAL_SPEC)
+      // Set 'greeting' (a string) as the target
+      const next = reducer(state, {type: 'increment', target: 'greeting', by: 5})
+      // 'greeting' is 'hello' (string) → defaults to 0 → 0 + 5 = 5
+      expect(next.slots.get('greeting')).toBe(5)
+    })
+  })
 })
 
 // -- T-0006-008: addItem with unknown collection --------------------------------
@@ -436,21 +518,102 @@ describe('reducer — immutability: Object.freeze before dispatch (T-0006-012a)'
   })
 })
 
-// -- T-0006-028: All 12 verbs exercised ----------------------------------------
+// -- T-0006-028: All 13 verbs exercised ----------------------------------------
 
-describe('reducer — coverage: all 12 verbs exercised (T-0006-028)', () => {
+describe('reducer — coverage: all 13 verbs exercised (T-0006-028)', () => {
+  // TRIPWIRE: This test dispatches each verb against the reducer. If someone
+  // removes a case from the reducer switch, the reducer falls through to the
+  // default branch (return state unchanged), which means no throw — but the
+  // minimalActionFor() switch will throw "Test missing minimal action for verb"
+  // if VERBS is updated without adding a minimalActionFor case, and more
+  // importantly: to verify the tripwire fires on a *reducer* deletion, see the
+  // manual verification note in the ADR. The real guard is that every action
+  // is dispatched and we assert the reducer returns a RendererState object
+  // (not undefined/null), which the default branch still does — so the
+  // structural test is paired with T-0006-007's behavioral assertions.
+  //
+  // Tripwire mechanism: deleting a verb case from reducer.ts causes the
+  // reducer to return state unchanged for that verb. The test below asserts
+  // the return value is not the same reference as the input state for
+  // state-mutating verbs — meaning any verb that SHOULD mutate but doesn't
+  // will fail the identity check. For no-op verbs (capture, toast, aiProcess,
+  // back-on-empty-history), the assertion is that the reducer doesn't throw.
+  //
+  // To verify: comment out `case 'increment':` in reducer.ts and run this
+  // test. The `increment` case in minimalActionFor dispatches to the reducer;
+  // the reducer returns state unchanged (same reference), which causes the
+  // `not.toBe(state)` assertion to fail — confirming the tripwire fires.
+
+  function minimalActionFor(verb: string): RendererAction {
+    switch (verb) {
+      case 'set':
+        return {type: 'set', target: 'x', value: 42}
+      case 'update':
+        return {type: 'update', collection: 'workouts', itemId: 'row_1', patch: {reps: 99}}
+      case 'reset':
+        return {type: 'reset', target: 'x'}
+      case 'increment':
+        return {type: 'increment', target: 'x', by: 1}
+      case 'addItem':
+        return {type: 'addItem', collection: 'workouts', item: {name: 'Test', reps: 1}}
+      case 'removeItem':
+        return {type: 'removeItem', collection: 'workouts', itemId: 'row_1'}
+      case 'updateItem':
+        return {type: 'updateItem', collection: 'workouts', itemId: 'row_1', patch: {reps: 99}}
+      case 'clearCollection':
+        return {type: 'clearCollection', collection: 'workouts'}
+      case 'navigate':
+        return {type: 'navigate', target: 's1'}
+      case 'back':
+        return {type: 'back'}
+      case 'capture':
+        return {type: 'capture', target: 'photoSlot'}
+      case 'toast':
+        return {type: 'toast', message: 'hello'}
+      case 'aiProcess':
+        return {
+          type: 'aiProcess',
+          task: 'summarize',
+          collection: 'workouts',
+          prompt: 'Summarize',
+          target: 'summary',
+        }
+      default:
+        throw new Error(`Test missing minimal action for verb: ${verb}`)
+    }
+  }
+
+  // Verbs that mutate state (reducer must return a new reference)
+  const MUTATING_VERBS = new Set([
+    'set', 'update', 'reset', 'increment', 'addItem', 'removeItem',
+    'updateItem', 'clearCollection', 'navigate',
+  ])
+
   const VERBS = [
-    'set', 'update', 'reset', 'addItem', 'removeItem',
+    'set', 'update', 'reset', 'increment', 'addItem', 'removeItem',
     'updateItem', 'clearCollection', 'navigate', 'back',
     'capture', 'toast', 'aiProcess',
   ]
 
-  it('all 12 verb types exist and are handled without throwing', () => {
-    expect(VERBS).toHaveLength(12)
-    // Each verb is exercised in T-0006-007 above. This test is a coverage
-    // breadcrumb that will fail if someone removes a verb from the list.
+  it('all 13 verb types are handled by the reducer without throwing', () => {
+    expect(VERBS).toHaveLength(13)
+    const state = makeStateWithCollection()
     for (const verb of VERBS) {
-      expect(typeof verb).toBe('string')
+      const action = minimalActionFor(verb)
+      expect(() => reducer(state, action)).not.toThrow()
+    }
+  })
+
+  it('state-mutating verbs produce a new state reference (tripwire: reducer case deleted → test fails)', () => {
+    // For each mutating verb: build fresh state, dispatch, assert new reference.
+    // If a `case` is removed from reducer.ts, the reducer returns the original
+    // state reference unchanged — this assertion catches that.
+    for (const verb of VERBS) {
+      if (!MUTATING_VERBS.has(verb)) continue
+      const state = makeStateWithCollection()
+      const action = minimalActionFor(verb)
+      const next = reducer(state, action)
+      expect(next).not.toBe(state)
     }
   })
 })

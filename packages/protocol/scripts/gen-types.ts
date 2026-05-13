@@ -127,16 +127,17 @@ export type ImageBinding =
 export type BindingValue = string | number | boolean
 `
 
-// Action types — 12 verbs, 'share' absent (F-4 cut).
+// Action types — 13 verbs, 'share' absent (F-4 cut).
 const ACTION_TYPES = `
 // ---------------------------------------------------------------------------
-// § Action types (12 verbs — 'share' cut per F-4)
+// § Action types (13 verbs — 'share' cut per F-4)
 // ---------------------------------------------------------------------------
 
 export type Action =
   | {type: 'set'; target: string; value: BindingValue}
   | {type: 'update'; collection: string; itemId: string; patch: Record<string, BindingValue>}
   | {type: 'reset'; target: string}
+  | {type: 'increment'; target: string; by: number; min?: number; max?: number}
   | {type: 'addItem'; collection: string; item: Record<string, BindingValue>}
   | {type: 'removeItem'; collection: string; itemId: string}
   | {type: 'updateItem'; collection: string; itemId: string; patch: Record<string, BindingValue>}

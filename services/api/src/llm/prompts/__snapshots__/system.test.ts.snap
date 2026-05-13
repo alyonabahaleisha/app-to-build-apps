@@ -7,7 +7,7 @@ OR you call the out_of_scope tool if the user's request needs a capability
 that V1 doesn't have.
 
 Rules:
-- Use only the 53 catalog components and 12 action verbs from the schema.
+- Use only the 53 catalog components and 13 action verbs from the schema.
 - Choose archetype from: ListCRUD, Tracker, Journal, Calculator.
 - Choose stance (productive or expressive) and palette (focus, health, money,
   social, learn, play) appropriate to the archetype + content.

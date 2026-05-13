@@ -1,7 +1,7 @@
 /**
  * gen-docs.ts — Generates packages/protocol/generated/docs.md
  *
- * One section per: 13 token types, 47 component schemas, 12 action verbs,
+ * One section per: 13 token types, 47 component schemas, 13 action verbs,
  * 5 binding types, plus top-level Spec / SpecScreen / Collection schemas.
  * ADR-0007's prompt builder concatenates this into the cacheable catalog block.
  *
@@ -15,12 +15,12 @@
  *      V1 Phase 1 Step 2 adds MoneyField + TimeField + MultiPicker + Slider + RatingInput + SearchBar,
  *      V1 Phase 1 Step 4 adds GridList + Carousel + Timeline + ErrorState,
  *      V1 Phase 1 Step 5 adds TransactionRow + Receipt + MetricTile + StepList)
- *   3. Action verbs (schema-declaration order, matching actions.ts — 12 total)
+ *   3. Action verbs (schema-declaration order, matching actions.ts — 13 total)
  *   4. Binding types (StringBinding, NumberBinding, BooleanBinding, DateBinding,
  *      ImageBinding — 5 total)
  *   5. Top-level schemas (Collection, Spec, SpecScreen — 3 total)
  *
- * Total: 13 + 47 + 12 + 5 + 3 = 80 sections (≥60 per ADR AC).
+ * Total: 13 + 53 + 13 + 5 + 3 = 87 sections (≥60 per ADR AC).
  *
  * T-0005-183a guard: every component section must have a non-empty body
  * paragraph. Static description map ensures this — no silent-empty-doc.
@@ -155,6 +155,7 @@ const VERB_DESCRIPTIONS: Record<string, string> = {
   capture: 'Open the device camera or photo-library picker and write the resulting image URI to the named state slot. The `target` must be a slot compatible with an ImageBinding.',
   toast: 'Display a brief non-blocking feedback message at the bottom of the screen. The optional `tone` tints the toast with success, warning, or danger styling.',
   aiProcess: 'Run an AI summarization task over the named collection and write the result to a state slot. In V0, `task` is always `\'summarize\'`. The `prompt` guides the summarization; the `target` slot receives the result string.',
+  increment: 'Add a numeric delta to a state slot. Reads the current value (0 if absent or non-numeric), adds `by` (negative values decrement), writes the result back. Optional `min` and `max` clamp the output. Use instead of `set` for counters, tallies, and +/- steppers.',
 }
 
 const BINDING_DESCRIPTIONS: Record<string, string> = {
@@ -240,11 +241,12 @@ for (const name of COMPONENT_ORDER) {
   }
 }
 
-// 3. Action verbs (schema-declaration order — 12 sections)
+// 3. Action verbs (schema-declaration order — 13 sections)
 sections.push(`---\n\n## Action Verbs\n`)
 const VERB_ORDER = [
   'set', 'update', 'reset', 'addItem', 'removeItem', 'updateItem',
   'clearCollection', 'navigate', 'back', 'capture', 'toast', 'aiProcess',
+  'increment',
 ]
 for (const name of VERB_ORDER) {
   const description = VERB_DESCRIPTIONS[name]

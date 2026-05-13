@@ -1,7 +1,7 @@
 /**
  * feedback middleware tests
  *
- * T-0006-158: All 12 verbs trigger correct feedback per Sable's contract (12 tests)
+ * T-0006-158: All 13 verbs trigger correct feedback per Sable's contract (13 tests)
  * T-0006-160: Action with no handler in feedback middleware logs warning, dispatches anyway
  * T-0006-161: Toast message content escapes (no rendered HTML/JSX from user input)
  * T-0006-161a: clearCollection raises Alert.alert BEFORE reducer runs
@@ -30,7 +30,7 @@ afterEach(() => {
 })
 
 // ---------------------------------------------------------------------------
-// T-0006-158: All 12 verbs trigger correct feedback per Sable's contract
+// T-0006-158: All 13 verbs trigger correct feedback per Sable's contract
 //
 // The feedback middleware's role:
 //   - clearCollection → intercepts (Alert.alert called, next NOT called yet)
@@ -41,16 +41,17 @@ afterEach(() => {
 // Toast short-circuit is owned by makeToastMiddleware.
 //
 // So "correct feedback" from the feedback middleware's perspective means:
-//   - 11 non-clearCollection verbs: next() is called, Alert NOT called
+//   - 12 non-clearCollection verbs: next() is called, Alert NOT called
 //   - clearCollection: Alert called, next NOT called synchronously
 // ---------------------------------------------------------------------------
 
-describe('feedback middleware (T-0006-158) — 12 verb pass-through contract', () => {
+describe('feedback middleware (T-0006-158) — 13 verb pass-through contract', () => {
 
   const PASS_THROUGH_VERBS: RendererAction[] = [
     {type: 'set', target: 'x', value: 'hello'},
     {type: 'update', collection: 'c', itemId: 'r1', patch: {name: 'updated'}},
     {type: 'reset', target: 'x'},
+    {type: 'increment', target: 'count', by: 1},
     {type: 'addItem', collection: 'c', item: {name: 'New'}},
     {type: 'removeItem', collection: 'c', itemId: 'r1'},
     {type: 'updateItem', collection: 'c', itemId: 'r1', patch: {done: true}},

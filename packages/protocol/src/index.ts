@@ -59,7 +59,7 @@ export type {
   ImageBinding,
 } from './binding.js'
 
-// Action verb discriminated union — 12 verbs, 'share' absent (F-4 cut)
+// Action verb discriminated union — 13 verbs, 'share' absent (F-4 cut)
 export {ActionSchema, ACTION_VERB_COUNT} from './actions.js'
 export type {Action} from './actions.js'
 

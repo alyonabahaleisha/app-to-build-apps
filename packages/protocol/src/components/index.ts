@@ -39,7 +39,8 @@ export type {
 } from './inputs.js'
 
 // Display tier (4 → 6 with AvatarGroup + Callout)
-export {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
+// Note: StatBaseSchema used in NodeSchema discriminated union (refine → ZodEffects)
+export {StatBaseSchema, StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 export type {Stat, Badge, Chip, Avatar, AvatarGroup, Callout} from './display.js'
 
 // Lists tier (5 → 9 with V1 Phase 1 Step 4)
@@ -68,6 +69,8 @@ export {
   // V1 Phase 1 Step 5 — Productivity domain compounds
   TransactionRowSchema,
   ReceiptSchema,
+  // Note: MetricTileBaseSchema used in NodeSchema discriminated union (refine → ZodEffects)
+  MetricTileBaseSchema,
   MetricTileSchema,
   StepListSchema,
   // V1 Phase 1 Step 6 — Date components
@@ -141,7 +144,7 @@ import {
   RatingInputSchema,
   SearchBarSchema,
 } from './inputs.js'
-import {StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
+import {StatBaseSchema, StatSchema, BadgeSchema, ChipSchema, AvatarSchema, AvatarGroupSchema, CalloutSchema} from './display.js'
 import {
   ListSchema,
   ListItemSchema,
@@ -163,6 +166,7 @@ import {
   // V1 Phase 1 Step 5 — Productivity domain compounds
   TransactionRowSchema,
   ReceiptSchema,
+  MetricTileBaseSchema,
   MetricTileSchema,
   StepListSchema,
   // V1 Phase 1 Step 6 — Date components
@@ -209,7 +213,9 @@ export const ALL_COMPONENT_SCHEMAS = [
   SliderSchema,
   RatingInputSchema,
   SearchBarSchema,
-  StatSchema,
+  // Note: StatBaseSchema used here (not StatSchema) because z.discriminatedUnion
+  // requires ZodObject; StatSchema's refine returns ZodEffects (incompatible).
+  StatBaseSchema,
   BadgeSchema,
   ChipSchema,
   AvatarSchema,
@@ -235,7 +241,9 @@ export const ALL_COMPONENT_SCHEMAS = [
   // V1 Phase 1 Step 5 — Productivity domain compounds
   TransactionRowSchema,
   ReceiptSchema,
-  MetricTileSchema,
+  // Note: MetricTileBaseSchema used here (not MetricTileSchema) because z.discriminatedUnion
+  // requires ZodObject; MetricTileSchema's refine returns ZodEffects (incompatible).
+  MetricTileBaseSchema,
   StepListSchema,
   ButtonSchema,
   FabSchema,

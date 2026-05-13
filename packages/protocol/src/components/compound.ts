@@ -144,17 +144,23 @@ export const ReceiptSchema = z
 export type Receipt = z.infer<typeof ReceiptSchema>
 export type ReceiptItem = z.infer<typeof ReceiptItemSchema>
 
-// MetricTile — KPI tile with optional sparkline.
+// MetricTileBaseSchema — raw ZodObject shape for MetricTileSchema.
+// Used in NodeSchema discriminated union (refine → ZodEffects, which is
+// incompatible with z.discriminatedUnion's ZodObject requirement).
+// Mirrors the CalendarBaseSchema / CalendarSchema pattern.
 //
 // sparklineData: up to 30 data points rendered via react-native-svg <Polyline>.
 // Single-point guard: sparklineData.length === 1 renders a horizontal line at
 // midpoint (division-by-zero guard for the (i / (points.length - 1)) * width formula).
 // deltaTone: 'positive' → success, 'negative' → danger, 'neutral' → fg.
-export const MetricTileSchema = z
+export const MetricTileBaseSchema = z
   .object({
     id: z.string().regex(COMPONENT_ID_REGEX),
     type: z.literal('MetricTile'),
-    value: z.string().min(1).max(40),
+    // value: legacy literal string. Required when valueBinding is absent.
+    value: z.string().min(1).max(40).optional(),
+    // valueBinding: live binding for MetricTiles that should track a state slot.
+    valueBinding: z.union([StringBindingSchema, NumberBindingSchema]).optional(),
     label: z.string().min(1).max(80),
     delta: z.string().max(40).optional(),
     deltaTone: z.enum(['positive', 'negative', 'neutral']).optional(),
@@ -163,6 +169,13 @@ export const MetricTileSchema = z
     accessibilityLabel: z.string().optional(),
   })
   .strict()
+
+// MetricTileSchema — wraps MetricTileBaseSchema with the XOR refine.
+// Use MetricTileSchema for standalone parsing; use MetricTileBaseSchema in discriminated unions.
+export const MetricTileSchema = MetricTileBaseSchema.refine(
+  v => (v.value !== undefined) !== (v.valueBinding !== undefined),
+  {message: 'MetricTile must have exactly one of `value` or `valueBinding`'},
+)
 export type MetricTile = z.infer<typeof MetricTileSchema>
 
 // StepList — numbered instructions or checklist of steps.

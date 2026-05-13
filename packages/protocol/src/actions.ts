@@ -2,7 +2,7 @@ import {z} from 'zod'
 import {ToneSchema} from './enums.js'
 import {BindingValueSchema} from './binding.js'
 
-// ActionSchema — exactly 12 verbs. 'share' is cut (F-4 from prop-review;
+// ActionSchema — exactly 13 verbs. 'share' is cut (F-4 from prop-review;
 // Share is host-meatball-only). All verb object schemas use .strict() so
 // extra params are rejected as errors (T-0005-047 / Notes for Colby item 12).
 
@@ -121,7 +121,22 @@ const AiProcessActionSchema = z
   })
   .strict()
 
-// ActionSchema — discriminated union of the 12 verbs above.
+// 13. increment — add a numeric delta to a state slot.
+// Reads slot's current value (0 if absent or non-numeric), adds `by` (may be
+// negative — that's how decrement works), writes the new number back. Optional
+// min/max clamp at the reducer so the model doesn't have to express bounds via
+// guard actions. Pure reducer op; no middleware involvement.
+const IncrementActionSchema = z
+  .object({
+    type: z.literal('increment'),
+    target: z.string().min(1),
+    by: z.number(),
+    min: z.number().optional(),
+    max: z.number().optional(),
+  })
+  .strict()
+
+// ActionSchema — discriminated union of the 13 verbs above.
 // 'share' is deliberately absent (F-4 cut). T-0005-039 and T-0005-040 guard this.
 export const ActionSchema = z.discriminatedUnion('type', [
   SetActionSchema,
@@ -136,9 +151,10 @@ export const ActionSchema = z.discriminatedUnion('type', [
   CaptureActionSchema,
   ToastActionSchema,
   AiProcessActionSchema,
+  IncrementActionSchema,
 ])
 
 export type Action = z.infer<typeof ActionSchema>
 
 // Verb count constant — used by T-0005-040 cardinality assertion.
-export const ACTION_VERB_COUNT = 12
+export const ACTION_VERB_COUNT = 13

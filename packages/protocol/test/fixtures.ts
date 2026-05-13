@@ -167,6 +167,14 @@ export const STAT_FIXTURE = {
   label: 'Total',
 }
 
+// STAT_FIXTURE_WITH_BINDING — a Stat that tracks a state slot (counter, total, etc.)
+export const STAT_FIXTURE_WITH_BINDING = {
+  id: 'st2',
+  type: 'Stat' as const,
+  valueBinding: {kind: 'state' as const, slot: 'count'},
+  label: 'Current count',
+}
+
 export const BADGE_FIXTURE = {
   id: 'bg1',
   type: 'Badge' as const,

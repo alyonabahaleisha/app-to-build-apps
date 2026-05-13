@@ -1382,6 +1382,16 @@
                         "minLength": 1,
                         "maxLength": 80
                       },
+                      "valueBinding": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                          },
+                          {
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                          }
+                        ]
+                      },
                       "label": {
                         "type": "string",
                         "minLength": 1,
@@ -1413,7 +1423,6 @@
                     "required": [
                       "id",
                       "type",
-                      "value",
                       "label"
                     ],
                     "additionalProperties": false
@@ -1491,10 +1500,33 @@
                                 "minLength": 1
                               },
                               "value": {
-                                "type": [
-                                  "string",
-                                  "number",
-                                  "boolean"
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "kind": {
+                                        "type": "string",
+                                        "const": "state"
+                                      },
+                                      "slot": {
+                                        "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding/anyOf/1/properties/slot"
+                                      }
+                                    },
+                                    "required": [
+                                      "kind",
+                                      "slot"
+                                    ],
+                                    "additionalProperties": false
+                                  }
                                 ]
                               }
                             },
@@ -1757,6 +1789,34 @@
                               "collection",
                               "prompt",
                               "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "increment"
+                              },
+                              "target": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "by": {
+                                "type": "number"
+                              },
+                              "min": {
+                                "type": "number"
+                              },
+                              "max": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "target",
+                              "by"
                             ],
                             "additionalProperties": false
                           }
@@ -2886,6 +2946,16 @@
                         "minLength": 1,
                         "maxLength": 40
                       },
+                      "valueBinding": {
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/9/properties/valueBinding"
+                          },
+                          {
+                            "$ref": "#/definitions/Spec/properties/screens/items/properties/root/anyOf/10/properties/valueBinding"
+                          }
+                        ]
+                      },
                       "label": {
                         "type": "string",
                         "minLength": 1,
@@ -2920,7 +2990,6 @@
                     "required": [
                       "id",
                       "type",
-                      "value",
                       "label"
                     ],
                     "additionalProperties": false

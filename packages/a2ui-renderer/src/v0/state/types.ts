@@ -12,7 +12,7 @@
  *
  * `clearPendingUndo` is an internal-only action type — the undoBuffer middleware
  * dispatches it after the 5s expiry to null out pendingUndo. It is NOT in the
- * 12-verb closed set exported by @app-creator/protocol. Components and spec authors
+ * 13-verb closed set exported by @app-creator/protocol. Components and spec authors
  * never emit this action; only the renderer's own middleware does.
  */
 import type {Collection, BindingValue} from '@app-creator/protocol'
@@ -80,16 +80,16 @@ export type RendererState = {
 }
 
 // ClearPendingUndoAction — internal-only action dispatched by undoBuffer middleware
-// after the 5s undo window expires. NOT in the 12-verb closed set; never emitted
+// after the 5s undo window expires. NOT in the 13-verb closed set; never emitted
 // by spec components or external callers.
 export type ClearPendingUndoAction = {type: 'clearPendingUndo'}
 
 // ResetAction — internal-only action dispatched by useRendererState when the
 // spec reference changes. Triggers full re-initialization from the new spec.
-// NOT in the 12-verb closed set.
+// NOT in the 13-verb closed set.
 export type ResetAction = {type: '__RESET__'; spec: import('@app-creator/protocol').Spec}
 
-// RendererAction — the full action set the reducer handles: 12 spec verbs +
+// RendererAction — the full action set the reducer handles: 13 spec verbs +
 // internal actions (clearPendingUndo, __RESET__).
 export type RendererAction =
   | import('@app-creator/protocol').Action

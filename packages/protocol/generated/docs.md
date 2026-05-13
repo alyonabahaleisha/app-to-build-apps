@@ -328,6 +328,10 @@ Display a brief non-blocking feedback message at the bottom of the screen. The o
 
 Run an AI summarization task over the named collection and write the result to a state slot. In V0, `task` is always `'summarize'`. The `prompt` guides the summarization; the `target` slot receives the result string.
 
+## increment
+
+Add a numeric delta to a state slot. Reads the current value (0 if absent or non-numeric), adds `by` (negative values decrement), writes the result back. Optional `min` and `max` clamp the output. Use instead of `set` for counters, tallies, and +/- steppers.
+
 ---
 
 ## Binding Types

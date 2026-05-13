@@ -489,7 +489,7 @@ describe('MetricTileSchema (T-0009-121, T-0009-236)', () => {
     expect(() => MetricTileSchema.parse({...VALID_METRIC, icon: 'trending-up'})).not.toThrow()
   })
 
-  it('rejects empty value', () => {
+  it('rejects empty value (min 1 on literal branch)', () => {
     expect(() => MetricTileSchema.parse({...VALID_METRIC, value: ''})).toThrow()
   })
 
@@ -522,6 +522,44 @@ describe('MetricTileSchema (T-0009-121, T-0009-236)', () => {
     expect(() =>
       MetricTileSchema.parse({...VALID_METRIC, unit: 'tasks'}),
     ).toThrow()
+  })
+
+  it('fails when neither value nor valueBinding is provided', () => {
+    const {value: _v, ...rest} = VALID_METRIC
+    expect(() => MetricTileSchema.parse({...rest, sparklineData: undefined})).toThrow()
+  })
+
+  it('fails when both value and valueBinding are provided (XOR refine)', () => {
+    expect(() =>
+      MetricTileSchema.parse({...VALID_METRIC, valueBinding: {kind: 'state', slot: 'totalTasks'}}),
+    ).toThrow()
+  })
+
+  // MetricTile XOR tests (mirroring T-0006-101/T-0006-102 for MetricTile)
+  it('parses with valueBinding: {kind: "state", slot: "totalTasks"}', () => {
+    const {value: _v, ...rest} = VALID_METRIC
+    const noSparkline = {...rest, sparklineData: undefined}
+    const {sparklineData: _s, ...base} = noSparkline
+    expect(() =>
+      MetricTileSchema.parse({...base, valueBinding: {kind: 'state', slot: 'totalTasks'}}),
+    ).not.toThrow()
+  })
+
+  it('parses with valueBinding: {kind: "literal", value: 99}', () => {
+    const {value: _v, sparklineData: _s, ...rest} = VALID_METRIC
+    expect(() =>
+      MetricTileSchema.parse({...rest, valueBinding: {kind: 'literal', value: 99}}),
+    ).not.toThrow()
+  })
+
+  it('parses with valueBinding: {kind: "collectionField", ...}', () => {
+    const {value: _v, sparklineData: _s, ...rest} = VALID_METRIC
+    expect(() =>
+      MetricTileSchema.parse({
+        ...rest,
+        valueBinding: {kind: 'collectionField', collectionId: 'workouts', field: 'reps'},
+      }),
+    ).not.toThrow()
   })
 })
 

@@ -42,6 +42,8 @@ import {
   RatingInputSchema,
   SearchBarSchema,
   // Display tier (4 → 6 with AvatarGroup + Callout)
+  // Note: StatBaseSchema used in the discriminated union (refine → ZodEffects, not ZodObject)
+  StatBaseSchema,
   StatSchema,
   BadgeSchema,
   ChipSchema,
@@ -71,6 +73,8 @@ import {
   // V1 Phase 1 Step 5 — Productivity domain compounds
   TransactionRowSchema,
   ReceiptSchema,
+  // Note: MetricTileBaseSchema used in the discriminated union (refine → ZodEffects, not ZodObject)
+  MetricTileBaseSchema,
   MetricTileSchema,
   StepListSchema,
   // V1 Phase 1 Step 6 — Date components
@@ -257,7 +261,8 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     RatingInputSchema,
     SearchBarSchema,
     // Display tier (V1 Phase 1 Step 3 adds AvatarGroup + Callout)
-    StatSchema,
+    // StatBaseSchema (not StatSchema) in the union: refine → ZodEffects, not ZodObject
+    StatBaseSchema,
     BadgeSchema,
     ChipSchema,
     AvatarSchema,
@@ -285,7 +290,8 @@ export const NodeSchema: z.ZodType<Node> = z.lazy(() =>
     // V1 Phase 1 Step 5 — Productivity domain compounds
     TransactionRowSchema,
     ReceiptSchema,
-    MetricTileSchema,
+    // MetricTileBaseSchema (not MetricTileSchema) in the union: refine → ZodEffects, not ZodObject
+    MetricTileBaseSchema,
     StepListSchema,
     // V1 Phase 1 Step 6 — Date components
     // CalendarBaseSchema (not CalendarSchema) in the union: superRefine → ZodEffects, not ZodObject

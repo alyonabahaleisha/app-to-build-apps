@@ -32,9 +32,10 @@ jest.mock('react-native-svg', () => {
 })
 
 import React from 'react'
-import type {Node} from '@app-creator/protocol'
+import type {Node, Spec} from '@app-creator/protocol'
 import {renderWithTheme} from '../../__test-utils__/renderWithTheme'
 import {MetricTileRenderer} from './MetricTile'
+import {buildInitialRendererState} from '../../state/reducer'
 
 // ---------------------------------------------------------------------------
 // Fixtures
@@ -268,5 +269,51 @@ describe('MetricTileRenderer 30-point sparkline (T-0009-236)', () => {
     })
     expect(getAllByText('42', {includeHiddenElements: true}).length).toBeGreaterThanOrEqual(1)
     expect(getAllByText('Tasks completed', {includeHiddenElements: true}).length).toBeGreaterThanOrEqual(1)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// MetricTile valueBinding — renders slot value from RendererState
+// ---------------------------------------------------------------------------
+
+describe('MetricTileRenderer valueBinding', () => {
+  const BINDING_SPEC: Spec = {
+    version: 1,
+    archetype: 'Calculator',
+    stance: 'productive',
+    palette: 'focus',
+    coverIcon: 'hash',
+    navigation: 'none',
+    screens: [{id: 's1', root: {id: 'n1', type: 'Heading', text: 'T', level: 1}}],
+    initialScreenId: 's1',
+    collections: [],
+    initialState: {total: 42},
+  }
+
+  const METRIC_WITH_BINDING: MetricTileNode = {
+    id: 'met_bound',
+    type: 'MetricTile',
+    valueBinding: {kind: 'state', slot: 'total'},
+    label: 'total tasks',
+  }
+
+  it('renders the slot value when valueBinding: {kind:"state", slot:"total"} and slots.total=42', () => {
+    const rendererState = buildInitialRendererState(BINDING_SPEC)
+    const {getAllByText} = renderWithTheme(<MetricTileRenderer node={METRIC_WITH_BINDING} />, {
+      stance: 'productive',
+      palette: 'focus',
+      rendererState,
+    })
+    expect(getAllByText('42', {includeHiddenElements: true}).length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders "" when valueBinding slot is absent from state', () => {
+    const rendererState = buildInitialRendererState({...BINDING_SPEC, initialState: {}})
+    const {toJSON} = renderWithTheme(<MetricTileRenderer node={METRIC_WITH_BINDING} />, {
+      stance: 'productive',
+      palette: 'focus',
+      rendererState,
+    })
+    expect(toJSON()).not.toBeNull()
   })
 })

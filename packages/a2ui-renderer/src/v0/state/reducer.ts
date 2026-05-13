@@ -1,7 +1,7 @@
 /**
  * V0 pure reducer for the A2UI renderer.
  *
- * Handles all 12 spec verbs + the internal `clearPendingUndo` action.
+ * Handles all 13 spec verbs + the internal `clearPendingUndo` action.
  * PURE function: no Date.now(), no Math.random(), no I/O, no side effects.
  * Side effects (haptics, toasts, AI calls, navigation primitive calls) live in
  * middleware that wraps this reducer.
@@ -49,11 +49,24 @@ export function reducer(state: RendererState, action: RendererAction): RendererS
   switch (action.type) {
     // -------------------------------------------------------------------------
     // 1. set — write a BindingValue to a named state slot
+    // Resolve {kind:'state', slot} references against current slots so the
+    // model can express "copy slot A into slot B" via set. Literals pass through.
     // -------------------------------------------------------------------------
     case 'set': {
+      const raw = action.value
+      let resolved: typeof raw = raw
+      if (
+        raw !== null &&
+        typeof raw === 'object' &&
+        'kind' in raw &&
+        (raw as {kind: string}).kind === 'state'
+      ) {
+        const slotName = (raw as {slot: string}).slot
+        resolved = (state.slots.get(slotName) ?? '') as typeof raw
+      }
       return {
         ...state,
-        slots: new Map(state.slots).set(action.target, action.value),
+        slots: new Map(state.slots).set(action.target, resolved),
       }
     }
 
@@ -94,7 +107,25 @@ export function reducer(state: RendererState, action: RendererAction): RendererS
     }
 
     // -------------------------------------------------------------------------
-    // 4. addItem — append a new row to a collection
+    // 4. increment — add a numeric delta to a state slot (counter/tally/stepper)
+    // Reads the slot's current value (0 if absent or non-numeric), adds `by`
+    // (negative = decrement), then applies optional min/max clamp.
+    // Pure reducer op; no middleware involvement.
+    // -------------------------------------------------------------------------
+    case 'increment': {
+      const current = state.slots.get(action.target)
+      const numericCurrent = typeof current === 'number' ? current : 0
+      let next = numericCurrent + action.by
+      if (action.min !== undefined) next = Math.max(action.min, next)
+      if (action.max !== undefined) next = Math.min(action.max, next)
+      return {
+        ...state,
+        slots: new Map(state.slots).set(action.target, next),
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // (original 4.) addItem — append a new row to a collection
     // Undo branch: if pendingUndo matches this collection + rowId, restore at
     // original insertIndex instead of appending. This is the undo restore path.
     // -------------------------------------------------------------------------

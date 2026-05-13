@@ -13,7 +13,7 @@ export const produceAppSpecTool = {
   name: 'produce_app_spec' as const,
   description:
     'Produce a structured V0 app spec describing the requested tool. ' +
-    'Use the 28-component catalog and 12 action verbs. Choose archetype, ' +
+    'Use the 53-component catalog and 13 action verbs. Choose archetype, ' +
     'stance, and palette appropriate to the prompt. Every collection must ' +
     'include realistic seedData (3–5 rows; no lorem ipsum). Every screen ' +
     'and component node must have a unique lowercase id. initialScreenId ' +

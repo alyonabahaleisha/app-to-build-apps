@@ -347,7 +347,8 @@ function checkStateSlotRefs(spec: Spec): ValidationError[] {
     if (
       action.type === 'set' ||
       action.type === 'reset' ||
-      action.type === 'capture'
+      action.type === 'capture' ||
+      action.type === 'increment'
     ) {
       autoSlots.add(action.target)
     }

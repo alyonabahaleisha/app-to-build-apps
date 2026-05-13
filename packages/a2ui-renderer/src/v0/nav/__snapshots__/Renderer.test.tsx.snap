@@ -22,9 +22,6 @@ exports[`Milestone B Integration (T-0006-173) Milestone B end-to-end snapshot 1`
             {
               "backgroundColor": "#FAFAF7",
               "flex": 1,
-              "paddingBottom": 0,
-              "paddingHorizontal": 20,
-              "paddingTop": 0,
             }
           }
         >

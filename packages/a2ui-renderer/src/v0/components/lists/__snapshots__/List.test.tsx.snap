@@ -5,95 +5,84 @@ exports[`ListRenderer snapshot (T-0006-107) — productive×focus matches snapsh
   accessibilityLabel="workouts"
   style={
     {
-      "flex": 1,
       "minHeight": 168,
     }
   }
   testID="list-container"
 >
-  <View
-    testID="flashlist"
-  >
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#14171A",
-                "fontSize": 16,
-                "lineHeight": 24,
-              }
-            }
-          >
-            Push-ups
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Push-ups
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#14171A",
-                "fontSize": 16,
-                "lineHeight": 24,
-              }
-            }
-          >
-            Squats
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Squats
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#14171A",
+            "fontSize": 16,
+            "lineHeight": 24,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#14171A",
-                "fontSize": 16,
-                "lineHeight": 24,
-              }
-            }
-          >
-            Pull-ups
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Pull-ups
+      </Text>
     </View>
   </View>
 </View>
@@ -104,95 +93,84 @@ exports[`ListRenderer snapshot (T-0006-108) — expressive×health matches snaps
   accessibilityLabel="workouts"
   style={
     {
-      "flex": 1,
       "minHeight": 168,
     }
   }
   testID="list-container"
 >
-  <View
-    testID="flashlist"
-  >
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1A1715",
-                "fontSize": 16,
-                "lineHeight": 26,
-              }
-            }
-          >
-            Push-ups
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Push-ups
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1A1715",
-                "fontSize": 16,
-                "lineHeight": 26,
-              }
-            }
-          >
-            Squats
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Squats
+      </Text>
     </View>
-    <View>
-      <View>
-        <View
-          style={
-            {
-              "justifyContent": "center",
-              "minHeight": 56,
-              "paddingHorizontal": 12,
-              "paddingVertical": 8,
-            }
+  </View>
+  <View>
+    <View
+      style={
+        {
+          "justifyContent": "center",
+          "minHeight": 56,
+          "paddingHorizontal": 12,
+          "paddingVertical": 8,
+        }
+      }
+    >
+      <Text
+        numberOfLines={1}
+        style={
+          {
+            "color": "#1A1715",
+            "fontSize": 16,
+            "lineHeight": 26,
           }
-        >
-          <Text
-            numberOfLines={1}
-            style={
-              {
-                "color": "#1A1715",
-                "fontSize": 16,
-                "lineHeight": 26,
-              }
-            }
-          >
-            Pull-ups
-          </Text>
-        </View>
-      </View>
+        }
+      >
+        Pull-ups
+      </Text>
     </View>
   </View>
 </View>

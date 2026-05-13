@@ -6,9 +6,6 @@ exports[`ScreenRenderer snapshot (T-0006-049) — productive×focus matches snap
     {
       "backgroundColor": "#FAFAF7",
       "flex": 1,
-      "paddingBottom": 0,
-      "paddingHorizontal": 20,
-      "paddingTop": 0,
     }
   }
 >
@@ -29,9 +26,6 @@ exports[`ScreenRenderer snapshot (T-0006-054) — expressive×health matches sna
     {
       "backgroundColor": "#FBF8F3",
       "flex": 1,
-      "paddingBottom": 0,
-      "paddingHorizontal": 32,
-      "paddingTop": 0,
     }
   }
 >

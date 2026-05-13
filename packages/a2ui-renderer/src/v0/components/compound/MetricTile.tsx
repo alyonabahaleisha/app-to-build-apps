@@ -30,12 +30,14 @@
  * T-0009-235: single-point sparkline → horizontal line at midpoint
  * T-0009-236: 30-point sparkline renders without truncation
  */
-import React from 'react'
+import React, {useMemo} from 'react'
 import {View, Text} from 'react-native'
 import Svg, {Polyline, Line} from 'react-native-svg'
 import type {Node} from '@app-creator/protocol'
 import {Icon} from '@app-creator/design-system'
 import {useTheme} from '../../theme/RendererThemeProvider.js'
+import {useBinding} from '../../state/useBinding.js'
+import type {Binding} from '../../state/useBinding.js'
 
 type MetricTileNode = Extract<Node, {type: 'MetricTile'}>
 
@@ -147,6 +149,17 @@ function Sparkline({
 export function MetricTileRenderer({node}: {node: MetricTileNode}) {
   const theme = useTheme()
 
+  // Always call useBinding to satisfy rules-of-hooks. When no valueBinding is
+  // present, use a stable literal binding derived from node.value so the hook
+  // is never skipped. The XOR refine on MetricTileSchema guarantees exactly one is set.
+  const fallbackBinding = useMemo<Binding<string>>(
+    () => ({kind: 'literal', value: node.value ?? ''}),
+    [node.value],
+  )
+  const binding: Binding<string | number> = node.valueBinding ?? fallbackBinding
+  const boundValue = useBinding<string | number>(binding)
+  const resolvedValue = String(boundValue ?? '')
+
   const h1Spec = theme.type['h1']
   const captionSpec = theme.type.caption
   const microSpec = theme.type.micro
@@ -155,7 +168,7 @@ export function MetricTileRenderer({node}: {node: MetricTileNode}) {
 
   const a11yLabel =
     node.accessibilityLabel ??
-    [node.value, node.label, node.delta].filter(Boolean).join(', ')
+    [resolvedValue, node.label, node.delta].filter(Boolean).join(', ')
 
   return (
     <View
@@ -187,7 +200,7 @@ export function MetricTileRenderer({node}: {node: MetricTileNode}) {
             }}
             accessibilityElementsHidden
           >
-            {node.value}
+            {resolvedValue}
           </Text>
         </View>
 

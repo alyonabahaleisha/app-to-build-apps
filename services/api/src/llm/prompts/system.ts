@@ -15,11 +15,12 @@
  * Tests: system.test.ts — T-0007-020 through T-0007-035, T-0010-001 through T-0010-032,
  *        T-0009-213 through T-0009-220.
  *
- * PROMPT_VERSION bumped to v0.2.1 — V0 UX hotfix. Replaced FAB-with-literal-
- * placeholder examples with inline-add (TextField + Button on same screen,
- * addItem.item bound to state slot). Tightened seedData rule to 1 sample
- * row for user-input collections (3–5 only for reference content).
+ * PROMPT_VERSION bumped to v0.3.0 — V0 actions surface fix. Added increment
+ * verb (counters, tallies, +/- buttons); added Stat.valueBinding and
+ * MetricTile.valueBinding for state-tracked displays. Counter example replaces
+ * Tip Splitter (multi-input arithmetic deferred to compute verb in V0.5).
  *
+ * v0.2.1 (prior): V0 UX hotfix. Inline-add pattern + minimal seedData.
  * v0.2.0 (prior): ADR-0009 Step 10 V1 catalog expansion (25 new components,
  * stance affinity cheat-sheet, domain compound hints, re-prompt continuity).
  */
@@ -28,7 +29,7 @@
 // PROMPT_VERSION — ADR-0010 Step 1. Bump on every system.ts change; CI enforces.
 // ---------------------------------------------------------------------------
 
-export const PROMPT_VERSION = 'v0.2.1' as const
+export const PROMPT_VERSION = 'v0.3.0' as const
 
 // ---------------------------------------------------------------------------
 // SYSTEM_PROMPT_STATIC
@@ -41,7 +42,7 @@ OR you call the out_of_scope tool if the user's request needs a capability
 that V1 doesn't have.
 
 Rules:
-- Use only the 53 catalog components and 12 action verbs from the schema.
+- Use only the 53 catalog components and 13 action verbs from the schema.
 - Choose archetype from: ListCRUD, Tracker, Journal, Calculator.
 - Choose stance (productive or expressive) and palette (focus, health, money,
   social, learn, play) appropriate to the archetype + content.
@@ -179,8 +180,9 @@ When to use: settings, preferences, boolean choices.
 
 ### Stat
 Big-number display with label and optional delta indicator.
-Props: id, value (string, required), label (required), delta (±string), deltaTone (positive|negative|neutral), align.
-When to use: key metrics, progress numbers, summary figures. Use Stat (not Body) for derived or computed values — totals, averages, per-person splits, and similar values produced by combining inputs. The delta field is for change-over-time (e.g., "+3 this week"), not for displaying a second number alongside the primary value.
+Props: id, label (required), valueBinding (StringBinding | NumberBinding) OR value (literal string, for fixed seed displays), delta (±string), deltaTone (positive|negative|neutral), align.
+Use valueBinding when the stat tracks a state slot (counter, computed total). Use literal \`value\` only for fixed seed displays.
+When to use: key metrics, progress numbers, summary figures. Use Stat (not Body) for computed values — totals, averages, per-person splits. The delta field is for change-over-time (e.g., "+3 this week"), not for displaying a second number.
 
 ### Badge
 Small status pill. Tone-tinted.
@@ -361,7 +363,8 @@ Stance affinity: productive.
 
 ### MetricTile
 Single metric card with optional sparkline trend line.
-Props: id, label (required), value (StringBinding, required), delta (string, optional), deltaTone (positive|negative|neutral), sparklineData (array of numbers, max 30), sparklineTone (accent|success|warning|danger).
+Props: id, label (required), valueBinding (StringBinding | NumberBinding) OR value (literal string), delta (string, optional), deltaTone (positive|negative|neutral), sparklineData (array of numbers, max 30), sparklineTone (accent|success|warning|danger).
+Use valueBinding when the tile tracks a state slot (live counter, computed total). Use literal \`value\` only for fixed seed displays.
 When to use: dashboard KPIs, single-metric summary tiles, health/fitness stats with trend. Prefer over Card+Stat for a single metric with sparkline.
 Stance affinity: productive.
 
@@ -409,13 +412,12 @@ Stance affinity: neutral.
 
 ---
 
-## Action Verbs (12)
+## Action Verbs (13)
 
 ### set
-Write a value to a named state slot.
+Write an absolute value to a named state slot. For delta semantics (counters, tallies), use \`increment\` instead. Note: V0 has no expression language or arithmetic inline evaluation — value is a literal or state-ref, not a formula.
 {type: "set", target: "slotName", value: <string|number|boolean>}
-When: update display values, clear inputs after submit.
-Note: V0 has no expression language or arithmetic inline evaluation. The value field is a literal — a hardcoded string, number, or boolean. For Calculator archetypes where a result depends on multiple input slots, the recommended pattern is to pre-fill initialState with sensible defaults (so the result Stat shows a meaningful non-zero value on first render) and use one set per Button to reset or update. Do not attempt to compute a formula inside the value field.
+When: update display values, clear inputs after submit, copy one slot into another via {kind:"state", slot:"sourceName"}.
 
 ### update
 Patch named fields on a collection item by itemId.
@@ -426,6 +428,12 @@ When: partial record update without replacing the whole item.
 Clear a state slot back to its initialState value.
 {type: "reset", target: "slotName"}
 When: reset form, clear search.
+
+### increment
+Add a numeric delta to a state slot. Current value defaults to 0 if absent or non-numeric. Optional \`min\`/\`max\` clamp.
+{type: "increment", target: "count", by: 1}
+{type: "increment", target: "count", by: -1, min: 0}
+When: counters, tallies, +/- steppers. Use instead of \`set\` whenever the new value depends on the current value.
 
 ### addItem
 Append a new row to a collection.
@@ -551,6 +559,7 @@ When generating, follow the recipe for the chosen archetype.
 - Include a streak or count field on the collection where the domain
   implies it (habits → streak, water → cups today, workouts → minutes).
 - Copy: domain-flavored. "Today's habits" not "Habit entries today".
+- Single-value trackers (cups, push-ups, streak): Stat + valueBinding + increment buttons. Multi-row trackers: inline-add pattern (see ListCRUD).
 
 ### Journal recipe
 - Two screens via stack nav: "Entries" (list) and "Compose" (form).
@@ -631,9 +640,9 @@ Boundary: user manually setting a Picker value is IN scope — AI inferring the 
 {"version":1,"archetype":"Journal","stance":"expressive","palette":"social","coverIcon":"book-open","navigation":"stack","initialScreenId":"entries","collections":[{"id":"entries","name":"Journal Entries","fields":[{"name":"title","type":{"type":"string"},"required":true},{"name":"body","type":{"type":"string"},"required":false}],"syncMode":"local","seedData":[{"title":"Example — tap to delete","body":"This entry is a sample. Tap to remove it and write your first."}]}],"initialState":{"draftTitle":"","draftBody":""},"screens":[{"id":"entries","title":"My Journal","root":{"id":"entriesScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"journalHeading","type":"Heading","text":"My Journal","level":1},{"id":"entryList","type":"List","collectionId":"entries","itemLayout":"expanded","emptyState":{"id":"journalEmpty","type":"EmptyState","icon":"book-open","headline":"Start your first entry","body":"Tap + to begin."}},{"id":"addEntryFab","type":"FAB","icon":"plus","action":{"type":"navigate","target":"compose"},"accessibilityLabel":"New entry"}]}},{"id":"compose","title":"New Entry","root":{"id":"composeScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"composeHeading","type":"Heading","text":"New Entry","level":1},{"id":"titleField","type":"TextField","label":"Title","placeholder":"A line about today","valueBinding":{"kind":"state","slot":"draftTitle"}},{"id":"bodyField","type":"TextField","label":"Body","placeholder":"How was your day?","valueBinding":{"kind":"state","slot":"draftBody"},"multiline":true},{"id":"saveRow","type":"Row","gap":"space-sm","children":[{"id":"saveBtn","type":"Button","label":"Save","variant":"primary","action":{"type":"addItem","collection":"entries","item":{"title":{"kind":"state","slot":"draftTitle"},"body":{"kind":"state","slot":"draftBody"}}}},{"id":"doneBtn","type":"Button","label":"Done","variant":"secondary","action":{"type":"back"}}]}]}}]}
 \`\`\`
 
-### Calculator — Tip Splitter (productive × money × none)
+### Calculator — Counter (productive × focus × none)
 \`\`\`json
-{"version":1,"archetype":"Calculator","stance":"productive","palette":"money","coverIcon":"dollar-sign","navigation":"none","initialScreenId":"main","collections":[],"initialState":{"bill":0,"tipPercent":15,"people":2,"result":0},"screens":[{"id":"main","title":"Tip Splitter","root":{"id":"mainScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"calcHeading","type":"Heading","text":"Tip Splitter","level":1},{"id":"resultSection","type":"Section","padding":"space-md","children":[{"id":"perPersonStat","type":"Stat","label":"per person","value":"$0.00"},{"id":"totalTipStat","type":"Stat","label":"total tip","value":"$0.00"}]},{"id":"inputSection","type":"Section","padding":"space-md","children":[{"id":"billField","type":"NumberField","label":"Bill Amount","valueBinding":{"kind":"state","slot":"bill"}},{"id":"tipField","type":"NumberField","label":"Tip %","valueBinding":{"kind":"state","slot":"tipPercent"},"min":0,"max":100},{"id":"peopleField","type":"NumberField","label":"People","valueBinding":{"kind":"state","slot":"people"},"min":1}]},{"id":"calcBtn","type":"Button","label":"Calculate","variant":"primary","action":{"type":"set","target":"result","value":0},"fullWidth":true}]}}]}
+{"version":1,"archetype":"Calculator","stance":"productive","palette":"focus","coverIcon":"hash","navigation":"none","initialScreenId":"main","collections":[],"initialState":{"count":0},"screens":[{"id":"main","title":"Counter","root":{"id":"mainScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"heading","type":"Heading","text":"Counter","level":1},{"id":"resultSection","type":"Section","padding":"space-md","children":[{"id":"countStat","type":"Stat","label":"current count","align":"center","valueBinding":{"kind":"state","slot":"count"}}]},{"id":"controlsRow","type":"Row","gap":"space-sm","justify":"center","children":[{"id":"decrementBtn","type":"Button","label":"−1","variant":"secondary","action":{"type":"increment","target":"count","by":-1}},{"id":"resetBtn","type":"Button","label":"Reset","variant":"text","action":{"type":"reset","target":"count"}},{"id":"incrementBtn","type":"Button","label":"+1","variant":"primary","action":{"type":"increment","target":"count","by":1}}]},{"id":"bumpRow","type":"Row","gap":"space-sm","justify":"center","children":[{"id":"plusFiveBtn","type":"Button","label":"+5","variant":"secondary","action":{"type":"increment","target":"count","by":5}},{"id":"minusFiveBtn","type":"Button","label":"−5","variant":"secondary","action":{"type":"increment","target":"count","by":-5}}]}]}}]}
 \`\`\`
 
 ---
