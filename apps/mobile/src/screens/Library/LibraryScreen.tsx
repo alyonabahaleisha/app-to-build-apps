@@ -206,21 +206,51 @@ export function LibraryScreen({navigation}: Props) {
               {libraryCopy.title}
             </Text>
 
-            {/* Avatar — 32pt circular, taps open Settings sheet */}
-            <Pressable
-              onPress={handleAvatarPress}
-              accessibilityRole="button"
-              accessibilityLabel={libraryCopy.avatarA11y}
-              hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
-              style={[
-                styles.avatar,
-                {
-                  backgroundColor: theme['bg-elevated'],
-                  borderColor: theme.divider,
-                },
-              ]}
-              testID="library-avatar"
-            />
+            <View style={styles.headerActions}>
+              {__DEV__ ? (
+                <Pressable
+                  onPress={() => navigation.navigate('Create', {prefilledPrompt: ''})}
+                  accessibilityRole="button"
+                  accessibilityLabel="Create new app (dev)"
+                  hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
+                  style={[
+                    styles.newButton,
+                    {
+                      backgroundColor: theme.accent,
+                      borderRadius: theme.radii['radius-md'],
+                    },
+                  ]}
+                  testID="library-new-dev"
+                >
+                  <Text
+                    style={{
+                      color: theme['accent-fg'],
+                      fontWeight: '600',
+                      fontSize: theme.type.body.size,
+                      lineHeight: theme.type.body.lineHeight,
+                    }}
+                  >
+                    + New
+                  </Text>
+                </Pressable>
+              ) : null}
+
+              {/* Avatar — 32pt circular, taps open Settings sheet */}
+              <Pressable
+                onPress={handleAvatarPress}
+                accessibilityRole="button"
+                accessibilityLabel={libraryCopy.avatarA11y}
+                hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
+                style={[
+                  styles.avatar,
+                  {
+                    backgroundColor: theme['bg-elevated'],
+                    borderColor: theme.divider,
+                  },
+                ]}
+                testID="library-avatar"
+              />
+            </View>
           </View>
 
           {/* Sticky search + filter row */}
@@ -339,6 +369,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   headerTitle: {},
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  newButton: {
+    paddingHorizontal: 12,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   avatar: {
     width: 32,
     height: 32,

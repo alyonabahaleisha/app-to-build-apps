@@ -425,7 +425,11 @@ When: reset form, clear search.
 ### addItem
 Append a new row to a collection.
 {type: "addItem", collection: "colId", item: {field: value, ...}}
-When: FAB add, form submit creating a new record.
+Each item-field value may be either:
+  - a literal (string|number|boolean) for fields with a fixed default; OR
+  - {kind: "state", slot: "slotName"} to capture the live value of a state slot.
+When a user types into a TextField bound to a state slot and then taps an Add button, the Add button addItem.item MUST reference that slot via {kind:"state", slot:...}. Never hardcode an empty string. Example: TextField valueBinding {kind:"state", slot:"newItemName"} paired with Button action {type:"addItem", collection:"items", item:{name:{kind:"state", slot:"newItemName"}}}. Hardcoded empty literals produce blank rows and are a bug.
+When: FAB add (literal defaults OK), form submit (use state bindings).
 
 ### removeItem
 Delete a row from a collection by id.

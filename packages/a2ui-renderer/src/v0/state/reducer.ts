@@ -138,7 +138,24 @@ export function reducer(state: RendererState, action: RendererAction): RendererS
       }
 
       const newId = generateRowId()
-      const newRows = new Map(collection.rows).set(newId, action.item as Row)
+      // Resolve state-binding references in item values against current slots.
+      // `{kind:'state', slot}` becomes the live slot value; literals pass through.
+      const resolvedItem: Row = {}
+      for (const [key, raw] of Object.entries(action.item)) {
+        if (
+          raw !== null &&
+          typeof raw === 'object' &&
+          'kind' in raw &&
+          (raw as {kind: string}).kind === 'state'
+        ) {
+          const slot = (raw as {slot: string}).slot
+          const slotValue = state.slots.get(slot)
+          resolvedItem[key] = (slotValue ?? '') as Row[string]
+        } else {
+          resolvedItem[key] = raw as Row[string]
+        }
+      }
+      const newRows = new Map(collection.rows).set(newId, resolvedItem)
       const newOrder = [...collection.rowOrder, newId]
       return {
         ...state,

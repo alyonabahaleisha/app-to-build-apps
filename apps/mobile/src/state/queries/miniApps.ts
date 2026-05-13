@@ -35,14 +35,13 @@ import {createQueryKey, STALE} from '#/state/queries/util'
 const VALID_SYNC_MODES = ['local', 'cloud-private'] as const
 export type SyncMode = (typeof VALID_SYNC_MODES)[number]
 
-// V0 valid archetypes only — T-0011-094 asserts 'dashboard' is rejected
+// V0 valid archetypes — matches packages/protocol Archetype union.
 const VALID_ARCHETYPES = [
   'unknown',
-  'productivity',
-  'entertainment',
-  'social',
-  'finance',
-  'health',
+  'ListCRUD',
+  'Tracker',
+  'Journal',
+  'Calculator',
 ] as const
 export type Archetype = (typeof VALID_ARCHETYPES)[number]
 

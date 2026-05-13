@@ -11,10 +11,17 @@ export const SlotNameSchema = z
   .max(64)
   .regex(/^[a-z][a-zA-Z0-9_]{0,63}$/)
 
-// BindingValueSchema — literal values emitted to state slots by actions.
-// Not the full Binding<T> — actions emit concrete values; bindings live on
-// the consuming component side.
-export const BindingValueSchema = z.union([z.string(), z.number(), z.boolean()])
+// BindingValueSchema — values emitted to state slots by actions.
+// Accepts either a literal (string|number|boolean) or a state-slot reference
+// `{kind:'state', slot}`. The reducer resolves state references at dispatch
+// time against the current slots map — letting addItem capture the live
+// value of a TextField's bound slot instead of a hardcoded empty string.
+export const BindingValueSchema = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.object({kind: z.literal('state'), slot: SlotNameSchema}),
+])
 export type BindingValue = z.infer<typeof BindingValueSchema>
 
 // StringBindingSchema — 3-branch discriminated union on 'kind'.

@@ -26,7 +26,14 @@
 import {and, desc, eq, isNull} from 'drizzle-orm'
 import type {NodePgDatabase} from 'drizzle-orm/node-postgres'
 
-import {SpecSchema, validateCrossRefs, renderHash, type Spec} from '@app-creator/protocol'
+import {
+  SpecSchema,
+  validateCrossRefs,
+  renderHash,
+  PaletteSchema,
+  StanceSchema,
+  type Spec,
+} from '@app-creator/protocol'
 
 // ADR-0010 Step 4: PROMPT_VERSION written on every mini_app_versions insert
 // so analytics can join by prompt version post-launch.
@@ -47,18 +54,13 @@ type Db = NodePgDatabase<typeof schema>
 // Closed-enum validation helpers
 // ---------------------------------------------------------------------------
 
-const VALID_STANCES = ['productive', 'playful', 'calm'] as const
+// Stance + palette truth source is the protocol package — the same enums the
+// LLM emits against via produce_app_spec. Keeping the lists in sync here was a
+// V0 footgun (palette mismatch caused half of all generations to 500).
+const VALID_STANCES = StanceSchema.options
 type Stance = (typeof VALID_STANCES)[number]
 
-const VALID_PALETTES = [
-  'neutral',
-  'focus',
-  'ocean',
-  'sunset',
-  'forest',
-  'candy',
-  'mono',
-] as const
+const VALID_PALETTES = PaletteSchema.options
 type AccentPalette = (typeof VALID_PALETTES)[number]
 
 function isValidStance(s: string): s is Stance {

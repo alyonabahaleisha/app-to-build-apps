@@ -18,7 +18,7 @@
  * rather than the schema's Screen type (children: unknown[]) to avoid casts.
  */
 import React from 'react'
-import {View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import type {Node} from '@app-creator/protocol'
 import {useTheme, useStance} from '../../theme/RendererThemeProvider.js'
@@ -69,19 +69,20 @@ export function ScreenRenderer({node}: {node: ScreenNode}) {
   const safePadding = buildSafePadding(safeArea as SafeAreaOption, insets)
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.bg,
+    <ScrollView
+      style={{flex: 1, backgroundColor: theme.bg}}
+      contentContainerStyle={{
+        flexGrow: 1,
         paddingHorizontal: horizontalPadding,
         paddingTop: safePadding.paddingTop,
         paddingBottom: safePadding.paddingBottom,
       }}
+      keyboardShouldPersistTaps="handled"
       accessibilityLabel={node.accessibilityLabel}
     >
       {node.children.map((child, index) => (
         <NodeRenderer key={child.id ?? index} node={child} />
       ))}
-    </View>
+    </ScrollView>
   )
 }

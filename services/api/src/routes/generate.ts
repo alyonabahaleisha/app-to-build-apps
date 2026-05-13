@@ -300,7 +300,7 @@ export const generateRoutes: FastifyPluginAsync<GenerateRoutesOptions> = async (
           `data: ${JSON.stringify({type: 'error', code: mapped.code, detail: mapped.detail})}\n\n`,
         )
       }
-      req.log.error({err: safeMessage(err), userId}, 'generate_failed')
+      req.log.error({err: safeMessage(err), userId, detail: (err as {detail?: unknown}).detail}, 'generate_failed')
     } finally {
       if (!clientGone) {
         reply.raw.write('data: [DONE]\n\n')

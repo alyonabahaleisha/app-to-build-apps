@@ -227,34 +227,34 @@ export function ListRenderer({node}: {node: ListNode}) {
     return <DefaultEmptyRow theme={theme} />
   }
 
+  // V0 fix: render rows as a plain mapped column instead of FlashList.
+  // FlashList inside a non-scrolling, non-fixed-height parent doesn't pick up
+  // data prop changes and silently drops appended rows. For V0's MAX_ROWS=50
+  // ceiling, virtualization isn't needed — a plain mapped column is correct.
   return (
     <Animated.View
       testID="list-container"
-      style={{flex: 1, minHeight: estimatedItemSize * Math.min(rowEntries.length, 5)}}
+      style={{minHeight: estimatedItemSize * Math.max(rowEntries.length, 1)}}
       layout={layoutAnim}
       accessibilityLabel={node.accessibilityLabel ?? node.collectionId}
     >
-      <FlashList<RowEntry>
-        data={rowEntries}
-        keyExtractor={(entry) => entry.rowId}
-        renderItem={({item}) => (
-          <Animated.View
-            key={item.rowId}
-            entering={enteringAnim}
-            exiting={exitingAnim}
+      {rowEntries.map(item => (
+        <Animated.View
+          key={item.rowId}
+          entering={enteringAnim}
+          exiting={exitingAnim}
+        >
+          <ListItemContextProvider
+            value={{row: item.row, rowId: item.rowId, index: item.index}}
           >
-            <ListItemContextProvider
-              value={{row: item.row, rowId: item.rowId, index: item.index}}
-            >
-              <DefaultRowView
-                row={item.row}
-                theme={theme}
-                rowHeight={estimatedItemSize}
-              />
-            </ListItemContextProvider>
-          </Animated.View>
-        )}
-      />
+            <DefaultRowView
+              row={item.row}
+              theme={theme}
+              rowHeight={estimatedItemSize}
+            />
+          </ListItemContextProvider>
+        </Animated.View>
+      ))}
     </Animated.View>
   )
 }

@@ -36,6 +36,7 @@ import {useToast} from '#/components/ToastProvider'
 import {AuthCanceledError} from '#/lib/auth/errors'
 import {getAuthProvider} from '#/lib/auth/getAuthProvider'
 import {magicLinkProvider} from '#/lib/auth/magicLinkProvider'
+import {useSession} from '#/state/session/useSession'
 import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
 import {EmailEntrySheet} from './EmailEntrySheet'
@@ -59,6 +60,7 @@ interface PublicProps extends Partial<Props> {
 export function SignInScreen({showExpiredBanner = false, onDismissExpiredBanner}: PublicProps = {}) {
   const theme = useAppShellTheme()
   const toast = useToast()
+  const session = useSession()
 
   const provider = useMemo(() => getAuthProvider(), [])
   const isMagicLink = provider.name === 'magic-link'
@@ -216,6 +218,35 @@ export function SignInScreen({showExpiredBanner = false, onDismissExpiredBanner}
                 </Text>
               )}
             </Pressable>
+
+            {__DEV__ ? (
+              <Pressable
+                onPress={() => session.skipAuth()}
+                accessibilityRole="button"
+                accessibilityLabel="Skip sign-in (dev)"
+                style={[
+                  styles.authButton,
+                  {
+                    backgroundColor: 'transparent',
+                    borderRadius: theme.radii['radius-md'],
+                    borderWidth: 1,
+                    borderColor: theme['fg-faint'],
+                  },
+                ]}
+                testID="sign-in-skip-dev"
+              >
+                <Text
+                  style={{
+                    fontSize: theme.type.body.size,
+                    fontWeight: '500',
+                    lineHeight: theme.type.body.lineHeight,
+                    color: theme['fg-muted'],
+                  }}
+                >
+                  Skip (dev)
+                </Text>
+              </Pressable>
+            ) : null}
 
             {/* Footer micro-copy with Terms + Privacy links */}
             <View style={styles.footerRow}>
