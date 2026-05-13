@@ -219,8 +219,9 @@ export async function apiFetch<T>(path: string, init: ApiFetchOptions = {}): Pro
   const {requireAuth, baseUrl, headers: rawHeaders, ...rest} = init
   const needsAuth = requireAuth ?? !isPublicPath(path)
 
+  const hasBody = rest.body != null
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    ...(hasBody ? {'Content-Type': 'application/json'} : {}),
     ...((rawHeaders as Record<string, string> | undefined) ?? {}),
   }
 
