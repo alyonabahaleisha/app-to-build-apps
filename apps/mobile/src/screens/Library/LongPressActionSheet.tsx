@@ -8,13 +8,16 @@
  * "Delete" is destructive — triggers a confirmation alert before running.
  * "Share" is stubbed (ADR-0008 PR 2/3 fills in the real implementation).
  *
- * Snap point: [40%] per ADR-0011 §implementation note 5.
+ * Uses enableDynamicSizing (no fixed snap point) so Delete never lands in
+ * the home-indicator strip. Fix for PR A of the bottom-sheet Delete bug.
  *
  * T-0011-171, T-0011-172.
  */
-import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet'
+import {BottomSheetBackdrop, BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet'
+import type {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
 import {Alert, Pressable, StyleSheet, Text} from 'react-native'
 import {forwardRef, useCallback, useImperativeHandle, useMemo, useRef} from 'react'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 
@@ -49,6 +52,7 @@ interface ActionItem {
 export const LongPressActionSheet = forwardRef<LongPressActionSheetRef, Props>(
   function LongPressActionSheet({handlers}, ref) {
     const theme = useAppShellTheme()
+    const insets = useSafeAreaInsets()
     const sheetRef = useRef<BottomSheetModal>(null)
     // Hold the ID of the card that was long-pressed so callbacks have it
     // without needing to thread it through every press handler.
@@ -65,6 +69,18 @@ export const LongPressActionSheet = forwardRef<LongPressActionSheetRef, Props>(
     }))
 
     const dismiss = useCallback(() => sheetRef.current?.dismiss(), [])
+
+    const renderBackdrop = useCallback(
+      (props: BottomSheetBackdropProps) => (
+        <BottomSheetBackdrop
+          {...props}
+          appearsOnIndex={0}
+          disappearsOnIndex={-1}
+          pressBehavior="close"
+        />
+      ),
+      [],
+    )
 
     const items = useMemo<ActionItem[]>(() => {
       const id = () => activeIdRef.current ?? ''
@@ -118,14 +134,13 @@ export const LongPressActionSheet = forwardRef<LongPressActionSheetRef, Props>(
       ]
     }, [handlers, dismiss])
 
-    const snapPoints = useMemo(() => ['40%'], [])
-
     return (
       <BottomSheetModal
         ref={sheetRef}
-        snapPoints={snapPoints}
+        enableDynamicSizing
+        backdropComponent={renderBackdrop}
       >
-        <BottomSheetView style={styles.content}>
+        <BottomSheetView style={{paddingBottom: insets.bottom + 16}}>
           {items.map(item => (
             <Pressable
               key={item.testID}
@@ -160,9 +175,6 @@ export const LongPressActionSheet = forwardRef<LongPressActionSheetRef, Props>(
 )
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
   item: {
     paddingVertical: 16,
     paddingHorizontal: 24,

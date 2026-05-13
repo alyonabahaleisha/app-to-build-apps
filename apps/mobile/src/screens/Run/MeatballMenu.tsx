@@ -14,9 +14,11 @@
  *
  * Note: @gorhom/bottom-sheet's mock is used in tests (configured in jest.config.js).
  */
-import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet'
-import {forwardRef, useImperativeHandle, useRef} from 'react'
+import {BottomSheetBackdrop, BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet'
+import type {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
+import {forwardRef, useCallback, useImperativeHandle, useRef} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useAppShellTheme} from '#/theme/AppShellThemeProvider'
 import {runCopy} from './copy'
@@ -78,6 +80,7 @@ export const MeatballMenu = forwardRef<MeatballMenuRef, MeatballMenuProps>(funct
   ref,
 ) {
   const theme = useAppShellTheme()
+  const insets = useSafeAreaInsets()
   const sheetRef = useRef<BottomSheetModal>(null)
 
   useImperativeHandle(ref, () => ({
@@ -85,15 +88,28 @@ export const MeatballMenu = forwardRef<MeatballMenuRef, MeatballMenuProps>(funct
     dismiss: () => sheetRef.current?.dismiss(),
   }))
 
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        pressBehavior="close"
+      />
+    ),
+    [],
+  )
+
   return (
     <BottomSheetModal
       ref={sheetRef}
-      snapPoints={['40%']}
+      enableDynamicSizing
+      backdropComponent={renderBackdrop}
       backgroundStyle={{backgroundColor: theme['bg-elevated']}}
       handleIndicatorStyle={{backgroundColor: theme.divider}}
     >
       <BottomSheetView>
-        <View style={styles.sheet} testID="meatball-sheet-content">
+        <View style={[styles.sheet, {paddingBottom: insets.bottom + 24}]} testID="meatball-sheet-content">
         <ActionItem
           label={runCopy.share}
           onPress={onShare}
@@ -134,7 +150,6 @@ export const MeatballMenu = forwardRef<MeatballMenuRef, MeatballMenuProps>(funct
 const styles = StyleSheet.create({
   sheet: {
     paddingHorizontal: 16,
-    paddingBottom: 24,
   },
   actionItem: {
     paddingVertical: 14,
