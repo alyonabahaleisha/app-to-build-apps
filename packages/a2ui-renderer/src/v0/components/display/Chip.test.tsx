@@ -5,6 +5,7 @@
  * T-0006-081: Chip selected state inverts to accent/accent-fg
  */
 import React from 'react'
+import {fireEvent} from '@testing-library/react-native'
 import {renderWithTheme} from '../../__test-utils__/renderWithTheme'
 import type {Node} from '@app-creator/protocol'
 import {ChipRenderer} from './Chip'
@@ -41,6 +42,13 @@ const CHIP_SELECTED_WITH_ICON: ChipNode = {
   text: 'Active',
   icon: 'check',
   selected: true,
+}
+
+const CHIP_WITH_ACTION: ChipNode = {
+  id: 'chip5',
+  type: 'Chip',
+  text: 'Done',
+  action: {type: 'set', target: 'status', value: 'done'},
 }
 
 // ---------------------------------------------------------------------------
@@ -144,5 +152,48 @@ describe('ChipRenderer selection state (T-0006-081)', () => {
       palette: 'health',
     })
     expect(toJSON()).not.toBeNull()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// T-0006-076: snapshot for interactive (action-bearing) chip
+// ---------------------------------------------------------------------------
+
+describe('ChipRenderer snapshot (interactive) — T-0006-076', () => {
+  it('matches snapshot for chip with action at productive×focus', () => {
+    const {toJSON} = renderWithTheme(
+      <ChipRenderer node={CHIP_WITH_ACTION} />,
+      {stance: 'productive', palette: 'focus'},
+    )
+    expect(toJSON()).toMatchSnapshot()
+  })
+})
+
+// ---------------------------------------------------------------------------
+// ChipRenderer interactive behavior
+// ---------------------------------------------------------------------------
+
+describe('ChipRenderer interactive behavior', () => {
+  it('dispatches node.action when pressed', () => {
+    // The Text child has accessibilityElementsHidden, so we query the
+    // Pressable wrapper via its accessibilityLabel instead.
+    const {getByLabelText, dispatch} = renderWithTheme(
+      <ChipRenderer node={CHIP_WITH_ACTION} />,
+      {stance: 'productive', palette: 'focus'},
+    )
+    fireEvent.press(getByLabelText('Done'))
+    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(dispatch).toHaveBeenCalledWith(CHIP_WITH_ACTION.action)
+  })
+
+  it('does not dispatch when action is absent', () => {
+    // CHIP_UNSELECTED has no action — renders as View (not Pressable), so
+    // fireEvent.press on the accessible label is a no-op at the interactive level.
+    const {getByLabelText, dispatch} = renderWithTheme(
+      <ChipRenderer node={CHIP_UNSELECTED} />,
+      {stance: 'productive', palette: 'focus'},
+    )
+    fireEvent.press(getByLabelText('All'))
+    expect(dispatch).not.toHaveBeenCalled()
   })
 })

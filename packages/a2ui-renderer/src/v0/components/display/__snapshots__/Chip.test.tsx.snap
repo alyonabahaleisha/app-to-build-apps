@@ -71,3 +71,69 @@ exports[`ChipRenderer snapshot (T-0006-075) — expressive×health matches snaps
   </Text>
 </View>
 `;
+
+exports[`ChipRenderer snapshot (interactive) — T-0006-076 matches snapshot for chip with action at productive×focus 1`] = `
+<View
+  accessibilityLabel="Done"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "flex-start",
+      "backgroundColor": "#FFFFFF",
+      "borderColor": "#ECEEF1",
+      "borderRadius": 9999,
+      "borderWidth": 1,
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 1,
+      "paddingHorizontal": 12,
+      "paddingVertical": 8,
+    }
+  }
+>
+  <Text
+    accessibilityElementsHidden={true}
+    style={
+      {
+        "color": "#5C6470",
+        "fontSize": 13,
+        "fontWeight": "400",
+        "letterSpacing": 0.1,
+        "lineHeight": 18,
+      }
+    }
+  >
+    Done
+  </Text>
+</View>
+`;

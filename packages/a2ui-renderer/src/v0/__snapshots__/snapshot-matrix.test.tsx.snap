@@ -10093,7 +10093,36 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
 exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-stable entries (T-0006-180..249, T-0006-251..255, T-0006-258..274, T-0006-276..280, T-0006-283..286) T-0006-190 — Chip/productive×focus 1`] = `
 <View
   accessibilityLabel="Running"
-  accessibilityRole="text"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
       "alignItems": "center",
@@ -10104,6 +10133,7 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
       "borderWidth": 1,
       "flexDirection": "row",
       "gap": 4,
+      "opacity": 1,
       "paddingHorizontal": 12,
       "paddingVertical": 8,
     }
@@ -12505,7 +12535,36 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
 exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-stable entries (T-0006-180..249, T-0006-251..255, T-0006-258..274, T-0006-276..280, T-0006-283..286) T-0006-218 — Chip/expressive×health 1`] = `
 <View
   accessibilityLabel="Meditation"
-  accessibilityRole="text"
+  accessibilityRole="button"
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
       "alignItems": "center",
@@ -12516,6 +12575,7 @@ exports[`Snapshot matrix — 106 register-pair snapshots (T-0006-180..286) Date-
       "borderWidth": 1,
       "flexDirection": "row",
       "gap": 4,
+      "opacity": 1,
       "paddingHorizontal": 12,
       "paddingVertical": 8,
     }

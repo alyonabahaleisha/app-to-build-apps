@@ -1,9 +1,5 @@
 /**
- * ChipRenderer — filter/selection pill, non-interactive in V0.
- *
- * Per UX doc: Chip is non-interactive in V0 renderer. Selection state comes
- * from binding upstream; the renderer just shows the visual state.
- * Interactive behavior (action dispatch) is wired in Step 9 when actions land.
+ * ChipRenderer — filter/selection pill, tappable when action is present.
  *
  * Selected states:
  *   unselected → bg-elevated background, fg-muted text, divider border
@@ -12,22 +8,25 @@
  * Shape: radius-full (pill), space-sm vertical / space-md horizontal padding.
  * Type: type-caption (13pt). Icon: 16pt if present.
  *
- * Accessibility: accessibilityRole="text" + accessibilityLabel = text.
- * (non-interactive in V0 so we do not use 'button' role yet)
+ * Accessibility:
+ *   interactive → accessibilityRole="button"
+ *   static      → accessibilityRole="text"
  *
  * T-0006-074 / T-0006-075: snapshots at productive×focus + expressive×health
  * T-0006-081: selected state inverts to accent/accent-fg
  */
 import React from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, Pressable} from 'react-native'
 import type {Node} from '@app-creator/protocol'
 import {Icon} from '@app-creator/design-system'
 import {useTheme} from '../../theme/RendererThemeProvider.js'
+import {useRendererStateContext} from '../../state/useRendererState.js'
 
 type ChipNode = Extract<Node, {type: 'Chip'}>
 
 export function ChipRenderer({node}: {node: ChipNode}) {
   const theme = useTheme()
+  const {dispatch} = useRendererStateContext()
 
   const selected = node.selected ?? false
 
@@ -38,23 +37,29 @@ export function ChipRenderer({node}: {node: ChipNode}) {
 
   const captionSpec = theme.type.caption
 
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor,
-        borderRadius: theme.radii['radius-full'],
-        borderWidth,
-        borderColor,
-        paddingVertical: theme.spacing['space-sm'],
-        paddingHorizontal: theme.spacing['space-md'],
-        alignSelf: 'flex-start',
-        gap: theme.spacing['space-xs'],
-      }}
-      accessibilityRole="text"
-      accessibilityLabel={node.accessibilityLabel ?? node.text}
-    >
+  const isInteractive = node.action != null
+
+  function handlePress() {
+    if (node.action) {
+      dispatch(node.action)
+    }
+  }
+
+  const chipStyle = {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor,
+    borderRadius: theme.radii['radius-full'],
+    borderWidth,
+    borderColor,
+    paddingVertical: theme.spacing['space-sm'],
+    paddingHorizontal: theme.spacing['space-md'],
+    alignSelf: 'flex-start' as const,
+    gap: theme.spacing['space-xs'],
+  }
+
+  const chipContent = (
+    <>
       {node.icon ? (
         <Icon name={node.icon} size={16} color={textColor} />
       ) : null}
@@ -70,6 +75,29 @@ export function ChipRenderer({node}: {node: ChipNode}) {
       >
         {node.text}
       </Text>
+    </>
+  )
+
+  if (isInteractive) {
+    return (
+      <Pressable
+        onPress={handlePress}
+        accessibilityRole="button"
+        accessibilityLabel={node.accessibilityLabel ?? node.text}
+        style={({pressed}) => ({...chipStyle, opacity: pressed ? 0.85 : 1})}
+      >
+        {chipContent}
+      </Pressable>
+    )
+  }
+
+  return (
+    <View
+      style={chipStyle}
+      accessibilityRole="text"
+      accessibilityLabel={node.accessibilityLabel ?? node.text}
+    >
+      {chipContent}
     </View>
   )
 }
