@@ -42,6 +42,28 @@ export default [
     },
   },
   // -------------------------------------------------------------------------
+  // ADR-0013 Step 3: block direct reads of EXPO_PUBLIC_AUTH_PROVIDER outside
+  // the canonical dispatcher (getAuthProvider.ts). The flag must be read once
+  // at module load via getAuthProvider() — scattering process.env reads across
+  // the codebase breaks testability and the memoization guarantee.
+  // -------------------------------------------------------------------------
+  {
+    files: ['apps/mobile/src/**/*.{ts,tsx}'],
+    ignores: ['apps/mobile/src/lib/auth/getAuthProvider.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "MemberExpression[object.type='MemberExpression'][object.object.name='process'][object.property.name='env'][property.name='EXPO_PUBLIC_AUTH_PROVIDER']",
+          message:
+            "Read EXPO_PUBLIC_AUTH_PROVIDER via getAuthProvider() (apps/mobile/src/lib/auth/getAuthProvider.ts), " +
+            "not directly from process.env. The flag must be read once at module load through the canonical dispatcher.",
+        },
+      ],
+    },
+  },
+  // -------------------------------------------------------------------------
   // V0 renderer: useEffect ban (ADR-0006 §K) + workspace-boundary imports
   //
   // Previously in packages/a2ui-renderer/.eslintrc.cjs (legacy format), which

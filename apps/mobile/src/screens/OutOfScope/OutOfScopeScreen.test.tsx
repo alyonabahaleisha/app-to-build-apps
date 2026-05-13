@@ -126,9 +126,8 @@ function renderOutOfScope(
                 <Stack.Screen name="Library" component={StubScreen} />
                 <Stack.Screen name="Generating" component={StubScreen} />
                 <Stack.Screen name="QuotaExhausted" component={StubScreen} />
-                <Stack.Screen name="Run" component={StubScreen} />
+                <Stack.Screen name="Run" component={StubScreen} initialParams={{miniAppId: 'stub'}} />
                 <Stack.Screen name="SignIn" component={StubScreen} />
-                <Stack.Screen name="AppRunner" component={StubScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </ToastProvider>
@@ -345,9 +344,8 @@ describe('OutOfScopeScreen', () => {
                   <MockStack.Screen name="Library" component={() => null} />
                   <MockStack.Screen name="Generating" component={() => null} />
                   <MockStack.Screen name="QuotaExhausted" component={() => null} />
-                  <MockStack.Screen name="Run" component={() => null} />
+                  <MockStack.Screen name="Run" component={() => null} initialParams={{miniAppId: 'stub'}} />
                   <MockStack.Screen name="SignIn" component={() => null} />
-                  <MockStack.Screen name="AppRunner" component={() => null} />
                 </MockStack.Navigator>
               </NavigationContainer>
             </ToastProvider>

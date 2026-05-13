@@ -105,9 +105,8 @@ function renderQuotaExhausted(resetAt: string) {
                 <Stack.Screen name="Create" component={StubScreen} />
                 <Stack.Screen name="Generating" component={StubScreen} />
                 <Stack.Screen name="OutOfScope" component={StubScreen} />
-                <Stack.Screen name="Run" component={StubScreen} />
+                <Stack.Screen name="Run" component={StubScreen} initialParams={{miniAppId: 'stub'}} />
                 <Stack.Screen name="SignIn" component={StubScreen} />
-                <Stack.Screen name="AppRunner" component={StubScreen} />
               </Stack.Navigator>
             </NavigationContainer>
           </ToastProvider>

@@ -15,7 +15,10 @@
     },
     "production": {
       "distribution": "store",
-      "ios": {"autoIncrement": "buildNumber"}
+      "ios": {"autoIncrement": "buildNumber"},
+      "env": {
+        "EXPO_PUBLIC_AUTH_PROVIDER": "apple"
+      }
     }
   },
   "submit": {

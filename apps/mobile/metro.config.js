@@ -27,6 +27,19 @@ const NODE_BUILTIN_STUBS = {
   // Stub returns isAvailable() === false so AICapabilitiesProvider routes to
   // the "no-foundation-models" fallback (the device-too-old code path).
   'react-native-ai-apple': path.resolve(projectRoot, '.stubs/react-native-ai-apple-stub.js'),
+  // expo-document-picker + react-native-svg: native modules registered with
+  // the Pod system but not in the currently-installed dev-client binary.
+  // Stubs let the renderer's static module graph evaluate cleanly so the
+  // (currently active) demo specs can render. Calling these APIs throws or
+  // returns a View no-op; safe because SAMPLE_SPEC doesn't exercise them.
+  // Remove the stubs once the next dev-client rebuild includes the pods.
+  'expo-document-picker': path.resolve(projectRoot, '.stubs/expo-document-picker-stub.js'),
+  'react-native-svg': path.resolve(projectRoot, '.stubs/react-native-svg-stub.js'),
+  // expo-apple-authentication native view manager isn't registered in the
+  // currently-installed dev-client. Stub exports the enums + a no-op view +
+  // a rejecting signInAsync so the SignInScreen renders ("Continue without
+  // signing in" still works). Removes once the binary is rebuilt.
+  'expo-apple-authentication': path.resolve(projectRoot, '.stubs/expo-apple-authentication-stub.js'),
 }
 
 const upstreamResolveRequest = config.resolver.resolveRequest

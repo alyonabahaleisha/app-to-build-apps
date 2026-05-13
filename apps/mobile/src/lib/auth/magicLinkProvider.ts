@@ -1,6 +1,11 @@
 /**
  * magicLinkProvider — magic-link email auth provider.
  *
+ * @deprecated ADR-0013 Step 4. SIWA (`siwaProvider`) is the V0 default after
+ * the env-flag flip (ADR-0013 PR 3). This provider remains live for one
+ * release as a safety-net rollback path. Removed in ADR-0013 PR 5 or a V0.5
+ * cleanup ADR.
+ *
  * `signIn()` returns a Promise that resolves when the user completes the
  * magic-link flow (email entered → link sent → link tapped → token redeemed).
  * It rejects with `AuthCanceledError` if the user closes the sheet, or

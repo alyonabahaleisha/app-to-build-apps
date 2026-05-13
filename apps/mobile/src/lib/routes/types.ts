@@ -3,8 +3,9 @@
  *
  * ADR-0011 Step 8: added 'Library', 'Run', 'Create' screen names.
  * ADR-0011 Step 9: added 'Generating', 'OutOfScope', 'QuotaExhausted'.
+ * ADR-0011 Step 10: 'AppRunner' removed; 'Run' is now the only run-mode screen.
  * Removed 'Home' (M1 screen deleted in Step 8).
- * 'Chat' and 'AppRunner' removed in Step 9 (M1 → V0 cutover).
+ * 'Chat' and 'AppRunner' removed in Step 9/10 (M1 → V0 cutover).
  *
  * The full LibraryStackParamList + CreateStackParamList will be introduced
  * in Step 11 when Navigation.tsx is finalized to the full V0 shape.
@@ -69,9 +70,4 @@ export type RootStackParamList = {
    */
   QuotaExhausted: {resetAt: string}
 
-  // ---------- M1 screens kept until Step 11 deletion ----------
-  /**
-   * @deprecated Replaced by 'Run' — will be deleted in Step 11.
-   */
-  AppRunner: {projectId: string}
 }

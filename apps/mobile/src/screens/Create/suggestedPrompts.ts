@@ -66,7 +66,11 @@ function seededShuffle<T>(arr: readonly T[], seed: string): T[] {
 }
 
 // Module-level session seed — generated once at app launch (not per-render).
-export const SESSION_SEED: string = crypto.randomUUID()
+// `Math.random` + `Date.now` is sufficient: the seed only feeds a UI shuffle
+// of the suggested-prompt picker, not anything cryptographic. RN has no
+// global `crypto.randomUUID`; reaching for `expo-crypto` would be over-spec.
+export const SESSION_SEED: string =
+  Date.now().toString(36) + '-' + Math.random().toString(36).slice(2)
 
 /**
  * Returns 6 prompts picked from the pool, deterministically shuffled

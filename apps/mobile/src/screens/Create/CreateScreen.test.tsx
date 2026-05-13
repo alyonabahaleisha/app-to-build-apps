@@ -212,8 +212,7 @@ function renderCreate(opts: HarnessOptions = {}) {
                 <Stack.Screen name="Generating" component={StubScreen} />
                 <Stack.Screen name="OutOfScope" component={StubScreen} />
                 <Stack.Screen name="QuotaExhausted" component={StubScreen} />
-                <Stack.Screen name="Run" component={StubScreen} />
-                <Stack.Screen name="AppRunner" component={StubScreen} />
+                <Stack.Screen name="Run" component={StubScreen} initialParams={{miniAppId: 'stub'}} />
               </Stack.Navigator>
             </NavigationContainer>
           </ToastProvider>
@@ -577,8 +576,7 @@ describe('OutOfScope email security (T-0011-231b)', () => {
                   <OutOfScopeStack.Screen name="SignIn" component={() => null} />
                   <OutOfScopeStack.Screen name="Generating" component={() => null} />
                   <OutOfScopeStack.Screen name="QuotaExhausted" component={() => null} />
-                  <OutOfScopeStack.Screen name="Run" component={() => null} />
-                  <OutOfScopeStack.Screen name="AppRunner" component={() => null} />
+                  <OutOfScopeStack.Screen name="Run" component={() => null} initialParams={{miniAppId: 'stub'}} />
                 </OutOfScopeStack.Navigator>
               </NavigationContainer>
             </ToastProvider>
