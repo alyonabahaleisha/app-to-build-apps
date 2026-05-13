@@ -1,13 +1,16 @@
 # App QA Bug Log
 > Branch: agent/M2-VS-01 | Date: 2026-05-13 | Tester: Claude Code (MCP + idb automation)
-> Device: iPhone 16 Pro simulator · iOS 18.3 · dev-client build · API **not running**
+> Device: iPhone 16 Pro simulator · iOS 18.3 · dev-client build
 
 ---
 
-## ~~BUG-000~~ · FIXED — Delete / Archive from Run screen meatball did not navigate back
+## ~~BUG-000~~ · FIXED — Delete / Archive from Run screen meatball did not work
 
-**Fix:** `navigation.goBack()` moved to fire immediately on confirm (optimistic); `onError` toast added for API failures. `copy.ts` now has `deleteError` + `archiveError` strings.  
-**PR:** agent/M2-VS-01 — commit `fix(run): optimistic nav on delete/archive + error toast`
+**Root cause (2 layers):**  
+1. `navigation.goBack()` was inside `onSuccess` — never fired without API. Fixed by moving it to fire immediately on confirm.  
+2. `apiFetch` always sent `Content-Type: application/json` even on bodyless DELETE/POST requests. Fastify returned `400 FST_ERR_CTP_EMPTY_JSON_BODY`, triggering `onError` cache rollback so the item silently reappeared. Fixed by only setting the header when `rest.body != null`.
+
+**PR:** agent/M2-VS-01 — commits `fix(run): optimistic nav on delete/archive + error toast` + `fix(api): omit Content-Type header on bodyless requests (delete/archive)`
 
 ---
 
