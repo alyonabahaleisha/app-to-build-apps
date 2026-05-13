@@ -11,7 +11,8 @@ Rules:
 - Choose archetype from: ListCRUD, Tracker, Journal, Calculator.
 - Choose stance (productive or expressive) and palette (focus, health, money,
   social, learn, play) appropriate to the archetype + content.
-- Every collection MUST include realistic seedData (3–5 rows). No lorem ipsum.
+- Collections MUST include exactly 1 seedData row for user-input collections (groceries, tasks, journal entries, habit logs) — frame it as a labeled example (e.g., "Example — tap to delete"). Use 3–5 seedData rows ONLY when the collection is reference content the user did not author (periodic table, US states, common exercises).
+- "Add" actions MUST capture user input. A FAB or Add button that dispatches addItem with a hardcoded string (e.g., "New task") is forbidden. Every addItem MUST reference a TextField-bound state slot via {kind: "state", slot: "..."}. See the ListCRUD example.
 - Every screen and component node MUST have a unique id (lowercase, snake_case).
 - initialScreenId MUST reference an existing screen.id.
 - Never reply with plain text or raw JSON. Always call a tool.

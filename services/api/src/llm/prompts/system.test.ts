@@ -165,9 +165,9 @@ it('T-0007-035: SYSTEM_PROMPT_CATALOG includes at least 4 example specs (4 occur
 // =============================================================================
 
 // ─── T-0010-001 — Happy ───────────────────────────────────────────────────
-// Bumped from v0.1.0 → v0.2.0 per ADR-0009 Step 10 (V1 catalog expansion).
-it('T-0010-001: PROMPT_VERSION === "v0.2.0"', () => {
-  expect(PROMPT_VERSION).toBe('v0.2.0')
+// Bumped from v0.2.0 → v0.2.1 per V0 prompt hotfix (inline-add pattern + minimal seedData).
+it('T-0010-001: PROMPT_VERSION === "v0.2.1"', () => {
+  expect(PROMPT_VERSION).toBe('v0.2.1')
 })
 
 // ─── T-0010-002 — Boundary ────────────────────────────────────────────────
@@ -177,10 +177,10 @@ it('T-0010-002: PROMPT_VERSION matches semver shape /^v\\d+\\.\\d+\\.\\d+$/', ()
 
 // ─── T-0010-003 — Boundary ────────────────────────────────────────────────
 it('T-0010-003: PROMPT_VERSION is exported as const (literal type preserved)', () => {
-  // TypeScript const assertion ensures the literal type "v0.2.0" not widened to string.
+  // TypeScript const assertion ensures the literal type "v0.2.1" not widened to string.
   // At runtime we verify the value is a string matching the literal — TS enforces the rest.
-  const version: 'v0.2.0' = PROMPT_VERSION
-  expect(version).toBe('v0.2.0')
+  const version: 'v0.2.1' = PROMPT_VERSION
+  expect(version).toBe('v0.2.1')
 })
 
 // ─── T-0010-004 — Happy ───────────────────────────────────────────────────

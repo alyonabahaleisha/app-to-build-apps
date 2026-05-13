@@ -15,16 +15,20 @@
  * Tests: system.test.ts — T-0007-020 through T-0007-035, T-0010-001 through T-0010-032,
  *        T-0009-213 through T-0009-220.
  *
- * PROMPT_VERSION bumped to v0.2.0 per ADR-0009 Step 10 — V1 catalog expansion
- * (25 new components, stance affinity cheat-sheet, domain compound hints,
- * re-prompt continuity instruction).
+ * PROMPT_VERSION bumped to v0.2.1 — V0 UX hotfix. Replaced FAB-with-literal-
+ * placeholder examples with inline-add (TextField + Button on same screen,
+ * addItem.item bound to state slot). Tightened seedData rule to 1 sample
+ * row for user-input collections (3–5 only for reference content).
+ *
+ * v0.2.0 (prior): ADR-0009 Step 10 V1 catalog expansion (25 new components,
+ * stance affinity cheat-sheet, domain compound hints, re-prompt continuity).
  */
 
 // ---------------------------------------------------------------------------
 // PROMPT_VERSION — ADR-0010 Step 1. Bump on every system.ts change; CI enforces.
 // ---------------------------------------------------------------------------
 
-export const PROMPT_VERSION = 'v0.2.0' as const
+export const PROMPT_VERSION = 'v0.2.1' as const
 
 // ---------------------------------------------------------------------------
 // SYSTEM_PROMPT_STATIC
@@ -41,7 +45,8 @@ Rules:
 - Choose archetype from: ListCRUD, Tracker, Journal, Calculator.
 - Choose stance (productive or expressive) and palette (focus, health, money,
   social, learn, play) appropriate to the archetype + content.
-- Every collection MUST include realistic seedData (3–5 rows). No lorem ipsum.
+- Collections MUST include exactly 1 seedData row for user-input collections (groceries, tasks, journal entries, habit logs) — frame it as a labeled example (e.g., "Example — tap to delete"). Use 3–5 seedData rows ONLY when the collection is reference content the user did not author (periodic table, US states, common exercises).
+- "Add" actions MUST capture user input. A FAB or Add button that dispatches addItem with a hardcoded string (e.g., "New task") is forbidden. Every addItem MUST reference a TextField-bound state slot via {kind: "state", slot: "..."}. See the ListCRUD example.
 - Every screen and component node MUST have a unique id (lowercase, snake_case).
 - initialScreenId MUST reference an existing screen.id.
 - Never reply with plain text or raw JSON. Always call a tool.
@@ -428,8 +433,16 @@ Append a new row to a collection.
 Each item-field value may be either:
   - a literal (string|number|boolean) for fields with a fixed default; OR
   - {kind: "state", slot: "slotName"} to capture the live value of a state slot.
-When a user types into a TextField bound to a state slot and then taps an Add button, the Add button addItem.item MUST reference that slot via {kind:"state", slot:...}. Never hardcode an empty string. Example: TextField valueBinding {kind:"state", slot:"newItemName"} paired with Button action {type:"addItem", collection:"items", item:{name:{kind:"state", slot:"newItemName"}}}. Hardcoded empty literals produce blank rows and are a bug.
-When: FAB add (literal defaults OK), form submit (use state bindings).
+
+Required pattern for user-input lists (groceries, tasks, journals, habits):
+Place a TextField + Button (or FAB) on the SAME screen as the List. Bind the TextField to a state slot; the Button's addItem.item references that slot. Example:
+
+  TextField  valueBinding: {kind:"state", slot:"newItemName"}
+  Button     action: {type:"addItem", collection:"items", item:{name:{kind:"state", slot:"newItemName"}, done:false}}
+
+NEVER emit addItem with a hardcoded placeholder string ("New task", "New entry", "New habit"). That produces blank rows the user cannot rename and feels broken. If you cannot bind to a TextField on the current screen, use the two-screen Compose pattern instead of literal-string addItem.
+
+When the user navigates from a Compose form back to the list, the LAST control on the Compose screen MUST be a Button whose action is addItem (referencing the form's state slots). Pair it with a sibling "Done" Button whose action is back — V0 cannot chain two verbs in one action, so each button picks one.
 
 ### removeItem
 Delete a row from a collection by id.
@@ -605,17 +618,17 @@ Boundary: user manually setting a Picker value is IN scope — AI inferring the 
 
 ### ListCRUD — Task Manager (productive × focus × stack)
 \`\`\`json
-{"version":1,"archetype":"ListCRUD","stance":"productive","palette":"focus","coverIcon":"list","navigation":"stack","initialScreenId":"tasks","collections":[{"id":"tasks","name":"Tasks","fields":[{"name":"title","type":{"type":"string"},"required":true},{"name":"done","type":{"type":"boolean"},"required":false}],"syncMode":"local","seedData":[{"title":"Review the sprint board","done":false},{"title":"Write release notes","done":true},{"title":"Schedule retrospective","done":false}]}],"initialState":{},"screens":[{"id":"tasks","title":"Tasks","root":{"id":"tasksScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"tasksHeading","type":"Heading","text":"My Tasks","level":1},{"id":"taskList","type":"List","collectionId":"tasks","itemLayout":"standard","emptyState":{"id":"emptyTasks","type":"EmptyState","icon":"list","headline":"No tasks yet","body":"Tap + to add your first task."}},{"id":"addFab","type":"FAB","icon":"plus","action":{"type":"addItem","collection":"tasks","item":{"title":"New task","done":false}},"accessibilityLabel":"Add task"}]}},{"id":"detail","title":"Task Detail","root":{"id":"detailScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"detailHeading","type":"Heading","text":"Task Detail","level":1},{"id":"backBtn","type":"Button","label":"Back","variant":"secondary","action":{"type":"back"}}]}}]}
+{"version":1,"archetype":"ListCRUD","stance":"productive","palette":"focus","coverIcon":"list","navigation":"stack","initialScreenId":"tasks","collections":[{"id":"tasks","name":"Tasks","fields":[{"name":"title","type":{"type":"string"},"required":true},{"name":"done","type":{"type":"boolean"},"required":false}],"syncMode":"local","seedData":[{"title":"Example — tap to delete","done":false}]}],"initialState":{"newTaskTitle":""},"screens":[{"id":"tasks","title":"Tasks","root":{"id":"tasksScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"tasksHeading","type":"Heading","text":"Tasks","level":1},{"id":"addRow","type":"Row","gap":"space-sm","children":[{"id":"newTaskField","type":"TextField","label":"New task","placeholder":"What needs doing?","valueBinding":{"kind":"state","slot":"newTaskTitle"}},{"id":"addTaskBtn","type":"Button","label":"Add","variant":"primary","action":{"type":"addItem","collection":"tasks","item":{"title":{"kind":"state","slot":"newTaskTitle"},"done":false}}}]},{"id":"taskList","type":"List","collectionId":"tasks","itemLayout":"standard","emptyState":{"id":"emptyTasks","type":"EmptyState","icon":"list","headline":"No tasks yet","body":"Type above and tap Add."}}]}}]}
 \`\`\`
 
 ### Tracker — Habit Tracker (productive × health × tabs)
 \`\`\`json
-{"version":1,"archetype":"Tracker","stance":"productive","palette":"health","coverIcon":"check-circle","navigation":"tabs","initialScreenId":"today","collections":[{"id":"habits","name":"Habits","fields":[{"name":"name","type":{"type":"string"},"required":true},{"name":"streak","type":{"type":"number"},"required":false}],"syncMode":"local","seedData":[{"name":"Morning walk","streak":5},{"name":"Read 20 pages","streak":3},{"name":"Drink water","streak":12}]}],"initialState":{},"screens":[{"id":"today","title":"Today","root":{"id":"todayScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"todayHeading","type":"Heading","text":"Today's Habits","level":1},{"id":"habitList","type":"List","collectionId":"habits","itemLayout":"standard","emptyState":{"id":"habitEmpty","type":"EmptyState","icon":"check-circle","headline":"No habits yet","body":"Add a habit to start tracking."}},{"id":"addHabitFab","type":"FAB","icon":"plus","action":{"type":"addItem","collection":"habits","item":{"name":"New habit","streak":0}},"accessibilityLabel":"Add habit"}]}},{"id":"history","title":"History","root":{"id":"historyScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"historyHeading","type":"Heading","text":"Habit History","level":1},{"id":"historyBody","type":"Body","text":"Your completed habits will appear here.","color":"fg-muted"}]}}]}
+{"version":1,"archetype":"Tracker","stance":"productive","palette":"health","coverIcon":"check-circle","navigation":"tabs","initialScreenId":"today","collections":[{"id":"habits","name":"Habits","fields":[{"name":"name","type":{"type":"string"},"required":true},{"name":"streak","type":{"type":"number"},"required":false}],"syncMode":"local","seedData":[{"name":"Example — tap to delete","streak":0}]}],"initialState":{"newHabitName":""},"screens":[{"id":"today","title":"Today","root":{"id":"todayScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"todayHeading","type":"Heading","text":"Today's Habits","level":1},{"id":"addHabitRow","type":"Row","gap":"space-sm","children":[{"id":"newHabitField","type":"TextField","label":"New habit","placeholder":"Drink water","valueBinding":{"kind":"state","slot":"newHabitName"}},{"id":"addHabitBtn","type":"Button","label":"Add","variant":"primary","action":{"type":"addItem","collection":"habits","item":{"name":{"kind":"state","slot":"newHabitName"},"streak":0}}}]},{"id":"habitList","type":"List","collectionId":"habits","itemLayout":"standard","emptyState":{"id":"habitEmpty","type":"EmptyState","icon":"check-circle","headline":"No habits yet","body":"Type above and tap Add."}}]}},{"id":"history","title":"History","root":{"id":"historyScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"historyHeading","type":"Heading","text":"Habit History","level":1},{"id":"historyBody","type":"Body","text":"Your completed habits will appear here.","color":"fg-muted"}]}}]}
 \`\`\`
 
 ### Journal — Diary (expressive × social × stack)
 \`\`\`json
-{"version":1,"archetype":"Journal","stance":"expressive","palette":"social","coverIcon":"book-open","navigation":"stack","initialScreenId":"entries","collections":[{"id":"entries","name":"Journal Entries","fields":[{"name":"title","type":{"type":"string"},"required":true},{"name":"body","type":{"type":"string"},"required":false}],"syncMode":"local","seedData":[{"title":"First day","body":"Started journaling today."},{"title":"Progress","body":"Things are looking up."}]}],"initialState":{},"screens":[{"id":"entries","title":"My Journal","root":{"id":"entriesScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"journalHeading","type":"Heading","text":"My Journal","level":1},{"id":"entryList","type":"List","collectionId":"entries","itemLayout":"standard","emptyState":{"id":"journalEmpty","type":"EmptyState","icon":"book-open","headline":"No entries yet","body":"Tap + to write your first entry."}},{"id":"addEntryFab","type":"FAB","icon":"plus","action":{"type":"addItem","collection":"entries","item":{"title":"New entry","body":""}},"accessibilityLabel":"New entry"}]}},{"id":"compose","title":"New Entry","root":{"id":"composeScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"composeHeading","type":"Heading","text":"New Entry","level":1},{"id":"saveBtn","type":"Button","label":"Save Entry","variant":"primary","action":{"type":"back"}}]}}]}
+{"version":1,"archetype":"Journal","stance":"expressive","palette":"social","coverIcon":"book-open","navigation":"stack","initialScreenId":"entries","collections":[{"id":"entries","name":"Journal Entries","fields":[{"name":"title","type":{"type":"string"},"required":true},{"name":"body","type":{"type":"string"},"required":false}],"syncMode":"local","seedData":[{"title":"Example — tap to delete","body":"This entry is a sample. Tap to remove it and write your first."}]}],"initialState":{"draftTitle":"","draftBody":""},"screens":[{"id":"entries","title":"My Journal","root":{"id":"entriesScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"journalHeading","type":"Heading","text":"My Journal","level":1},{"id":"entryList","type":"List","collectionId":"entries","itemLayout":"expanded","emptyState":{"id":"journalEmpty","type":"EmptyState","icon":"book-open","headline":"Start your first entry","body":"Tap + to begin."}},{"id":"addEntryFab","type":"FAB","icon":"plus","action":{"type":"navigate","target":"compose"},"accessibilityLabel":"New entry"}]}},{"id":"compose","title":"New Entry","root":{"id":"composeScreen","type":"Screen","safeArea":"both","padding":"space-lg","children":[{"id":"composeHeading","type":"Heading","text":"New Entry","level":1},{"id":"titleField","type":"TextField","label":"Title","placeholder":"A line about today","valueBinding":{"kind":"state","slot":"draftTitle"}},{"id":"bodyField","type":"TextField","label":"Body","placeholder":"How was your day?","valueBinding":{"kind":"state","slot":"draftBody"},"multiline":true},{"id":"saveRow","type":"Row","gap":"space-sm","children":[{"id":"saveBtn","type":"Button","label":"Save","variant":"primary","action":{"type":"addItem","collection":"entries","item":{"title":{"kind":"state","slot":"draftTitle"},"body":{"kind":"state","slot":"draftBody"}}}},{"id":"doneBtn","type":"Button","label":"Done","variant":"secondary","action":{"type":"back"}}]}]}}]}
 \`\`\`
 
 ### Calculator — Tip Splitter (productive × money × none)
